@@ -10,10 +10,19 @@
 $currentFile = __FILE__;
 $currentFolder = dirname($currentFile);
 
-//include product files
-require_once $currentFolder . '/handbid-shortcode-controller.php';
-require_once $currentFolder . '/handbid-view-renderer.php';
-require_once $currentFolder . '/handbid-view.php';
+// Handbid Store manual addition
+// @TODO Make better autoloader
+require_once $currentFolder . '/lib/HandbidStore.php';
+
+if ($handle = opendir($currentFolder . '/lib')) {
+    while (false !== ($entry = readdir($handle))) {
+        if($entry!="." && $entry!= ".."){
+            require_once $currentFolder . '/lib/' . $entry;
+        }
+    }
+
+    closedir($handle);
+}
 
 class Handbid {
 
@@ -77,7 +86,7 @@ class Handbid {
             $viewRenderer = $this->viewRender;
         }
 
-        return new ShortcodeController($viewRenderer, $this->basePath);
+        return new ShortCodeController($viewRenderer, $this->basePath);
 
     }
 

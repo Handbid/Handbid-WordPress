@@ -1,5 +1,5 @@
 <?php
-class ShortcodeController {
+class ShortCodeController {
 
     public $viewRenderer;
     public $basePath;
