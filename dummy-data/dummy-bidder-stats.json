@@ -1,0 +1,34 @@
+[
+    {
+        "_id":              "50cb51bdbc89296504000731",
+        "type":             "BidderStats",
+        "dateInserted":     1355502013,
+        "dateUpdated":      1355502013,
+        "owner":            ["4e1730e5ba3a20145c000011"],
+        "name":             "Stats for bidder Demo Admin (2199) in \" JLOCC Holiday Gift Auction\"",
+        "menuTitle":        null,
+        "url":              "\/bidderstats\/0.122490001355502013\/0\/stats-for-bidder-demo-admin--2199--in---jlocc-holiday-gift-auction",
+        "key":              "0.122982001355502013-0-stats-for-bidder-demo-admin--2199--in---jlocc-holiday-gift-auction",
+        "group":            null,
+        "module":           null,
+        "roles":            [],
+        "permissions":      [],
+        "keywords":         ["bidderstats", "stats", "for", "bidder", "demo", "admin", "2199", "jlocc", "holiday", "gift", "auction", "0.122490001355502013", "0.122982001355502013", "users", "auctions"],
+        "bidder":           "4e1730e5ba3a20145c000011",
+        "auction":          "50bd9f98bc8929482700016b",
+        "winningItems":     [],
+        "losingItems":      [],
+        "winningBids":      null,
+        "losingBids":       [],
+        "winningTotal":     0,
+        "purchaseTotal":    0,
+        "hasTickets":       0,
+        "purchases":        [],
+        "proxyItems":       [],
+        "bidAmountsByItem": {
+            "winning": [],
+            "losing":  []
+        },
+        "purchasedItems":   []
+    }
+]

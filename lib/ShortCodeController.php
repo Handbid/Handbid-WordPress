@@ -18,7 +18,7 @@ class ShortCodeController {
         }
 
         // Temp dummy data
-        $auctions = file_get_contents($this->basePath . '/dummy_auctions.json');
+        $auctions = file_get_contents($this->basePath . '/dummy-data/dummy-auctions.json');
         $json = json_decode($auctions,true);
 
         foreach($json as $auction) {

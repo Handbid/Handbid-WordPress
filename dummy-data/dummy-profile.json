@@ -1,0 +1,148 @@
+[
+    {
+        "_id":               "4e1730e5ba3a20145c000011",
+        "type":              "User",
+        "dateInserted":      1310142693,
+        "dateUpdated":       1370462094,
+        "owner":             [
+            "4dcd88a3ba3a20310e000004"
+        ],
+        "name":              "Demo Admin",
+        "menuTitle":         null,
+        "url":               "/user/demo-bidder",
+        "key":               "demo-bidder",
+        "group":             null,
+        "module":            null,
+        "roles":             [
+            "4dcd88c1ba3a207a0d000003"
+        ],
+        "permissions":       [
+        ],
+        "keywords":          [
+            "4e1730e5ba3a20145c000011",
+            "user",
+            "1310142693",
+            "1366823811",
+            "demo",
+            "admin",
+            "bidder",
+            "demo@handbid.com",
+            "djetwtu1m2dmtetpc2dwsnpyvmxoq2dpqt09",
+            "2199",
+            "4f86e599bc89291024000022",
+            "file",
+            "1334240665",
+            "profile.jpg",
+            "0.627380001334240665",
+            "profile",
+            "jpg",
+            "var",
+            "www",
+            "vhosts",
+            "handbid",
+            "trunk",
+            "local",
+            "uploads",
+            "files",
+            "76.25.3.173",
+            "1234567890",
+            "iphone",
+            "50aa665c211e68d00b7350757fda501c",
+            "48c9096655c0f1dbd2c1cbea12aae881",
+            "be4e27f3a9aff47c03d34b7c8f4d41ff",
+            "dce69a17310ae64587341fd9744fcbfe",
+            "42c3ede92c92f3c59e01b77ed1b74918",
+            "1d0daad20556a1d4c89043ac8845a1a6"
+        ],
+        "firstName":         "Demo",
+        "lastName":          "Admin",
+        "email":             "demo@handbid.com",
+        "password":          "****",
+        "chargifyId":        null,
+        "alias":             "2199",
+        "photo":             "https://handbidlive-handbid.netdna-ssl.com/local/uploads/user/demo-bidder/fb-profile.jpg",
+        "address":           {
+            "street1":    "",
+            "street2":    "",
+            "city":       "",
+            "province":   "",
+            "postalCode": "",
+            "country":    "us"
+        },
+        "_restMetaData":     {
+            "isManager": true,
+            "isBidder":  false,
+            "bidStats":  {
+                "4dd1f9d3ba3a20815800002c": {
+                    "numWinning": 0,
+                    "numLosing":  0,
+                    "winningIds": [
+                    ],
+                    "losingIds":  [
+                    ]
+                },
+                "4eb8b2d7bc8929df12000012": {
+                    "numWinning": 0,
+                    "numLosing":  0,
+                    "winningIds": [
+                    ],
+                    "losingIds":  [
+                    ]
+                },
+                "4e8c7d95bc8929287d000002": {
+                    "numWinning": 0,
+                    "numLosing":  0,
+                    "winningIds": [
+                    ],
+                    "losingIds":  [
+                    ]
+                }
+            }
+        },
+        "phone":             {
+            "value": "",
+            "type":  null
+        },
+        "cellPhone":         {
+            "value": "1234567890",
+            "type":  "iphone"
+        },
+        "subscriptionId":    null,
+        "favoriteItems":     [
+            "4eb8b408bc8929cb0e00003a",
+            "4eb8b407bc8929cb0e00002a",
+            "4eb8b2d7bc8929df12000012",
+            "4f970e1ebc89291d2f000026",
+            "4eb8b408bc8929cb0e000043",
+            "4eb8b407bc8929cb0e00002d",
+            "4eb8b408bc8929cb0e000045",
+            "4eb8b408bc8929cb0e00004b",
+            "5026dc18bc8929b266000002",
+            "4f9614efbc8929696400001c",
+            "4f96150fbc89296c6400001f",
+            "4f96156fbc89292b65000004",
+            "4eb8b407bc8929cb0e00001e",
+            "4f9a26e7bc89299906000002",
+            "4eb8b407bc8929cb0e000026",
+            "4eb8b407bc8929cb0e00002f",
+            "4eb8b407bc8929cb0e000022"
+        ],
+        "pin":               2199,
+        "facebookId":        0,
+        "referralSource":    "",
+        "_auth":             {
+            "ironframe":           "demo@handbid.com:50aa665c211e68d00b7350757fda501c:48c9096655c0f1dbd2c1cbea12aae881",
+            "autoLoginUserPhone":  "1234567890",
+            "bidderEmailPassword": "demo@handbid.com:bidder:be4e27f3a9aff47c03d34b7c8f4d41ff",
+            "bidderEmailPhone":    "demo@handbid.com:bidder:dce69a17310ae64587341fd9744fcbfe",
+            "bidderPinPassword":   "2199:bidder:42c3ede92c92f3c59e01b77ed1b74918",
+            "bidderPinPhone":      "2199:bidder:1d0daad20556a1d4c89043ac8845a1a6",
+            "bidder":              "demo@handbid.com:bidder:be4e27f3a9aff47c03d34b7c8f4d41ff"
+        },
+        "stripeId":          "",
+        "isPrivate":         0,
+        "_mobileTabBarIcon": "https://handbidlive-handbid.netdna-ssl.com/local/uploads/user/taylor-romero/placeholder.png",
+        "agreeToTerms":      1
+    }
+]
+

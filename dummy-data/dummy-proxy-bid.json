@@ -1,0 +1,837 @@
+[
+    {
+        "_id":           "4dded253ba3a20762500001b",
+        "type":          "ProxyBid",
+        "dateInserted":  1306448467,
+        "dateUpdated":   1395863146,
+        "owner":         [
+            "4dd15534ba3a208158000019"
+        ],
+        "name":          "2212",
+        "menuTitle":     null,
+        "url":           "/proxybid/",
+        "key":           "2212",
+        "group":         null,
+        "module":        null,
+        "roles":         [
+        ],
+        "permissions":   [
+        ],
+        "keywords":      [
+            "4dded253ba3a20762500001b",
+            "proxybid",
+            "1306448467",
+            "2212",
+            "users",
+            "items",
+            "auctions",
+            "500",
+            "losing"
+        ],
+        "microtime":     null,
+        "user":          "4dded077ba3a20cb6d000028",
+        "item":          "4dd1ff8aba3a20e358000037",
+        "auction":       "4dd1f9d3ba3a20815800002c",
+        "maxAmount":     500,
+        "status":        "losing",
+        "_restMetaData": {
+            "bidderName":  "2212",
+            "bidderAlias": "2212",
+            "bidderPin":   2212
+        }
+    },
+    {
+        "_id":           "4de4668aba3a20ca06000013",
+        "type":          "ProxyBid",
+        "dateInserted":  1306814090,
+        "dateUpdated":   1395863147,
+        "owner":         [
+            "4dd15534ba3a208158000019"
+        ],
+        "name":          "8789",
+        "menuTitle":     null,
+        "url":           "/proxybid/-1",
+        "key":           "8789",
+        "group":         null,
+        "module":        null,
+        "roles":         [
+        ],
+        "permissions":   [
+        ],
+        "keywords":      [
+            "4de4668aba3a20ca06000013",
+            "proxybid",
+            "1306814090",
+            "8789",
+            "users",
+            "items",
+            "auctions",
+            "5000",
+            "winning"
+        ],
+        "microtime":     null,
+        "user":          "4dded040ba3a209825000010",
+        "item":          "4dd1fd83ba3a208558000067",
+        "auction":       "4dd1f9d3ba3a20815800002c",
+        "maxAmount":     5000,
+        "status":        "winning",
+        "_restMetaData": {
+            "bidderName":  "8789",
+            "bidderAlias": "8789",
+            "bidderPin":   8789
+        }
+    },
+    {
+        "_id":           "4defe2e8ba3a20481e000003",
+        "type":          "ProxyBid",
+        "dateInserted":  1307566824,
+        "dateUpdated":   1395863147,
+        "owner":         [
+            "4defaf73ba3a20481e000002"
+        ],
+        "name":          "5531",
+        "menuTitle":     null,
+        "url":           "/proxybid/-2",
+        "key":           "5531",
+        "group":         null,
+        "module":        null,
+        "roles":         [
+        ],
+        "permissions":   [
+        ],
+        "keywords":      [
+            "4defe2e8ba3a20481e000003",
+            "proxybid",
+            "1307566824",
+            "5531",
+            "users",
+            "items",
+            "auctions",
+            "750",
+            "losing"
+        ],
+        "microtime":     null,
+        "user":          "4defaf73ba3a20481e000002",
+        "item":          "4dd1fe20ba3a208458000036",
+        "auction":       "4dd1f9d3ba3a20815800002c",
+        "maxAmount":     750,
+        "status":        "losing",
+        "_restMetaData": {
+            "bidderName":  "5531",
+            "bidderAlias": "5531",
+            "bidderPin":   5531
+        }
+    },
+    {
+        "_id":           "4df2ad3cba3a20f143000006",
+        "type":          "ProxyBid",
+        "dateInserted":  1307749692,
+        "dateUpdated":   1395863147,
+        "owner":         [
+            "4dd15534ba3a208158000019"
+        ],
+        "name":          "3844",
+        "menuTitle":     null,
+        "url":           "/proxybid/-2",
+        "key":           "3844",
+        "group":         null,
+        "module":        null,
+        "roles":         [
+        ],
+        "permissions":   [
+        ],
+        "keywords":      [
+            "4df2ad3cba3a20f143000006",
+            "proxybid",
+            "1307749692",
+            "3844",
+            "users",
+            "items",
+            "auctions",
+            "15000",
+            "winning"
+        ],
+        "microtime":     null,
+        "user":          "4df2ad24ba3a20f16e000005",
+        "item":          "4dd200f7ba3a20245b000032",
+        "auction":       "4dd1f9d3ba3a20815800002c",
+        "maxAmount":     15000,
+        "status":        "winning",
+        "_restMetaData": {
+            "bidderName":  "3844",
+            "bidderAlias": "3844",
+            "bidderPin":   3844
+        }
+    },
+    {
+        "_id":           "4dfa434aba3a205c1100000d",
+        "type":          "ProxyBid",
+        "dateInserted":  1308246858,
+        "dateUpdated":   1395863147,
+        "owner":         [
+            "4dd15534ba3a208158000019"
+        ],
+        "name":          "3967",
+        "menuTitle":     null,
+        "url":           "/proxybid/-3",
+        "key":           "3967",
+        "group":         null,
+        "module":        null,
+        "roles":         [
+        ],
+        "permissions":   [
+        ],
+        "keywords":      [
+            "4dfa434aba3a205c1100000d",
+            "proxybid",
+            "1308246858",
+            "3967",
+            "users",
+            "items",
+            "auctions",
+            "500",
+            "losing"
+        ],
+        "microtime":     null,
+        "user":          "4dfa42e8ba3a205811000009",
+        "item":          "4dd20389ba3a20e35800003c",
+        "auction":       "4dd1f9d3ba3a20815800002c",
+        "maxAmount":     500,
+        "status":        "losing",
+        "_restMetaData": {
+            "bidderName":  "3967",
+            "bidderAlias": "3967",
+            "bidderPin":   3967
+        }
+    },
+    {
+        "_id":           "4dfaab60ba3a200412000003",
+        "type":          "ProxyBid",
+        "dateInserted":  1308273504,
+        "dateUpdated":   1395863147,
+        "owner":         [
+            "4dfaaafbba3a200312000004"
+        ],
+        "name":          "7793",
+        "menuTitle":     null,
+        "url":           "/proxybid/-3",
+        "key":           "7793",
+        "group":         null,
+        "module":        null,
+        "roles":         [
+        ],
+        "permissions":   [
+        ],
+        "keywords":      [
+            "4dfaab60ba3a200412000003",
+            "proxybid",
+            "1308273504",
+            "7793",
+            "users",
+            "items",
+            "auctions",
+            "550",
+            "losing"
+        ],
+        "microtime":     null,
+        "user":          "4dfaaafbba3a200312000004",
+        "item":          "4dd1ff8aba3a20e358000037",
+        "auction":       "4dd1f9d3ba3a20815800002c",
+        "maxAmount":     550,
+        "status":        "losing",
+        "_restMetaData": {
+            "bidderName":  "7793",
+            "bidderAlias": "7793",
+            "bidderPin":   7793
+        }
+    },
+    {
+        "_id":           "4e0a2ee7ba3a20592700000a",
+        "type":          "ProxyBid",
+        "dateInserted":  1309290215,
+        "dateUpdated":   1395863147,
+        "owner":         [
+            "4e0a2ea2ba3a20e635000004"
+        ],
+        "name":          "1313",
+        "menuTitle":     null,
+        "url":           "/proxybid/untitled",
+        "key":           "1313",
+        "group":         null,
+        "module":        null,
+        "roles":         [
+        ],
+        "permissions":   [
+        ],
+        "keywords":      [
+            "4e0a2ee7ba3a20592700000a",
+            "proxybid",
+            "1309290215",
+            "1313",
+            "untitled",
+            "users",
+            "items",
+            "auctions",
+            "650",
+            "losing"
+        ],
+        "microtime":     null,
+        "user":          "4e0a2ea2ba3a20e635000004",
+        "item":          "4dd1ff8aba3a20e358000037",
+        "auction":       "4dd1f9d3ba3a20815800002c",
+        "maxAmount":     650,
+        "status":        "losing",
+        "_restMetaData": {
+            "bidderName":  "1313",
+            "bidderAlias": "1313",
+            "bidderPin":   1313
+        }
+    },
+    {
+        "_id":           "4e0a2f07ba3a20602700000f",
+        "type":          "ProxyBid",
+        "dateInserted":  1309290247,
+        "dateUpdated":   1395863147,
+        "owner":         [
+            "4e0a2ea2ba3a20e635000004"
+        ],
+        "name":          "1313",
+        "menuTitle":     null,
+        "url":           "/proxybid/untitled-1",
+        "key":           "1313",
+        "group":         null,
+        "module":        null,
+        "roles":         [
+        ],
+        "permissions":   [
+        ],
+        "keywords":      [
+            "4e0a2f07ba3a20602700000f",
+            "proxybid",
+            "1309290247",
+            "1313",
+            "untitled",
+            "users",
+            "items",
+            "auctions",
+            "850",
+            "winning"
+        ],
+        "microtime":     null,
+        "user":          "4e0a2ea2ba3a20e635000004",
+        "item":          "4dd1fe20ba3a208458000036",
+        "auction":       "4dd1f9d3ba3a20815800002c",
+        "maxAmount":     850,
+        "status":        "winning",
+        "_restMetaData": {
+            "bidderName":  "1313",
+            "bidderAlias": "1313",
+            "bidderPin":   1313
+        }
+    },
+    {
+        "_id":           "4e0a2f3bba3a20e835000004",
+        "type":          "ProxyBid",
+        "dateInserted":  1309290299,
+        "dateUpdated":   1395863147,
+        "owner":         [
+            "4e0a2ea2ba3a20e635000004"
+        ],
+        "name":          "1313",
+        "menuTitle":     null,
+        "url":           "/proxybid/untitled-2",
+        "key":           "1313",
+        "group":         null,
+        "module":        null,
+        "roles":         [
+        ],
+        "permissions":   [
+        ],
+        "keywords":      [
+            "4e0a2f3bba3a20e835000004",
+            "proxybid",
+            "1309290299",
+            "1313",
+            "untitled",
+            "users",
+            "items",
+            "auctions",
+            "600",
+            "winning"
+        ],
+        "microtime":     null,
+        "user":          "4e0a2ea2ba3a20e635000004",
+        "item":          "4dd20389ba3a20e35800003c",
+        "auction":       "4dd1f9d3ba3a20815800002c",
+        "maxAmount":     600,
+        "status":        "winning",
+        "_restMetaData": {
+            "bidderName":  "1313",
+            "bidderAlias": "1313",
+            "bidderPin":   1313
+        }
+    },
+    {
+        "_id":           "4e0a2fc2ba3a20e435000006",
+        "type":          "ProxyBid",
+        "dateInserted":  1309290434,
+        "dateUpdated":   1395863147,
+        "owner":         [
+            "4e0a2ea2ba3a20e635000004"
+        ],
+        "name":          "1313",
+        "menuTitle":     null,
+        "url":           "/proxybid/untitled-3",
+        "key":           "1313",
+        "group":         null,
+        "module":        null,
+        "roles":         [
+        ],
+        "permissions":   [
+        ],
+        "keywords":      [
+            "4e0a2fc2ba3a20e435000006",
+            "proxybid",
+            "1309290434",
+            "1313",
+            "untitled",
+            "users",
+            "items",
+            "auctions",
+            "600",
+            "losing"
+        ],
+        "microtime":     null,
+        "user":          "4e0a2ea2ba3a20e635000004",
+        "item":          "4dd1ff8aba3a20e358000037",
+        "auction":       "4dd1f9d3ba3a20815800002c",
+        "maxAmount":     600,
+        "status":        "losing",
+        "_restMetaData": {
+            "bidderName":  "1313",
+            "bidderAlias": "1313",
+            "bidderPin":   1313
+        }
+    },
+    {
+        "_id":           "4e1900ccba3a20b777000010",
+        "type":          "ProxyBid",
+        "dateInserted":  1310261452,
+        "dateUpdated":   1337652664,
+        "owner":         [
+            "4e190098ba3a20d606000004"
+        ],
+        "name":          "3682",
+        "menuTitle":     null,
+        "url":           "/proxybid/untitled-4",
+        "key":           "3682",
+        "group":         null,
+        "module":        null,
+        "roles":         [
+        ],
+        "permissions":   [
+        ],
+        "keywords":      [
+            "4e1900ccba3a20b777000010",
+            "proxybid",
+            "1310261452",
+            "untitled",
+            "3682",
+            "users",
+            "items",
+            "auctions",
+            "50000",
+            "winning"
+        ],
+        "microtime":     null,
+        "user":          "4e190098ba3a20d606000004",
+        "item":          "4e18d205ba3a201d73000007",
+        "auction":       "4dd1f9d3ba3a20815800002c",
+        "maxAmount":     50000,
+        "status":        "winning",
+        "_restMetaData": {
+            "bidderName":  "3682",
+            "bidderAlias": "3682",
+            "bidderPin":   3682
+        }
+    },
+    {
+        "_id":           "4e190e0dba3a20b377000011",
+        "type":          "ProxyBid",
+        "dateInserted":  1310264845,
+        "dateUpdated":   1395863147,
+        "owner":         [
+            "4dd15534ba3a208158000019"
+        ],
+        "name":          "2212",
+        "menuTitle":     null,
+        "url":           "/proxybid/untitled-4",
+        "key":           "2212",
+        "group":         null,
+        "module":        null,
+        "roles":         [
+        ],
+        "permissions":   [
+        ],
+        "keywords":      [
+            "4e190e0dba3a20b377000011",
+            "proxybid",
+            "1310264845",
+            "1310264847",
+            "2212",
+            "untitled",
+            "users",
+            "items",
+            "auctions",
+            "625",
+            "losing"
+        ],
+        "microtime":     null,
+        "user":          "4dded077ba3a20cb6d000028",
+        "item":          "4dd1ff8aba3a20e358000037",
+        "auction":       "4dd1f9d3ba3a20815800002c",
+        "maxAmount":     625,
+        "status":        "losing",
+        "_restMetaData": {
+            "bidderName":  "2212",
+            "bidderAlias": "2212",
+            "bidderPin":   2212
+        }
+    },
+    {
+        "_id":           "4e191445ba3a202807000009",
+        "type":          "ProxyBid",
+        "dateInserted":  1310266437,
+        "dateUpdated":   1395863147,
+        "owner":         [
+            "4e191382ba3a20b277000017"
+        ],
+        "name":          "8137",
+        "menuTitle":     null,
+        "url":           "/proxybid/untitled-4",
+        "key":           "8137",
+        "group":         null,
+        "module":        null,
+        "roles":         [
+        ],
+        "permissions":   [
+        ],
+        "keywords":      [
+            "4e191445ba3a202807000009",
+            "proxybid",
+            "1310266437",
+            "8137",
+            "untitled",
+            "users",
+            "items",
+            "auctions",
+            "5000",
+            "losing"
+        ],
+        "microtime":     null,
+        "user":          "4e191382ba3a20b277000017",
+        "item":          "4dd20507ba3a20845800003a",
+        "auction":       "4dd1f9d3ba3a20815800002c",
+        "maxAmount":     5000,
+        "status":        "losing",
+        "_restMetaData": {
+            "bidderName":  "8137",
+            "bidderAlias": "8137",
+            "bidderPin":   8137
+        }
+    },
+    {
+        "_id":           "4e1917c3ba3a20b077000018",
+        "type":          "ProxyBid",
+        "dateInserted":  1310267331,
+        "dateUpdated":   1395863147,
+        "owner":         [
+            "4dd15534ba3a208158000019"
+        ],
+        "name":          "3682",
+        "menuTitle":     null,
+        "url":           "/proxybid/untitled-4",
+        "key":           "3682",
+        "group":         null,
+        "module":        null,
+        "roles":         [
+        ],
+        "permissions":   [
+        ],
+        "keywords":      [
+            "4e1917c3ba3a20b077000018",
+            "proxybid",
+            "1310267331",
+            "3682",
+            "untitled",
+            "users",
+            "items",
+            "auctions",
+            "8000",
+            "losing"
+        ],
+        "microtime":     null,
+        "user":          "4e190098ba3a20d606000004",
+        "item":          "4dd1fc26ba3a208558000063",
+        "auction":       "4dd1f9d3ba3a20815800002c",
+        "maxAmount":     8000,
+        "status":        "losing",
+        "_restMetaData": {
+            "bidderName":  "3682",
+            "bidderAlias": "3682",
+            "bidderPin":   3682
+        }
+    },
+    {
+        "_id":           "4e1917d5ba3a209577000025",
+        "type":          "ProxyBid",
+        "dateInserted":  1310267349,
+        "dateUpdated":   1395863147,
+        "owner":         [
+            "4dd15534ba3a208158000019"
+        ],
+        "name":          "7800",
+        "menuTitle":     null,
+        "url":           "/proxybid/untitled-4",
+        "key":           "7800",
+        "group":         null,
+        "module":        null,
+        "roles":         [
+        ],
+        "permissions":   [
+        ],
+        "keywords":      [
+            "4e1917d5ba3a209577000025",
+            "proxybid",
+            "1310267349",
+            "7800",
+            "untitled",
+            "users",
+            "items",
+            "auctions",
+            "9000",
+            "winning"
+        ],
+        "microtime":     null,
+        "user":          "4e190841ba3a205508000007",
+        "item":          "4dd1fc26ba3a208558000063",
+        "auction":       "4dd1f9d3ba3a20815800002c",
+        "maxAmount":     9000,
+        "status":        "winning",
+        "_restMetaData": {
+            "bidderName":  "7800",
+            "bidderAlias": "7800",
+            "bidderPin":   7800
+        }
+    },
+    {
+        "_id":           "4e191a23ba3a20a974000010",
+        "type":          "ProxyBid",
+        "dateInserted":  1310267939,
+        "dateUpdated":   1395863147,
+        "owner":         [
+            "4dd15534ba3a208158000019"
+        ],
+        "name":          "1247",
+        "menuTitle":     null,
+        "url":           "/proxybid/untitled-4",
+        "key":           "1247",
+        "group":         null,
+        "module":        null,
+        "roles":         [
+        ],
+        "permissions":   [
+        ],
+        "keywords":      [
+            "4e191a23ba3a20a974000010",
+            "proxybid",
+            "1310267939",
+            "1247",
+            "untitled",
+            "users",
+            "items",
+            "auctions",
+            "5000",
+            "winning"
+        ],
+        "microtime":     null,
+        "user":          "4e1915dbba3a202a07000019",
+        "item":          "4dd205ffba3a208158000034",
+        "auction":       "4dd1f9d3ba3a20815800002c",
+        "maxAmount":     5000,
+        "status":        "winning",
+        "_restMetaData": {
+            "bidderName":  "1247",
+            "bidderAlias": "1247",
+            "bidderPin":   1247
+        }
+    },
+    {
+        "_id":           "4e1926dcba3a20a021000000",
+        "type":          "ProxyBid",
+        "dateInserted":  1310271196,
+        "dateUpdated":   1395863147,
+        "owner":         [
+            "4dfaaafbba3a200312000004"
+        ],
+        "name":          "7793",
+        "menuTitle":     null,
+        "url":           "/proxybid/untitled-4",
+        "key":           "7793",
+        "group":         null,
+        "module":        null,
+        "roles":         [
+        ],
+        "permissions":   [
+        ],
+        "keywords":      [
+            "4e1926dcba3a20a021000000",
+            "proxybid",
+            "1310271196",
+            "7793",
+            "untitled",
+            "users",
+            "items",
+            "auctions",
+            "750",
+            "winning"
+        ],
+        "microtime":     null,
+        "user":          "4dfaaafbba3a200312000004",
+        "item":          "4dd1ff8aba3a20e358000037",
+        "auction":       "4dd1f9d3ba3a20815800002c",
+        "maxAmount":     750,
+        "status":        "winning",
+        "_restMetaData": {
+            "bidderName":  "7793",
+            "bidderAlias": "7793",
+            "bidderPin":   7793
+        }
+    },
+    {
+        "_id":           "4e1926dcba3a20a221000000",
+        "type":          "ProxyBid",
+        "dateInserted":  1310271196,
+        "dateUpdated":   1395863147,
+        "owner":         [
+            "4e1926aaba3a20a621000001"
+        ],
+        "name":          "7008",
+        "menuTitle":     null,
+        "url":           "/proxybid/untitled-4",
+        "key":           "7008",
+        "group":         null,
+        "module":        null,
+        "roles":         [
+        ],
+        "permissions":   [
+        ],
+        "keywords":      [
+            "4e1926dcba3a20a221000000",
+            "proxybid",
+            "1310271196",
+            "7008",
+            "untitled",
+            "users",
+            "items",
+            "auctions",
+            "6000",
+            "winning"
+        ],
+        "microtime":     null,
+        "user":          "4e1926aaba3a20a621000001",
+        "item":          "4dd20507ba3a20845800003a",
+        "auction":       "4dd1f9d3ba3a20815800002c",
+        "maxAmount":     6000,
+        "status":        "winning",
+        "_restMetaData": {
+            "bidderName":  "7008",
+            "bidderAlias": "7008",
+            "bidderPin":   7008
+        }
+    },
+    {
+        "_id":           "4e1a7759ba3a20a121000043",
+        "type":          "ProxyBid",
+        "dateInserted":  1310357337,
+        "dateUpdated":   1395863147,
+        "owner":         [
+            "4dddf347ba3a209125000008"
+        ],
+        "name":          "1569",
+        "menuTitle":     null,
+        "url":           "/proxybid/untitled-4",
+        "key":           "1569",
+        "group":         null,
+        "module":        null,
+        "roles":         [
+        ],
+        "permissions":   [
+        ],
+        "keywords":      [
+            "4e1a7759ba3a20a121000043",
+            "proxybid",
+            "1310357337",
+            "1569",
+            "untitled",
+            "users",
+            "items",
+            "auctions",
+            "losing",
+            "taylor"
+        ],
+        "microtime":     null,
+        "user":          "4dddf347ba3a209125000008",
+        "item":          "4e1a5518ba3a20f52200002c",
+        "auction":       "4e090bdeba3a20e435000002",
+        "maxAmount":     25,
+        "status":        "losing",
+        "_restMetaData": {
+            "bidderName":  "Taylor",
+            "bidderAlias": "Taylor",
+            "bidderPin":   1
+        }
+    },
+    {
+        "_id":           "4e1b2abdba3a20d63d000011",
+        "type":          "ProxyBid",
+        "dateInserted":  1310403261,
+        "dateUpdated":   1395863147,
+        "owner":         [
+            "4e1af7cfba3a20a621000073"
+        ],
+        "name":          "9871",
+        "menuTitle":     null,
+        "url":           "/proxybid/untitled-4",
+        "key":           "9871",
+        "group":         null,
+        "module":        null,
+        "roles":         [
+        ],
+        "permissions":   [
+        ],
+        "keywords":      [
+            "4e1b2abdba3a20d63d000011",
+            "proxybid",
+            "1310403261",
+            "9871",
+            "untitled",
+            "users",
+            "items",
+            "auctions",
+            "losing"
+        ],
+        "microtime":     null,
+        "user":          "4e1af7cfba3a20a621000073",
+        "item":          "4e1a0bd5ba3a207556000003",
+        "auction":       "4e090bdeba3a20e435000002",
+        "maxAmount":     60,
+        "status":        "losing",
+        "_restMetaData": {
+            "bidderName":  "9871",
+            "bidderAlias": "9871",
+            "bidderPin":   9871
+        }
+    }
+]
+

@@ -1,0 +1,32 @@
+[
+    {
+        "_id":               "50bd9f98bc8929482700016b",
+        "name":              " JLOCC Holiday Gift Auction",
+        "status":            "closed",
+        "image":             "http:\/\/handbidlive.handbid.netdna-cdn.com\/local\/uploads\/user\/0.679804001346814051\/0\/jr--league-orange-county\/jlocc-1345502779_600.jpg",
+        "key":               "jlocc-holiday-gift-auction",
+        "vanityAddress":     "Junior League of Orange County, CA",
+        "location":          {
+            "street1":    "5140 Campus Drive",
+            "street2":    "",
+            "city":       "Newport Beach",
+            "province":   "CA",
+            "postalCode": "92660",
+            "country":    "us"
+        },
+        "startTime":         1355504400,
+        "endTime":           1356022800,
+        "closingTime":       1356023600,
+        "description":       "",
+        "localOnly":         0,
+        "inviteOnly":        0,
+        "enableTicketSales": 0,
+        "_restMetaData":     {
+            "numItems":   46,
+            "closesIn":   0,
+            "serverTime": 1395863635,
+            "canEdit":    false,
+            "managers":   ["5046c063bc8929062700000b"]
+        }
+    }
+]

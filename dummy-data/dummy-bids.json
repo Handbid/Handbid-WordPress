@@ -1,0 +1,47 @@
+[
+    {
+        "_id":           "50cf5bc5bc89299424000e67",
+        "name":          "$45 bid for `Waterfront Brunch` by 2217",
+        "microtime":     1355766725.9703,
+        "user":          "509f07a1bc8929ec070005da",
+        "item":          "50c53080bc8929e45e0004c7",
+        "auction":       "50bd9f98bc8929482700016b",
+        "amount":        45,
+        "status":        "winning",
+        "_restMetaData": {
+            "bidderName":  "2217",
+            "bidderAlias": "2217",
+            "bidderPin":   2217
+        }
+    },
+    {
+        "_id":           "50ce4eaabc8929d604000932",
+        "name":          "$35 bid for `Waterfront Brunch` by 7477",
+        "microtime":     1355697834.7986,
+        "user":          "50ce4de1bc89297324000dac",
+        "item":          "50c53080bc8929e45e0004c7",
+        "auction":       "50bd9f98bc8929482700016b",
+        "amount":        35,
+        "status":        "losing",
+        "_restMetaData": {
+            "bidderName":  "7477",
+            "bidderAlias": "7477",
+            "bidderPin":   7477
+        }
+    },
+    {
+        "_id":           "50cd8e0cbc89297424000d72",
+        "name":          "$25 bid for `Waterfront Brunch` by 9369",
+        "microtime":     1355648524.59,
+        "user":          "509f2e35bc8929423d000783",
+        "item":          "50c53080bc8929e45e0004c7",
+        "auction":       "50bd9f98bc8929482700016b",
+        "amount":        25,
+        "status":        "losing",
+        "_restMetaData": {
+            "bidderName":  "9369",
+            "bidderAlias": "9369",
+            "bidderPin":   9369
+        }
+    }
+]
