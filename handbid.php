@@ -13,13 +13,14 @@ $currentFolder = dirname($currentFile);
 //include product files
 require_once $currentFolder . '/handbid-shortcode-controller.php';
 require_once $currentFolder . '/handbid-view-renderer.php';
+require_once $currentFolder . '/handbid-view.php';
 
 class Handbid {
 
     public $shortCodeController;
     public $viewRender;
     public $basePath;
-    public $store;
+//    public $store;
 
     function __construct($options = null) {
         add_action( 'init', array( $this, 'init' ) );
@@ -27,7 +28,7 @@ class Handbid {
         $this->basePath = dirname(__FILE__);
         $this->viewRender = $this->createViewRenderer();
         $this->shortCodeController = $this->createShortCodeController();
-        $this->store = $this->createStore();
+//        $this->store = $this->createStore();
 
     }
 

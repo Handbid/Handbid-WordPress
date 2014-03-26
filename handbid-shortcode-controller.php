@@ -21,9 +21,9 @@ class ShortcodeController {
         $auctions = file_get_contents($this->basePath . '/dummy_auctions.json');
         $json = json_decode($auctions,true);
 
-        foreach($json['Auctions'] as $auction) {
+        foreach($json as $auction) {
 
-            $markup .= $this->viewRenderer->render($attributes['template'], $auction);
+            $markup = $this->viewRenderer->render($attributes['template'], $auction);
 
         }
 

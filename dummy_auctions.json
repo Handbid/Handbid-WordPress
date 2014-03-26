@@ -1,4 +1,4 @@
-{"Auctions": [
+[
     {
         "_id":               "50bd9f98bc8929482700016b",
         "name":              " JLOCC Holiday Gift Auction",
@@ -209,4 +209,4 @@
             "managers":   ["50609364bc8929a257000016"]
         }
     }
-]}
+]

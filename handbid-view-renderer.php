@@ -4,7 +4,6 @@
  * Handbid view renderer
  *
  */
-
 class HandbidViewRenderer {
 
     public $basePath;
@@ -15,7 +14,7 @@ class HandbidViewRenderer {
 
     public function render($templatePath, $vars = []) {
 
-        $template = file_get_contents($this->basePath . '/' . $templatePath);
-        return $template;
+        $view = new HandbidView($this->basePath . '/' . $templatePath, $vars);
+        return $view->render();
     }
 }
