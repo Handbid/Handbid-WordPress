@@ -1,4 +1,5 @@
 <?php
+
 class ShortCodeController {
 
     public $viewRenderer;
@@ -9,9 +10,8 @@ class ShortCodeController {
         $this->basePath = $basePath;
     }
 
+    // Auctions
     public function handbid_auction_results ($attributes) {
-
-        $markup = '';
 
         if(!$attributes['template']) {
             $attributes['template'] = 'views/auction/logo.phtml';
@@ -30,27 +30,70 @@ class ShortCodeController {
         return $markup;
 
     }
-    public function handbid_bid_history ($attributes) {
+    public function handbid_auction_banner($attributes) {
+
+        // Temp dummy data
+        $auction = file_get_contents($this->basePath . '/dummy-data/dummy-auction.json');
+        $json = json_decode($auction,true);
+
+        return $this->viewRenderer->render('views/auction/map.phtml', $auction);
+
+    }
+    public function handbid_auction_details($attributes) {
+
+        // Temp dummy data
+        $auction = file_get_contents($this->basePath . '/dummy-data/dummy-auction.json');
+        $json = json_decode($auction,true);
+
+        return $this->viewRenderer->render('views/auction/details.phtml', $auction);
+
+    }
+    public function handbid_auction_contact_form($attributes) {
+
+        // Temp dummy data
+        $auction = file_get_contents($this->basePath . '/dummy-data/dummy-auction.json');
+        $json = json_decode($auction,true);
+
+        return $this->viewRenderer->render('views/auction/contact-form.phtml', $auction);
+
+    }
+    public function handbid_auction_list($attributes) {
+
+        // Temp dummy data
+        $auction = file_get_contents($this->basePath . '/dummy-data/dummy-auction.json');
+        $json = json_decode($auction,true);
+
+        return $this->viewRenderer->render('views/auction/auction-list.phtml', $auction);
+
+    }
+
+    // Bids
+    public function handbid_bid_history($attributes) {
 //        item = "item-key"
 //resultsPerPage = 5
 //template = "views/bid/results.phtml"
     }
-    public function handbid_bid_now ($attributes) {
+    public function handbid_bid_now($attributes) {
 //        item = "item-key"
 //template = "views/bid/now.phtml"
     }
-    public function handbid_item_comment ($attributes) {
+
+    // Items
+    public function handbid_item_comment($attributes) {
 //        item = "item-key"
 //template = "views/item/comment.phtml"
     }
-    public function handbid_item_results ($attributes) {
+    public function handbid_item_results($attributes) {
 //        auction = "auction-key"
 //template = "views/item/results.phtml"
     }
-    public function handbid_item_search_bar ($attributes) {
+    public function handbid_item_search_bar($attributes) {
 //        template = "item/search-bar.phtml"
     }
-    public function handbid_ticket_buy ($attributes) {
+
+    // Tickets
+    public function handbid_ticket_buy($attributes) {
 //        template = "views/ticket/buy.phtml"
     }
+
 }

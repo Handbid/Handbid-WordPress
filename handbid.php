@@ -10,10 +10,13 @@
 $currentFile = __FILE__;
 $currentFolder = dirname($currentFile);
 
+
+
 // Handbid Store manual addition
 // @TODO Make better autoloader
 require_once $currentFolder . '/lib/HandbidStore.php';
 
+// Loop through lib directory autoloading files and require_once them
 if ($handle = opendir($currentFolder . '/lib')) {
     while (false !== ($entry = readdir($handle))) {
         if($entry!="." && $entry!= ".."){
@@ -46,13 +49,23 @@ class Handbid {
         add_action('wp_enqueue_scripts', array( $this, 'handbid_javascript' ) );
 
         // Add plugin shortcodes
-        add_shortcode( 'handbid_auction_results', array( $this->shortCodeController, 'handbid_auction_results' ) );
-        add_shortcode( 'handbid_bid_history', array( $this->shortCodeController, 'handbid_bid_history' ) );
-        add_shortcode( 'handbid_bid_now', array( $this->shortCodeController, 'handbid_bid_now' ) );
-        add_shortcode( 'handbid_item_comment', array( $this->shortCodeController, 'handbid_item_comment' ) );
-        add_shortcode( 'handbid_item_results', array( $this->shortCodeController, 'handbid_item_results' ) );
-        add_shortcode( 'handbid_item_search_bar', array( $this->shortCodeController, 'handbid_item_search_bar' ) );
-        add_shortcode( 'handbid_ticket_buy', array( $this->shortCodeController, 'handbid_ticket_buy' ) );
+        $shortCodes = [
+            'handbid_auction_results',
+            'handbid_auction_banner',
+            'handbid_auction_details',
+            'handbid_auction_contact_form',
+            'handbid_auction_list',
+            'handbid_bid_history',
+            'handbid_bid_now',
+            'handbid_item_comment',
+            'handbid_item_results',
+            'handbid_item_search_bar',
+            'handbid_ticket_buy',
+        ];
+
+        forEach($shortCodes as $shortCode) {
+            add_shortcode( $shortCode, array( $this->shortCodeController, $shortCode ) );
+        }
 
     }
 
