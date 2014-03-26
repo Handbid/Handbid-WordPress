@@ -1,0 +1,212 @@
+{"Auctions": [
+    {
+        "_id":               "50bd9f98bc8929482700016b",
+        "name":              " JLOCC Holiday Gift Auction",
+        "status":            "closed",
+        "image":             "http:\/\/handbidlive.handbid.netdna-cdn.com\/local\/uploads\/user\/0.679804001346814051\/0\/jr--league-orange-county\/jlocc-1345502779_600.jpg",
+        "key":               "jlocc-holiday-gift-auction",
+        "vanityAddress":     "Junior League of Orange County, CA",
+        "location":          {
+            "street1":    "5140 Campus Drive",
+            "street2":    "",
+            "city":       "Newport Beach",
+            "province":   "CA",
+            "postalCode": "92660",
+            "country":    "us"
+        },
+        "startTime":         1355504400,
+        "endTime":           1356022800,
+        "closingTime":       1356023600,
+        "description":       "",
+        "localOnly":         0,
+        "inviteOnly":        0,
+        "enableTicketSales": 0,
+        "_restMetaData":     {
+            "numItems":   46,
+            "closesIn":   0,
+            "serverTime": 1395803166,
+            "canEdit":    false,
+            "managers":   ["5046c063bc8929062700000b"]
+        }
+    },
+    {
+        "_id":               "5239f6faa14d994249010706",
+        "name":              "10th Anniversary Boehner Feinstein Williams Dinner",
+        "status":            "closed",
+        "image":             "http:\/\/handbidlive.handbid.netdna-cdn.com\/local\/uploads\/user\/0.536167001378759450\/0\/epiphany-productions\/cca-logo-square.jpg",
+        "key":               "10th-anniversary-boehner-feinstein-williams-dinner",
+        "vanityAddress":     "Washington Hilton",
+        "location":          {
+            "street1":    "1919 Connecticut Avenue NW",
+            "street2":    "",
+            "city":       "Washington",
+            "province":   "DC",
+            "postalCode": "20009",
+            "country":    "us"
+        },
+        "startTime":         1382565600,
+        "endTime":           1382583600,
+        "closingTime":       0,
+        "description":       "Benefits the Consortium of Catholic Academies",
+        "localOnly":         0,
+        "inviteOnly":        0,
+        "enableTicketSales": 0,
+        "_restMetaData":     {
+            "numItems":   30,
+            "closesIn":   0,
+            "serverTime": 1395803166,
+            "canEdit":    false,
+            "managers":   ["522e331aa14d99ac0100dbfc"]
+        }
+    },
+    {
+        "_id":               "526858cca14d990a3400618a",
+        "name":              "12th Annual Summit Schools Social & Auction",
+        "status":            "closed",
+        "image":             "http:\/\/handbidlive.handbid.netdna-cdn.com\/local\/uploads\/user\/0.344647001349724131\/0\/summit-schools\/handbid-logo-20131.jpg",
+        "key":               "12th-annual-summit-schools-social---auction",
+        "vanityAddress":     "CSPS Hall",
+        "location":          {
+            "street1":    "1103 3rd St SE",
+            "street2":    "",
+            "city":       "Cedar Rapids",
+            "province":   "IA",
+            "postalCode": "52401",
+            "country":    "us"
+        },
+        "startTime":         1382918400,
+        "endTime":           1383360300,
+        "closingTime":       1383358070,
+        "description":       "",
+        "localOnly":         0,
+        "inviteOnly":        0,
+        "enableTicketSales": 0,
+        "_restMetaData":     {
+            "numItems":   110,
+            "closesIn":   0,
+            "serverTime": 1395803166,
+            "canEdit":    false,
+            "managers":   ["507327e3bc8929301f000003"]
+        }
+    },
+    {
+        "_id":               "522e36c3a14d99414b00e190",
+        "name":              "13th Annual Dining Away Duchenne",
+        "status":            "closed",
+        "image":             "http:\/\/handbidlive.handbid.netdna-cdn.com\/local\/uploads\/user\/0.536167001378759450\/0\/epiphany-productions\/facebook_dad-624x403.png",
+        "key":               "13th-annual-dining-away-duchenne",
+        "vanityAddress":     "Eastern Market",
+        "location":          {
+            "street1":    "225 7th Street SE",
+            "street2":    "",
+            "city":       "Washington",
+            "province":   "DC",
+            "postalCode": "20003",
+            "country":    "us"
+        },
+        "startTime":         1378850400,
+        "endTime":           1378861200,
+        "closingTime":       1378860840,
+        "description":       "13th Annual Dining Away Duchenne Benefiting the Foundation to Eradicate Duchenne.",
+        "localOnly":         0,
+        "inviteOnly":        0,
+        "enableTicketSales": 0,
+        "_restMetaData":     {
+            "numItems":   31,
+            "closesIn":   0,
+            "serverTime": 1395803166,
+            "canEdit":    false,
+            "managers":   ["522e331aa14d99ac0100dbfc"]
+        }
+    },
+    {
+        "_id":               "4dd1f9d3ba3a20815800002c",
+        "name":              "2011 Dinosaur Ball",
+        "status":            "closed",
+        "image":             "http:\/\/handbidlive.handbid.netdna-cdn.com\/local\/uploads\/user\/admin-admin\/nhm_logo_standard_final.jpg",
+        "key":               "2011-dinosaur-ball",
+        "vanityAddress":     "The Natural History Museum of Los Angeles County",
+        "location":          {
+            "street1":    "900 Exposition Blvd",
+            "street2":    "",
+            "city":       "Los Angeles",
+            "province":   "CA",
+            "postalCode": "90007",
+            "country":    "us"
+        },
+        "startTime":         1306540800,
+        "endTime":           1310265000,
+        "closingTime":       0,
+        "description":       "An evening expedition to celebrate the opening of the much anticipated Dinosaur Hall!\r\n\r\nThe 2011 Dinosaur Ball marks one of the most significant milestones in the history of the Natural History Museum, the opening of the highly-anticipated new Dinosaur Hall. The hall, curated by Dr. Luis Chiappe, Director of the NHM Dinosaur Institute, features more than 300 fossils and 20 mounted dinosaurs, many of which were discovered on NHM expeditions.\r\n\r\nGifts to the 2011 Dinosaur Ball will\r\nsupport education and public programs\r\nat the Natural History Museum between\r\nJuly 1, 2010 and June 30, 2011.",
+        "localOnly":         0,
+        "inviteOnly":        0,
+        "enableTicketSales": 0,
+        "_restMetaData":     {
+            "numItems":   16,
+            "closesIn":   0,
+            "serverTime": 1395803166,
+            "canEdit":    false,
+            "managers":   []
+        }
+    },
+    {
+        "_id":               "5273ddc8a14d99432b00c2ae",
+        "name":              "2013 Double Chai Gala",
+        "status":            "closed",
+        "image":             "http:\/\/handbidlive.handbid.netdna-cdn.com\/local\/uploads\/user\/0.279071001383323926\/0\/jewish-academy--of-orlando\/jao_anniversary_logo1.png",
+        "key":               "2013-double-chai-gala",
+        "vanityAddress":     "Ohev",
+        "location":          {
+            "street1":    "",
+            "street2":    "",
+            "city":       "",
+            "province":   "",
+            "postalCode": "",
+            "country":    "us"
+        },
+        "startTime":         1383325260,
+        "endTime":           1384752600,
+        "closingTime":       1384738245,
+        "description":       "Annual Gala",
+        "localOnly":         0,
+        "inviteOnly":        0,
+        "enableTicketSales": 0,
+        "_restMetaData":     {
+            "numItems":   103,
+            "closesIn":   0,
+            "serverTime": 1395803166,
+            "canEdit":    false,
+            "managers":   ["5273d916a14d99396b008f66"]
+        }
+    },
+    {
+        "_id":               "521005eaa14d99e03700b298",
+        "name":              "2013 Fore! Our Kids Golf Classic",
+        "status":            "closed",
+        "image":             "http:\/\/handbidlive.handbid.netdna-cdn.com\/local\/uploads\/user\/0.936942001348506468\/0\/tennyson-center\/2013-golf-logo-with-tcc---final.jpg",
+        "key":               "2013-fore--golf-classic",
+        "vanityAddress":     "Flemings Prime Steakhouse",
+        "location":          {
+            "street1":    "191 Inverness Drive W.",
+            "street2":    "",
+            "city":       "Englewood",
+            "province":   "CO",
+            "postalCode": "80112",
+            "country":    "us"
+        },
+        "startTime":         1377453600,
+        "endTime":           1377482400,
+        "closingTime":       1377483287,
+        "description":       "VIP Dinner",
+        "localOnly":         1,
+        "inviteOnly":        0,
+        "enableTicketSales": 0,
+        "_restMetaData":     {
+            "numItems":   62,
+            "closesIn":   0,
+            "serverTime": 1395803166,
+            "canEdit":    false,
+            "managers":   ["50609364bc8929a257000016"]
+        }
+    }
+]}
