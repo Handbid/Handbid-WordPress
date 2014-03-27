@@ -4,10 +4,12 @@ class ShortCodeController {
 
     public $viewRenderer;
     public $basePath;
+    public $auction;
 
     public function __construct( HandbidViewRenderer $viewRenderer, $basePath) {
         $this->viewRenderer = $viewRenderer;
         $this->basePath = $basePath;
+        $this->auction = $this->check_url_for_auction();
     }
 
     // Auctions
@@ -32,38 +34,29 @@ class ShortCodeController {
     }
     public function handbid_auction_banner($attributes) {
 
-        // Temp dummy data
-        $auction = file_get_contents($this->basePath . '/dummy-data/dummy-auction.json');
-        $json = json_decode($auction,true);
-
-        return $this->viewRenderer->render('views/auction/map.phtml', $auction);
+        return $this->viewRenderer->render('views/auction/banner.phtml', $this->auction);
 
     }
     public function handbid_auction_details($attributes) {
 
-        // Temp dummy data
-        $auction = file_get_contents($this->basePath . '/dummy-data/dummy-auction.json');
-        $json = json_decode($auction,true);
-
-        return $this->viewRenderer->render('views/auction/details.phtml', $auction);
+        return $this->viewRenderer->render('views/auction/details.phtml', $this->auction);
 
     }
     public function handbid_auction_contact_form($attributes) {
 
-        // Temp dummy data
-        $auction = file_get_contents($this->basePath . '/dummy-data/dummy-auction.json');
-        $json = json_decode($auction,true);
-
-        return $this->viewRenderer->render('views/auction/contact-form.phtml', $auction);
+        return $this->viewRenderer->render('views/auction/contact-form.phtml', $this->auction);
 
     }
     public function handbid_auction_list($attributes) {
 
         // Temp dummy data
-        $auction = file_get_contents($this->basePath . '/dummy-data/dummy-auction.json');
-        $json = json_decode($auction,true);
+        $categories = file_get_contents($this->basePath . '/dummy-data/dummy-categories.json');
+        $items = file_get_contents($this->basePath . '/dummy-data/dummy-items.json');
 
-        return $this->viewRenderer->render('views/auction/auction-list.phtml', $auction);
+        $json[] = json_decode($categories,true);
+        $json[] = json_decode($items,true);
+
+        return $this->viewRenderer->render('views/auction/auction-list.phtml', $json);
 
     }
 
@@ -94,6 +87,26 @@ class ShortCodeController {
     // Tickets
     public function handbid_ticket_buy($attributes) {
 //        template = "views/ticket/buy.phtml"
+    }
+
+    // Add query support
+    function check_url_for_auction() {
+
+        $auction = null;
+
+        if($_GET['auction']) {
+            if($this->auction) {
+                $_GET['auction'] = $this->auction;
+            }
+            else
+            {
+                $auction = file_get_contents($this->basePath . '/dummy-data/dummy-auction.json');
+                $auction = json_decode($auction,true);
+                $this->auction = $auction;
+            }
+        }
+
+        return $auction;
     }
 
 }

@@ -1,10 +1,26 @@
+<?php
+    if($this->context[0]) {
+        $auction = $this->context[0];
+    }
+    else
+    {
+        echo "No Auction Set";
+        return;
+    }
+?>
+
 <div class="bannerContainer">
     <div class="statusContainer">
-        <div class="name">Auction Name</div>
-        <div class="status closed">Auction is open for Bidding</div>
+        <div class="name"><?= $auction['name']; ?></div>
+        <div class="status closed">Auction is <?= $auction['status']; ?> for Bidding</div>
     </div>
 
-    <div class="timeRemaining">Auction closes in 12:00</div>
+    <?php if($auction['status'] != "closed") {
+        ?>
+        <div class="timeRemaining">Auction closes in <?= $auction['closingTime']; ?></div>
+    <?php
+    } ?>
+
     <div class="map-frame">
         <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false">
         </script>
@@ -37,7 +53,7 @@
                     };
                     map = new google.maps.Map(document.getElementById("gmap_canvas"), myOptions);
                     marker = new google.maps.Marker({map: map, position: new google.maps.LatLng(39.733536, -104.99261100000001)});
-                    infowindow = new google.maps.InfoWindow({content: "<span class='gmap'><b>Galvanize</b></span><span class='gmap'>1062 Delaware St</span><span class='gmap'> Denver</span>" });
+                    infowindow = new google.maps.InfoWindow({content: "<span class='gmap'><b><?= $auction['name']; ?></b></span><span class='gmap'><?= $auction['vanityAddress']; ?></span><span class='gmap'></span>" });
                     google.maps.event.addListener(marker, "click", function () {
                         infowindow.open(map, marker);
                     });
