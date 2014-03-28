@@ -1,24 +1,22 @@
 <?php
-if($this->context[0]) {
+if ($this->context[0] && $this->context[1]) {
     $categories = $this->context[0];
-    $items = $this->context[1];
-}
-else
-{
-    echo "No Auction Set";
+    $items      = $this->context[1];
+    $donors     = array_unique($items);
+} else {
+    echo "No Categories / Items Found";
     return;
 }
 
 ?>
 
-
 <div class="auctionItemListWidget">
 
     <!-- Filtering Side Bar -->
     <div class="sideBar">
-        <div class="sectionHeading">Auction Name Items</div>
+        <div class="sectionHeading"><?= __('Auction Items'); ?></div>
 
-        <label>Show Items:</label>
+        <label><?= __('Show Items'); ?> :</label>
         <ul>
             <li><a href="#">All Items</a></li>
             <li><a href="#">For Sale</a></li>
@@ -28,20 +26,20 @@ else
             <li><a href="#">Favorites</a></li>
         </ul>
 
-        <label>Categories:</label>
+        <label><?= __('Categories'); ?>:</label>
         <ul>
             <?php
 
-                forEach($categories as $category) {
-                    ?>
-                    <li><a href="#"><?= $category['name']; ?></a></li>
-                    <?php
-                }
+            forEach ($categories as $category) {
+                ?>
+                <li><a href="#"><?= $category['name']; ?></a></li>
+            <?php
+            }
 
             ?>
         </ul>
 
-        <label>Price Ranges:</label>
+        <label><?= __('Price Ranges'); ?>:</label>
         <ul>
             <li><a href="#">0 - 100</a></li>
             <li><a href="#">100 - 250</a></li>
@@ -54,7 +52,7 @@ else
     <div class="itemList">
 
         <div class="FilterBar">
-            <label>Filter By:</label>
+            <label><?= __('Filter By'); ?> :</label>
             <select>
                 <option value="price-range">Price Range</option>
                 <option value="price-range">1</option>
@@ -63,15 +61,25 @@ else
 
             <select>
                 <option value="price-range">Donor</option>
-                <option value="price-range">1</option>
-                <option value="price-range">2</option>
+                <?php
+                forEach ($donors as $donor) {
+                    ?>
+                    <option value="<?= $donor['_id']; ?>"><?= $donor['name']; ?></option>
+                <?php
+                }
+                ?>
             </select>
 
 
             <select>
-                <option value="price-range">Category</option>
-                <option value="price-range">1</option>
-                <option value="price-range">2</option>
+                <option value="all">Categories</option>
+                <?php
+                forEach ($categories as $category) {
+                    ?>
+                    <option value="<?= $category['_id']; ?>"><?= $category['name']; ?></option>
+                <?php
+                }
+                ?>
             </select>
 
             <select>
@@ -86,22 +94,20 @@ else
                 <option value="price-range">2</option>
             </select>
 
-            <a href="#">Clear Filters</a>
+            <a href="#"><?= __('Clear Filters'); ?></a>
         </div>
         <ul class="items">
-            <?php forEach($items as $item) {
-                ?>
-
+            <?php forEach ($items as $item) { ?>
                 <li class="item">
                     <a href="#">
                         <div class="topContainer" style="background-image:url(<?= $item['images'][0]; ?>)">
                             <div class="price">
                                 <?= $item['currentPrice']; ?>
                             </div>
-                                <span class="bidIncrement">
-                                    Bid Increment:
-                                    <span class="amount"><?= $item['bidIncrement']; ?></span>
-                                </span>
+                            <span class="bidIncrement">
+                                <?= __('Bid Incremenet'); ?> :
+                                <span class="amount"><?= $item['bidIncrement']; ?></span>
+                            </span>
                         </div>
                         <div class="description">
                             <div class="itemCode">
@@ -115,20 +121,19 @@ else
                             </div>
                         </div>
                         <div class="bottomBar">
-                                <span class="totalBids">
-                                    <?= __('Bids') . ' : ' . $item['_restMetaData']['totalBids']; ?>
-                                </span>
-                                <span class="totalFavorites">
-                                    Favorites: 20
-                                </span>
-                                <span class="totalViews">
-                                    Views: 222
-                                </span>
+                            <span class="totalBids">
+                                <?= __('Bids') . ' : ' . $item['_restMetaData']['totalBids']; ?>
+                            </span>
+                            <span class="totalFavorites">
+                                <?= __('Favorites'); ?> : 20
+                            </span>
+                            <span class="totalViews">
+                                <?= __('Views'); ?> : 222
+                            </span>
                         </div>
                     </a>
                 </li>
-                <?php
-            } ?>
+            <?php } ?>
         </ul>
     </div>
 </div>

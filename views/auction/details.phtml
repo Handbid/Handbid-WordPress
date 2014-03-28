@@ -1,18 +1,16 @@
 <?php
-if($this->context[0]) {
+if ($this->context[0]) {
     $auction = $this->context[0];
-}
-else
-{
+} else {
     echo "No Auction Set";
     return;
 }
 ?>
 
 <div class="eventsAndDetails">
-    <div class="sectionHeading">Auction & Event Details</div>
+    <div class="sectionHeading"><?= __('Auction & Event Details'); ?></div>
     <div class="socialLinks">
-        <a href="#" >Facebook</a>
+        <a href="#">Facebook</a>
         <a href="#">Twitter</a>
         <a href="#">Share</a>
     </div>
@@ -24,8 +22,8 @@ else
         </ul>
 
         <div class="actionBar">
-            <a href="#" class="register">Register</a>
-            <a href="#" class="buyTickets">Buy Tickets</a>
+            <a href="#" class="register"><?= __('Register'); ?></a>
+            <a href="#" class="buyTickets"><?= __('Buy Tickets'); ?></a>
         </div>
     </div>
 

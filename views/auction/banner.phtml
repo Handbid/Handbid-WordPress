@@ -1,12 +1,10 @@
 <?php
-    if($this->context[0]) {
-        $auction = $this->context[0];
-    }
-    else
-    {
-        echo "No Auction Set";
-        return;
-    }
+if ($this->context[0]) {
+    $auction = $this->context[0];
+} else {
+    echo "No Auction Set";
+    return;
+}
 ?>
 
 <div class="bannerContainer">
@@ -15,7 +13,7 @@
         <div class="status closed">Auction is <?= $auction['status']; ?> for Bidding</div>
     </div>
 
-    <?php if($auction['status'] != "closed") {
+    <?php if ($auction['status'] != "closed") {
         ?>
         <div class="timeRemaining">Auction closes in <?= $auction['closingTime']; ?></div>
     <?php

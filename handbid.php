@@ -7,12 +7,11 @@
  * Version: 0.0.0.62
  */
 
+// Handbid Class Autoloader
 $currentFile = __FILE__;
 $currentFolder = dirname($currentFile);
 
-
-
-// Handbid Store manual addition
+// Handbid Store manual addition / Dependency Injection
 // @TODO Make better autoloader
 require_once $currentFolder . '/lib/HandbidStore.php';
 
@@ -32,7 +31,6 @@ class Handbid {
     public $shortCodeController;
     public $viewRender;
     public $basePath;
-//    public $store;
 
     function __construct($options = null) {
         add_action( 'init', array( $this, 'init' ) );
@@ -40,44 +38,16 @@ class Handbid {
         $this->basePath = dirname(__FILE__);
         $this->viewRender = $this->createViewRenderer();
         $this->shortCodeController = $this->createShortCodeController();
-//        $this->store = $this->createStore();
 
     }
 
     function init() {
+
         // Add javascript
         add_action('wp_enqueue_scripts', array( $this, 'handbid_javascript' ) );
 
-        // Add plugin shortcodes
-        $shortCodes = [
-            'handbid_auction_results',
-            'handbid_auction_banner',
-            'handbid_auction_details',
-            'handbid_auction_contact_form',
-            'handbid_auction_list',
-            'handbid_bid_history',
-            'handbid_bid_now',
-            'handbid_item_comment',
-            'handbid_item_results',
-            'handbid_item_search_bar',
-            'handbid_ticket_buy',
-        ];
-
-        forEach($shortCodes as $shortCode) {
-            add_shortcode( $shortCode, array( $this->shortCodeController, $shortCode ) );
-        }
-
-    }
-
-    function handbid_javascript() {
-        $scripts=array('handbid-javascript'=>'/public/js/handbid.js',
-                       'socket-js'=>'public/js/socket.js');
-
-        foreach($scripts as $key=>$sc)
-        {
-            wp_register_script( $key, get_template_directory_uri() . $sc, array('javascript') );
-            wp_enqueue_script( $key );
-        }
+        // Setup ShortCodes
+        $this->setupShortCodes();
     }
 
     // Handbid Class Functions
@@ -93,6 +63,30 @@ class Handbid {
     function currentItem() {
 
     }
+
+    // Javascript
+    function handbid_javascript() {
+        $scripts=array('handbid-javascript'=>'/public/js/handbid.js',
+                       'socket-js'=>'public/js/socket.js');
+
+        foreach($scripts as $key=>$sc)
+        {
+            wp_register_script( $key, get_template_directory_uri() . $sc, array('javascript') );
+            wp_enqueue_script( $key );
+        }
+    }
+
+    // View Renderer
+    function createViewRenderer($basePath = false) {
+
+        if(!$basePath) {
+            $basePath = $this->basePath;
+        }
+
+        return new HandbidViewRenderer($basePath);
+    }
+
+    // ShortCodes
     function createShortCodeController($viewRenderer = false) {
 
         if(!$viewRenderer) {
@@ -102,14 +96,28 @@ class Handbid {
         return new ShortCodeController($viewRenderer, $this->basePath);
 
     }
+    function setupShortCodes() {
 
-    function createViewRenderer($basePath = false) {
+        // Add Plugin ShortCodes
+        $shortCodes = [
+            'handbid_auction_results',
+            'handbid_auction_banner',
+            'handbid_auction_details',
+            'handbid_auction_contact_form',
+            'handbid_auction_list',
+            'handbid_bid_winning',
+            'handbid_bid_history',
+            'handbid_bid_now',
+            'handbid_image_gallery',
+            'handbid_item_comment',
+            'handbid_item_results',
+            'handbid_item_search_bar',
+            'handbid_ticket_buy',
+        ];
 
-        if(!$basePath) {
-            $basePath = $this->basePath;
+        forEach($shortCodes as $shortCode) {
+            add_shortcode( $shortCode, array( $this->shortCodeController, $shortCode ) );
         }
-
-        return new HandbidViewRenderer($basePath);
     }
 
 }

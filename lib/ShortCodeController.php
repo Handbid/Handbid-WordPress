@@ -5,11 +5,13 @@ class ShortCodeController {
     public $viewRenderer;
     public $basePath;
     public $auction;
+    public $item;
 
     public function __construct( HandbidViewRenderer $viewRenderer, $basePath) {
         $this->viewRenderer = $viewRenderer;
         $this->basePath = $basePath;
         $this->auction = $this->check_url_for_auction();
+        $this->item = $this->check_url_for_item();
     }
 
     // Auctions
@@ -61,14 +63,14 @@ class ShortCodeController {
     }
 
     // Bids
-    public function handbid_bid_history($attributes) {
-//        item = "item-key"
-//resultsPerPage = 5
-//template = "views/bid/results.phtml"
-    }
     public function handbid_bid_now($attributes) {
-//        item = "item-key"
-//template = "views/bid/now.phtml"
+        return $this->viewRenderer->render('views/bid/now.phtml', $this->item);
+    }
+    public function handbid_bid_history($attributes) {
+        return $this->viewRenderer->render('views/bid/history.phtml', $this->item);
+    }
+    public function handbid_bid_winning($attributes) {
+        return $this->viewRenderer->render('views/bid/winning.phtml', $this->item);
     }
 
     // Items
@@ -77,8 +79,7 @@ class ShortCodeController {
 //template = "views/item/comment.phtml"
     }
     public function handbid_item_results($attributes) {
-//        auction = "auction-key"
-//template = "views/item/results.phtml"
+        return $this->viewRenderer->render('views/item/results.phtml', $this->item);
     }
     public function handbid_item_search_bar($attributes) {
 //        template = "item/search-bar.phtml"
@@ -87,6 +88,11 @@ class ShortCodeController {
     // Tickets
     public function handbid_ticket_buy($attributes) {
 //        template = "views/ticket/buy.phtml"
+    }
+
+    // Image
+    public function handbid_image_gallery($attributes) {
+        return $this->viewRenderer->render('views/auction/banner.phtml', $this->auction);
     }
 
     // Add query support
@@ -107,6 +113,24 @@ class ShortCodeController {
         }
 
         return $auction;
+    }
+    function check_url_for_item() {
+
+        $item = null;
+
+        if($_GET['item']) {
+            if($this->item) {
+                $_GET['item'] = $this->item;
+            }
+            else
+            {
+                $item= file_get_contents($this->basePath . '/dummy-data/dummy-item.json');
+                $item = json_decode($item,true);
+                $this->item = $item;
+            }
+        }
+
+        return $item;
     }
 
 }

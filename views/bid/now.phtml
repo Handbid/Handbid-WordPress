@@ -1,1 +1,22 @@
-bid/now.phtml view template
+<?php
+if ($this->context[0]) {
+    $item = $this->context[0];
+} else {
+    echo "No Item Set";
+    return;
+}
+?>
+
+<div class="biddingContainer">
+    <div class="bidDescription">
+        <span><?= __('Minimum next bid'); ?></span>
+        <span class="minBid"><?= $item['minimumBidAmount']; ?></span>
+        <a href="#"><?= __('Reset Bid'); ?></a>
+        <span><?= __('Bid increment by') . ' ' . $item['bidIncrement']; ?></span>
+    </div>
+    <div class="bidAction">
+        <a href="#">Up</a>
+        <a href="#">Down</a>
+        <a href="#"><?= __('Bid Now'); ?></a>
+    </div>
+</div>

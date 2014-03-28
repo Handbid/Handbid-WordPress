@@ -1,1 +1,61 @@
-item/results.phtml view template
+<?php
+if ($this->context[0]) {
+    $item = $this->context[0];
+} else {
+    echo "No Item Set";
+    return;
+}
+?>
+
+<div class="leftContainer">
+    <div class="photoGallery">
+        <?php forEach($item['images'] as $image) {
+            ?>
+            <img src="<?= $image; ?>"/>
+        <?php
+        }
+        ?>
+    </div>
+    <div class="ctaContainer">
+        <h3><?= $item['name']; ?></h3>
+        <div class="donorInfo">
+            <label><?= __('Donated by') . ' : '; ?></label>
+            <p><?= $item['donor'];?></p>
+        </div>
+        <div class="bidContainer">
+            <?php do_shortcode('[handbid_bid_now]'); ?>
+        </div>
+    </div>
+
+    <div class="itemInfoContainer">
+        Item Info Container
+    </div>
+</div>
+
+<div class="rightContainer">
+
+    <div class="winningBid">
+        <?php do_shortcode('[handbid_bid_winning]'); ?>
+    </div>
+
+    <div class="biddingHistory">
+        <?php do_shortcode('[handbid_bid_history]'); ?>
+    </div>
+
+    <div class="finePrint">
+        Fine Print Widget
+    </div>
+
+    <div class="socialSharing">
+        Social Sharing Widget
+    </div>
+
+    <div class="sponsors">
+        Sponsors Widget
+    </div>
+
+    <div class="liveChat">
+        live Chat Widget
+    </div>
+
+</div>
