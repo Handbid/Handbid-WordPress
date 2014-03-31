@@ -27,7 +27,7 @@ if ($this->context[0]) {
                     <div class="label"><?= __('Donated by') . ': '; ?></div>
                     <div class="donor"><?= $item['donor'];?></div>
                 </div>
-                <div class="bidContainer widgetContainer">
+                <div id="bidContainer" class="bidContainer widgetContainer">
                     <?php do_shortcode('[handbid_bid_now]'); ?>
                 </div>
             </div>

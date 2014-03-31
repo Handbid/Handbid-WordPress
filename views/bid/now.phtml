@@ -9,10 +9,14 @@ if ($this->context[0]) {
 
 <div class="biddingContainer">
     <div class="bidDescription leftContainer">
-        <div class="label"><?= __('Minimum next bid'); ?></div>
-        <div class="amount"><?= '$' . $item['minimumBidAmount']; ?></div>
+        <div class="label" id="bidLabel"><?= __('Minimum next bid'); ?></div>
+        <div class="amount">
+            $<span class="value" id="bidAmountTotal"><?= $item['minimumBidAmount']; ?></span>
+        </div>
         <button class="reset"><?= __('Reset Bid'); ?></button>
-        <div class="bidIncrement"><?= __('Bid increments by') . ' ' . $item['bidIncrement']; ?></div>
+        <div class="bidIncrement">
+            <?= __('Bid increments by') . ' $'; ?><span class="value"><?= $item['bidIncrement']; ?></span>
+        </div>
     </div>
     <div class="bidAction rightContainer">
         <div class="bidUpDown">
