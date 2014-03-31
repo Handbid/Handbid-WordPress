@@ -8,32 +8,33 @@ if ($this->context[0]) {
 ?>
 
 <div class="mainWithSideBar">
-    <div class="leftContainer">
-        <div class="photoGallery">
-            <?php forEach($item['images'] as $image) {
+    <div class="widgetContainer auctionItemContainer">
+        <div class="leftContainer">
+            <div class="photoGallery">
+                <?php forEach($item['images'] as $image) {
+                    ?>
+                    <img src="<?= $image; ?>"/>
+                <?php
+                }
                 ?>
-                <img src="<?= $image; ?>"/>
-            <?php
-            }
-            ?>
+            </div>
         </div>
-    </div>
-    <div class="rightContainer">
+        <div class="rightContainer">
 
-        <div class="ctaContainer">
-            <h3><?= $item['name']; ?></h3>
-            <div class="donated-by">
-                <div class="label"><?= __('Donated by') . ': '; ?></div>
-                <div class="donor"><?= $item['donor'];?></div>
-            </div>
-            <div class="bidContainer">
-                <?php do_shortcode('[handbid_bid_now]'); ?>
+            <div class="ctaContainer">
+                <h3><?= $item['name']; ?></h3>
+                <div class="donated-by">
+                    <div class="label"><?= __('Donated by') . ': '; ?></div>
+                    <div class="donor"><?= $item['donor'];?></div>
+                </div>
+                <div class="bidContainer widgetContainer">
+                    <?php do_shortcode('[handbid_bid_now]'); ?>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="itemInfoContainer">
-        <?php do_shortcode('[handbid_item_info]'); ?>
-        Item Info Container
+        <div class="itemInfoContainer">
+           <?= $item['description']; ?>
+        </div>
     </div>
 </div>
 
@@ -47,19 +48,23 @@ if ($this->context[0]) {
         <?php do_shortcode('[handbid_bid_history]'); ?>
     </div>
 
-    <div class="finePrint">
-        Fine Print Widget
+
+    <div class="widget finePrint widgetContainer">
+        <h3>Fine Print</h3>
+        <div class="content">Fine Print Widget</div>
     </div>
 
-    <div class="socialSharing">
-        Social Sharing Widget
+    <div class="widget socialSharing widgetContainer">
+        <h3>Social</h3>
+        <div class="content">Social Sharing Widget</div>
     </div>
 
-    <div class="sponsors">
-        Sponsors Widget
+    <div class="widget sponsors widgetContainer">
+        <h3>Sponsors</h3>
+        <div class="content">Sponsors Widget</div>
     </div>
 
-    <div class="liveChat">
+    <div class="widget liveChat widgetContainer">
         live Chat Widget
     </div>
 

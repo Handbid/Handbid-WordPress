@@ -1,1 +1,19 @@
-winning bid
+<?php
+
+if ($this->context[0]) {
+    $item = $this->context[0];
+} else {
+    echo "No Item Set";
+    return;
+}
+?>
+
+<div class="widget widget-winningbidder widgetContainer">
+    <div class="header"><?= __('Winning bid'); ?></div>
+    <div class="amount"><?= '$' . $item['highestBid']['amount']; ?></div>
+    <div class="alias"><?= __('By' . ' ' . $item['highestBid']['_restMetaData']['bidderName'] . ' ( ' . $item['highestBid']['_restMetaData']['bidderPin'] . ' )'); ?></div>
+    <div class="original-value">
+        <div class="original-text"><?= __('Original Value'); ?></div>
+        <div class="original-amount"><?= '$' . $item['startingPrice']; ?></div>
+    </div>
+</div>

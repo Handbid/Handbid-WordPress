@@ -1,1 +1,26 @@
-bidding history
+<?php
+if ($this->context[0]) {
+    $item = $this->context[0];
+} else {
+    echo "No Item Set";
+    return;
+}
+?>
+
+<div class="widget widget-bidhistory widgetContainer">
+    <div>
+        <h3><?= __('Bid History'); ?></h3>
+    </div>
+    <div class="bid-history-list">
+        <div class="bid-history-item">
+            <div class="left">
+                <div class="image"><img src="/local/uploads/image-cache/f3069e643b/f3069e643b889347c416eef088f15201-40x40.png"></div>
+            </div>
+            <div class="right">
+                <div class="text">
+                    <div class="alias">Jeffrey Porter (4449)</div>
+                    <div class="amount">$55</div>
+                </div>
+            </div>
+        </div>
+    </div></div>
