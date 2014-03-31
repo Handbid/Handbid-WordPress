@@ -66,13 +66,14 @@ class Handbid {
 
     // Javascript
     function handbid_javascript() {
-        $scripts=array('handbid-javascript'=>'/public/js/handbid.js',
-                       'socket-js'=>'public/js/socket.js');
+
+        $scripts = array('handbid' => '/public/js/handbid.js',
+                         'socket'  =>' public/js/socket.js');
 
         foreach($scripts as $key=>$sc)
         {
-            wp_register_script( $key, get_template_directory_uri() . $sc, array('javascript') );
-            wp_enqueue_script( $key );
+            wp_register_script($key, plugins_url($sc, __FILE__));
+            wp_enqueue_script($key);
         }
     }
 
