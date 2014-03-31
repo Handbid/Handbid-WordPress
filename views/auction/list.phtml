@@ -13,8 +13,8 @@ if ($this->context[0] && $this->context[1]) {
 <div class="auctionItemListWidget">
 
     <!-- Filtering Side Bar -->
-    <div class="sideBar">
-        <div class="sectionHeading"><?= __('Auction Items'); ?></div>
+    <div class="sideBar widgetContainer">
+        <h3><?= __('Auction Items'); ?></h3>
 
         <label><?= __('Show Items'); ?> :</label>
         <ul>
@@ -96,43 +96,30 @@ if ($this->context[0] && $this->context[1]) {
 
             <a href="#"><?= __('Clear Filters'); ?></a>
         </div>
-        <ul class="items">
+        <ul id="container" class="items">
             <?php forEach ($items as $item) { ?>
-                <li class="item">
-                    <a href="#">
-                        <div class="topContainer" style="background-image:url(<?= $item['images'][0]; ?>)">
-                            <div class="price">
-                                <?= $item['currentPrice']; ?>
+                <li class="item item-tile">
+                    <a href="/auction-item/?item=<?= $item['_id']; ?>">
+                        <div class="item-content-inner">
+                            <div class="image" style="background-image: url(<?= $item['images'][0]; ?>);">
+                                <div class="block currentPrice">
+                                    <span><?= __('Current bid'); ?></span><?= '$' . $item['currentPrice']; ?></div>
+                                <div class="block itemCode"><?= __('Item Code') . ' : ' . $item['itemCode']; ?></div>
                             </div>
-                            <span class="bidIncrement">
-                                <?= __('Bid Incremenet'); ?> :
-                                <span class="amount"><?= $item['bidIncrement']; ?></span>
-                            </span>
-                        </div>
-                        <div class="description">
-                            <div class="itemCode">
-                                <?= __('Item Code') . ' : ' . $item['itemCode']; ?>
+                            <div class="details">
+                                <h2><?= $item['name']; ?></h2>
+                                <div class="bidIncrement"><?= __('Bid Increment') . ': $' . $item['bidIncrement']; ?></div>
+                                <div class="category">Category: Sports</div>
                             </div>
-                            <div class="itemName">
-                                <?= $item['name']; ?>
-                            </div>
-                            <div class="itemCategory">
-                                <?= $item['currentPrice']; ?>
-                            </div>
-                        </div>
-                        <div class="bottomBar">
-                            <span class="totalBids">
-                                <?= __('Bids') . ' : ' . $item['_restMetaData']['totalBids']; ?>
-                            </span>
-                            <span class="totalFavorites">
-                                <?= __('Favorites'); ?> : 20
-                            </span>
-                            <span class="totalViews">
-                                <?= __('Views'); ?> : 222
-                            </span>
                         </div>
                     </a>
+                    <div class="footer">
+                        <div class="stat bidCount"><div class="icon"></div><?= __('Bids') . ' : ' . $item['_restMetaData']['totalBids']; ?></div>
+                        <div class="stat favCount"><div class="icon"></div><?= __('Favorites'); ?> 20</div>
+                        <div class="stat viewCount"><div class="icon"></div><?= __('Views'); ?> 200</div>
+                    </div>
                 </li>
+
             <?php } ?>
         </ul>
     </div>

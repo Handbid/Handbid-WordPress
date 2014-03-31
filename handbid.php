@@ -4,7 +4,7 @@
  * Author: Jon Hemstreet
  * Author URI: http://www.jonhemstreet.com
  * Description: Handbid is fully automated mobile silent auction software specifically designed to increase revenue, drive bid activity, and maximize ROI for non-profits. Eliminating the need for paper bid sheets, Handbid empowers users to bid using a mobile device, the web, or a tablet (kiosk) at the event. Bidders can enter bids remotely or locally, manage their bids with proxy bidding, and instantly view status of all bids.
- * Version: 0.0.0.62
+ * Version: 0.0.0.63
  */
 
 // Handbid Class Autoloader

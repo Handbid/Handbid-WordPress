@@ -58,7 +58,7 @@ class ShortCodeController {
         $json[] = json_decode($categories,true);
         $json[] = json_decode($items,true);
 
-        return $this->viewRenderer->render('views/auction/auction-list.phtml', $json);
+        return $this->viewRenderer->render('views/auction/list.phtml', $json);
 
     }
 
