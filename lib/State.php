@@ -4,6 +4,11 @@ class State {
 
     public $auction;
     public $item;
+    public $basePath;
+
+    public function __construct( $basePath ) {
+        $this->basePath = $basePath;
+    }
 
     function currentAuction() {
         if(!$this->auction) {

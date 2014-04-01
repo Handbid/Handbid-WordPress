@@ -56,7 +56,7 @@ class Handbid {
     function state() {
 
         if(!$this->state) {
-            $this->state = new state();
+            $this->state = new state($this->basePath);
         }
 
         return $this->state;
