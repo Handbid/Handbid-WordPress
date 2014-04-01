@@ -11,10 +11,6 @@
 $currentFile = __FILE__;
 $currentFolder = dirname($currentFile);
 
-// Handbid Store manual addition / Dependency Injection
-// @TODO Make better autoloader
-require_once $currentFolder . '/lib/HandbidStore.php';
-
 // Loop through lib directory autoloading files and require_once them
 if ($handle = opendir($currentFolder . '/lib')) {
     while (false !== ($entry = readdir($handle))) {
@@ -31,12 +27,14 @@ class Handbid {
     public $shortCodeController;
     public $viewRender;
     public $basePath;
+    public $state;
 
     function __construct($options = null) {
         add_action( 'init', array( $this, 'init' ) );
 
         $this->basePath = dirname(__FILE__);
         $this->viewRender = $this->createViewRenderer();
+        $this->state = $this->state();
         $this->shortCodeController = $this->createShortCodeController();
 
     }
@@ -51,17 +49,17 @@ class Handbid {
     }
 
     // Handbid Class Functions
-    function createStore($type = "bidder") {
-
-    }
     function createActionController() {
 
     }
-    function currentAuction() {
 
-    }
-    function currentItem() {
+    function state() {
 
+        if(!$this->state) {
+            $this->state = new state();
+        }
+
+        return $this->state;
     }
 
     // Javascript
@@ -88,13 +86,17 @@ class Handbid {
     }
 
     // ShortCodes
-    function createShortCodeController($viewRenderer = false) {
+    function createShortCodeController($viewRenderer = false, $state = false) {
 
         if(!$viewRenderer) {
             $viewRenderer = $this->viewRender;
         }
 
-        return new ShortCodeController($viewRenderer, $this->basePath);
+        if(!$state) {
+            $state = $this->state;
+        }
+
+        return new ShortCodeController($viewRenderer, $this->basePath, $state);
 
     }
     function setupShortCodes() {

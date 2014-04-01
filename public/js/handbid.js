@@ -2,10 +2,15 @@ var $j = jQuery.noConflict();
 
 $j(function() {
 
+    // Block of code written to get selectors
+    // @TODO this should be put somewhere better
     var bidAmountDom = document.getElementById("bidAmountTotal");
-    var basePrice = bidAmountDom.innerHTML;
+    if(bidAmountDom) {
+        var basePrice = bidAmountDom.innerHTML;
+    }
 
     var bidLabel = document.getElementById("bidLabel");
+    var proxyBid = document.getElementById('proxyBid');
 
     var bidAmount = parseInt($j(".bidDescription .amount .value").text());
     var bidIncrement = parseInt($j(".bidDescription .bidIncrement .value").text());
@@ -20,11 +25,12 @@ $j(function() {
 
             if(bidAmount == basePrice) {
                 bidLabel.innerHTML = "Minimum next bid";
+                proxyBid.classList.remove('show');
             }
         }
         else
         {
-            alert('You can not bid lower than the minimum bid')
+            alert('You can not bid lower than the minimum bid');
         }
 
     });
@@ -34,6 +40,7 @@ $j(function() {
         bidAmount += bidIncrement;
         bidAmountDom.innerHTML = bidAmount;
         bidLabel.innerHTML = "$" + (bidAmount - basePrice) + " above minimum bid";
+        proxyBid.classList.add('show');
 
     });
 
@@ -48,6 +55,7 @@ $j(function() {
         bidAmount = parseInt(basePrice);
         bidAmountDom.innerHTML = basePrice;
         bidLabel.innerHTML = "Minimum next bid";
+        proxyBid.classList.remove('show');
     });
 
     function onItemUpdate() {
