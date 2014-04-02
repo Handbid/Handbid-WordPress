@@ -10,12 +10,13 @@
 // Handbid Class Autoloader
 $currentFile = __FILE__;
 $currentFolder = dirname($currentFile);
+$libFolder = $currentFolder . '/lib';
 
 // Loop through lib directory autoloading files and require_once them
-if ($handle = opendir($currentFolder . '/lib')) {
+if ($handle = opendir($libFolder)) {
     while (false !== ($entry = readdir($handle))) {
         if($entry!="." && $entry!= ".."){
-            require_once $currentFolder . '/lib/' . $entry;
+            require_once $libFolder . '/' . $entry;
         }
     }
 
@@ -32,23 +33,23 @@ class Handbid {
     function __construct($options = null) {
         add_action( 'init', array( $this, 'init' ) );
 
-        $this->basePath = dirname(__FILE__);
-        $this->viewRender = $this->createViewRenderer();
-        $this->state = $this->state();
-        $this->shortCodeController = $this->createShortCodeController();
+        // Dependency Injection
+        $this->basePath            = ($options['basePath']) ? $options['basePath'] : dirname(__FILE__);
+        $this->viewRender          = ($options['viewRender']) ? $options['viewRender'] : $this->createViewRenderer();
+        $this->state               = ($options['state']) ? $options['state'] : $this->state();
+        $this->shortCodeController = ($options['createShortCodeController']) ? $options['state'] : $this->createShortCodeController();
 
     }
 
     function init() {
 
         // Add javascript
-        add_action('wp_enqueue_scripts', array( $this, 'handbid_javascript' ) );
+        add_action('wp_enqueue_scripts', array( $this, 'setupJavascript' ) );
 
         // Setup ShortCodes
         $this->setupShortCodes();
     }
 
-    // Handbid Class Functions
     function createActionController() {
 
     }
@@ -63,7 +64,7 @@ class Handbid {
     }
 
     // Javascript
-    function handbid_javascript() {
+    function setupJavascript() {
 
         $scripts = array('handbid' => '/public/js/handbid.js',
                          'socket'  =>' public/js/socket.js');

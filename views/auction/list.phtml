@@ -18,12 +18,12 @@ if ($this->context[0] && $this->context[1]) {
 
         <label><?= __('Show Items'); ?> :</label>
         <ul>
-            <li><a href="#">All Items</a></li>
-            <li><a href="#">For Sale</a></li>
-            <li><a href="#">Live</a></li>
-            <li><a href="#">Extended</a></li>
-            <li><a href="#">No Bids</a></li>
-            <li><a href="#">Favorites</a></li>
+            <li><input type="radio" name="items" value="all">All Items</li>
+            <li><input type="radio" name="items" value="forSale">For Sale</li>
+            <li><input type="radio" name="items" value="live">Live</li>
+            <li><input type="radio" name="items" value="extended">Extended</li>
+            <li><input type="radio" name="items" value="noBids">No Bids</li>
+            <li><input type="radio" name="items" value="favorites">Favorites</li>
         </ul>
 
         <label><?= __('Categories'); ?>:</label>
@@ -32,7 +32,7 @@ if ($this->context[0] && $this->context[1]) {
 
             forEach ($categories as $category) {
                 ?>
-                <li><a href="#"><?= $category['name']; ?></a></li>
+                <li><input type="radio" name="category" value="<?= $category['name']; ?>"><?= $category['name']; ?></li>
             <?php
             }
 
@@ -41,10 +41,10 @@ if ($this->context[0] && $this->context[1]) {
 
         <label><?= __('Price Ranges'); ?>:</label>
         <ul>
-            <li><a href="#">0 - 100</a></li>
-            <li><a href="#">100 - 250</a></li>
-            <li><a href="#">250 - 500</a></li>
-            <li><a href="#">> 500</a></li>
+            <li><input type="radio" name="priceRange" value="0to100">0 - 100</li>
+            <li><input type="radio" name="priceRange" value="100to250">100 - 250</li>
+            <li><input type="radio" name="priceRange" value="250to500">250 - 500</li>
+            <li><input type="radio" name="priceRange" value="500+">500+</li>
         </ul>
     </div>
 
@@ -114,9 +114,9 @@ if ($this->context[0] && $this->context[1]) {
                         </div>
                     </a>
                     <div class="footer">
-                        <div class="stat bidCount"><div class="icon"></div><?= __('Bids') . ' : ' . $item['_restMetaData']['totalBids']; ?></div>
-                        <div class="stat favCount"><div class="icon"></div><?= __('Favorites'); ?> 20</div>
-                        <div class="stat viewCount"><div class="icon"></div><?= __('Views'); ?> 200</div>
+                        <div class="stat bidCount"><div class="icon"></div><?= $item['_restMetaData']['totalBids']; ?></div>
+                        <div class="stat favCount"><div class="icon"></div>20</div>
+                        <div class="stat viewCount"><div class="icon"></div>200</div>
                     </div>
                 </li>
 

@@ -5,6 +5,9 @@ if ($this->context[0]) {
     echo "No Auction Set";
     return;
 }
+
+$dateFormat = 'm/d/Y h:i a';
+
 ?>
 
 <div class="eventsAndDetails">
@@ -16,7 +19,8 @@ if ($this->context[0]) {
     </div>
     <div class="detailsWrapper">
         <ul class="eventDetails">
-            <li><label>Event Dates: </label><?= $auction['startTime']; ?> - <?= $auction['endTime']; ?></li>
+
+            <li><label>Event Dates: </label><?= date($dateFormat,$auction['startTime']); ?> - <?= date($dateFormat,$auction['endTime']); ?></li>
             <li><label>Event Location: </label><?= $auction['vanityAddress']; ?></li>
             <li><label>Event Address: </label><?= $auction['location']; ?></li>
         </ul>

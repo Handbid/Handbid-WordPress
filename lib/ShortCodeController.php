@@ -73,7 +73,7 @@ class ShortCodeController {
         return $this->viewRenderer->render('views/bid/history.phtml', $this->state->currentItem());
     }
     public function handbid_bid_winning($attributes) {
-        return $this->viewRenderer->render('views/bid/winning.phtml', $$this->state->currentItem());
+        return $this->viewRenderer->render('views/bid/winning.phtml', $this->state->currentItem());
     }
 
     // Items
@@ -90,7 +90,7 @@ class ShortCodeController {
 
     // Tickets
     public function handbid_ticket_buy($attributes) {
-//        template = "views/ticket/buy.phtml"
+        return $this->viewRenderer->render('views/ticket/buy.phtml', $this->state->currentAuction());
     }
 
     // Image
