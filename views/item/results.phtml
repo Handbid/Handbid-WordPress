@@ -33,7 +33,13 @@ if ($this->context[0]) {
             </div>
         </div>
         <div class="itemInfoContainer">
-           <?= $item['description']; ?>
+
+            <!-- @TODO Remove tabby plugin dependency -->
+            <?php echo do_shortcode('[tabby title="Description"]'); ?><?= $item['description']; ?>
+            <?php echo do_shortcode('[tabby title="Comments"]'); ?><?php comments_template(); ?>
+
+            <?php echo do_shortcode('[tabbyending]'); ?>
+
         </div>
     </div>
 </div>

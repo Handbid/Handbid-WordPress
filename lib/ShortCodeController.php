@@ -85,7 +85,7 @@ class ShortCodeController {
         return $this->viewRenderer->render('views/item/results.phtml', $this->state->currentItem());
     }
     public function handbid_item_search_bar($attributes) {
-//        template = "item/search-bar.phtml"
+        return $this->viewRenderer->render('views/item/search-bar.phtml');
     }
 
     // Tickets
