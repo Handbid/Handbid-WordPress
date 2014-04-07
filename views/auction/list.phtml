@@ -3,6 +3,15 @@ if ($this->context[0] && $this->context[1]) {
     $categories = $this->context[0];
     $items      = $this->context[1];
     $donors     = array_unique($items);
+
+    $priceRanges = [
+        '_all' => 'All',
+        '_0'   => '0 - 100',
+        '_1'   => '101 - 250',
+        '_2'   => '251 - 500',
+        '_5'   => '501+'
+    ];
+
 } else {
     echo "No Categories / Items Found";
     return;
@@ -13,7 +22,7 @@ if ($this->context[0] && $this->context[1]) {
 <div class="auctionItemListWidget">
 
     <!-- Filtering Side Bar -->
-    <div class="sideBar widgetContainer">
+    <div class="sideBar widgetContainer filterBar">
         <h3><?= __('Auction Items'); ?></h3>
 
         <label><?= __('Show Items'); ?> :</label>
@@ -27,12 +36,13 @@ if ($this->context[0] && $this->context[1]) {
         </ul>
 
         <label><?= __('Categories'); ?>:</label>
-        <ul>
+        <ul class="categorySort">
+            <li><input class="input all" type="radio" name="category" value="all"><?= __('All'); ?></li>
             <?php
 
             forEach ($categories as $category) {
                 ?>
-                <li><input type="radio" name="category" value="<?= $category['name']; ?>"><?= $category['name']; ?></li>
+                <li><input class="input" type="radio" name="category" value="<?= sanitize_html_class($category['name']); ?>"><?= __($category['name']); ?></li>
             <?php
             }
 
@@ -40,18 +50,21 @@ if ($this->context[0] && $this->context[1]) {
         </ul>
 
         <label><?= __('Price Ranges'); ?>:</label>
-        <ul>
-            <li><input type="radio" name="priceRange" value="0to100">0 - 100</li>
-            <li><input type="radio" name="priceRange" value="100to250">100 - 250</li>
-            <li><input type="radio" name="priceRange" value="250to500">250 - 500</li>
-            <li><input type="radio" name="priceRange" value="500+">500+</li>
+        <ul class="priceSort">
+            <?php
+            forEach($priceRanges as $k => $v ) {
+                ?>
+                <li><input type="radio" name="priceRange" value="<?= $k; ?>"><?= $v; ?></li>
+            <?php
+            }
+            ?>
         </ul>
     </div>
 
     <!-- Item List -->
     <div class="itemList">
 
-        <div class="FilterBar">
+        <div class="filterBar">
             <label><?= __('Filter By'); ?> :</label>
             <select>
                 <option value="price-range">Price Range</option>
@@ -96,14 +109,32 @@ if ($this->context[0] && $this->context[1]) {
 
             <a href="#"><?= __('Clear Filters'); ?></a>
         </div>
-        <ul id="container" class="items">
-            <?php forEach ($items as $item) { ?>
-                <li class="item item-tile">
+        <ul id="container" class="items js-isotope" data-isotope-options='{ "itemSelector": ".item", "masonry": { "columnWidth": 200 } }'>
+            <?php forEach ($items as $item) {
+
+                // By default no filtering is done
+                $priceClass = '_all';
+
+                if($item['currentPrice'] >= 0 && $item['currentPrice'] <= 100 ) {
+                    $priceClass = '_0';
+                }
+                else if($item['currentPrice'] >= 101 && $item['currentPrice'] < 250) {
+                    $priceClass = '_1';
+                }
+                else if($item['currentPrice'] >= 251 && $item['currentPrice'] < 500) {
+                    $priceClass = '_2';
+                }
+                else if($item['currentPrice'] >= 501) {
+                    $priceClass = '_5';
+                }
+
+                ?>
+                <li class="item item-tile <?= sanitize_html_class($item['_restMetaData']['categoryName']) . ' ' . $priceClass; ?>">
                     <a href="/auction-item/?item=<?= $item['_id']; ?>">
                         <div class="item-content-inner">
                             <div class="image" style="background-image: url(<?= $item['images'][0]; ?>);">
                                 <div class="block currentPrice">
-                                    <span><?= __('Current bid'); ?></span><?= '$' . $item['currentPrice']; ?></div>
+                                    <span><?= __('Current bid'); ?></span><span class="price"><?= '$' . $item['currentPrice']; ?></span></div>
                                 <div class="block itemCode"><?= __('Item Code') . ' : ' . $item['itemCode']; ?></div>
                             </div>
                             <div class="details">

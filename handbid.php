@@ -66,9 +66,11 @@ class Handbid {
     // Javascript
     function setupJavascript() {
 
-        $scripts = array('handbid' => '/public/js/handbid.js',
-                         'socket'  =>' public/js/socket.js',
-                         'bidNow'  =>' public/js/bidNow.js');
+        $scripts = array('handbid'     => 'public/js/handbid.js',
+                         'socket'      =>' public/js/socket.js',
+                         'isotope'     =>' public/js/isotope.pkgd.min.js',
+                         'auctionList' =>' public/js/auctionList.js',
+                         'bidNow'      =>' public/js/bidNow.js');
 
         foreach($scripts as $key=>$sc)
         {
