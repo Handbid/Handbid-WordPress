@@ -39,7 +39,25 @@ class ShortCodeController {
     }
     public function handbid_auction_banner($attributes) {
 
-        return $this->viewRenderer->render('views/auction/banner.phtml', $this->state->currentAuction());
+        $auction = $this->state->currentAuction();
+
+        $url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' . urlencode($auction[0]['vanityAddress']) . '&sensor=true';
+
+        $geolocation = json_decode(file_get_contents($url));
+
+        $location = $geolocation->results[0]->geometry->location;
+
+        $coords = [
+            $location->lat,
+            $location->lng
+        ];
+
+        $attributes = [
+            $this->state->currentAuction(),
+            $coords
+        ];
+
+        return $this->viewRenderer->render('views/auction/banner.phtml', $attributes);
 
     }
     public function handbid_auction_details($attributes) {

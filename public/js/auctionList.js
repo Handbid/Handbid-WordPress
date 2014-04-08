@@ -9,14 +9,12 @@ $j(function() {
         // options...
         itemSelector: '.item',
         masonry:      {
-            columnWidth: 200,
-            columnHeight: 200
+            columnWidth: 300,
+            rowHeight: 355
         }
     });
 
-
     function filterClass() {
-
 
         var filterClass = '';
 
@@ -30,13 +28,11 @@ $j(function() {
 
         return filterClass;
 
-
     }
 
     // Filter Auction Items
     $j('.categorySort input[type=radio], .priceSort input[type=radio]').on('click', function() {
 
-        alert(filterClass());
         $container.isotope({ filter: filterClass()});
 
     });

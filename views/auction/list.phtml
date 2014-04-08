@@ -66,11 +66,6 @@ if ($this->context[0] && $this->context[1]) {
 
         <div class="filterBar">
             <label><?= __('Filter By'); ?> :</label>
-            <select>
-                <option value="price-range">Price Range</option>
-                <option value="price-range">1</option>
-                <option value="price-range">2</option>
-            </select>
 
             <select>
                 <option value="price-range">Donor</option>
@@ -83,33 +78,15 @@ if ($this->context[0] && $this->context[1]) {
                 ?>
             </select>
 
-
-            <select>
-                <option value="all">Categories</option>
-                <?php
-                forEach ($categories as $category) {
-                    ?>
-                    <option value="<?= $category['_id']; ?>"><?= $category['name']; ?></option>
-                <?php
-                }
-                ?>
-            </select>
-
             <select>
                 <option value="price-range">Bids</option>
                 <option value="price-range">1</option>
                 <option value="price-range">2</option>
             </select>
 
-            <select>
-                <option value="price-range">Type</option>
-                <option value="price-range">1</option>
-                <option value="price-range">2</option>
-            </select>
-
             <a href="#"><?= __('Clear Filters'); ?></a>
         </div>
-        <ul id="container" class="items js-isotope" data-isotope-options='{ "itemSelector": ".item", "masonry": { "columnWidth": 200 } }'>
+        <ul id="container" class="items js-isotope">
             <?php forEach ($items as $item) {
 
                 // By default no filtering is done
@@ -129,7 +106,7 @@ if ($this->context[0] && $this->context[1]) {
                 }
 
                 ?>
-                <li class="item item-tile <?= sanitize_html_class($item['_restMetaData']['categoryName']) . ' ' . $priceClass; ?>">
+                <li class="item item-tile <?= sanitize_html_class($item['_restMetaData']['categoryName']) . ' ' . $priceClass; ?> all _all">
                     <a href="/auction-item/?item=<?= $item['_id']; ?>">
                         <div class="item-content-inner">
                             <div class="image" style="background-image: url(<?= $item['images'][0]; ?>);">

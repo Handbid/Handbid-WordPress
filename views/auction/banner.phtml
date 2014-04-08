@@ -1,6 +1,8 @@
 <?php
 if ($this->context[0]) {
-    $auction = $this->context[0];
+    $auction = $this->context[0][0];
+    $coords = $this->context[1];
+
 } else {
     echo "No Auction Set";
     return;
@@ -40,17 +42,16 @@ if ($this->context[0]) {
                         font-weight: 500;
                     }
                 </style>
-                <a href="http://www.hostbit.de" class="map-data">http://www.hostbit.de</a>
             </div>
             <script type="text/javascript">function init_map() {
                     var myOptions = {
                         zoom:             17,
-                        center:           new google.maps.LatLng(39.733536, -104.99261100000001),
+                        center:           new google.maps.LatLng(<?= $coords[0]; ?>, <?= $coords[1]; ?>),
                         mapTypeId:        google.maps.MapTypeId.ROADMAP,
                         disableDefaultUI: true
                     };
                     map = new google.maps.Map(document.getElementById("gmap_canvas"), myOptions);
-                    marker = new google.maps.Marker({map: map, position: new google.maps.LatLng(39.733536, -104.99261100000001)});
+                    marker = new google.maps.Marker({map: map, position: new google.maps.LatLng(<?= $coords[0]; ?>, <?= $coords[1]; ?>)});
                     infowindow = new google.maps.InfoWindow({content: "<span class='gmap'><b><?= $auction['name']; ?></b></span><span class='gmap'><?= $auction['vanityAddress']; ?></span><span class='gmap'></span>" });
                     google.maps.event.addListener(marker, "click", function () {
                         infowindow.open(map, marker);
