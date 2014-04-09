@@ -13,9 +13,11 @@ $dateFormat = 'm/d/Y h:i a';
 <div class="eventsAndDetails">
     <div class="sectionHeading"><?= __('Auction & Event Details'); ?></div>
     <div class="socialLinks">
-        <a href="#" class="facebook">Facebook</a>
-        <a href="#" class="twitter">Twitter</a>
-        <a href="#" class="share">Share</a>
+        <a class="facebook" href="https://www.facebook.com/sharer/sharer.php?u=<?php htmlspecialchars(the_permalink(), ENT_QUOTES); ?>" title="Share on Facebook." target="_blank">Facebook</a>
+        <a class="twitter" href="http://twitter.com/home/?status=<?= urlencode($auction['name']); ?> - <?php the_permalink(); ?>" title="Tweet this!" target="_blank">Twitter</a>
+
+        <a class="gplus" href="https://plus.google.com/share?url=<?php the_permalink(); ?>" onclick="javascript:window.open(this.href,
+  '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">Google+</a>
     </div>
     <div class="detailsWrapper">
         <ul class="eventDetails">
@@ -36,3 +38,4 @@ $dateFormat = 'm/d/Y h:i a';
     </div>
 
 </div>
+

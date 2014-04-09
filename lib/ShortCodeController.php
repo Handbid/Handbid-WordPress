@@ -113,7 +113,7 @@ class ShortCodeController {
 
     // Image
     public function handbid_image_gallery($attributes) {
-        return $this->viewRenderer->render('views/auction/banner.phtml', $this->state->currentAuction());
+        return $this->viewRenderer->render('views/image/photo-gallery.phtml', $this->state->currentItem());
     }
 
 }

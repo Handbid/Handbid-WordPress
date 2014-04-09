@@ -1,0 +1,24 @@
+<?php
+if ($this->context[0]) {
+    $item = $this->context[0];
+} else {
+    echo "Context not found";
+    return;
+}
+
+?>
+
+
+<div class="banner">
+    <a href="#" class="unslider-arrow prev">Previous slide</a>
+    <a href="#" class="unslider-arrow next">Next slide</a>
+    <ul>
+        <?php
+            forEach($item['images'] as $imageUrl) {
+                ?>
+                <li><img src="<?= $imageUrl; ?>"/></li>
+                <?php
+            }
+        ?>
+    </ul>
+</div>

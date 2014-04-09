@@ -69,6 +69,10 @@ class Handbid {
         $scripts = array('handbid'     => 'public/js/handbid.js',
                          'socket'      =>' public/js/socket.js',
                          'isotope'     =>' public/js/isotope.pkgd.min.js',
+                         'modal'       =>' public/js/jquery.modal.min.js',
+                         'unslider'    =>' public/js/unslider.min.js',
+                         'contactForm' =>' public/js/contactForm.js',
+                         'photoGallery'=>' public/js/photoGallery.js',
                          'auctionList' =>' public/js/auctionList.js',
                          'bidNow'      =>' public/js/bidNow.js');
 
