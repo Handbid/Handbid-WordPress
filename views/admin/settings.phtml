@@ -1,0 +1,21 @@
+<div class="wrap">
+    <h2>Handbid</h2>
+    <form method="post" action="options.php">
+        <?php settings_fields( 'application' ); ?>
+        <?php do_settings_sections( 'application' ); ?>
+        <table class="form-table">
+            <tr valign="top">
+                <th scope="row"><?= ('Application Id'); ?></th>
+                <td><input type="text" name="appId" value="<?php echo get_option('appId'); ?>" /></td>
+            </tr>
+
+            <tr valign="top">
+                <th scope="row"><?= ('API Key'); ?></th>
+                <td><input type="text" name="apiKey" value="<?php echo get_option('apiKey'); ?>" /></td>
+            </tr>
+        </table>
+
+        <?php submit_button(); ?>
+
+    </form>
+</div>

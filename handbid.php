@@ -3,8 +3,12 @@
  * Plugin Name: Handbid
  * Author: Jon Hemstreet
  * Author URI: http://www.jonhemstreet.com
- * Description: Handbid is fully automated mobile silent auction software specifically designed to increase revenue, drive bid activity, and maximize ROI for non-profits. Eliminating the need for paper bid sheets, Handbid empowers users to bid using a mobile device, the web, or a tablet (kiosk) at the event. Bidders can enter bids remotely or locally, manage their bids with proxy bidding, and instantly view status of all bids.
- * Version: 0.0.0.63
+ * Version: 0.0.0.64
+ * Description: Handbid is fully automated mobile silent auction software specifically designed to increase revenue,
+ * drive bid activity, and maximize ROI for non-profits. Eliminating the need for paper bid sheets, Handbid empowers
+ * users to bid using a mobile device, the web, or a tablet (kiosk) at the event. Bidders can enter bids remotely or
+ * locally, manage their bids with proxy bidding, and instantly view status of all bids.
+ *
  */
 
 // Handbid Class Autoloader
@@ -29,6 +33,7 @@ class Handbid {
     public $viewRender;
     public $basePath;
     public $state;
+    public $actionController;
 
     function __construct($options = null) {
         add_action( 'init', array( $this, 'init' ) );
@@ -37,8 +42,8 @@ class Handbid {
         $this->basePath            = ($options['basePath']) ? $options['basePath'] : dirname(__FILE__);
         $this->viewRender          = ($options['viewRender']) ? $options['viewRender'] : $this->createViewRenderer();
         $this->state               = ($options['state']) ? $options['state'] : $this->state();
-        $this->shortCodeController = ($options['createShortCodeController']) ? $options['state'] : $this->createShortCodeController();
-
+        $this->shortCodeController = ($options['createShortCodeController']) ? $options['createShortCodeController'] : $this->createShortCodeController();
+        $this->actionController    = ($options['actionController']) ? $options['actionController'] : $this->createActionController();
     }
 
     function init() {
@@ -48,19 +53,10 @@ class Handbid {
 
         // Setup ShortCodes
         $this->setupShortCodes();
-    }
 
-    function createActionController() {
+        add_action( 'admin_init', array( $this, 'registerPluginSettings' ) );
+        add_action( 'admin_menu', array( $this, 'setupAdminArea' ) );
 
-    }
-
-    function state() {
-
-        if(!$this->state) {
-            $this->state = new state($this->basePath);
-        }
-
-        return $this->state;
     }
 
     // Javascript
@@ -81,6 +77,25 @@ class Handbid {
             wp_register_script($key, plugins_url($sc, __FILE__));
             wp_enqueue_script($key);
         }
+    }
+
+    // State
+    function state() {
+
+        if(!$this->state) {
+            $this->state = new state($this->basePath);
+        }
+
+        return $this->state;
+    }
+
+    // Controllers
+    function createActionController($viewRenderer = false) {
+        if(!$viewRenderer) {
+            $viewRenderer = $this->viewRender;
+        }
+
+        return new HandbidActionController($viewRenderer);
     }
 
     // View Renderer
@@ -131,6 +146,14 @@ class Handbid {
         }
     }
 
+    // Admin
+    function registerPluginSettings() {
+        register_setting( 'application', 'appId');  // get_option('appId');
+        register_setting( 'application', 'apiKey'); // get_option('apiKey');
+    }
+    function setupAdminArea() {
+        add_menu_page('Handbid', 'Handbid', 0, 'handbid-admin-dashboard', array($this->actionController, 'adminSettingsAction'), plugins_url() .'/handbid/public/images/favicon.png');
+    }
 }
 
 new Handbid;

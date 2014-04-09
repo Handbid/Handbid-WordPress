@@ -1,6 +1,13 @@
 <?php
 
 class HandbidActionController {
+
+    public $viewRenderer;
+
+    public function __construct(HandbidViewRenderer $viewRenderer) {
+        $this->viewRenderer = $viewRenderer;
+    }
+
     function auctionDashboardAction() {
 
     }
@@ -12,5 +19,8 @@ class HandbidActionController {
     }
     function findItemsAjaxAction() {
 
+    }
+    function adminSettingsAction() {
+        return $this->viewRenderer->render('views/admin/settings.phtml');
     }
 }
