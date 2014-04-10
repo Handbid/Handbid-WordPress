@@ -34,16 +34,18 @@ class Handbid {
     public $basePath;
     public $state;
     public $actionController;
+    public $adminActionController;
 
     function __construct($options = null) {
         add_action( 'init', array( $this, 'init' ) );
 
         // Dependency Injection
-        $this->basePath            = ($options['basePath']) ? $options['basePath'] : dirname(__FILE__);
-        $this->viewRender          = ($options['viewRender']) ? $options['viewRender'] : $this->createViewRenderer();
-        $this->state               = ($options['state']) ? $options['state'] : $this->state();
-        $this->shortCodeController = ($options['createShortCodeController']) ? $options['createShortCodeController'] : $this->createShortCodeController();
-        $this->actionController    = ($options['actionController']) ? $options['actionController'] : $this->createActionController();
+        $this->basePath              = ($options['basePath']) ? $options['basePath'] : dirname(__FILE__);
+        $this->viewRender            = ($options['viewRender']) ? $options['viewRender'] : $this->createViewRenderer();
+        $this->state                 = ($options['state']) ? $options['state'] : $this->state();
+        $this->shortCodeController   = ($options['createShortCodeController']) ? $options['createShortCodeController'] : $this->createShortCodeController();
+        $this->actionController      = ($options['actionController']) ? $options['actionController'] : $this->createActionController();
+        $this->adminActionController = ($options['adminActionController']) ? $options['adminActionController'] : $this->adminActionController();
     }
 
     function init() {
@@ -54,8 +56,9 @@ class Handbid {
         // Setup ShortCodes
         $this->setupShortCodes();
 
-        add_action( 'admin_init', array( $this, 'registerPluginSettings' ) );
-        add_action( 'admin_menu', array( $this, 'setupAdminArea' ) );
+        add_action( 'admin_init', array( $this->adminActionController, 'registerPluginSettings' ) );
+        add_action( 'admin_menu', array( $this->adminActionController, 'setupAdminArea' ) );
+        add_action( 'admin_footer', array( $this->adminActionController, 'setupAdminJavascript' ) );
 
     }
 
@@ -96,6 +99,17 @@ class Handbid {
         }
 
         return new HandbidActionController($viewRenderer);
+    }
+    function adminActionController($viewRenderer = false, $basePath = false) {
+        if(!$viewRenderer) {
+            $viewRenderer = $this->viewRender;
+        }
+
+        if(!$basePath) {
+            $basePath = $this->basePath;
+        }
+
+        return new HandbidAdminActionController($viewRenderer);
     }
 
     // View Renderer
@@ -144,15 +158,6 @@ class Handbid {
         forEach($shortCodes as $shortCode) {
             add_shortcode( $shortCode, array( $this->shortCodeController, $shortCode ) );
         }
-    }
-
-    // Admin
-    function registerPluginSettings() {
-        register_setting( 'application', 'appId');  // get_option('appId');
-        register_setting( 'application', 'apiKey'); // get_option('apiKey');
-    }
-    function setupAdminArea() {
-        add_menu_page('Handbid', 'Handbid', 0, 'handbid-admin-dashboard', array($this->actionController, 'adminSettingsAction'), plugins_url() .'/Handbid-Wordpress/public/images/favicon.png');
     }
 }
 

@@ -1,21 +1,22 @@
 <div class="wrap">
     <h2>Handbid</h2>
     <form method="post" action="options.php">
-        <?php settings_fields( 'application' ); ?>
-        <?php do_settings_sections( 'application' ); ?>
+        <?php settings_fields( 'handbid-application' ); ?>
+        <?php do_settings_sections( 'handbid-application' ); ?>
         <table class="form-table">
             <tr valign="top">
                 <th scope="row"><?= ('Application Id'); ?></th>
-                <td><input type="text" name="appId" value="<?php echo get_option('appId'); ?>" /></td>
+                <td><input type="text" name="handbidAppId" value="<?php echo get_option('handbidAppId'); ?>" /></td>
             </tr>
 
             <tr valign="top">
                 <th scope="row"><?= ('API Key'); ?></th>
-                <td><input type="text" name="apiKey" value="<?php echo get_option('apiKey'); ?>" /></td>
+                <td><input type="password" name="handbidApiKey" value="<?php echo get_option('handbidApiKey'); ?>" /></td>
             </tr>
         </table>
-
         <?php submit_button(); ?>
 
     </form>
+
+    <button class="button testRestEndpoint"><?= __('Test Rest Endpoint'); ?></button>
 </div>

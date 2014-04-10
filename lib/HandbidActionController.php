@@ -20,7 +20,4 @@ class HandbidActionController {
     function findItemsAjaxAction() {
 
     }
-    function adminSettingsAction() {
-        return $this->viewRenderer->render('views/admin/settings.phtml');
-    }
 }
