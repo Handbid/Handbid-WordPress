@@ -40,6 +40,10 @@ class Handbid {
     public $handbid;
 
     function __construct($options = null) {
+
+        // Make sure handbid has everything it needs to run
+        \Handbid\Handbid::includeDependencies();
+
         add_action( 'init', array( $this, 'init' ) );
 
         // Dependency Injection
@@ -53,9 +57,6 @@ class Handbid {
     }
 
     function init() {
-
-        // Make sure handbid has everything it needs to run
-        \Handbid\Handbid::includeDependencies();
 
         // Add javascript
         add_action('wp_enqueue_scripts', [ $this, 'initJavascript' ] );
