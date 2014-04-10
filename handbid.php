@@ -152,7 +152,7 @@ class Handbid {
         register_setting( 'application', 'apiKey'); // get_option('apiKey');
     }
     function setupAdminArea() {
-        add_menu_page('Handbid', 'Handbid', 0, 'handbid-admin-dashboard', array($this->actionController, 'adminSettingsAction'), plugins_url() .'/handbid/public/images/favicon.png');
+        add_menu_page('Handbid', 'Handbid', 0, 'handbid-admin-dashboard', array($this->actionController, 'adminSettingsAction'), plugins_url() .'/Handbid-Wordpress/public/images/favicon.png');
     }
 }
 
