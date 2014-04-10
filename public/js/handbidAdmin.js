@@ -10,16 +10,18 @@ var $j = jQuery.noConflict();
 $j(function() {
 
         var appId = $j('input[name=handbidAppId]').val(),
-            apiKey = $j('input[name=handbidApiKey]').val();
+            apiKey = $j('input[name=handbidApiKey]').val(),
+            endpoint = handbidAdmin.endpoint;
+
 
         $j('.testRestEndpoint').click( function() {
             var data = {
+                action: 'test_app_creds',
                 appId: appId,
                 apiKey: apiKey
             };
 
-
-            $j.get( "http://google.com", data, success, "json" );
+            $j.post( endpoint, data, success, "json" );
         } );
 
         function success( data ) {

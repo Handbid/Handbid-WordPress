@@ -19,13 +19,15 @@ $libFolder = $currentFolder . '/lib';
 // Loop through lib directory autoloading files and require_once them
 if ($handle = opendir($libFolder)) {
     while (false !== ($entry = readdir($handle))) {
-        if($entry!="." && $entry!= ".."){
+        if($entry!="." && $entry!= ".." && strpos($entry, '.php') > 0){
             require_once $libFolder . '/' . $entry;
         }
     }
 
     closedir($handle);
 }
+
+require_once($libFolder . '/Handbid-Php/src/Handbid.php');
 
 class Handbid {
 
@@ -35,51 +37,56 @@ class Handbid {
     public $state;
     public $actionController;
     public $adminActionController;
+    public $handbid;
 
     function __construct($options = null) {
         add_action( 'init', array( $this, 'init' ) );
 
         // Dependency Injection
-        $this->basePath              = ($options['basePath']) ? $options['basePath'] : dirname(__FILE__);
-        $this->viewRender            = ($options['viewRender']) ? $options['viewRender'] : $this->createViewRenderer();
-        $this->state                 = ($options['state']) ? $options['state'] : $this->state();
-        $this->shortCodeController   = ($options['createShortCodeController']) ? $options['createShortCodeController'] : $this->createShortCodeController();
-        $this->actionController      = ($options['actionController']) ? $options['actionController'] : $this->createActionController();
-        $this->adminActionController = ($options['adminActionController']) ? $options['adminActionController'] : $this->adminActionController();
+        $this->basePath              = isset($options['basePath']) ? $options['basePath'] : dirname(__FILE__);
+        $this->viewRender            = isset($options['viewRender']) ? $options['viewRender'] : $this->createViewRenderer();
+        $this->state                 = isset($options['state']) ? $options['state'] : $this->state();
+        $this->shortCodeController   = isset($options['createShortCodeController']) ? $options['createShortCodeController'] : $this->createShortCodeController();
+        $this->actionController      = isset($options['actionController']) ? $options['actionController'] : $this->createActionController();
+        $this->adminActionController = isset($options['adminActionController']) ? $options['adminActionController'] : $this->createAdminActionController();
+        $this->handbid               = isset($options['handbid']) ? $options['handbid'] : $this->createHandbid();
     }
 
     function init() {
 
+        // Make sure handbid has everything it needs to run
+        \Handbid\Handbid::includeDependencies();
+
         // Add javascript
-        add_action('wp_enqueue_scripts', array( $this, 'setupJavascript' ) );
+        add_action('wp_enqueue_scripts', [ $this, 'initJavascript' ] );
 
-        // Setup ShortCodes
-        $this->setupShortCodes();
-
-        add_action( 'admin_init', array( $this->adminActionController, 'registerPluginSettings' ) );
-        add_action( 'admin_menu', array( $this->adminActionController, 'setupAdminArea' ) );
-        add_action( 'admin_footer', array( $this->adminActionController, 'setupAdminJavascript' ) );
-
+        // init controllers
+        $this->shortCodeController->init();
+        add_action( 'admin_init', array( $this->adminActionController, 'init' ) );
     }
 
     // Javascript
-    function setupJavascript() {
+    function initJavascript() {
 
-        $scripts = array('handbid'     => 'public/js/handbid.js',
-                         'socket'      =>' public/js/socket.js',
-                         'isotope'     =>' public/js/isotope.pkgd.min.js',
-                         'modal'       =>' public/js/jquery.modal.min.js',
-                         'unslider'    =>' public/js/unslider.min.js',
-                         'contactForm' =>' public/js/contactForm.js',
-                         'photoGallery'=>' public/js/photoGallery.js',
-                         'auctionList' =>' public/js/auctionList.js',
-                         'bidNow'      =>' public/js/bidNow.js');
+        $scripts = array('handbid'            => 'public/js/handbid.js',
+                         'handbidSocket'      =>' public/js/socket.js',
+                         'handbidIsotope'     =>' public/js/isotope.pkgd.min.js',
+                         'handbidModal'       =>' public/js/jquery.modal.min.js',
+                         'handbidUnslider'    =>' public/js/unslider.min.js',
+                         'handbidContactForm' =>' public/js/contactForm.js',
+                         'handbidPhotoGallery'=>' public/js/photoGallery.js',
+                         'handbidAuctionList' =>' public/js/auctionList.js',
+                         'handbidBidNow'      =>' public/js/bidNow.js');
 
         foreach($scripts as $key=>$sc)
         {
             wp_register_script($key, plugins_url($sc, __FILE__));
             wp_enqueue_script($key);
         }
+    }
+
+    function createHandbid() {
+        return new \Handbid\Handbid(get_option('handbidAppId'), get_option('handbidApiKey'));
     }
 
     // State
@@ -100,13 +107,9 @@ class Handbid {
 
         return new HandbidActionController($viewRenderer);
     }
-    function adminActionController($viewRenderer = false, $basePath = false) {
+    function createAdminActionController($viewRenderer = false) {
         if(!$viewRenderer) {
             $viewRenderer = $this->viewRender;
-        }
-
-        if(!$basePath) {
-            $basePath = $this->basePath;
         }
 
         return new HandbidAdminActionController($viewRenderer);
@@ -135,29 +138,6 @@ class Handbid {
 
         return new ShortCodeController($viewRenderer, $this->basePath, $state);
 
-    }
-    function setupShortCodes() {
-
-        // Add Plugin ShortCodes
-        $shortCodes = [
-            'handbid_auction_results',
-            'handbid_auction_banner',
-            'handbid_auction_details',
-            'handbid_auction_contact_form',
-            'handbid_auction_list',
-            'handbid_bid_winning',
-            'handbid_bid_history',
-            'handbid_bid_now',
-            'handbid_image_gallery',
-            'handbid_item_comment',
-            'handbid_item_results',
-            'handbid_item_search_bar',
-            'handbid_ticket_buy',
-        ];
-
-        forEach($shortCodes as $shortCode) {
-            add_shortcode( $shortCode, array( $this->shortCodeController, $shortCode ) );
-        }
     }
 }
 

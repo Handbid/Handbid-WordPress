@@ -17,11 +17,38 @@ class ShortCodeController {
         }
     }
 
+    public function init() {
+        $this->initShortCode();
+    }
+    function initShortCode() {
+
+        // Add Plugin ShortCodes
+        $shortCodes = [
+            'handbid_auction_results'      => 'auctionResults',
+            'handbid_auction_banner'       => 'auctionBanner',
+            'handbid_auction_details'      => 'auctionDetails',
+            'handbid_auction_contact_form' => 'auctionContactForm',
+            'handbid_auction_list'         => 'auctionList',
+            'handbid_bid_now'              => 'bidNow',
+            'handbid_bid_history'          => 'bidHistory',
+            'handbid_bid_winning'          => 'bidWinning',
+            'handbid_item_comment'         => 'itemComment',
+            'handbid_item_results'         => 'itemResults',
+            'handbid_item_search_bar'      => 'itemSearchBar',
+            'handbid_ticket_buy'           => 'ticketBuy',
+            'handbid_image_gallery'        => 'imageGallery'
+        ];
+
+        forEach($shortCodes as $shortCode => $callback) {
+            add_shortcode( $shortCode, [ $this, $callback ] );
+        }
+    }
+
     // Auctions
-    public function handbid_auction_results ($attributes) {
+    public function auctionResults ($attributes) {
 
         if(!$attributes['template']) {
-            $attributes['template'] = 'views/auction/logo.phtml';
+            $attributes['template'] = 'views/auction/logo';
         }
 
         // Temp dummy data
@@ -37,7 +64,7 @@ class ShortCodeController {
         return $markup;
 
     }
-    public function handbid_auction_banner($attributes) {
+    public function auctionBanner($attributes) {
 
         $auction = $this->state->currentAuction();
 
@@ -57,20 +84,20 @@ class ShortCodeController {
             $coords
         ];
 
-        return $this->viewRenderer->render('views/auction/banner.phtml', $attributes);
+        return $this->viewRenderer->render('views/auction/banner', $attributes);
 
     }
-    public function handbid_auction_details($attributes) {
+    public function auctionDetails($attributes) {
 
-        return $this->viewRenderer->render('views/auction/details.phtml', $this->state->currentAuction());
-
-    }
-    public function handbid_auction_contact_form($attributes) {
-
-        return $this->viewRenderer->render('views/auction/contact-form.phtml', $this->state->currentAuction());
+        return $this->viewRenderer->render('views/auction/details', $this->state->currentAuction());
 
     }
-    public function handbid_auction_list($attributes) {
+    public function auctionContactForm($attributes) {
+
+        return $this->viewRenderer->render('views/auction/contact-form', $this->state->currentAuction());
+
+    }
+    public function auctionList($attributes) {
 
         // Temp dummy data
         $categories = file_get_contents($this->basePath . '/dummy-data/dummy-categories.json');
@@ -79,41 +106,41 @@ class ShortCodeController {
         $json[] = json_decode($categories,true);
         $json[] = json_decode($items,true);
 
-        return $this->viewRenderer->render('views/auction/list.phtml', $json);
+        return $this->viewRenderer->render('views/auction/list', $json);
 
     }
 
     // Bids
-    public function handbid_bid_now($attributes) {
-        return $this->viewRenderer->render('views/bid/now.phtml', $this->state->currentItem());
+    public function bidNow($attributes) {
+        return $this->viewRenderer->render('views/bid/now', $this->state->currentItem());
     }
-    public function handbid_bid_history($attributes) {
-        return $this->viewRenderer->render('views/bid/history.phtml', $this->state->currentItem());
+    public function bidHistory($attributes) {
+        return $this->viewRenderer->render('views/bid/history', $this->state->currentItem());
     }
-    public function handbid_bid_winning($attributes) {
-        return $this->viewRenderer->render('views/bid/winning.phtml', $this->state->currentItem());
+    public function bidWinning($attributes) {
+        return $this->viewRenderer->render('views/bid/winning', $this->state->currentItem());
     }
 
     // Items
-    public function handbid_item_comment($attributes) {
+    public function itemComment($attributes) {
 //        item = "item-key"
-//template = "views/item/comment.phtml"
+//template = "views/item/comment"
     }
-    public function handbid_item_results($attributes) {
-        return $this->viewRenderer->render('views/item/results.phtml', $this->state->currentItem());
+    public function itemResults($attributes) {
+        return $this->viewRenderer->render('views/item/results', $this->state->currentItem());
     }
-    public function handbid_item_search_bar($attributes) {
-        return $this->viewRenderer->render('views/item/search-bar.phtml');
+    public function itemSearchBar($attributes) {
+        return $this->viewRenderer->render('views/item/search-bar');
     }
 
     // Tickets
-    public function handbid_ticket_buy($attributes) {
-        return $this->viewRenderer->render('views/ticket/buy.phtml', $this->state->currentAuction());
+    public function ticketBuy($attributes) {
+        return $this->viewRenderer->render('views/ticket/buy', $this->state->currentAuction());
     }
 
     // Image
-    public function handbid_image_gallery($attributes) {
-        return $this->viewRenderer->render('views/image/photo-gallery.phtml', $this->state->currentItem());
+    public function imageGallery($attributes) {
+        return $this->viewRenderer->render('views/image/photo-gallery', $this->state->currentItem());
     }
 
 }
