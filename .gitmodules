@@ -1,0 +1,3 @@
+[submodule "lib/Handbid-Php"]
+	path = lib/Handbid-Php
+	url = git@github.com:Handbid/Handbid-Php.git
