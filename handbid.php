@@ -3,7 +3,7 @@
  * Plugin Name: Handbid
  * Author: Jon Hemstreet
  * Author URI: http://www.jonhemstreet.com
- * Version: 0.0.0.65
+ * Version: 0.0.0.66
  * Description: Handbid is fully automated mobile silent auction software specifically designed to increase revenue,
  * drive bid activity, and maximize ROI for non-profits. Eliminating the need for paper bid sheets, Handbid empowers
  * users to bid using a mobile device, the web, or a tablet (kiosk) at the event. Bidders can enter bids remotely or
@@ -44,7 +44,7 @@ class Handbid {
         // Make sure handbid has everything it needs to run
         \Handbid\Handbid::includeDependencies();
 
-        add_action( 'init', array( $this, 'init' ) );
+        add_action( 'init', [ $this, 'init' ] );
 
         // Dependency Injection
         $this->basePath              = isset($options['basePath']) ? $options['basePath'] : dirname(__FILE__);
@@ -63,7 +63,7 @@ class Handbid {
 
         // init controllers
         $this->shortCodeController->init();
-        add_action( 'admin_init', array( $this->adminActionController, 'init' ) );
+        $this->adminActionController->init();
     }
 
     // Javascript
