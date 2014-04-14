@@ -5,4 +5,4 @@ Handbid-WordPress
 
 ## Shortcodes
 
-*descriptions comming soon*
+*descriptions coming soon*
