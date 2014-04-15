@@ -1,13 +1,23 @@
+<?php
+if ($this->context[0]) {
+    $auction = $this->context[0];
+} else {
+    echo "No Auction Set";
+    return;
+}
+$timeFormat = 'h:i:s';
+?>
+
 <div class="widget widget-buy-ticket">
     <div class="auction-content">
-        <h2><a href="/auctions/handbid-demo-auction">Handbid Demo Auction</a></h2>
-        <div class="timer auction-timer normal">Ends in</div>
+        <h2><a href="/auction-detail/?auction=<?= $auction['_id']; ?>"><?= $auction['name']; ?></a></h2>
+        <div class="timer auction-timer normal"><?= __('Ends in'); ?> <span><?= date($timeFormat,$auction['closingTime']); ?></span></div>
     </div>
     <div>
         <div class="tickets">
             <a href="/auctions/handbid-demo-auction/tickets">
-                <div>BUY TICKETS</div>
-                TO AUCTION
+                <div><?= __('BUY TICKETS'); ?></div>
+                <?= __('TO AUCTION'); ?>
             </a>
         </div>
         <div class="share">

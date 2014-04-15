@@ -8,13 +8,17 @@ if ($this->context[0]) {
 
 $dateFormat = 'm/d/Y h:i a';
 
+
+// @Todo Fix url w/ query params, Horrible way to do this, sorry!
+$url = get_permalink() . '?auction=' . get_query_var('auction');
+
 ?>
 
 <div class="eventsAndDetails">
     <div class="sectionHeading"><?= __('Auction & Event Details'); ?></div>
     <div class="socialLinks">
-        <a class="facebook" href="https://www.facebook.com/sharer/sharer.php?u=<?php htmlspecialchars(the_permalink(), ENT_QUOTES); ?>" title="Share on Facebook." target="_blank">Facebook</a>
-        <a class="twitter" href="http://twitter.com/home/?status=<?= urlencode($auction['name']); ?> - <?php the_permalink(); ?>" title="Tweet this!" target="_blank">Twitter</a>
+        <a class="facebook" href="https://www.facebook.com/sharer/sharer.php?u=<?php htmlspecialchars($url, ENT_QUOTES); ?>" title="Share on Facebook." target="_blank">Facebook</a>
+        <a class="twitter" href="http://twitter.com/home/?status=<?= urlencode($auction['name']); ?> - <?= $url; ?>" title="Tweet this!" target="_blank">Twitter</a>
 
         <a class="gplus" href="https://plus.google.com/share?url=<?php the_permalink(); ?>" onclick="javascript:window.open(this.href,
   '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">Google+</a>

@@ -9,7 +9,7 @@ $j(function() {
         // options...
         itemSelector: '.item',
         masonry:      {
-            columnWidth: 300,
+            columnWidth: 290,
             rowHeight: 355
         }
     });

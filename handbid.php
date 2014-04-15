@@ -3,7 +3,7 @@
  * Plugin Name: Handbid
  * Author: Jon Hemstreet
  * Author URI: http://www.jonhemstreet.com
- * Version: 0.0.0.66
+ * Version: 0.0.0.67
  * Description: Handbid is fully automated mobile silent auction software specifically designed to increase revenue,
  * drive bid activity, and maximize ROI for non-profits. Eliminating the need for paper bid sheets, Handbid empowers
  * users to bid using a mobile device, the web, or a tablet (kiosk) at the event. Bidders can enter bids remotely or
@@ -37,6 +37,7 @@ class Handbid {
     public $state;
     public $actionController;
     public $adminActionController;
+//    public $rewriteRulesController;
     public $handbid;
 
     function __construct($options = null) {
@@ -47,13 +48,16 @@ class Handbid {
         add_action( 'init', [ $this, 'init' ] );
 
         // Dependency Injection
-        $this->basePath              = isset($options['basePath']) ? $options['basePath'] : dirname(__FILE__);
-        $this->viewRender            = isset($options['viewRender']) ? $options['viewRender'] : $this->createViewRenderer();
-        $this->state                 = isset($options['state']) ? $options['state'] : $this->state();
-        $this->shortCodeController   = isset($options['createShortCodeController']) ? $options['createShortCodeController'] : $this->createShortCodeController();
-        $this->actionController      = isset($options['actionController']) ? $options['actionController'] : $this->createActionController();
-        $this->adminActionController = isset($options['adminActionController']) ? $options['adminActionController'] : $this->createAdminActionController();
-        $this->handbid               = isset($options['handbid']) ? $options['handbid'] : $this->createHandbid();
+        $this->basePath               = isset($options['basePath']) ? $options['basePath'] : dirname(__FILE__);
+        $this->viewRender             = isset($options['viewRender']) ? $options['viewRender'] : $this->createViewRenderer();
+        $this->state                  = isset($options['state']) ? $options['state'] : $this->state();
+        $this->shortCodeController    = isset($options['createShortCodeController']) ? $options['createShortCodeController'] : $this->createShortCodeController();
+        $this->actionController       = isset($options['actionController']) ? $options['actionController'] : $this->createActionController();
+        $this->adminActionController  = isset($options['adminActionController']) ? $options['adminActionController'] : $this->createAdminActionController();
+        $this->handbid                = isset($options['handbid']) ? $options['handbid'] : $this->createHandbid();
+        // @TODO Implement rewrite controller
+//        $this->rewriteRulesController = isset($options['rewriteRulesController']) ? $options['rewriteRulesController'] : $this->createReWriteRulesController();
+
     }
 
     function init() {
@@ -62,8 +66,10 @@ class Handbid {
         add_action('wp_enqueue_scripts', [ $this, 'initJavascript' ] );
 
         // init controllers
+//        $this->rewriteRulesController->init(); // Implement this later
         $this->shortCodeController->init();
         $this->adminActionController->init();
+
     }
 
     // Javascript
@@ -140,6 +146,13 @@ class Handbid {
         return new ShortCodeController($viewRenderer, $this->basePath, $state);
 
     }
+
+    // @TODO Implement rewrite controller
+//    function createReWriteRulesController() {
+//        return new ReWriteRulesController();
+//    }
+
+
 }
 
 new Handbid;
