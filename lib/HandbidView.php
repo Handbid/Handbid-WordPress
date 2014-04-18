@@ -29,4 +29,8 @@ class HandbidView {
         return $this->context[$name];
     }
 
+    public function get($name) {
+        return $this->$name;
+    }
+
 }

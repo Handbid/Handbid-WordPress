@@ -1,3 +1,16 @@
-<a class="auctionListLogo" href="/auction-detail/?auction=<?= $this->_id; ?>">
-    <img class="alignnone animated fadeIn" alt="<?= $this->name; ?>" src="<?= $this->image; ?>" width="250" style="opacity: 0;">
+<?php
+
+$orgs = $this->get('organizations');
+
+forEach($orgs as $org) {
+
+?>
+
+
+<a class="auctionListLogo" href="/auction-detail/?auction=<?= $org->_id; ?>">
+    <img class="alignnone animated fadeIn" alt="<?= $org->name; ?>" src="<?= $org->logo; ?>" width="250" style="opacity: 0;">
 </a>
+
+<?php
+    }
+?>

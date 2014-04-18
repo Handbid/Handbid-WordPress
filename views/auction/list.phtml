@@ -4,6 +4,18 @@ if ($this->context[0] && $this->context[1]) {
     $items      = $this->context[1];
     $donors     = array_unique($items);
 
+    $categories[] = [
+        'name' => 'All'
+    ];
+
+    $showItems = [
+        'all'       => 'All Items',
+        'forSale'   => 'For Sale',
+        'live'      => 'Live',
+        'extended'  => 'Extended',
+        'noBids'    => 'No Bids',
+        'favorites' => 'Favorites'
+    ];
     $priceRanges = [
         '_all' => 'All',
         '_0'   => '0 - 100',
@@ -19,42 +31,58 @@ if ($this->context[0] && $this->context[1]) {
 
 ?>
 
+
 <div class="auctionItemListWidget">
 
     <!-- Filtering Side Bar -->
     <div class="sideBar widgetContainer filterBar">
         <h3><?= __('Auction Items'); ?></h3>
 
-        <label><?= __('Show Items'); ?> :</label>
-        <ul>
-            <li><input type="radio" name="items" value="all">All Items</li>
-            <li><input type="radio" name="items" value="forSale">For Sale</li>
-            <li><input type="radio" name="items" value="live">Live</li>
-            <li><input type="radio" name="items" value="extended">Extended</li>
-            <li><input type="radio" name="items" value="noBids">No Bids</li>
-            <li><input type="radio" name="items" value="favorites">Favorites</li>
+        <label class="categoryLabel"><?= __('Show Items'); ?> :</label>
+        <ul class="fancyRadio">
+            <?php forEach($showItems as $k => $v) {
+                ?>
+                <li>
+                    <input id="<?= $k; ?>" type="radio" name="category" value="<?= $k; ?>">
+                    <label for="<?= $k; ?>"><?= __($v); ?></label>
+                </li>
+            <?php
+            }
+            ?>
         </ul>
 
-        <label><?= __('Categories'); ?>:</label>
-        <ul class="categorySort">
-            <li><input class="input all" type="radio" name="category" value="all"><?= __('All'); ?></li>
+        <label class="categoryLabel"><?= __('Categories'); ?>:</label>
+        <ul class="categorySort fancyRadio">
+            <li>
+                <input id="all" type="radio" name="category" value="_all">
+                <label for="all"><?= __('All'); ?></label>
+            </li>
+
             <?php
 
             forEach ($categories as $category) {
                 ?>
-                <li><input class="input" type="radio" name="category" value="<?= sanitize_html_class($category['name']); ?>"><?= __($category['name']); ?></li>
+                <li>
+                    <input id="<?= sanitize_html_class($category['name']); ?>" type="radio" name="category" value="<?= sanitize_html_class($category['name']); ?>">
+                    <label for="<?= sanitize_html_class($category['name']); ?>"><?= __(ucfirst($category['name'])); ?></label>
+                </li>
             <?php
             }
 
             ?>
         </ul>
 
-        <label><?= __('Price Ranges'); ?>:</label>
-        <ul class="priceSort">
+        <label class="categoryLabel"><?= __('Price Ranges'); ?>:</label>
+        <ul class="priceSort fancyRadio">
             <?php
             forEach($priceRanges as $k => $v ) {
                 ?>
-                <li><input type="radio" name="priceRange" value="<?= $k; ?>"><?= $v; ?></li>
+                <li>
+                    <input id="<?= $k; ?>" type="radio" name="category" value="<?= $k; ?>">
+                    <label for="<?= $k; ?>"><?= __($v); ?></label>
+                </li>
+
+                <li><input type="radio" name="priceRange" value=""></li>
             <?php
             }
             ?>

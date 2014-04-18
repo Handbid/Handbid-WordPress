@@ -29,6 +29,7 @@ if ($handle = opendir($libFolder)) {
 
 require_once($libFolder . '/Handbid-Php/src/Handbid.php');
 
+
 class Handbid {
 
     public $shortCodeController;
@@ -49,12 +50,13 @@ class Handbid {
 
         // Dependency Injection
         $this->basePath               = isset($options['basePath']) ? $options['basePath'] : dirname(__FILE__);
+        $this->handbid                = isset($options['handbid']) ? $options['handbid'] : $this->createHandbid();
         $this->viewRender             = isset($options['viewRender']) ? $options['viewRender'] : $this->createViewRenderer();
         $this->state                  = isset($options['state']) ? $options['state'] : $this->state();
         $this->shortCodeController    = isset($options['createShortCodeController']) ? $options['createShortCodeController'] : $this->createShortCodeController();
         $this->actionController       = isset($options['actionController']) ? $options['actionController'] : $this->createActionController();
         $this->adminActionController  = isset($options['adminActionController']) ? $options['adminActionController'] : $this->createAdminActionController();
-        $this->handbid                = isset($options['handbid']) ? $options['handbid'] : $this->createHandbid();
+
         // @TODO Implement rewrite controller
 //        $this->rewriteRulesController = isset($options['rewriteRulesController']) ? $options['rewriteRulesController'] : $this->createReWriteRulesController();
 
@@ -133,17 +135,20 @@ class Handbid {
     }
 
     // ShortCodes
-    function createShortCodeController($viewRenderer = false, $state = false) {
+    function createShortCodeController($handbid = null, $viewRenderer = false, $state = false) {
 
         if(!$viewRenderer) {
             $viewRenderer = $this->viewRender;
         }
 
+        if(!$handbid) {
+            $handbid = $this->handbid;
+        }
+
         if(!$state) {
             $state = $this->state;
         }
-
-        return new ShortCodeController($viewRenderer, $this->basePath, $state);
+        return new ShortCodeController($handbid, $viewRenderer, $this->basePath, $state);
 
     }
 

@@ -5,8 +5,10 @@ class ShortCodeController {
     public $viewRenderer;
     public $basePath;
     public $state;
+    public $handbid;
 
-    public function __construct( HandbidViewRenderer $viewRenderer, $basePath, $state, $config = []) {
+    public function __construct(\Handbid\Handbid $handbid, HandbidViewRenderer $viewRenderer, $basePath, $state, $config = []) {
+        $this->handbid = $handbid;
         $this->viewRenderer = $viewRenderer;
         $this->basePath = $basePath;
         $this->state = $state;
@@ -47,19 +49,18 @@ class ShortCodeController {
     // Auctions
     public function auctionResults ($attributes) {
 
-        if(!$attributes['template']) {
+//        echo "auction results"; exit;
+
+        if(!isset($attributes['template']) && !$attributes['template']) {
             $attributes['template'] = 'views/auction/logo';
         }
 
-        // Temp dummy data
-        $auctions = file_get_contents($this->basePath . '/dummy-data/dummy-auctions.json');
-        $json = json_decode($auctions,true);
+        // Get orgs from handbid server
+        $orgs = $this->handbid->store('Organization')->all();
 
-        foreach($json as $auction) {
-
-            $markup = $this->viewRenderer->render($attributes['template'], $auction);
-
-        }
+        $markup = $this->viewRenderer->render($attributes['template'], [
+            'organizations' => $orgs
+        ]);
 
         return $markup;
 
