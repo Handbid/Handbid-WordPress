@@ -23,7 +23,7 @@ class HandbidAdminActionController {
     }
     function initAdminJavascript() {
 
-        $scripts = array('handbidAdmin' => 'public/js/handbidAdmin.js');
+        $scripts = [ 'handbidAdmin' => 'public/js/handbidAdmin.js' ];
 
         foreach($scripts as $key=>$sc)
         {
@@ -41,7 +41,7 @@ class HandbidAdminActionController {
         register_setting( 'handbid-application', 'handbidApiKey');  // get_option('handbidApiKey');
     }
     function adminSettingsAction() {
-        return $this->viewRenderer->render('views/admin/settings');
+        echo $this->viewRenderer->render('views/admin/settings');
     }
     function testAppCredsAjax() {
         $appId  = $_POST['appId'];
