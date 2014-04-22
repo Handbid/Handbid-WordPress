@@ -1,14 +1,12 @@
 <?php
-
-if ($this->context) {
-    $auction = $this->context;
+if ($this->context[0]) {
+    $auction = $this->context[0];
 } else {
     echo "No Auction Set";
     return;
 }
 
 $dateFormat = 'm/d/Y h:i a';
-
 
 // @Todo Fix url w/ query params, Horrible way to do this, sorry!
 $url = get_permalink() . '?auction=' . get_query_var('auction');
@@ -19,7 +17,7 @@ $url = get_permalink() . '?auction=' . get_query_var('auction');
     <div class="sectionHeading"><?= __('Auction & Event Details'); ?></div>
     <div class="socialLinks">
         <a class="facebook" href="https://www.facebook.com/sharer/sharer.php?u=<?php htmlspecialchars($url, ENT_QUOTES); ?>" title="Share on Facebook." target="_blank">Facebook</a>
-        <a class="twitter" href="http://twitter.com/home/?status=<?= urlencode($auction->name); ?> - <?= $url; ?>" title="Tweet this!" target="_blank">Twitter</a>
+        <a class="twitter" href="http://twitter.com/home/?status=<?= urlencode($auction['name']); ?> - <?= $url; ?>" title="Tweet this!" target="_blank">Twitter</a>
 
         <a class="gplus" href="https://plus.google.com/share?url=<?php the_permalink(); ?>" onclick="javascript:window.open(this.href,
   '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">Google+</a>
@@ -27,10 +25,12 @@ $url = get_permalink() . '?auction=' . get_query_var('auction');
     <div class="detailsWrapper">
         <ul class="eventDetails">
 
-            <li><label><?= __('Event Dates') . ' : '; ?></label><?= date($dateFormat,$auction->startTime); ?> - <?= date($dateFormat,$auction->endTime); ?></li>
-            <li><label><?= __('Event Location') . ' : '; ?></label><?= $auction->vanityAddress; ?></li>
+            <li><label><?= __('Event Dates') . ' : '; ?></label><?= date($dateFormat,$auction['startTime']); ?> - <?= date($dateFormat,$auction['endTime']); ?></li>
+            <li><label><?= __('Event Location') . ' : '; ?></label><?= $auction['vanityAddress']; ?></li>
             <li><label><?= __('Event Address') . ' : '; ?></label>
-                <?= $auction->location->full; ?>
+                <?php foreach($auction['location'] as $location) {
+                    echo $location . ' ';
+                } ?>
             </li>
         </ul>
 

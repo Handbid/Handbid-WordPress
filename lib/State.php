@@ -2,19 +2,31 @@
 
 class State {
 
+    public $basePath;
+    public $handbid;
+    public $org;
     public $auction;
     public $item;
-    public $basePath;
 
-    public function __construct( $basePath ) {
+    public function __construct( $basePath, $handbid ) {
         $this->basePath = $basePath;
+        $this->handbid  = $handbid;
+    }
+
+    function currentOrg() {
+
+        if(!$this->org) {
+            $orgId = get_query_var('organization');
+            $this->org = $this->handbid->store('Organization')->byId($orgId);
+        }
+
+        return $this->org;
     }
 
     function currentAuction() {
         if(!$this->auction) {
-            $auction = file_get_contents($this->basePath . '/dummy-data/dummy-auction.json');
-            $auction = json_decode($auction,true);
-            $this->auction = $auction;
+            $auctionId = get_query_var('auction');
+            $this->auction = $this->handbid->store('Auction')->byId($auctionId);
         }
 
         return $this->auction;
@@ -22,9 +34,8 @@ class State {
 
     function currentItem() {
         if(!$this->item) {
-            $item = file_get_contents($this->basePath . '/dummy-data/dummy-item.json');
-            $item = json_decode($item,true);
-            $this->item = $item;
+            $itemId = get_query_var('item');
+            $this->item = $this->handbid->store('Item')->byId($itemId);
         }
 
         return $this->item;

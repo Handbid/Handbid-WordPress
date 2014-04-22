@@ -1,16 +1,15 @@
+<div class="clientListBlock">
 <?php
 
-$orgs = $this->get('organizations');
+$auctions = $this->get('auctions');
 
-forEach($orgs as $org) {
+forEach($auctions as $auction) { ?>
 
-?>
-
-
-<a class="auctionListLogo" href="/auction-detail/?auction=<?= $org->_id; ?>">
-    <img class="alignnone animated fadeIn" alt="<?= $org->name; ?>" src="<?= $org->logo; ?>" width="250" style="opacity: 0;">
+<a class="auctionListLogo" href="/auction-detail/?auction=<?= $auction->_id; ?>">
+    <img class="alignnone animated fadeIn" alt="<?= $auction->name; ?>" src="<?= $auction->image; ?>" width="250" style="opacity: 0;">
 </a>
 
 <?php
     }
 ?>
+</div>

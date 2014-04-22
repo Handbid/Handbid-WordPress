@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Plugin Name: Handbid
  * Author: Jon Hemstreet
@@ -38,7 +39,6 @@ class Handbid {
     public $state;
     public $actionController;
     public $adminActionController;
-//    public $rewriteRulesController;
     public $handbid;
 
     function __construct($options = null) {
@@ -56,10 +56,6 @@ class Handbid {
         $this->shortCodeController    = isset($options['createShortCodeController']) ? $options['createShortCodeController'] : $this->createShortCodeController();
         $this->actionController       = isset($options['actionController']) ? $options['actionController'] : $this->createActionController();
         $this->adminActionController  = isset($options['adminActionController']) ? $options['adminActionController'] : $this->createAdminActionController();
-
-        // @TODO Implement rewrite controller
-//        $this->rewriteRulesController = isset($options['rewriteRulesController']) ? $options['rewriteRulesController'] : $this->createReWriteRulesController();
-
     }
 
     function init() {
@@ -67,8 +63,10 @@ class Handbid {
         // Add javascript
         add_action('wp_enqueue_scripts', [ $this, 'initJavascript' ] );
 
+        // Add query variable support
+        add_filter('query_vars', [ $this, 'registerVariables' ]);
+
         // init controllers
-//        $this->rewriteRulesController->init(); // Implement this later
         $this->shortCodeController->init();
         $this->adminActionController->init();
 
@@ -102,7 +100,7 @@ class Handbid {
     function state() {
 
         if(!$this->state) {
-            $this->state = new state($this->basePath);
+            $this->state = new state($this->basePath, $this->handbid);
         }
 
         return $this->state;
@@ -152,11 +150,13 @@ class Handbid {
 
     }
 
-    // @TODO Implement rewrite controller
-//    function createReWriteRulesController() {
-//        return new ReWriteRulesController();
-//    }
-
+    // Query Variable Support
+    function registerVariables($qvars){
+        $qvars[] = 'organization';
+        $qvars[] = 'auction';
+        $qvars[] = 'item';
+        return $qvars;
+    }
 
 }
 
