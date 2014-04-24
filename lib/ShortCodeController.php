@@ -28,7 +28,6 @@ class ShortCodeController {
         $shortCodes = [
             'handbid_organization_details' => 'organizationDetails',
             'handbid_organization_auctions'=> 'organizationAuctions',
-            'handbid_organization_list'    => 'organizationList',
             'handbid_auction_results'      => 'auctionResults',
             'handbid_auction_banner'       => 'auctionBanner',
             'handbid_auction_details'      => 'auctionDetails',
@@ -48,11 +47,27 @@ class ShortCodeController {
         }
     }
 
+    // Pass me attributes and full path 'views/organization/details' and I will check it for you
+    public function checkTemplate($attributes, $path) {
+        if(!isset($attributes['template']) && !$attributes['template']) {
+            $attributes['template'] = $path;
+        }
+
+        return $attributes['template'];
+    }
     // Organization
     public function organizationDetails($attributes) {
         try {
+
+            $template = $this->checkTemplate($attributes, 'views/organization/details');
+
             $organization = $this->state->currentOrg();
-            return $this->viewRenderer->render('views/organization/details', $organization);
+
+            $markup = $this->viewRenderer->render($template, [
+                    'organization' => $organization
+                ]);
+
+            return $markup;
         }
         catch (Exception $e) {
             echo "No organization details could be found";
@@ -61,8 +76,17 @@ class ShortCodeController {
     }
     public function organizationAuctions($attributes) {
         try {
+
+            $template = $this->checkTemplate($attributes, 'views/auction/logo');
+
             $organization = $this->state->currentOrg();
-            return $this->viewRenderer->render('views/organization/auctions', $organization);
+            $auctions = $this->handbid->store('Auction')->byOrg($organization->_id);
+
+            $markup = $this->viewRenderer->render($template, [
+                    'auctions' => $auctions
+                ]);
+
+            return $markup;
         }
         catch (Exception $e) {
             echo "No organization auctions could be found";
@@ -73,7 +97,11 @@ class ShortCodeController {
     public function organizationList($attributes) {
         try {
             $organizations = $this->handbid->store('Organization')->all();
-            return $this->viewRenderer->render('views/organization/list', $organizations);
+
+            $template = $this->checkTemplate($attributes, 'views/organization/list');
+            return $this->viewRenderer->render($template, [
+                    'organizations' => $organizations
+                ]);
         }
         catch (Exception $e) {
             echo "No Organization List";
@@ -85,9 +113,9 @@ class ShortCodeController {
     public function auctionResults ($attributes) {
 
         try {
-            if(!isset($attributes['template']) && !$attributes['template']) {
-                $attributes['template'] = 'views/auction/logo';
-            }
+
+            $template = $this->checkTemplate($attributes, 'views/auction/logo');
+
 
             if(!in_array($attributes['type'], ['recent', 'all', 'past'])) {
                 $attributes['type'] = 'recent';
@@ -96,7 +124,7 @@ class ShortCodeController {
             // Get orgs from handbid server
             $auctions = $this->handbid->store('Auction')->{$attributes['type']}();
 
-            $markup = $this->viewRenderer->render($attributes['template'], [
+            $markup = $this->viewRenderer->render($template, [
                     'auctions' => $auctions
                 ]);
 
@@ -124,12 +152,11 @@ class ShortCodeController {
                 $location->lng
             ];
 
-            $attributes = [
-                $auction,
-                $coords
-            ];
-
-            return $this->viewRenderer->render('views/auction/banner', $attributes);
+            $template = $this->checkTemplate($attributes, 'views/auction/details');
+            return $this->viewRenderer->render($template, [
+                    'auction'     => $auction,
+                    'coordinates' => $coords
+                ]);
 
         } catch(Exception $e)
         {
@@ -141,7 +168,8 @@ class ShortCodeController {
     public function auctionDetails($attributes) {
 
         try {
-            return $this->viewRenderer->render('views/auction/details', $this->state->currentAuction());
+            $template = $this->checkTemplate($attributes, 'views/auction/details');
+            return $this->viewRenderer->render($template, $this->state->currentAuction());
         }
         catch(Exception $e) {
             echo "No Auction found";
@@ -152,7 +180,8 @@ class ShortCodeController {
     }
     public function auctionContactForm($attributes) {
         try {
-            return $this->viewRenderer->render('views/auction/contact-form', $this->state->currentAuction());
+            $template = $this->checkTemplate($attributes, 'views/auction/contact-form');
+            return $this->viewRenderer->render($template, $this->state->currentAuction());
         }
         catch (Exception $e) {
             echo "Could not find current auction for contact form";
@@ -171,7 +200,8 @@ class ShortCodeController {
             $json[] = json_decode($categories,true);
             $json[] = json_decode($items,true);
 
-            return $this->viewRenderer->render('views/auction/list', $json);
+            $template = $this->checkTemplate($attributes, 'views/auction/list');
+            return $this->viewRenderer->render($template, $json);
         }
         catch (Exception $e) {
             echo "No Auction Data Found";
@@ -184,7 +214,8 @@ class ShortCodeController {
     // Bids
     public function bidNow($attributes) {
         try {
-            return $this->viewRenderer->render('views/bid/now', $this->state->currentItem());
+            $template = $this->checkTemplate($attributes, 'views/bid/now');
+            return $this->viewRenderer->render($template, $this->state->currentItem());
         }
         catch (Exception $e) {
             echo "No Item Found for Bid Now";
@@ -193,7 +224,8 @@ class ShortCodeController {
     }
     public function bidHistory($attributes) {
         try {
-            return $this->viewRenderer->render('views/bid/history', $this->state->currentItem());
+            $template = $this->checkTemplate($attributes, 'views/bid/history');
+            return $this->viewRenderer->render($template, $this->state->currentItem());
         } catch (Exception $e) {
             echo "No Item Found for Bid History";
             return;
@@ -202,7 +234,8 @@ class ShortCodeController {
     }
     public function bidWinning($attributes) {
         try {
-            return $this->viewRenderer->render('views/bid/winning', $this->state->currentItem());
+            $template = $this->checkTemplate($attributes, 'views/bid/winning');
+            return $this->viewRenderer->render($template, $this->state->currentItem());
         }
         catch (Exception $e) {
             echo "No Item found for Bid winning";
@@ -215,7 +248,8 @@ class ShortCodeController {
     // Items
     public function itemResults($attributes) {
         try {
-            return $this->viewRenderer->render('views/item/results', $this->state->currentItem());
+            $template = $this->checkTemplate($attributes, 'views/item/results');
+            return $this->viewRenderer->render($template, $this->state->currentItem());
         }
         catch (Exception $e) {
             echo "No Item was found for Item Results";
@@ -224,7 +258,6 @@ class ShortCodeController {
     }
     public function itemSearchBar($attributes) {
         try {
-            return $this->viewRenderer->render('views/item/search-bar');
         }
         catch (Exception $e) {
             echo "Error For Search Bar";
@@ -236,7 +269,6 @@ class ShortCodeController {
     public function ticketBuy($attributes) {
         try {
             $auction = $this->state->currentAuction();
-            return $this->viewRenderer->render('views/ticket/buy', $this->state->currentAuction());
         } catch(Exception $e)
         {
             echo "Ticket Buy, No Auction Found";
@@ -248,7 +280,8 @@ class ShortCodeController {
     public function imageGallery($attributes) {
         try {
             $item = $this->state->currentItem();
-            return $this->viewRenderer->render('views/image/photo-gallery', $item);
+            $template = $this->checkTemplate($attributes, 'views/image/photo-gallery');
+            return $this->viewRenderer->render($template, $item);
         } catch(Exception $e)
         {
             echo 'No Item was found for image gallery';

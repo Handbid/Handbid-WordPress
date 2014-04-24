@@ -1,1 +1,14 @@
-Organization Auction Details
+<?php
+if ($this->context['organization']) {
+    $org = $this->context['organization'];
+} else {
+    echo "No Organization Set";
+    return;
+}
+
+?>
+<img src="<?= $org->logo; ?>"/>
+<?= $org->name; ?>
+<?= $org->address->full; ?>
+<a href="<?= $org->website; ?>" target="_blank"><?= $org->website; ?></a>
+<p><?= $org->description; ?></p>

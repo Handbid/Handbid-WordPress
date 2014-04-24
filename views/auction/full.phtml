@@ -1,1 +1,46 @@
-auction/full.phtml view template
+<?php
+    $auctions = $this->get('auctions');
+
+    $dateFormat = 'm/d/Y h:i a';
+?>
+<table class="auctionTable">
+    <thead>
+        <th><?= __('Current Auctions'); ?></th>
+        <th></th>
+        <th><?= __('Status'); ?></th>
+        <th><?= __('Date'); ?></th>
+        <th><?= __('Total Items'); ?></th>
+        <th></th>
+    </thead>
+    <?php
+    forEach($auctions as $auction) { ?>
+        <tr onclick="window.location.href='/auction-detail/?auction=<?= $auction->_id; ?>'">
+            <td>
+                <img class="alignnone animated fadeIn" alt="<?= $auction->name; ?>" src="<?= $auction->image; ?>" width="250" style="opacity: 0;">
+            </td>
+            <td>
+                <?= $auction->name; ?>
+                <?= $auction->vanityAddress; ?>
+                <?= $auction->location->full; ?>
+            </td>
+            <td>
+                <?= $auction->status; ?>
+            </td>
+            <td>
+                <?= __('Start'), date($dateFormat,$auction->startTime); ?>
+                <?= __('End'), date($dateFormat,$auction->endTime); ?>
+            </td>
+            <td>
+                Total Items: Need Data
+            </td>
+            <td>
+                <span class="auctionListLogo">
+                    <?= __('View'); ?>
+                </span>
+            </td>
+        </tr>
+    <?php
+    }
+    ?>
+
+</table>

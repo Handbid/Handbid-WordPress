@@ -1,7 +1,9 @@
 <?php
 
 if ($this->context) {
-    $auction = $this->context;
+    var_dump($this->context);
+    $auction     = $this->context;
+    $coordinates = $auction->location;
 } else {
     echo "No Auction Set";
     return;
@@ -30,7 +32,7 @@ $url = get_permalink() . '?auction=' . get_query_var('auction');
             <li><label><?= __('Event Dates') . ' : '; ?></label><?= date($dateFormat,$auction->startTime); ?> - <?= date($dateFormat,$auction->endTime); ?></li>
             <li><label><?= __('Event Location') . ' : '; ?></label><?= $auction->vanityAddress; ?></li>
             <li><label><?= __('Event Address') . ' : '; ?></label>
-                <?= $auction->location->full; ?>
+                <?= $coordinates->location->full; ?>
             </li>
         </ul>
 
