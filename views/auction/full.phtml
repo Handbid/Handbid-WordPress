@@ -15,26 +15,43 @@
     <?php
     forEach($auctions as $auction) { ?>
         <tr onclick="window.location.href='/auction-detail/?auction=<?= $auction->_id; ?>'">
-            <td>
-                <img class="alignnone animated fadeIn" alt="<?= $auction->name; ?>" src="<?= $auction->image; ?>" width="250" style="opacity: 0;">
+            <td class="cell-image cell-first">
+                <img class="alignnone animated fadeIn" alt="<?= $auction->name; ?>" src="<?= $auction->image; ?>" style="opacity: 0;">
             </td>
-            <td>
-                <?= $auction->name; ?>
-                <?= $auction->vanityAddress; ?>
-                <?= $auction->location->full; ?>
+            <td class="cell-name">
+                <div class="name"><?= $auction->name; ?></div>
+
+                <div class="vanity">
+                    <?= $auction->vanityAddress; ?>
+                </div>
+                <div class="address">
+                    <?= $auction->location->full; ?>
+                </div>
             </td>
-            <td>
+            <td class="cell-status">
                 <?= $auction->status; ?>
             </td>
-            <td>
-                <?= __('Start'), date($dateFormat,$auction->startTime); ?>
-                <?= __('End'), date($dateFormat,$auction->endTime); ?>
+            <td class="cell-time">
+                <div class="startDate">
+                    <div class="label">
+                        <?= __('Start'); ?>
+                    </div>
+                    <div>
+                        <?= date($dateFormat,$auction->startTime); ?>
+                    </div>
+                </div>
+                <div class="endDate">
+                    <span>
+                        <?= __('End'); ?>
+                    </span>
+                    <?= date($dateFormat,$auction->startTime); ?>
+                </div>
             </td>
-            <td>
+            <td class="cell-numItems">
                 Total Items: Need Data
             </td>
-            <td>
-                <span class="auctionListLogo">
+            <td classs="cell-button">
+                <span class="button auctionListLogo">
                     <?= __('View'); ?>
                 </span>
             </td>

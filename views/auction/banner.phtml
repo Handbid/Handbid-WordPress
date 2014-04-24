@@ -1,7 +1,7 @@
 <?php
 if ($this->context) {
-    $auction = $this->context[0];
-    $coords = $this->context[1];
+    $auction = $this->context['auction'];
+    $coords = $this->context['coordinates'];
 
 } else {
     echo "No Auction Set";

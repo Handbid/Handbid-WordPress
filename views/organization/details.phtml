@@ -5,10 +5,20 @@ if ($this->context['organization']) {
     echo "No Organization Set";
     return;
 }
-
 ?>
-<img src="<?= $org->logo; ?>"/>
-<?= $org->name; ?>
-<?= $org->address->full; ?>
-<a href="<?= $org->website; ?>" target="_blank"><?= $org->website; ?></a>
-<p><?= $org->description; ?></p>
+
+<div class="organizationDetailsContainer">
+    <img src="<?= $org->logo; ?>"/>
+    <div class="orgDetails">
+        <h3><?= $org->name; ?></h3>
+        <div class="address">
+            <?= $org->address->full; ?>
+        </div>
+        <div class="website">
+            <a href="<?= $org->website; ?>" target="_blank"><?= $org->website; ?></a>
+        </div>
+        <div class="description">
+            <?= $org->description; ?>
+        </div>
+    </div>
+</div>

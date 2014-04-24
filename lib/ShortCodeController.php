@@ -47,14 +47,17 @@ class ShortCodeController {
         }
     }
 
-    // Pass me attributes and full path 'views/organization/details' and I will check it for you
+    // Helpers
     public function checkTemplate($attributes, $path) {
+
+        // checks for full template path 'views/organization/details'
         if(!isset($attributes['template']) && !$attributes['template']) {
             $attributes['template'] = $path;
         }
 
         return $attributes['template'];
     }
+
     // Organization
     public function organizationDetails($attributes) {
         try {
@@ -152,7 +155,7 @@ class ShortCodeController {
                 $location->lng
             ];
 
-            $template = $this->checkTemplate($attributes, 'views/auction/details');
+            $template = $this->checkTemplate($attributes, 'views/auction/banner');
             return $this->viewRenderer->render($template, [
                     'auction'     => $auction,
                     'coordinates' => $coords
@@ -169,7 +172,10 @@ class ShortCodeController {
 
         try {
             $template = $this->checkTemplate($attributes, 'views/auction/details');
-            return $this->viewRenderer->render($template, $this->state->currentAuction());
+            $auction = $this->state->currentAuction();
+            return $this->viewRenderer->render($template, [
+                    'auction' => $auction
+                ]);
         }
         catch(Exception $e) {
             echo "No Auction found";
