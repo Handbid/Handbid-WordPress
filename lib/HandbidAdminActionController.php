@@ -47,8 +47,8 @@ class HandbidAdminActionController {
         // handbidEndpoint      : endpoint url
 
         $settings = [
-            'handbid-application'  => 'handbidAppId',
-            'handbid-application'  => 'handbidApiKey',
+            'handbid-application'  => 'handbidConsumerKey',
+            'handbid-application'  => 'handbidConsumerSecret',
             'handbid-landing-page' => 'handbidAuctionDetail',
             'handbid-landing-page' => 'handbidItemDetail',
             'handbid-landing-page' => 'handbidOrganization',

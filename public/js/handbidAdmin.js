@@ -9,8 +9,8 @@ var $j = jQuery.noConflict();
 
 $j(function() {
 
-    var appId = $j('input[name=handbidAppId]').val(),
-        apiKey = $j('input[name=handbidApiKey]').val(),
+    var appId = $j('input[name=handbidConsumerKey]').val(),
+        apiKey = $j('input[name=handbidConsumerSecret]').val(),
         endpoint = handbidAdmin.endpoint;
 
     $j('.testRestEndpoint').click( function() {

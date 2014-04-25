@@ -13,24 +13,20 @@ $errors = [
 
 <div class="wrap">
     <h2>Handbid</h2>
+        <button class="button testRestEndpoint"><?= __('Test Rest Endpoint'); ?></button>
+
     <form method="post" action="options.php">
         <table class="form-table">
             <tr valign="top">
                 <th scope="row"><?= ('Application Id'); ?></th>
-                <td><input type="text" name="handbidAppId" value="<?php echo get_option('handbidAppId'); ?>" /></td>
+                <td><input type="text" name="handbidConsumerKey" value="<?php echo get_option('handbidConsumerKey'); ?>" /></td>
             </tr>
 
             <tr valign="top">
                 <th scope="row"><?= ('API Key'); ?></th>
-                <td><input type="password" name="handbidApiKey" value="<?php echo get_option('handbidApiKey'); ?>" /></td>
-                <button class="button testRestEndpoint"><?= __('Test Rest Endpoint'); ?></button>
+                <td><input type="password" name="handbidConsumerSecret" value="<?php echo get_option('handbidConsumerSecret'); ?>" /></td>
             </tr>
 
-            <tr valign="top">
-                <th scope="row"></th>
-                <td><button class="button testRestEndpoint"><?= __('Test Rest Endpoint'); ?></button></td>
-
-            </tr>
             <tr valign="top">
                 <th scope="row"><?= ('Rest Api Url ( Default : https://rest.handbid.com )'); ?></th>
                 <td><input type="text" name="handbidRestEndpoint" value="<?php echo get_option('handbidRestEndpoint'); ?>" /></td>

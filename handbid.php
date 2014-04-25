@@ -4,7 +4,7 @@
  * Plugin Name: Handbid
  * Author: Jon Hemstreet
  * Author URI: http://www.jonhemstreet.com
- * Version: 0.0.1.2
+ * Version: 0.0.1.3
  * Description: Handbid is fully automated mobile silent auction software specifically designed to increase revenue,
  * drive bid activity, and maximize ROI for non-profits. Eliminating the need for paper bid sheets, Handbid empowers
  * users to bid using a mobile device, the web, or a tablet (kiosk) at the event. Bidders can enter bids remotely or
@@ -94,7 +94,7 @@ class Handbid {
 
     function createHandbid() {
         $endpoint = get_option('handbidRestEndpoint');
-        return new \Handbid\Handbid(get_option('handbidAppId'), get_option('handbidApiKey'), [
+        return new \Handbid\Handbid(get_option('handbidConsumerKey'), get_option('handbidConsumerSecret'), [
                 'endpoint' => ($endpoint) ? $endpoint : null
             ]);
     }
