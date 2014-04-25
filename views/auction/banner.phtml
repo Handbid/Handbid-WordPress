@@ -1,18 +1,19 @@
 <?php
 if ($this->context) {
-    $auction = $this->context['auction'];
-    $coords = $auction->location->coords;
+    $auction  = $this->context['auction'];
+    $coords   = $auction->location->coords;
+    $org      = $auction->meta->organization;
 
 } else {
     echo "No Auction Set";
     return;
 }
 ?>
+<header id="title-area" class="clearfix headerCover"><div class="inner" style="opacity: 1;"><h1 class="page-title entry-title"><?= $auction->name; ?></h1></div></header>
 
 <div class="bannerContainer">
     <div class="statusContainer">
-        <div class="name"><a href="/organization?organization=<?=$auction->organization ?>">Organzation</a></div>
-        <div class="name"><?= $auction->name; ?></div>
+        <div class="name"><a href="/organization?organization=<?= $org->id; ?>"><?= $org->name; ?></a></div>
         <div class="status closed"><? __('Auction is') . ' ' . $auction->status . ' ' . __('for Bidding'); ?></div>
     </div>
 

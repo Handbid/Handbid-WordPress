@@ -93,7 +93,10 @@ class Handbid {
     }
 
     function createHandbid() {
-        return new \Handbid\Handbid(get_option('handbidAppId'), get_option('handbidApiKey'));
+        $endpoint = get_option('handbidRestEndpoint');
+        return new \Handbid\Handbid(get_option('handbidAppId'), get_option('handbidApiKey'), [
+                'endpoint' => ($endpoint) ? $endpoint : null
+            ]);
     }
 
     // State

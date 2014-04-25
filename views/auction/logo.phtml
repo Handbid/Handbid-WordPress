@@ -5,9 +5,16 @@ $auctions = $this->get('auctions');
 
 forEach($auctions as $auction) { ?>
 
-<a class="auctionListLogo" href="/auction-detail/?auction=<?= $auction->_id; ?>">
-    <img class="alignnone animated fadeIn" alt="<?= $auction->name; ?>" src="<?= $auction->image; ?>" style="opacity: 0;">
-</a>
+    <a href="/auction-detail/?auction=<?= $auction->_id; ?>" class="fancyLink auctionListLogo">
+        <img src="<?= $auction->image; ?>" />
+        <div class="mask"></div>
+        <div class="content">
+            <div class="info" title="Full Image">
+                <div><?= date('m/d/Y',$auction->startTime); ?></div>
+                <div><?= date('h:i a',$auction->startTime); ?></div>
+            </div>
+        </div>
+    </a>
 
 <?php
     }

@@ -1,18 +1,19 @@
 <?php
-if ($this->context[0]) {
-    $item = $this->context[0];
+if ($this->context) {
+    $item = $this->context['item'];
 } else {
     echo "No Item Set";
     return;
 }
+var_dump($item);
 ?>
 
 <div class="widget widget-winningbidder widgetContainer">
     <div class="header"><?= __('Winning bid'); ?></div>
-    <div class="amount"><?= '$' . $item['highestBid']['amount']; ?></div>
+    <div class="amount"><?= '$' . $item->highestBid->amount; ?></div>
     <div class="alias"><?= __('By' . ' ' . $item['highestBid']['_restMetaData']['bidderName'] . ' ( ' . $item['highestBid']['_restMetaData']['bidderPin'] . ' )'); ?></div>
     <div class="original-value">
         <div class="original-text"><?= __('Original Value'); ?></div>
-        <div class="original-amount"><?= '$' . $item['startingPrice']; ?></div>
+        <div class="original-amount"><?= '$' . $item->startingPrice; ?></div>
     </div>
 </div>

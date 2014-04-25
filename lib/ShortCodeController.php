@@ -72,7 +72,8 @@ class ShortCodeController {
             return $markup;
         }
         catch (Exception $e) {
-            echo "No organization details could be found";
+            echo "Oops we could not find the organization you were looking for, Please try again later";
+            error_log($e->getMessage());
             return;
         }
     }
@@ -81,8 +82,15 @@ class ShortCodeController {
 
             $template = $this->templateFromAttributes($attributes, 'views/auction/logo');
 
-            $organization = $this->state->currentOrg();
-            $auctions = $this->handbid->store('Auction')->byOrg($organization->_id);
+            $org = $this->state->currentOrg();
+
+
+            if(!in_array($attributes['type'], ['upcoming', 'all', 'past'])) {
+                $attributes['type'] = 'upcoming';
+            }
+
+            // Get orgs from handbid server
+            $auctions = $this->handbid->store('Auction')->{$attributes['type']}(($org->_id) ? $org->_id : null);
 
             $markup = $this->viewRenderer->render($template, [
                     'auctions' => $auctions
@@ -91,7 +99,7 @@ class ShortCodeController {
             return $markup;
         }
         catch (Exception $e) {
-            echo "No organization auctions could be found";
+            error_log($e->getMessage());
             return;
         }
     }
@@ -104,8 +112,8 @@ class ShortCodeController {
             $template = $this->templateFromAttributes($attributes, 'views/auction/logo');
 
 
-            if(!in_array($attributes['type'], ['recent', 'all', 'past'])) {
-                $attributes['type'] = 'recent';
+            if(!in_array($attributes['type'], ['upcoming', 'all', 'past'])) {
+                $attributes['type'] = 'upcoming';
             }
 
             // Get orgs from handbid server
@@ -118,7 +126,7 @@ class ShortCodeController {
             return $markup;
         }
         catch (Exception $e) {
-            echo "Error during Auctions List";
+            error_log($e->getMessage());
             return;
         }
 
@@ -147,7 +155,7 @@ class ShortCodeController {
 
         } catch(Exception $e)
         {
-            echo $e->getMessage();
+            error_log($e->getMessage());
             return;
         }
 
@@ -162,7 +170,7 @@ class ShortCodeController {
                 ]);
         }
         catch(Exception $e) {
-            echo "No Auction found";
+            error_log($e->getMessage());
             return;
         }
 
@@ -174,7 +182,7 @@ class ShortCodeController {
             return $this->viewRenderer->render($template, $this->state->currentAuction());
         }
         catch (Exception $e) {
-            echo "Could not find current auction for contact form";
+            error_log($e->getMessage());
             return;
         }
 
@@ -194,7 +202,7 @@ class ShortCodeController {
                 ]);
         }
         catch (Exception $e) {
-            echo $e->getMessage();
+            error_log($e->getMessage());
             return;
         }
 
@@ -205,19 +213,23 @@ class ShortCodeController {
     public function bidNow($attributes) {
         try {
             $template = $this->templateFromAttributes($attributes, 'views/bid/now');
-            return $this->viewRenderer->render($template, $this->state->currentItem());
+            return $this->viewRenderer->render($template, [
+                    'item' => $this->state->currentItem()
+                ]);
         }
         catch (Exception $e) {
-            echo "No Item Found for Bid Now";
+            error_log($e->getMessage());
             return;
         }
     }
     public function bidHistory($attributes) {
         try {
             $template = $this->templateFromAttributes($attributes, 'views/bid/history');
-            return $this->viewRenderer->render($template, $this->state->currentItem());
+            return $this->viewRenderer->render($template, [
+                    'item' => $this->state->currentItem()
+                ]);
         } catch (Exception $e) {
-            echo "No Item Found for Bid History";
+            error_log($e->getMessage());
             return;
         }
 
@@ -225,10 +237,12 @@ class ShortCodeController {
     public function bidWinning($attributes) {
         try {
             $template = $this->templateFromAttributes($attributes, 'views/bid/winning');
-            return $this->viewRenderer->render($template, $this->state->currentItem());
+            return $this->viewRenderer->render($template, [
+                    'item' => $this->state->currentItem()
+                ]);
         }
         catch (Exception $e) {
-            echo "No Item found for Bid winning";
+            error_log($e->getMessage());
             return;
         }
 
@@ -239,10 +253,12 @@ class ShortCodeController {
     public function itemResults($attributes) {
         try {
             $template = $this->templateFromAttributes($attributes, 'views/item/results');
-            return $this->viewRenderer->render($template, $this->state->currentItem());
+            return $this->viewRenderer->render($template, [
+                    'item' => $this->state->currentItem()
+                ]);
         }
         catch (Exception $e) {
-            echo "No Item was found for Item Results";
+            error_log($e->getMessage());
             return;
         }
     }
@@ -250,7 +266,7 @@ class ShortCodeController {
         try {
         }
         catch (Exception $e) {
-            echo "Error For Search Bar";
+            error_log($e->getMessage());
             return;
         }
     }
@@ -261,7 +277,7 @@ class ShortCodeController {
             $auction = $this->state->currentAuction();
         } catch(Exception $e)
         {
-            echo "Ticket Buy, No Auction Found";
+            error_log($e->getMessage());
             return;
         }
     }
@@ -276,7 +292,7 @@ class ShortCodeController {
                 ]);
         } catch(Exception $e)
         {
-            echo 'No Item was found for image gallery';
+            error_log($e->getMessage());
             return;
         }
     }

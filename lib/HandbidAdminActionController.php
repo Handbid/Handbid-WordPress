@@ -53,7 +53,10 @@ class HandbidAdminActionController {
             'handbid-landing-page' => 'handbidItemDetail',
             'handbid-landing-page' => 'handbidOrganization',
             'handbid-endpoint'     => 'handbidRestEndpoint',
-            'handbid-social'       => 'handbidFacebookAppId'
+            'handbid-social'       => 'handbidFacebookAppId',
+            'handbid-error'        => 'handbidOrganizationNotFound',
+            'handbid-error'        => 'handbidAuctionNotFound',
+            'handbid-error'        => 'handbidItemNotFound'
         ];
 
         forEach($settings as $k => $v) {

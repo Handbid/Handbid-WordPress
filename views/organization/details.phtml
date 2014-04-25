@@ -6,11 +6,11 @@ if ($this->context['organization']) {
     return;
 }
 ?>
+<header id="title-area" class="clearfix headerCover"><div class="inner" style="opacity: 1;"><h1 class="page-title entry-title"><?= $org->name; ?></h1></div></header>
 
 <div class="organizationDetailsContainer">
     <img src="<?= $org->logo; ?>"/>
     <div class="orgDetails">
-        <h3><?= $org->name; ?></h3>
         <div class="address">
             <?= $org->address->full; ?>
         </div>

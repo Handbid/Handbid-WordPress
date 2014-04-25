@@ -1,28 +1,34 @@
 <?php
-if ($this->context[0]) {
-    $item = $this->context[0];
+if ($this->context) {
+    $item = $this->context['item'];
 } else {
     echo "No Item Set";
     return;
 }
 ?>
-
-<div class="biddingContainer">
-    <div class="bidDescription leftContainer">
-        <div class="label" id="bidLabel"><?= __('Minimum next bid'); ?></div>
-        <div class="amount">
-            $<span class="value" id="bidAmountTotal"><?= $item['minimumBidAmount']; ?></span>
+<h3><?= $item->name; ?></h3>
+<div class="donated-by">
+    <div class="label"><?= __('Donated by') . ': '; ?></div>
+    <div class="donor"><?= $item->donor;?></div>
+</div>
+<div id="bidContainer" class="bidContainer widgetContainer">
+    <div class="biddingContainer">
+        <div class="bidDescription leftContainer">
+            <div class="label" id="bidLabel"><?= __('Minimum next bid'); ?></div>
+            <div class="amount">
+                $<span class="value" id="bidAmountTotal"><?= $item->minimumBidAmount; ?></span>
+            </div>
+            <button class="reset"><?= __('Reset Bid'); ?></button>
+            <div class="bidIncrement">
+                <?= __('Bid increments by') . ' $'; ?><span class="value"><?= $item->bidIncrement; ?></span>
+            </div>
         </div>
-        <button class="reset"><?= __('Reset Bid'); ?></button>
-        <div class="bidIncrement">
-            <?= __('Bid increments by') . ' $'; ?><span class="value"><?= $item['bidIncrement']; ?></span>
+        <div class="bidAction rightContainer">
+            <div class="bidUpDown">
+                <button class="down"><?= __('Down'); ?></button><button class="up"><?= __('Up'); ?></button>
+            </div>
+            <button class="bidNow"><?= __('Bid Now'); ?></button>
+            <button class="proxy" id="proxyBid"><?= __('Make a Proxy Bid'); ?></button>
         </div>
-    </div>
-    <div class="bidAction rightContainer">
-        <div class="bidUpDown">
-            <button class="down"><?= __('Down'); ?></button><button class="up"><?= __('Up'); ?></button>
-        </div>
-        <button class="bidNow"><?= __('Bid Now'); ?></button>
-        <button class="proxy" id="proxyBid"><?= __('Make a Proxy Bid'); ?></button>
     </div>
 </div>

@@ -3,11 +3,17 @@
               'handbidAuctionDetail' => 'Auction Detail Landing Page Url',
               'handbidItemDetail'    => 'Item Detail Landing Page Url'
    ];
+
+$errors = [
+    'handbidOrganizationNotFound' => 'Organization not found error message',
+    'handbidAuctionNotFound'      => 'Auction not found error message',
+    'handbidItemNotFound'         => 'Item not found error message'
+]
 ?>
 
 <div class="wrap">
     <h2>Handbid</h2>
-    <form method="post" action="admin.php?page=handbid-admin-dashboard">
+    <form method="post" action="options.php">
         <table class="form-table">
             <tr valign="top">
                 <th scope="row"><?= ('Application Id'); ?></th>
@@ -26,7 +32,7 @@
 
             </tr>
             <tr valign="top">
-                <th scope="row"><?= ('Rest Api Url'); ?></th>
+                <th scope="row"><?= ('Rest Api Url ( Default : https://rest.handbid.com )'); ?></th>
                 <td><input type="text" name="handbidRestEndpoint" value="<?php echo get_option('handbidRestEndpoint'); ?>" /></td>
             </tr>
 
@@ -36,6 +42,16 @@
             </tr>
 
             <?php forEach($pages as $k => $v) {
+            ?>
+                <tr valign="top">
+                    <th scope="row"><?= ($v); ?></th>
+                    <td><input type="text" name="<?= $k; ?>" value="<?php echo get_option($k); ?>" /></td>
+                </tr>
+            <?php
+            }
+            ?>
+
+            <?php forEach($errors as $k => $v) {
             ?>
                 <tr valign="top">
                     <th scope="row"><?= ($v); ?></th>
