@@ -6,7 +6,7 @@ $auctions = $this->get('auctions');
 forEach($auctions as $auction) { ?>
 
 <a class="auctionListLogo" href="/auction-detail/?auction=<?= $auction->_id; ?>">
-    <img class="alignnone animated fadeIn" alt="<?= $auction->name; ?>" src="<?= $auction->image; ?>" width="250" style="opacity: 0;">
+    <img class="alignnone animated fadeIn" alt="<?= $auction->name; ?>" src="<?= $auction->image; ?>" style="opacity: 0;">
 </a>
 
 <?php

@@ -4,10 +4,6 @@ if ($this->context) {
     $items      = $this->context['items'];
     $donors     = array_unique($items);
 
-    $categories[] = [
-        'name' => 'All'
-    ];
-
     $showItems = [
         'all'       => 'All Items',
         'forSale'   => 'For Sale',
@@ -53,11 +49,6 @@ if ($this->context) {
 
         <label class="categoryLabel"><?= __('Categories'); ?>:</label>
         <ul class="categorySort fancyRadio">
-            <li>
-                <input id="all" type="radio" name="category" value="_all">
-                <label for="all"><?= __('All'); ?></label>
-            </li>
-
             <?php
 
             forEach ($categories as $category) {

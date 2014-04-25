@@ -147,7 +147,7 @@ class ShortCodeController {
 
         } catch(Exception $e)
         {
-            echo 'Error in auction banner';
+            echo $e->getMessage();
             return;
         }
 
@@ -187,7 +187,9 @@ class ShortCodeController {
 
             $template = $this->templateFromAttributes($attributes, 'views/auction/list');
             return $this->viewRenderer->render($template, [
-                    'categories' => 'category',
+                    'categories' => [
+                        '_all' => 'All'
+                    ],
                     'items'      => $items
                 ]);
         }
@@ -269,7 +271,9 @@ class ShortCodeController {
         try {
             $item = $this->state->currentItem();
             $template = $this->templateFromAttributes($attributes, 'views/image/photo-gallery');
-            return $this->viewRenderer->render($template, $item);
+            return $this->viewRenderer->render($template, [
+                    'item' => $item
+                ]);
         } catch(Exception $e)
         {
             echo 'No Item was found for image gallery';

@@ -1,13 +1,11 @@
 <?php
-if ($this->context[0]) {
-    $item = $this->context[0];
+if ($this->context) {
+    $item = $this->context['item'];
 } else {
     echo "Context not found";
     return;
 }
-
 ?>
-
 
 <div class="banner">
     <a href="#" class="unslider-arrow prev">Previous slide</a>
