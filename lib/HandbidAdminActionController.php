@@ -37,8 +37,28 @@ class HandbidAdminActionController {
 
     }
     function registerPluginSettings() {
-        register_setting( 'handbid-application', 'handbidAppId');   // get_option('handbidAppId');
-        register_setting( 'handbid-application', 'handbidApiKey');  // get_option('handbidApiKey');
+
+
+        // handbidAppId         : handbid app id
+        // handbidApiKey        : handbid api key
+        // handbidAuctionDetail : auction details
+        // handbidItemDetail    : auction item details
+        // handbidOrganization  : single organization
+        // handbidEndpoint      : endpoint url
+
+        $settings = [
+            'handbid-application'  => 'handbidAppId',
+            'handbid-application'  => 'handbidApiKey',
+            'handbid-landing-page' => 'handbidAuctionDetail',
+            'handbid-landing-page' => 'handbidItemDetail',
+            'handbid-landing-page' => 'handbidOrganization',
+            'handbid-endpoint'     => 'handbidRestEndpoint',
+            'handbid-social'       => 'handbidFacebookAppId'
+        ];
+
+        forEach($settings as $k => $v) {
+            register_setting($k,$v);
+        }
     }
     function adminSettingsAction() {
         echo $this->viewRenderer->render('views/admin/settings');

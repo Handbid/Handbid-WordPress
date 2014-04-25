@@ -1,8 +1,13 @@
+<?php
+   $pages = [ 'handbidOrganization'  => 'Organization Landing Page Url',
+              'handbidAuctionDetail' => 'Auction Detail Landing Page Url',
+              'handbidItemDetail'    => 'Item Detail Landing Page Url'
+   ];
+?>
+
 <div class="wrap">
     <h2>Handbid</h2>
-    <form method="post" action="options.php">
-        <?php settings_fields( 'handbid-application' ); ?>
-        <?php do_settings_sections( 'handbid-application' ); ?>
+    <form method="post" action="admin.php?page=handbid-admin-dashboard">
         <table class="form-table">
             <tr valign="top">
                 <th scope="row"><?= ('Application Id'); ?></th>
@@ -12,11 +17,36 @@
             <tr valign="top">
                 <th scope="row"><?= ('API Key'); ?></th>
                 <td><input type="password" name="handbidApiKey" value="<?php echo get_option('handbidApiKey'); ?>" /></td>
+                <button class="button testRestEndpoint"><?= __('Test Rest Endpoint'); ?></button>
             </tr>
+
+            <tr valign="top">
+                <th scope="row"></th>
+                <td><button class="button testRestEndpoint"><?= __('Test Rest Endpoint'); ?></button></td>
+
+            </tr>
+            <tr valign="top">
+                <th scope="row"><?= ('Rest Api Url'); ?></th>
+                <td><input type="text" name="handbidRestEndpoint" value="<?php echo get_option('handbidRestEndpoint'); ?>" /></td>
+            </tr>
+
+            <tr valign="top">
+                <th scope="row"><?= ('Facebook App Id ( For Comments )'); ?></th>
+                <td><input type="text" name="handbidFacebookAppId" value="<?php echo get_option('handbidFacebookAppId'); ?>" /></td>
+            </tr>
+
+            <?php forEach($pages as $k => $v) {
+            ?>
+                <tr valign="top">
+                    <th scope="row"><?= ($v); ?></th>
+                    <td><input type="text" name="<?= $k; ?>" value="<?php echo get_option($k); ?>" /></td>
+                </tr>
+            <?php
+            }
+            ?>
         </table>
         <?php submit_button(); ?>
 
     </form>
 
-    <button class="button testRestEndpoint"><?= __('Test Rest Endpoint'); ?></button>
 </div>

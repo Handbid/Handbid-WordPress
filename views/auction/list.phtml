@@ -1,7 +1,7 @@
 <?php
-if ($this->context[0] && $this->context[1]) {
-    $categories = $this->context[0];
-    $items      = $this->context[1];
+if ($this->context) {
+    $categories = $this->context['categories'];
+    $items      = $this->context['items'];
     $donors     = array_unique($items);
 
     $categories[] = [

@@ -11,6 +11,7 @@ if ($this->context) {
 
 <div class="bannerContainer">
     <div class="statusContainer">
+        <div class="name"><a href="/organization?organization=<?=$auction->organization ?>">Organzation</a></div>
         <div class="name"><?= $auction->name; ?></div>
         <div class="status closed"><? __('Auction is') . ' ' . $auction->status . ' ' . __('for Bidding'); ?></div>
     </div>
