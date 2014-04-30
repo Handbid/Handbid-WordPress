@@ -1,8 +1,8 @@
 <?php
 
 if ($this->context) {
-    $auction      = $this->context['auction'];
-    $coordinates  = $this->context['coordinates'];
+    $auction      = $this->context->auction;
+    $coordinates  = $this->context->coordinates;
 } else {
 
     echo "No Auction Set";
@@ -15,7 +15,6 @@ $dateFormat = 'm/d/Y h:i a';
 $url = get_permalink() . '?auction=' . get_query_var('auction');
 
 ?>
-<!--<a href="/--><?//= get_option('handbidOrganization') . '?organization=' . $auction->organization ?><!--">Organzation</a>-->
 <div class="eventsAndDetails">
     <div class="sectionHeading"><?= __('Auction & Event Details'); ?></div>
     <div class="socialLinks">

@@ -91,7 +91,7 @@ if ($this->context) {
                 <?php
                 forEach ($donors as $donor) {
                     ?>
-                    <option value="<?= $donor['_id']; ?>"><?= $donor['name']; ?></option>
+                    <option value="<?= $donor->_id; ?>"><?= $donor->name; ?></option>
                 <?php
                 }
                 ?>
@@ -111,37 +111,39 @@ if ($this->context) {
                 // By default no filtering is done
                 $priceClass = '_all';
 
-                if($item['currentPrice'] >= 0 && $item['currentPrice'] <= 100 ) {
+                if($item->currentPrice >= 0 && $item->currentPrice <= 100 ) {
                     $priceClass = '_0';
                 }
-                else if($item['currentPrice'] >= 101 && $item['currentPrice'] < 250) {
+                else if($item->currentPrice >= 101 && $item->currentPrice < 250) {
                     $priceClass = '_1';
                 }
-                else if($item['currentPrice'] >= 251 && $item['currentPrice'] < 500) {
+                else if($item->currentPrice >= 251 && $item->currentPrice < 500) {
                     $priceClass = '_2';
                 }
-                else if($item['currentPrice'] >= 501) {
+                else if($item->currentPrice >= 501) {
                     $priceClass = '_5';
                 }
 
                 ?>
-                <li class="item item-tile <?= sanitize_html_class($item['_restMetaData']['categoryName']) . ' ' . $priceClass; ?> all _all">
-                    <a href="/auction-item/?item=<?= $item['_id']; ?>">
+                <li class="item item-tile
+<!--                --><?//= sanitize_html_class($item['_restMetaData']['categoryName']) . ' ' . $priceClass; ?><!-- -->
+                all _all">
+                    <a href="/auction-item/?item=<?= $item->_id; ?>">
                         <div class="item-content-inner">
-                            <div class="image" style="background-image: url(<?= $item['images'][0]; ?>);">
+                            <div class="image" style="background-image: url(<?= $item->images[0]; ?>);">
                                 <div class="block currentPrice">
-                                    <span><?= __('Current bid'); ?></span><span class="price"><?= '$' . $item['currentPrice']; ?></span></div>
-                                <div class="block itemCode"><?= __('Item Code') . ' : ' . $item['itemCode']; ?></div>
+                                    <span><?= __('Current bid'); ?></span><span class="price"><?= '$' . $item->currentPrice; ?></span></div>
+                                <div class="block itemCode"><?= __('Item Code') . ' : ' . $item->itemCode; ?></div>
                             </div>
                             <div class="details">
-                                <h2><?= $item['name']; ?></h2>
-                                <div class="bidIncrement"><?= __('Bid Increment') . ': $' . $item['bidIncrement']; ?></div>
+                                <h2><?= $item->name; ?></h2>
+                                <div class="bidIncrement"><?= __('Bid Increment') . ': $' . $item->bidIncrement; ?></div>
                                 <div class="category">Category: Sports</div>
                             </div>
                         </div>
                     </a>
                     <div class="footer">
-                        <div class="stat bidCount"><div class="icon"></div><?= $item['_restMetaData']['totalBids']; ?></div>
+<!--                        <div class="stat bidCount"><div class="icon"></div>--><?//= $item['_restMetaData']['totalBids']; ?><!--</div>-->
                         <div class="stat favCount"><div class="icon"></div>20</div>
                         <div class="stat viewCount"><div class="icon"></div>200</div>
                     </div>

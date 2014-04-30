@@ -1,14 +1,12 @@
 <?php
 if ($this->context) {
-    $item = $this->context['item'];
+    $item = $this->context->item;
 } else {
     echo "No Item Set";
     return;
 }
 
-var_dump($item);
 ?>
-
 
 <div class="widget widget-bidhistory widgetContainer">
     <div>
@@ -17,7 +15,7 @@ var_dump($item);
     <div class="bid-history-list">
         <div class="bid-history-item">
             <div class="left">
-                <div class="image"><img src="/local/uploads/image-cache/f3069e643b/f3069e643b889347c416eef088f15201-40x40.png"></div>
+                <div class="image"><img src="<?= $item->images[0]; ?>"></div>
             </div>
             <div class="right">
                 <div class="text">

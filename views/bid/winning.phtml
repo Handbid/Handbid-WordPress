@@ -1,11 +1,10 @@
 <?php
-if ($this->context) {
-    $item = $this->context['item'];
+if ($this->context->item) {
+    $item = $this->context->item;
 } else {
     echo "No Item Set";
     return;
 }
-var_dump($item);
 ?>
 
 <div class="widget widget-winningbidder widgetContainer">
