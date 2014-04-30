@@ -16,14 +16,16 @@ $errors = [
         <button class="button testRestEndpoint"><?= __('Test Rest Endpoint'); ?></button>
 
     <form method="post" action="options.php">
+        <?php settings_fields('handbid-admin'); ?>
+        <?php do_settings_fields('handbid-admin-dashboard', 'handbid-admin'); ?>
         <table class="form-table">
             <tr valign="top">
-                <th scope="row"><?= ('Application Id'); ?></th>
+                <th scope="row"><?= ('Consumer Key'); ?></th>
                 <td><input type="text" name="handbidConsumerKey" value="<?php echo get_option('handbidConsumerKey'); ?>" /></td>
             </tr>
 
             <tr valign="top">
-                <th scope="row"><?= ('API Key'); ?></th>
+                <th scope="row"><?= ('Consumer Secret'); ?></th>
                 <td><input type="password" name="handbidConsumerSecret" value="<?php echo get_option('handbidConsumerSecret'); ?>" /></td>
             </tr>
 

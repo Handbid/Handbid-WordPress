@@ -21,6 +21,7 @@ class HandbidAdminActionController {
         add_action( 'admin_footer', [ $this, 'initAdminJavascript' ] );
         $this->registerPluginSettings();
     }
+
     function initAdminJavascript() {
 
         $scripts = [ 'handbidAdmin' => 'public/js/handbidAdmin.js' ];
@@ -36,33 +37,27 @@ class HandbidAdminActionController {
         ]);
 
     }
+
     function registerPluginSettings() {
 
-
-        // handbidAppId         : handbid app id
-        // handbidApiKey        : handbid api key
-        // handbidAuctionDetail : auction details
-        // handbidItemDetail    : auction item details
-        // handbidOrganization  : single organization
-        // handbidEndpoint      : endpoint url
-
         $settings = [
-            'handbid-application'  => 'handbidConsumerKey',
-            'handbid-application'  => 'handbidConsumerSecret',
-            'handbid-landing-page' => 'handbidAuctionDetail',
-            'handbid-landing-page' => 'handbidItemDetail',
-            'handbid-landing-page' => 'handbidOrganization',
-            'handbid-endpoint'     => 'handbidRestEndpoint',
-            'handbid-social'       => 'handbidFacebookAppId',
-            'handbid-error'        => 'handbidOrganizationNotFound',
-            'handbid-error'        => 'handbidAuctionNotFound',
-            'handbid-error'        => 'handbidItemNotFound'
+            'handbidConsumerKey',
+            'handbidConsumerSecret',
+            'handbidAuctionDetail',
+            'handbidItemDetail',
+            'handbidOrganization',
+            'handbidRestEndpoint',
+            'handbidFacebookAppId',
+            'handbidOrganizationNotFound',
+            'handbidAuctionNotFound',
+            'handbidItemNotFound'
         ];
 
-        forEach($settings as $k => $v) {
-            register_setting($k,$v);
+        forEach($settings as $setting) {
+            register_setting('handbid-admin',$setting);
         }
     }
+
     function adminSettingsAction() {
         echo $this->viewRenderer->render('views/admin/settings');
     }
