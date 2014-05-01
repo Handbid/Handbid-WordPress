@@ -1,7 +1,8 @@
 <?php
+var_dump($this->context); exit;
 if (isset($this->context['item']) || isset($this->context['bidHistory']) || $this->context) {
     $item = $this->context['item'];
-    $bidhistory = $this->context['bidhHistory'];
+    $bidhistory = $this->context['bidHistory'];
     var_dump($bidhistory); exit;
 
 } else {
