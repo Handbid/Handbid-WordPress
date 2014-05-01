@@ -3,13 +3,16 @@ var $j = jQuery.noConflict();
 $j(function() {
     jQuery( document ).ready(function( $ ) {
         // jQuery
+
         var $container = $j('#container.js-isotope');
+
+        // Setup item width
+        $('.item')[0].width();
 
         $container.isotope({
             // options...
             itemSelector: '.item',
             masonry:      {
-                columnWidth: 290,
                 rowHeight: 355
             }
         });
