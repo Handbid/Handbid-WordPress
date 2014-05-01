@@ -2,7 +2,14 @@
 if ($this->context) {
     $categories = $this->context['categories'];
     $items      = $this->context['items'];
-    $donors[]     = array_unique($items->donor);
+
+    forEach($items as $item) {
+        if($item->donor) {
+            $donorsDirty[] = $item->donor;
+        }
+    }
+
+    $donors[]     = array_unique($donorsDirty);
 
     $showItems = [
         'all'       => 'All Items',
