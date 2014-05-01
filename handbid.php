@@ -60,8 +60,6 @@ class Handbid {
 
     function init() {
 
-        add_action( 'admin_init', [ $this, 'registerPluginSettings' ] );
-
         // Add javascript
         add_action('wp_enqueue_scripts', [ $this, 'initJavascript' ] );
 
