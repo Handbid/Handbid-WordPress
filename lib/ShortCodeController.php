@@ -144,6 +144,7 @@ class ShortCodeController {
 
             if($geolocation->status == "ZERO_RESULTS") {
                 echo "Map not available.";
+                echo '<h1 class="page-title entry-title"><?php echo $auction->name; ?></h1>';
                 error_log('Google maps returned zero results');
                 return;
             }
