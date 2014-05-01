@@ -1,16 +1,18 @@
 var $j = jQuery.noConflict();
 
 $j(function() {
+
     var $container = $j('#container.js-isotope');
 
-    // Setup item width
-    $j('.item')[0].width();
+    $j('.item:first-of-type').width();
 
     $container.isotope({
         // options...
         itemSelector: '.item',
         masonry:      {
-            rowHeight: 355
+            columnWidth: 290,
+            rowHeight: 355,
+            gutterWidth: 20
         }
     });
 
