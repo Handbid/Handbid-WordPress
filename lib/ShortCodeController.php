@@ -230,7 +230,6 @@ class ShortCodeController {
             return;
         }
 
-        // Temp dummy data
     }
 
     // Bids
@@ -248,9 +247,13 @@ class ShortCodeController {
     }
     public function bidHistory($attributes) {
         try {
+            $item       = $this->state->currentItem();
+            $bidHistory = $this->state->store('Bid')->byItem($item->_id);
+
             $template = $this->templateFromAttributes($attributes, 'views/bid/history');
             return $this->viewRenderer->render($template, [
-                    'item' => $this->state->currentItem()
+                    'item'       => $this->state->currentItem(),
+                    'bidHistory' => $bidHistory
                 ]);
         } catch (Exception $e) {
             error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());

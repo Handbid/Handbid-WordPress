@@ -1,6 +1,9 @@
 <?php
-if (isset($this->context['item']) || $this->context) {
+if (isset($this->context['item']) || isset($this->context['bidHistory']) || $this->context) {
     $item = $this->context['item'];
+    $bidhistory = $this->context['bidhHistory'];
+    var_dump($bidhistory); exit;
+    
 } else {
     echo "No Item Set";
     return;
