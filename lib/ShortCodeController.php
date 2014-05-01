@@ -73,7 +73,7 @@ class ShortCodeController {
         }
         catch (Exception $e) {
             echo "Oops we could not find the organization you were looking for, Please try again later.";
-            error_log($e->getMessage() + ' on' + $e->getFile() + ':' + $e->getLine());
+            error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
             return;
         }
     }
@@ -100,7 +100,7 @@ class ShortCodeController {
         }
         catch (Exception $e) {
             echo "Organizations Auctions could not be found, please try again later.";
-            error_log($e->getMessage() + ' on' + $e->getFile() + ':' + $e->getLine());
+            error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
             return;
         }
     }
@@ -128,7 +128,7 @@ class ShortCodeController {
         }
         catch (Exception $e) {
             echo "Auctions could not be found, please try again later.";
-            error_log($e->getMessage() + ' on' + $e->getFile() + ':' + $e->getLine());
+            error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
             return;
         }
 
@@ -157,7 +157,7 @@ class ShortCodeController {
 
         } catch(Exception $e)
         {
-            error_log($e->getMessage() + ' on' + $e->getFile() + ':' + $e->getLine());
+            error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
             return;
         }
 
@@ -172,7 +172,7 @@ class ShortCodeController {
                 ]);
         }
         catch(Exception $e) {
-            error_log($e->getMessage() + ' on' + $e->getFile() + ':' + $e->getLine());
+            error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
             return;
         }
 
@@ -184,7 +184,7 @@ class ShortCodeController {
             return $this->viewRenderer->render($template, $this->state->currentAuction());
         }
         catch (Exception $e) {
-            error_log($e->getMessage() + ' on' + $e->getFile() + ':' + $e->getLine());
+            error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
             return;
         }
 
@@ -205,7 +205,7 @@ class ShortCodeController {
         }
         catch (Exception $e) {
             echo "Auctions could not be found, please try again later.";
-            error_log($e->getMessage() + ' on' + $e->getFile() + ':' + $e->getLine());
+            error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
             return;
         }
 
@@ -221,7 +221,7 @@ class ShortCodeController {
                 ]);
         }
         catch (Exception $e) {
-            error_log($e->getMessage() + ' on' + $e->getFile() + ':' + $e->getLine());
+            error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
             return;
         }
     }
@@ -232,7 +232,7 @@ class ShortCodeController {
                     'item' => $this->state->currentItem()
                 ]);
         } catch (Exception $e) {
-            error_log($e->getMessage() + ' on' + $e->getFile() + ':' + $e->getLine());
+            error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
             return;
         }
 
@@ -245,7 +245,7 @@ class ShortCodeController {
                 ]);
         }
         catch (Exception $e) {
-            error_log($e->getMessage() + ' on' + $e->getFile() + ':' + $e->getLine());
+            error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
             return;
         }
 
@@ -261,7 +261,7 @@ class ShortCodeController {
                 ]);
         }
         catch (Exception $e) {
-            error_log($e->getMessage() + ' on' + $e->getFile() + ':' + $e->getLine());
+            error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
             return;
         }
     }
@@ -269,7 +269,7 @@ class ShortCodeController {
         try {
         }
         catch (Exception $e) {
-            error_log($e->getMessage() + ' on' + $e->getFile() + ':' + $e->getLine());
+            error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
             return;
         }
     }
@@ -280,7 +280,7 @@ class ShortCodeController {
             $auction = $this->state->currentAuction();
         } catch(Exception $e)
         {
-            error_log($e->getMessage() + ' on' + $e->getFile() + ':' + $e->getLine());
+            error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
             return;
         }
     }
@@ -295,7 +295,7 @@ class ShortCodeController {
                 ]);
         } catch(Exception $e)
         {
-            error_log($e->getMessage() + ' on' + $e->getFile() + ':' + $e->getLine());
+            error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
             return;
         }
     }
