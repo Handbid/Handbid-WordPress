@@ -141,7 +141,7 @@ class ShortCodeController {
             $url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' . urlencode($auction->vanityAddress) . '&sensor=true';
 
             $geolocation = json_decode(file_get_contents($url));
-
+            var_dump($geolocation); exit;
             $location = $geolocation->results[0]->geometry->location;
 
             $coords = [
