@@ -30,9 +30,7 @@ $url = get_permalink() . '?auction=' . get_query_var('auction');
 
             <li><label><?php echo __('Event Dates') . ' : '; ?></label><?php echo date($dateFormat,$auction->startTime); ?> - <?php echo date($dateFormat,$auction->endTime); ?></li>
             <li><label><?php echo __('Event Location') . ' : '; ?></label><?php echo $auction->vanityAddress; ?></li>
-            <li><label><?php echo __('Event Address') . ' : '; ?></label>
-                <?php echo $location->full; ?>
-            </li>
+            <li><label><?php echo __('Event Address') . ' : '; ?></label><?php echo $location->full; ?></li>
         </ul>
 
         <div class="actionBar">
