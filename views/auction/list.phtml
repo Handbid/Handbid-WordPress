@@ -1,9 +1,9 @@
 <?php
 if ($this->context) {
-    var_dump($this->context['donors'][0]); exit;
+    var_dump($this->context['donors']); exit;
     $categories = $this->context['categories'];
     $items      = $this->context['items'];
-    $donors     = $this->context['donors'][0];
+    $donors     = $this->context['donors'];
 
     $showItems = [
         'all'       => 'All Items',
