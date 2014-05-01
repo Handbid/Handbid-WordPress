@@ -1,44 +1,40 @@
 var $j = jQuery.noConflict();
 
 $j(function() {
-    jQuery( document ).ready(function( $ ) {
-        // jQuery
+    var $container = $j('#container.js-isotope');
 
-        var $container = $j('#container.js-isotope');
+    // Setup item width
+    $j('.item')[0].width();
 
-        // Setup item width
-        $('.item')[0].width();
+    $container.isotope({
+        // options...
+        itemSelector: '.item',
+        masonry:      {
+            rowHeight: 355
+        }
+    });
 
-        $container.isotope({
-            // options...
-            itemSelector: '.item',
-            masonry:      {
-                rowHeight: 355
-            }
-        });
+    function filterClass() {
 
-        function filterClass() {
+        var filterClass = '';
 
-            var filterClass = '';
-
-            if($j('.categorySort input[type=radio]:checked').val()) {
-                filterClass = '.' + $j('.categorySort input[type=radio]:checked').val();
-            }
-
-            if($j('.priceSort input[type=radio]:checked').val()) {
-                filterClass += '.' + $j('.priceSort input[type=radio]:checked').val();
-            }
-
-            return filterClass;
-
+        if($j('.categorySort input[type=radio]:checked').val()) {
+            filterClass = '.' + $j('.categorySort input[type=radio]:checked').val();
         }
 
-        // Filter Auction Items
-        $j('.categorySort input[type=radio], .priceSort input[type=radio]').on('click', function() {
+        if($j('.priceSort input[type=radio]:checked').val()) {
+            filterClass += '.' + $j('.priceSort input[type=radio]:checked').val();
+        }
 
-            $container.isotope({ filter: filterClass()});
+        return filterClass;
 
-        });
+    }
+
+    // Filter Auction Items
+    $j('.categorySort input[type=radio], .priceSort input[type=radio]').on('click', function() {
+
+        $container.isotope({ filter: filterClass()});
+
     });
 
 });
