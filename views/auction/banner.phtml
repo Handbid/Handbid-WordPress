@@ -16,16 +16,15 @@ if ($this->context) {
     echo "No Auction Set";
     return;
 }
-
-if(!$coords || !$org) {
-    ?>
-    <h1 class="page-title entry-title"><?php echo $auction->name; ?></h1>
-    <?php
-        return;
-} ?>
-
+?>
 
 <header id="title-area" class="clearfix headerCover"><div class="inner" style="opacity: 1;"><h1 class="page-title entry-title"><?php echo $auction->name; ?></h1></div></header>
+
+<?php
+    if(!$coords || !$org) {
+        return;
+    }
+?>
 
 <div class="bannerContainer">
     <div class="statusContainer">
