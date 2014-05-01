@@ -2,7 +2,9 @@
 if ($this->context) {
     $categories = $this->context['categories'];
     $items      = $this->context['items'];
-    $donors     = array_unique($items);
+    if(isset($items) || is_array($items)) {
+        $donors     = array_unique($items);
+    }
 
     $showItems = [
         'all'       => 'All Items',
