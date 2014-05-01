@@ -1,7 +1,8 @@
 <?php
 
 if ($this->context) {
-    $auction      = $this->context->auction;
+
+    $auction  = $this->context['auction'];
     $coordinates  = $this->context->coordinates;
 } else {
 

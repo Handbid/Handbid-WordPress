@@ -19,7 +19,9 @@ if ($this->context) {
 
     <?php if ($auction->status != "closed") {
         ?>
-        <div class="timeRemaining">Auction closes in <?php echo $auction->closingTime; ?></div>
+        <?php if(isset($auction->closingTime)) { ?>
+            <div class="timeRemaining"><?php echo __('Auction closes in ') . $auction->closingTime; ?></div>
+        <?php } ?>
     <?php
     } ?>
 
