@@ -155,8 +155,7 @@ class ShortCodeController {
             }
             else
             {
-                echo "Map was not found, Please try again later.";
-                error_log('Recieved ZERO_RESULTS from google maps.');
+                error_log('Recieved ZERO_RESULTS from google maps in auction banner shortCode.');
             }
 
             $template = $this->templateFromAttributes($attributes, 'views/auction/banner');
