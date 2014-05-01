@@ -4,9 +4,12 @@ if ($this->context) {
 
     $coords = null;
 
-    if(is_array($this->context['coords']) || isset($this->context['coords'])) {
+    if(isset($this->context['coords']) || is_array($this->context['coords'])) {
         $coords   = $this->context['coords'];
     }
+
+    var_dump($auction); exit;
+    
     $org      = $auction->meta->organization;
 
 } else {
