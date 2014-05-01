@@ -166,6 +166,7 @@ class ShortCodeController {
 
         } catch(Exception $e)
         {
+            echo "Auction banner could not be loaded, Please try again later.";
             error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
             return;
         }
@@ -181,6 +182,7 @@ class ShortCodeController {
                 ]);
         }
         catch(Exception $e) {
+            echo "Auction details could not be loaded, Please try again later.";
             error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
             return;
         }
@@ -193,6 +195,7 @@ class ShortCodeController {
             return $this->viewRenderer->render($template, $this->state->currentAuction());
         }
         catch (Exception $e) {
+            echo "Contact form could not be loaded, Please try again later.";
             error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
             return;
         }
@@ -241,6 +244,7 @@ class ShortCodeController {
                 ]);
         }
         catch (Exception $e) {
+            echo "Bid now feature could not be loaded, please try again later.";
             error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
             return;
         }
@@ -257,6 +261,7 @@ class ShortCodeController {
                     'bidHistory' => $bidHistory
                 ]);
         } catch (Exception $e) {
+            echo "Bid history could not be loaded, please try again later.";
             error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
             return;
         }
@@ -270,6 +275,7 @@ class ShortCodeController {
                 ]);
         }
         catch (Exception $e) {
+            echo "winning bid could note be loaded, Please try again later.";
             error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
             return;
         }
@@ -286,6 +292,7 @@ class ShortCodeController {
                 ]);
         }
         catch (Exception $e) {
+            echo "item results could not be loaded, Please try again later.";
             error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
             return;
         }
@@ -294,6 +301,7 @@ class ShortCodeController {
         try {
         }
         catch (Exception $e) {
+            echo "Search bar could not be loaded, Please try again later.";
             error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
             return;
         }
@@ -305,6 +313,7 @@ class ShortCodeController {
             $auction = $this->state->currentAuction();
         } catch(Exception $e)
         {
+            echo "Ticket purchase could not be loaded, Please try again later.";
             error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
             return;
         }
@@ -320,6 +329,7 @@ class ShortCodeController {
                 ]);
         } catch(Exception $e)
         {
+            echo "Image gallery could not be loaded, Please try again later."
             error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
             return;
         }
