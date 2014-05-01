@@ -6,12 +6,20 @@ if (isset($this->context['item']) || $this->context) {
     return;
 }
 
-var_dump($item); exit;
 ?>
 
 <div class="widget widget-winningbidder widgetContainer">
     <div class="header"><?php echo __('Winning bid'); ?></div>
-    <div class="amount"><?php echo '$' . $item->highestBid->amount; ?></div>
+    <div class="amount"><?php
+        if($item->highestBid->amount) {
+            echo '$' . $item->highestBid->amount; ?></div>
+        <?php
+        }
+        else
+        {
+            echo "No Bids";
+        }?>
+
     <div class="alias"><?php echo __('By' . ' ' . $item['highestBid']['_restMetaData']['bidderName'] . ' ( ' . $item['highestBid']['_restMetaData']['bidderPin'] . ' )'); ?></div>
     <div class="original-value">
         <div class="original-text"><?php echo __('Original Value'); ?></div>
