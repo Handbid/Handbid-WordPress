@@ -329,7 +329,7 @@ class ShortCodeController {
                 ]);
         } catch(Exception $e)
         {
-            echo "Image gallery could not be loaded, Please try again later."
+            echo "Image gallery could not be loaded, Please try again later.";
             error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
             return;
         }
