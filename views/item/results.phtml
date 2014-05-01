@@ -13,7 +13,7 @@ if ($this->context) {
             <div class="photoGallery">
                 <?php forEach($item['images'] as $image) {
                     ?>
-                    <img src="<?= $image; ?>"/>
+                    <img src="<?php echo  $image; ?>"/>
                 <?php
                 }
                 ?>
@@ -22,10 +22,10 @@ if ($this->context) {
         <div class="rightContainer">
 
             <div class="ctaContainer">
-                <h3><?= $item['name']; ?></h3>
+                <h3><?php echo  $item['name']; ?></h3>
                 <div class="donated-by">
-                    <div class="label"><?= __('Donated by') . ': '; ?></div>
-                    <div class="donor"><?= $item['donor'];?></div>
+                    <div class="label"><?php echo  __('Donated by') . ': '; ?></div>
+                    <div class="donor"><?php echo  $item['donor'];?></div>
                 </div>
                 <div id="bidContainer" class="bidContainer widgetContainer">
                     <?php do_shortcode('[handbid_bid_now]'); ?>
@@ -35,10 +35,10 @@ if ($this->context) {
         <div class="itemInfoContainer">
 
             <!-- @TODO Remove tabby plugin dependency -->
-            <?= do_shortcode('[tabby title="Description"]'); ?><?= $item['description']; ?>
-            <?= do_shortcode('[tabby title="Comments"]'); ?><?php comments_template(); ?>
+            <?php echo  do_shortcode('[tabby title="Description"]'); ?><?php echo  $item['description']; ?>
+            <?php echo  do_shortcode('[tabby title="Comments"]'); ?><?php comments_template(); ?>
 
-            <?= do_shortcode('[tabbyending]'); ?>
+            <?php echo  do_shortcode('[tabbyending]'); ?>
 
         </div>
     </div>
