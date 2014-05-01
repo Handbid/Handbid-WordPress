@@ -248,7 +248,7 @@ class ShortCodeController {
     public function bidHistory($attributes) {
         try {
             $item       = $this->state->currentItem();
-            $bidHistory = $this->state->store('Bid')->byItem($item->_id);
+            $bidHistory = $this->handbid->store('Bid')->byItem($item->_id);
 
             $template = $this->templateFromAttributes($attributes, 'views/bid/history');
             return $this->viewRenderer->render($template, [
