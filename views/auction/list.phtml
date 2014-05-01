@@ -2,8 +2,7 @@
 if ($this->context) {
     $categories = $this->context['categories'];
     $items      = $this->context['items'];
-var_dump($items); exit;
-    $donors[]     = array_unique($items);
+    $donors[]     = array_unique($items->donor);
 
     $showItems = [
         'all'       => 'All Items',
