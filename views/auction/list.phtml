@@ -1,5 +1,6 @@
 <?php
 if ($this->context) {
+    var_dump($this->context); exit;
     $categories = $this->context['categories'];
     $items      = $this->context['items'];
     $donors     = $this->context['donors'];
@@ -89,10 +90,12 @@ if ($this->context) {
             <select>
                 <option value="price-range">Donor</option>
                 <?php
-                forEach ($donors as $donor) {
-                    ?>
-                    <option value="<?php echo $donor->_id; ?>"><?php echo $donor->name; ?></option>
-                <?php
+                if(isset($donors) || is_array($donors)) {
+                    forEach ($donors as $donor) {
+                        ?>
+                        <option value="<?php echo $donor->_id; ?>"><?php echo $donor->name; ?></option>
+                    <?php
+                    }
                 }
                 ?>
             </select>
