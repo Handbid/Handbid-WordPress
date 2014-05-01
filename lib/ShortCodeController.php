@@ -50,7 +50,7 @@ class ShortCodeController {
     // Helpers
     public function templateFromAttributes($attributes, $default) {
 
-        if(!isset($attributes['template']) && !$attributes['template']) {
+        if(!is_array($attributes) || !isset($attributes['template']) || !$attributes['template']) {
             $attributes['template'] = $default;
         }
 
@@ -72,7 +72,7 @@ class ShortCodeController {
             return $markup;
         }
         catch (Exception $e) {
-            echo "Oops we could not find the organization you were looking for, Please try again later";
+            echo "Oops we could not find the organization you were looking for, Please try again later.";
             error_log($e->getMessage() + ' on' + $e->getFile() + ':' + $e->getLine());
             return;
         }
@@ -99,7 +99,7 @@ class ShortCodeController {
             return $markup;
         }
         catch (Exception $e) {
-            echo "Organizations Auctions could not be found, please try again later";
+            echo "Organizations Auctions could not be found, please try again later.";
             error_log($e->getMessage() + ' on' + $e->getFile() + ':' + $e->getLine());
             return;
         }
@@ -113,7 +113,7 @@ class ShortCodeController {
             $template = $this->templateFromAttributes($attributes, 'views/auction/logo');
 
 
-            if(!in_array($attributes['type'], ['upcoming', 'all', 'past'])) {
+            if(!is_array($attributes) || !in_array($attributes['type'], ['upcoming', 'all', 'past'])) {
                 $attributes['type'] = 'upcoming';
             }
 
@@ -127,7 +127,7 @@ class ShortCodeController {
             return $markup;
         }
         catch (Exception $e) {
-            echo "Auctions could not be found, please try again later";
+            echo "Auctions could not be found, please try again later.";
             error_log($e->getMessage() + ' on' + $e->getFile() + ':' + $e->getLine());
             return;
         }
@@ -204,7 +204,7 @@ class ShortCodeController {
                 ]);
         }
         catch (Exception $e) {
-            echo "Auctions could not be found, please try again later";
+            echo "Auctions could not be found, please try again later.";
             error_log($e->getMessage() + ' on' + $e->getFile() + ':' + $e->getLine());
             return;
         }

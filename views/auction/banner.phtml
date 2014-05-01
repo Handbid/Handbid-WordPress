@@ -9,17 +9,17 @@ if ($this->context) {
     return;
 }
 ?>
-<header id="title-area" class="clearfix headerCover"><div class="inner" style="opacity: 1;"><h1 class="page-title entry-title"><?= $auction->name; ?></h1></div></header>
+<header id="title-area" class="clearfix headerCover"><div class="inner" style="opacity: 1;"><h1 class="page-title entry-title"><?php echo $auction->name; ?></h1></div></header>
 
 <div class="bannerContainer">
     <div class="statusContainer">
-        <div class="name"><a href="/organization?organization=<?= $org->id; ?>"><?= $org->name; ?></a></div>
+        <div class="name"><a href="/organization?organization=<?php echo $org->id; ?>"><?php echo $org->name; ?></a></div>
         <div class="status closed"><? __('Auction is') . ' ' . $auction->status . ' ' . __('for Bidding'); ?></div>
     </div>
 
     <?php if ($auction->status != "closed") {
         ?>
-        <div class="timeRemaining">Auction closes in <?= $auction->closingTime; ?></div>
+        <div class="timeRemaining">Auction closes in <?php echo $auction->closingTime; ?></div>
     <?php
     } ?>
 
@@ -48,13 +48,13 @@ if ($this->context) {
             <script type="text/javascript">function init_map() {
                     var myOptions = {
                         zoom:             17,
-                        center:           new google.maps.LatLng(<?= $coords->lon; ?>, <?= $coords->lat; ?>),
+                        center:           new google.maps.LatLng(<?php echo $coords->lon; ?>, <?php echo $coords->lat; ?>),
                         mapTypeId:        google.maps.MapTypeId.ROADMAP,
                         disableDefaultUI: true
                     };
                     map = new google.maps.Map(document.getElementById("gmap_canvas"), myOptions);
-                    marker = new google.maps.Marker({map: map, position: new google.maps.LatLng(<?= $coords->lon; ?>, <?= $coords->lat; ?>)});
-                    infowindow = new google.maps.InfoWindow({content: "<span class='gmap'><b><?= $auction->name; ?></b></span><span class='gmap'><?= $auction->vanityAddress; ?></span><span class='gmap'></span>" });
+                    marker = new google.maps.Marker({map: map, position: new google.maps.LatLng(<?php echo $coords->lon; ?>, <?php echo $coords->lat; ?>)});
+                    infowindow = new google.maps.InfoWindow({content: "<span class='gmap'><b><?php echo $auction->name; ?></b></span><span class='gmap'><?php echo $auction->vanityAddress; ?></span><span class='gmap'></span>" });
                     google.maps.event.addListener(marker, "click", function () {
                         infowindow.open(map, marker);
                     });

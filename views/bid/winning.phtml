@@ -8,11 +8,11 @@ if ($this->context->item) {
 ?>
 
 <div class="widget widget-winningbidder widgetContainer">
-    <div class="header"><?= __('Winning bid'); ?></div>
-    <div class="amount"><?= '$' . $item->highestBid->amount; ?></div>
-    <div class="alias"><?= __('By' . ' ' . $item['highestBid']['_restMetaData']['bidderName'] . ' ( ' . $item['highestBid']['_restMetaData']['bidderPin'] . ' )'); ?></div>
+    <div class="header"><?php echo __('Winning bid'); ?></div>
+    <div class="amount"><?php echo '$' . $item->highestBid->amount; ?></div>
+    <div class="alias"><?php echo __('By' . ' ' . $item['highestBid']['_restMetaData']['bidderName'] . ' ( ' . $item['highestBid']['_restMetaData']['bidderPin'] . ' )'); ?></div>
     <div class="original-value">
-        <div class="original-text"><?= __('Original Value'); ?></div>
-        <div class="original-amount"><?= '$' . $item->startingPrice; ?></div>
+        <div class="original-text"><?php echo __('Original Value'); ?></div>
+        <div class="original-amount"><?php echo '$' . $item->startingPrice; ?></div>
     </div>
 </div>

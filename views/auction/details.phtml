@@ -16,10 +16,10 @@ $url = get_permalink() . '?auction=' . get_query_var('auction');
 
 ?>
 <div class="eventsAndDetails">
-    <div class="sectionHeading"><?= __('Auction & Event Details'); ?></div>
+    <div class="sectionHeading"><?php echo __('Auction & Event Details'); ?></div>
     <div class="socialLinks">
         <a class="facebook" href="https://www.facebook.com/sharer/sharer.php?u=<?php htmlspecialchars($url, ENT_QUOTES); ?>" title="Share on Facebook." target="_blank">Facebook</a>
-        <a class="twitter" href="http://twitter.com/home/?status=<?= urlencode($auction->name); ?> - <?= $url; ?>" title="Tweet this!" target="_blank">Twitter</a>
+        <a class="twitter" href="http://twitter.com/home/?status=<?php echo urlencode($auction->name); ?> - <?php echo $url; ?>" title="Tweet this!" target="_blank">Twitter</a>
 
         <a class="gplus" href="https://plus.google.com/share?url=<?php the_permalink(); ?>" onclick="javascript:window.open(this.href,
   '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">Google+</a>
@@ -27,16 +27,16 @@ $url = get_permalink() . '?auction=' . get_query_var('auction');
     <div class="detailsWrapper">
         <ul class="eventDetails">
 
-            <li><label><?= __('Event Dates') . ' : '; ?></label><?= date($dateFormat,$auction->startTime); ?> - <?= date($dateFormat,$auction->endTime); ?></li>
-            <li><label><?= __('Event Location') . ' : '; ?></label><?= $auction->vanityAddress; ?></li>
-            <li><label><?= __('Event Address') . ' : '; ?></label>
-                <?= $coordinates->location->full; ?>
+            <li><label><?php echo __('Event Dates') . ' : '; ?></label><?php echo date($dateFormat,$auction->startTime); ?> - <?php echo date($dateFormat,$auction->endTime); ?></li>
+            <li><label><?php echo __('Event Location') . ' : '; ?></label><?php echo $auction->vanityAddress; ?></li>
+            <li><label><?php echo __('Event Address') . ' : '; ?></label>
+                <?php echo $coordinates->location->full; ?>
             </li>
         </ul>
 
         <div class="actionBar">
-            <a href="#" class="register"><?= __('Register'); ?></a>
-            <a href="#" class="buyTickets"><?= __('Buy Tickets'); ?></a>
+            <a href="#" class="register"><?php echo __('Register'); ?></a>
+            <a href="#" class="buyTickets"><?php echo __('Buy Tickets'); ?></a>
         </div>
     </div>
 

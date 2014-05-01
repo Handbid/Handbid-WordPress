@@ -14,7 +14,7 @@ if ($this->context) {
         <?php
             forEach($item->images as $imageUrl) {
                 ?>
-                <li><img src="<?= $imageUrl; ?>"/></li>
+                <li><img src="<?php echo $imageUrl; ?>"/></li>
                 <?php
             }
         ?>

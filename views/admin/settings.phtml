@@ -13,37 +13,37 @@ $errors = [
 
 <div class="wrap">
     <h2>Handbid</h2>
-        <button class="button testRestEndpoint"><?= __('Test Rest Endpoint'); ?></button>
+        <button class="button testRestEndpoint"><?php echo __('Test Rest Endpoint'); ?></button>
 
     <form method="post" action="options.php">
         <?php settings_fields('handbid-admin'); ?>
         <?php do_settings_fields('handbid-admin-dashboard', 'handbid-admin'); ?>
         <table class="form-table">
             <tr valign="top">
-                <th scope="row"><?= ('Consumer Key'); ?></th>
+                <th scope="row"><?php echo ('Consumer Key'); ?></th>
                 <td><input type="text" name="handbidConsumerKey" value="<?php echo get_option('handbidConsumerKey'); ?>" /></td>
             </tr>
 
             <tr valign="top">
-                <th scope="row"><?= ('Consumer Secret'); ?></th>
+                <th scope="row"><?php echo ('Consumer Secret'); ?></th>
                 <td><input type="password" name="handbidConsumerSecret" value="<?php echo get_option('handbidConsumerSecret'); ?>" /></td>
             </tr>
 
             <tr valign="top">
-                <th scope="row"><?= ('Rest Api Url ( Default : https://rest.handbid.com )'); ?></th>
+                <th scope="row"><?php echo ('Rest Api Url ( Default : https://rest.handbid.com )'); ?></th>
                 <td><input type="text" name="handbidRestEndpoint" value="<?php echo get_option('handbidRestEndpoint'); ?>" /></td>
             </tr>
 
             <tr valign="top">
-                <th scope="row"><?= ('Facebook App Id ( For Comments )'); ?></th>
+                <th scope="row"><?php echo ('Facebook App Id ( For Comments )'); ?></th>
                 <td><input type="text" name="handbidFacebookAppId" value="<?php echo get_option('handbidFacebookAppId'); ?>" /></td>
             </tr>
 
             <?php forEach($pages as $k => $v) {
             ?>
                 <tr valign="top">
-                    <th scope="row"><?= ($v); ?></th>
-                    <td><input type="text" name="<?= $k; ?>" value="<?php echo get_option($k); ?>" /></td>
+                    <th scope="row"><?php echo ($v); ?></th>
+                    <td><input type="text" name="<?php echo $k; ?>" value="<?php echo get_option($k); ?>" /></td>
                 </tr>
             <?php
             }
@@ -52,8 +52,8 @@ $errors = [
             <?php forEach($errors as $k => $v) {
             ?>
                 <tr valign="top">
-                    <th scope="row"><?= ($v); ?></th>
-                    <td><input type="text" name="<?= $k; ?>" value="<?php echo get_option($k); ?>" /></td>
+                    <th scope="row"><?php echo ($v); ?></th>
+                    <td><input type="text" name="<?php echo $k; ?>" value="<?php echo get_option($k); ?>" /></td>
                 </tr>
             <?php
             }
