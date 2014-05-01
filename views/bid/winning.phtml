@@ -11,7 +11,7 @@ if (isset($this->context['item']) || $this->context) {
 <div class="widget widget-winningbidder widgetContainer">
     <div class="header"><?php echo __('Winning bid'); ?></div>
     <div class="amount"><?php
-        if($item->highestBid->amount) {
+        if(isset($item->highestBid) || is_array($item->highestBid)) {
             echo '$' . $item->highestBid->amount; ?>
         <?php
         }
