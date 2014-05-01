@@ -142,7 +142,6 @@ class ShortCodeController {
 
             $geolocation = json_decode(file_get_contents($url));
 
-            var_dump($geolocation); exit;
             $location = $geolocation->results[0]->geometry->location;
 
             $coords = [
