@@ -52,14 +52,11 @@ if ($this->context) {
             <?php
 
             forEach ($categories as $category) {
-                var_dump($category); exit;
                 ?>
-                <?php if(is_array($category) || isset($category['name'])) { ?>
-                    <li>
-                        <input id="<?php echo sanitize_html_class($category['name']); ?>" type="radio" name="category" value="<?php echo sanitize_html_class($category['name']); ?>">
-                        <label for="<?php echo sanitize_html_class($category['name']); ?>"><?php echo __(ucfirst($category['name'])); ?></label>
-                    </li>
-                <?php }?>
+                <li>
+                    <input id="<?php echo sanitize_html_class($category); ?>" type="radio" name="category" value="<?php echo sanitize_html_class($category); ?>">
+                    <label for="<?php echo sanitize_html_class($category); ?>"><?php echo __(ucfirst($category)); ?></label>
+                </li>
             <?php
             }
 
