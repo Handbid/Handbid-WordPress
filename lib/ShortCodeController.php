@@ -204,12 +204,24 @@ class ShortCodeController {
             $auction = $this->state->currentAuction();
             $items = $this->handbid->store('Item')->byAuction($auction->_id);
 
+            // Get donors
+            $donorsDirty = [];
+
+            forEach($items as $item) {
+                if($item->donor) {
+                    $donorsDirty[] = $item->donor;
+                }
+            }
+
+            $donors[]     = array_unique($donorsDirty);
+
             $template = $this->templateFromAttributes($attributes, 'views/auction/list');
             return $this->viewRenderer->render($template, [
                     'categories' => [
                         '_all' => 'All'
                     ],
-                    'items'      => $items
+                    'items'      => $items,
+                    'donors'     => $donors
                 ]);
         }
         catch (Exception $e) {
