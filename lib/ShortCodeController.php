@@ -141,7 +141,13 @@ class ShortCodeController {
             $url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' . urlencode($auction->vanityAddress) . '&sensor=true';
 
             $geolocation = json_decode(file_get_contents($url));
-            var_dump($geolocation); exit;
+
+            if($geolocation->status == "ZERO_RESULTS") {
+                echo "Map not available.";
+                error_log('Google maps returned zero results');
+                return;
+            }
+
             $location = $geolocation->results[0]->geometry->location;
 
             $coords = [
