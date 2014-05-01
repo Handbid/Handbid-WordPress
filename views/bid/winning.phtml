@@ -1,5 +1,5 @@
 <?php
-if ($this->context) {
+if (isset($this->context->item) || $this->context) {
     $item = $this->context->item;
 } else {
     echo "No Item Set";
