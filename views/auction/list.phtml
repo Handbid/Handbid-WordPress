@@ -52,7 +52,7 @@ if ($this->context) {
             <?php
 
             forEach ($categories as $category) {
-                var_dump($category);
+                var_dump($category); exit;
                 ?>
                 <?php if(is_array($category) || isset($category['name'])) { ?>
                     <li>
