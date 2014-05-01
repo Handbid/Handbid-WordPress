@@ -1,0 +1,20 @@
+<?php
+if ($this->context) {
+    $item = $this->context['item'];
+} else {
+    echo "No Item Set";
+    return;
+}
+?>
+<p class="description">
+
+    <?php
+    if (isset($item->description) && $item->description) {
+        echo $item->description;
+    }
+    else
+    {
+      echo "No Item Found";
+    }
+    ?>
+</p>

@@ -47,9 +47,11 @@ class ShortCodeController
             'handbid_bid_history'           => 'bidHistory',
             'handbid_bid_winning'           => 'bidWinning',
             'handbid_item_results'          => 'itemResults',
+            'handbid_item_description'      => 'itemDescription',
             'handbid_item_search_bar'       => 'itemSearchBar',
             'handbid_ticket_buy'            => 'ticketBuy',
-            'handbid_image_gallery'         => 'imageGallery'
+            'handbid_image_gallery'         => 'imageGallery',
+            'handbid_facebook_comments'     => 'facebookComments'
         ];
 
         forEach ($shortCodes as $shortCode => $callback) {
@@ -352,6 +354,23 @@ class ShortCodeController
         }
     }
 
+    public function itemDescription($attributes)
+    {
+        try {
+            $template = $this->templateFromAttributes($attributes, 'views/item/description');
+            return $this->viewRenderer->render(
+                $template,
+                [
+                    'item' => $this->state->currentItem()
+                ]
+            );
+        } catch (Exception $e) {
+            echo "Item description could not be loaded, Please try again later.";
+            error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
+            return;
+        }
+    }
+
     public function itemSearchBar($attributes)
     {
         try {
@@ -393,4 +412,30 @@ class ShortCodeController
         }
     }
 
+    // Social
+    public function facebookComments($attributes)
+    {
+        {
+            try {
+                $org     = get_query_var('organization');
+                $auction = get_query_var('auction');
+                $item    = get_query_var('item');
+
+                $customUrl = $org . $auction . $item;
+
+                $template = $this->templateFromAttributes($attributes, 'views/facebook/comments');
+                return $this->viewRenderer->render(
+                    $template,
+                    [
+                        'url'     => $customUrl
+                    ]
+                );
+            } catch (Exception $e) {
+                echo "Facebook Comments could not be loaded, Please try again later.";
+                error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
+                return;
+            }
+        }
+
+    }
 }
