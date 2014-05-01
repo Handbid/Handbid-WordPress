@@ -1,10 +1,11 @@
 <?php
 if ($this->context) {
-    $item = $this->context->item;
+    $item = $this->context['item'];
 } else {
     echo "No Item Set";
     return;
 }
+
 ?>
 <h3><?php echo  $item->name; ?></h3>
 <div class="donated-by">
