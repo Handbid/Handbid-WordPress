@@ -1,6 +1,6 @@
 <?php
 if ($this->context) {
-    $item = $this->context->item;
+    $item = $this->context['item'];
 } else {
     echo "Context not found";
     return;
