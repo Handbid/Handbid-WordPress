@@ -1,5 +1,6 @@
 <?php
 if (isset($this->context['item']) || $this->context) {
+    var_dump($this->context); exit;
     $item = $this->context['item'];
 } else {
     echo "No Item Set";
