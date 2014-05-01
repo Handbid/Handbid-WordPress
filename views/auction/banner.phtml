@@ -4,20 +4,20 @@ if ($this->context) {
 
     $coords = null;
 
-    if(isset($this->context['coords']) || is_array($this->context['coords'])) {
-        $coords   = $this->context['coords'];
+    if(isset($this->context['coordinates']) || is_array($this->context['coordinates'])) {
+        $coords   = $this->context['coordinates'];
     }
 
-    var_dump($this->context); exit;
-
-    $org      = $auction->meta->organization;
+    if(isset($auction->meta)) {
+        $org      = $auction->meta->organization;
+    }
 
 } else {
     echo "No Auction Set";
     return;
 }
 
-if(!$coords) {
+if(!$coords || !$org) {
     ?>
     <h1 class="page-title entry-title"><?php echo $auction->name; ?></h1>
     <?php
