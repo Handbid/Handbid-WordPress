@@ -3,8 +3,7 @@
 if ($this->context) {
 
     $auction      = $this->context['auction'];
-    var_dump($this->context); exit;
-    $coordinates  = $this->context['coordinates'];
+    $location     = $auction->location;
 } else {
 
     echo "No Auction Set";
@@ -32,7 +31,7 @@ $url = get_permalink() . '?auction=' . get_query_var('auction');
             <li><label><?php echo __('Event Dates') . ' : '; ?></label><?php echo date($dateFormat,$auction->startTime); ?> - <?php echo date($dateFormat,$auction->endTime); ?></li>
             <li><label><?php echo __('Event Location') . ' : '; ?></label><?php echo $auction->vanityAddress; ?></li>
             <li><label><?php echo __('Event Address') . ' : '; ?></label>
-                <?php echo $coordinates->location->full; ?>
+                <?php echo $location->full; ?>
             </li>
         </ul>
 
