@@ -27,7 +27,6 @@ if ($this->context) {
 
 ?>
 
-
 <div class="auctionItemListWidget">
 
     <!-- Filtering Side Bar -->
@@ -82,59 +81,37 @@ if ($this->context) {
 
     <!-- Item List -->
     <div class="itemList">
-
-        <div class="filterBar">
-            <label><?php echo __('Filter By'); ?> :</label>
-
-            <select>
-                <option value="price-range">Donor</option>
-                <?php
-                if(isset($donors) || is_array($donors)) {
-                    forEach ($donors as $donor) {
-                        ?>
-                        <option value="<?php echo $donor->_id; ?>"><?php echo $donor->name; ?></option>
-                    <?php
-                    }
-                }
-                ?>
-            </select>
-
-            <select>
-                <option value="price-range">Bids</option>
-                <option value="price-range">1</option>
-                <option value="price-range">2</option>
-            </select>
-
-            <a class="button" href="#"><?php echo __('Clear Filters'); ?></a>
-        </div>
         <ul id="container" class="items js-isotope">
             <?php forEach ($items as $item) {
+
+                $currentPrice = $item->currentPrice;
 
                 // By default no filtering is done
                 $priceClass = '_all';
 
-                if($item->currentPrice >= 0 && $item->currentPrice <= 100 ) {
+                if($currentPrice >= 0 && $currentPrice <= 100 ) {
                     $priceClass = '_0';
                 }
-                else if($item->currentPrice >= 101 && $item->currentPrice < 250) {
+                else if($currentPrice >= 101 && $currentPrice < 250) {
                     $priceClass = '_1';
                 }
-                else if($item->currentPrice >= 251 && $item->currentPrice < 500) {
+                else if($currentPrice >= 251 && $currentPrice < 500) {
                     $priceClass = '_2';
                 }
-                else if($item->currentPrice >= 501) {
+                else if($currentPrice >= 501) {
                     $priceClass = '_5';
                 }
 
                 ?>
+
                 <li class="item item-tile
-<!--                --><?//= sanitize_html_class($item['_restMetaData']['categoryName']) . ' ' . $priceClass; ?><!-- -->
+                <?php echo sanitize_html_class(implode($item->terms)) . ' ' . $priceClass; ?>
                 all _all">
                     <a href="/auction-item/?item=<?php echo $item->_id; ?>">
                         <div class="item-content-inner">
                             <div class="image" style="background-image: url(<?php echo $item->images[0]; ?>);">
                                 <div class="block currentPrice">
-                                    <span><?php echo __('Current bid'); ?></span><span class="price"><?php echo '$' . $item->currentPrice; ?></span></div>
+                                    <span><?php echo __('Current bid'); ?></span><span class="price"><?php echo '$' . $currentPrice; ?></span></div>
                                 <div class="block itemCode"><?php echo __('Item Code') . ' : ' . $item->itemCode; ?></div>
                             </div>
                             <div class="details">
@@ -144,11 +121,6 @@ if ($this->context) {
                             </div>
                         </div>
                     </a>
-                    <div class="footer">
-<!--                        <div class="stat bidCount"><div class="icon"></div>--><?//= $item['_restMetaData']['totalBids']; ?><!--</div>-->
-                        <div class="stat favCount"><div class="icon"></div>20</div>
-                        <div class="stat viewCount"><div class="icon"></div>200</div>
-                    </div>
                 </li>
 
             <?php } ?>
