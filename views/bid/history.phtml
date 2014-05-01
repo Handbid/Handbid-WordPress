@@ -1,9 +1,9 @@
 <?php
-var_dump($this->context); exit;
 if (isset($this->context['item']) || isset($this->context['bidHistory']) || $this->context) {
-    $item = $this->context['item'];
+    $item       = $this->context['item'];
     $bidhistory = $this->context['bidHistory'];
-    var_dump($bidhistory); exit;
+    var_dump($bidhistory);
+    exit;
 
 } else {
     echo "No Item Set";
@@ -28,4 +28,5 @@ if (isset($this->context['item']) || isset($this->context['bidHistory']) || $thi
                 </div>
             </div>
         </div>
-    </div></div>
+    </div>
+</div>

@@ -7,29 +7,31 @@ if ($this->context) {
 }
 
 ?>
-<h3><?php echo  $item->name; ?></h3>
+<h3><?php echo $item->name; ?></h3>
 <div class="donated-by">
-    <div class="label"><?php echo  __('Donated by') . ': '; ?></div>
-    <div class="donor"><?php echo  $item->donor;?></div>
+    <div class="label"><?php echo __('Donated by') . ': '; ?></div>
+    <div class="donor"><?php echo $item->donor; ?></div>
 </div>
 <div id="bidContainer" class="bidContainer widgetContainer">
     <div class="biddingContainer">
         <div class="bidDescription leftContainer">
-            <div class="label" id="bidLabel"><?php echo  __('Minimum next bid'); ?></div>
+            <div class="label" id="bidLabel"><?php echo __('Minimum next bid'); ?></div>
             <div class="amount">
-                $<span class="value" id="bidAmountTotal"><?php echo  $item->minimumBidAmount; ?></span>
+                $<span class="value" id="bidAmountTotal"><?php echo $item->minimumBidAmount; ?></span>
             </div>
-            <button class="reset"><?php echo  __('Reset Bid'); ?></button>
+            <button class="reset"><?php echo __('Reset Bid'); ?></button>
             <div class="bidIncrement">
-                <?php echo  __('Bid increments by') . ' $'; ?><span class="value"><?php echo  $item->bidIncrement; ?></span>
+                <?php echo __('Bid increments by') . ' $'; ?><span
+                    class="value"><?php echo $item->bidIncrement; ?></span>
             </div>
         </div>
         <div class="bidAction rightContainer">
             <div class="bidUpDown">
-                <button class="down"><?php echo  __('Down'); ?></button><button class="up"><?php echo  __('Up'); ?></button>
+                <button class="down"><?php echo __('Down'); ?></button>
+                <button class="up"><?php echo __('Up'); ?></button>
             </div>
-            <button class="bidNow"><?php echo  __('Bid Now'); ?></button>
-            <button class="proxy" id="proxyBid"><?php echo  __('Make a Proxy Bid'); ?></button>
+            <button class="bidNow"><?php echo __('Bid Now'); ?></button>
+            <button class="proxy" id="proxyBid"><?php echo __('Make a Proxy Bid'); ?></button>
         </div>
     </div>
 </div>

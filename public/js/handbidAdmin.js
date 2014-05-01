@@ -7,24 +7,24 @@
 
 var $j = jQuery.noConflict();
 
-$j(function() {
+$j(function () {
 
     var appId = $j('input[name=handbidConsumerKey]').val(),
         apiKey = $j('input[name=handbidConsumerSecret]').val(),
         endpoint = handbidAdmin.endpoint;
 
-    $j('.testRestEndpoint').click( function() {
+    $j('.testRestEndpoint').click(function () {
         var data = {
             action: 'test_app_creds',
-            appId: appId,
+            appId:  appId,
             apiKey: apiKey
         };
 
-        $j.post( endpoint, data, success );
-    } );
+        $j.post(endpoint, data, success);
+    });
 
-    function success( data ) {
-        alert( data );
+    function success(data) {
+        alert(data);
     }
-    
+
 });

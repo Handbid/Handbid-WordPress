@@ -4,7 +4,7 @@ if ($this->context) {
     $items      = $this->context['items'];
     $donors     = $this->context['donors'];
 
-    $showItems = [
+    $showItems   = [
         'all'       => 'All Items',
         'forSale'   => 'For Sale',
         'live'      => 'Live',
@@ -35,7 +35,7 @@ if ($this->context) {
 
         <label class="categoryLabel"><?php echo __('Show Items'); ?> :</label>
         <ul class="fancyRadio">
-            <?php forEach($showItems as $k => $v) {
+            <?php forEach ($showItems as $k => $v) {
                 ?>
                 <li>
                     <input id="<?php echo $k; ?>" type="radio" name="category" value="<?php echo $k; ?>">
@@ -53,8 +53,11 @@ if ($this->context) {
             forEach ($categories as $category) {
                 ?>
                 <li>
-                    <input id="<?php echo sanitize_html_class($category); ?>" type="radio" name="category" value="<?php echo sanitize_html_class($category); ?>">
-                    <label for="<?php echo sanitize_html_class($category); ?>"><?php echo __(ucfirst($category)); ?></label>
+                    <input id="<?php echo sanitize_html_class($category); ?>" type="radio" name="category"
+                           value="<?php echo sanitize_html_class($category); ?>">
+                    <label for="<?php echo sanitize_html_class($category); ?>"><?php echo __(
+                            ucfirst($category)
+                        ); ?></label>
                 </li>
             <?php
             }
@@ -65,7 +68,7 @@ if ($this->context) {
         <label class="categoryLabel"><?php echo __('Price Ranges'); ?>:</label>
         <ul class="priceSort fancyRadio">
             <?php
-            forEach($priceRanges as $k => $v ) {
+            forEach ($priceRanges as $k => $v) {
                 ?>
                 <li>
                     <input id="<?php echo $k; ?>" type="radio" name="category" value="<?php echo $k; ?>">
@@ -89,22 +92,25 @@ if ($this->context) {
                 // By default no filtering is done
                 $priceClass = '_all';
 
-                if($currentPrice >= 0 && $currentPrice <= 100 ) {
+                if ($currentPrice >= 0 && $currentPrice <= 100) {
                     $priceClass = '_0';
-                }
-                else if($currentPrice >= 101 && $currentPrice < 250) {
-                    $priceClass = '_1';
-                }
-                else if($currentPrice >= 251 && $currentPrice < 500) {
-                    $priceClass = '_2';
-                }
-                else if($currentPrice >= 501) {
-                    $priceClass = '_5';
+                } else {
+                    if ($currentPrice >= 101 && $currentPrice < 250) {
+                        $priceClass = '_1';
+                    } else {
+                        if ($currentPrice >= 251 && $currentPrice < 500) {
+                            $priceClass = '_2';
+                        } else {
+                            if ($currentPrice >= 501) {
+                                $priceClass = '_5';
+                            }
+                        }
+                    }
                 }
 
                 $terms = $item->terms;
 
-                if(is_array($terms)) {
+                if (is_array($terms)) {
                     $terms = implode($terms);
                 }
 
@@ -115,13 +121,24 @@ if ($this->context) {
                         <div class="item-content-inner">
                             <div class="image" style="background-image: url(<?php echo $item->images[0]; ?>);">
                                 <div class="block currentPrice">
-                                    <span><?php echo __('Current bid'); ?></span><span class="price"><?php echo '$' . $currentPrice; ?></span></div>
-                                <div class="block itemCode"><?php echo __('Item Code') . ' : ' . $item->itemCode; ?></div>
+                                    <span><?php echo __('Current bid'); ?></span><span
+                                        class="price"><?php echo '$' . $currentPrice; ?></span></div>
+                                <div class="block itemCode"><?php echo __(
+                                            'Item Code'
+                                        ) . ' : ' . $item->itemCode; ?></div>
                             </div>
                             <div class="details">
                                 <h2><?php echo $item->name; ?></h2>
-                                <div class="bidIncrement"><?php echo __('Bid Increment') . ': $' . $item->bidIncrement; ?></div>
-                                <div class="category">Category: Sports</div>
+
+                                <div class="bidIncrement"><?php echo __(
+                                            'Bid Increment'
+                                        ) . ': $' . $item->bidIncrement; ?></div>
+                                <?php if ($terms) {
+                                    ?>
+                                    <div class="category"><?php echo __('Category') . ' : ' . $terms; ?></div>
+                                <?php
+                                }
+                                ?>
                             </div>
                         </div>
                     </a>

@@ -6,19 +6,22 @@ if ($this->context['organization']) {
     return;
 }
 ?>
-<header id="title-area" class="clearfix headerCover"><div class="inner" style="opacity: 1;"><h1 class="page-title entry-title"><?php echo  $org->name; ?></h1></div></header>
+<header id="title-area" class="clearfix headerCover">
+    <div class="inner" style="opacity: 1;"><h1 class="page-title entry-title"><?php echo $org->name; ?></h1></div>
+</header>
 
 <div class="organizationDetailsContainer">
-    <img src="<?php echo  $org->logo; ?>"/>
+    <img src="<?php echo $org->logo; ?>"/>
+
     <div class="orgDetails">
         <div class="address">
-            <?php echo  $org->address->full; ?>
+            <?php echo $org->address->full; ?>
         </div>
         <div class="website">
-            <a href="<?php echo  $org->website; ?>" target="_blank"><?php echo  $org->website; ?></a>
+            <a href="<?php echo $org->website; ?>" target="_blank"><?php echo $org->website; ?></a>
         </div>
         <div class="description">
-            <?php echo  $org->description; ?>
+            <?php echo $org->description; ?>
         </div>
     </div>
 </div>

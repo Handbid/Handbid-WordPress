@@ -12,11 +12,11 @@ if ($this->context) {
     <a href="#" class="unslider-arrow next">Next slide</a>
     <ul>
         <?php
-            forEach($item->images as $imageUrl) {
-                ?>
-                <li><img src="<?php echo $imageUrl; ?>"/></li>
-                <?php
-            }
+        forEach ($item->images as $imageUrl) {
+            ?>
+            <li><img src="<?php echo $imageUrl; ?>"/></li>
+        <?php
+        }
         ?>
     </ul>
 </div>

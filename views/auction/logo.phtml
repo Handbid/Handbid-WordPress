@@ -1,22 +1,24 @@
 <div class="clientListBlock">
-<?php
+    <?php
 
-$auctions = $this->get('auctions');
+    $auctions = $this->get('auctions');
 
-forEach($auctions as $auction) { ?>
+    forEach ($auctions as $auction) {
+        ?>
 
-    <a href="/auction-detail/?auction=<?php echo  $auction->_id; ?>" class="fancyLink auctionListLogo">
-        <img src="<?php echo  $auction->image; ?>" />
-        <div class="mask"></div>
-        <div class="content">
-            <div class="info" title="Full Image">
-                <div><?php echo  date('m/d/Y',$auction->startTime); ?></div>
-                <div><?php echo  date('h:i a',$auction->startTime); ?></div>
+        <a href="/auction-detail/?auction=<?php echo $auction->_id; ?>" class="fancyLink auctionListLogo">
+            <img src="<?php echo $auction->image; ?>"/>
+
+            <div class="mask"></div>
+            <div class="content">
+                <div class="info" title="Full Image">
+                    <div><?php echo date('m/d/Y', $auction->startTime); ?></div>
+                    <div><?php echo date('h:i a', $auction->startTime); ?></div>
+                </div>
             </div>
-        </div>
-    </a>
+        </a>
 
-<?php
+    <?php
     }
-?>
+    ?>
 </div>

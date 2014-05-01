@@ -11,18 +11,18 @@ if (isset($this->context['item']) || $this->context) {
 <div class="widget widget-winningbidder widgetContainer">
     <div class="header"><?php echo __('Winning bid'); ?></div>
     <div class="amount"><?php
-        if(isset($item->highestBid) || is_array($item->highestBid)) {
+        if (isset($item->highestBid) || is_array($item->highestBid)) {
             echo '$' . $item->highestBid->amount; ?>
         <?php
-        }
-        else
-        {
+        } else {
             echo "No Bids";
         }?>
     </div>
 
-    <?php if(isset($item->highestBid) || is_array($item->highestBid)) { ?>
-        <div class="alias"><?php echo __('By' . ' ' . $item['highestBid']['_restMetaData']['bidderName'] . ' ( ' . $item['highestBid']['_restMetaData']['bidderPin'] . ' )'); ?></div>
+    <?php if (isset($item->highestBid) || is_array($item->highestBid)) { ?>
+        <div class="alias"><?php echo __(
+                'By' . ' ' . $item['highestBid']['_restMetaData']['bidderName'] . ' ( ' . $item['highestBid']['_restMetaData']['bidderPin'] . ' )'
+            ); ?></div>
     <?php } ?>
     <div class="original-value">
         <div class="original-text"><?php echo __('Original Value'); ?></div>

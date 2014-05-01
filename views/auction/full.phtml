@@ -1,50 +1,52 @@
 <?php
-    $auctions = $this->get('auctions');
+$auctions = $this->get('auctions');
 
-    $dateFormat = 'm/d/Y h:i a';
+$dateFormat = 'm/d/Y h:i a';
 ?>
 <table class="auctionTable">
     <thead>
-        <th><?php echo  __('Current Auctions'); ?></th>
-        <th></th>
-        <th><?php echo  __('Status'); ?></th>
-        <th><?php echo  __('Date'); ?></th>
-        <th><?php echo  __('Total Items'); ?></th>
-        <th></th>
+    <th><?php echo __('Current Auctions'); ?></th>
+    <th></th>
+    <th><?php echo __('Status'); ?></th>
+    <th><?php echo __('Date'); ?></th>
+    <th><?php echo __('Total Items'); ?></th>
+    <th></th>
     </thead>
     <?php
-    forEach($auctions as $auction) { ?>
-        <tr onclick="window.location.href='/auction-detail/?auction=<?php echo  $auction->_id; ?>'">
+    forEach ($auctions as $auction) {
+        ?>
+        <tr onclick="window.location.href='/auction-detail/?auction=<?php echo $auction->_id; ?>'">
             <td class="cell-image cell-first">
-                <img class="alignnone animated fadeIn" alt="<?php echo  $auction->name; ?>" src="<?php echo  $auction->image; ?>" style="opacity: 0;">
+                <img class="alignnone animated fadeIn" alt="<?php echo $auction->name; ?>"
+                     src="<?php echo $auction->image; ?>" style="opacity: 0;">
             </td>
             <td class="cell-name">
-                <div class="name"><?php echo  $auction->name; ?></div>
+                <div class="name"><?php echo $auction->name; ?></div>
 
                 <div class="vanity">
-                    <?php echo  $auction->vanityAddress; ?>
+                    <?php echo $auction->vanityAddress; ?>
                 </div>
                 <div class="address">
-                    <?php echo  $auction->location->full; ?>
+                    <?php echo $auction->location->full; ?>
                 </div>
             </td>
             <td class="cell-status">
-                <?php echo  $auction->status; ?>
+                <?php echo $auction->status; ?>
             </td>
             <td class="cell-time">
                 <div class="startDate">
                     <div class="label">
-                        <?php echo  __('Start'); ?>
+                        <?php echo __('Start'); ?>
                     </div>
                     <div>
-                        <?php echo  date($dateFormat,$auction->startTime); ?>
+                        <?php echo date($dateFormat, $auction->startTime); ?>
                     </div>
                 </div>
                 <div class="endDate">
                     <span>
-                        <?php echo  __('End'); ?>
+                        <?php echo __('End'); ?>
                     </span>
-                    <?php echo  date($dateFormat,$auction->startTime); ?>
+                    <?php echo date($dateFormat, $auction->startTime); ?>
                 </div>
             </td>
             <td class="cell-numItems">
@@ -52,7 +54,7 @@
             </td>
             <td classs="cell-button">
                 <span class="button auctionListLogo">
-                    <?php echo  __('View'); ?>
+                    <?php echo __('View'); ?>
                 </span>
             </td>
         </tr>

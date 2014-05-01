@@ -1,11 +1,11 @@
 var $j = jQuery.noConflict();
 
-$j(function() {
+$j(function () {
 
     // Block of code written to get selectors
     // @TODO this should be put somewhere better
     var bidAmountDom = document.getElementById("bidAmountTotal");
-    if(bidAmountDom) {
+    if (bidAmountDom) {
         var basePrice = bidAmountDom.innerHTML;
     }
 
@@ -15,28 +15,26 @@ $j(function() {
     var bidAmount = parseInt($j(".bidDescription .amount .value").text());
     var bidIncrement = parseInt($j(".bidDescription .bidIncrement .value").text());
 
-    var bidDown = $j( ".bidUpDown .down" );
-    bidDown.on('click', function() {
-        if(bidAmount > basePrice)
-        {
+    var bidDown = $j(".bidUpDown .down");
+    bidDown.on('click', function () {
+        if (bidAmount > basePrice) {
             bidAmount -= bidIncrement;
             bidAmountDom.innerHTML = bidAmount;
             bidLabel.innerHTML = "$" + (bidAmount - basePrice) + " above minimum bid";
 
-            if(bidAmount == basePrice) {
+            if (bidAmount == basePrice) {
                 bidLabel.innerHTML = "Minimum next bid";
                 proxyBid.classList.remove('show');
             }
         }
-        else
-        {
+        else {
             alert('You can not bid lower than the minimum bid');
         }
 
     });
 
-    var bidUp = $j( ".bidUpDown .up" );
-    bidUp.on('click', function() {
+    var bidUp = $j(".bidUpDown .up");
+    bidUp.on('click', function () {
         bidAmount += bidIncrement;
         bidAmountDom.innerHTML = bidAmount;
         bidLabel.innerHTML = "$" + (bidAmount - basePrice) + " above minimum bid";
@@ -44,14 +42,14 @@ $j(function() {
 
     });
 
-    var bidNow = $j( ".bidNow" );
-    bidNow.on('click', function() {
+    var bidNow = $j(".bidNow");
+    bidNow.on('click', function () {
         alert('Bid submitted at ' + bidAmount);
         onItemUpdate();
     });
 
-    var reset = $j( ".bidContainer .reset" );
-    reset.on('click', function() {
+    var reset = $j(".bidContainer .reset");
+    reset.on('click', function () {
         bidAmount = parseInt(basePrice);
         bidAmountDom.innerHTML = basePrice;
         bidLabel.innerHTML = "Minimum next bid";

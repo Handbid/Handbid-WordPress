@@ -12,14 +12,18 @@ $timeFormat = 'h:i:s';
 
 <div class="widget widget-buy-ticket">
     <div class="auction-content">
-        <h2><a href="/auction-detail/?auction=<?php echo  $auction->_id; ?>"><?php echo  $auction->name; ?></a></h2>
-        <div class="timer auction-timer normal"><?php echo  __('Ends in'); ?> <span><?php echo  date($timeFormat,$auction->closingTime); ?></span></div>
+        <h2><a href="/auction-detail/?auction=<?php echo $auction->_id; ?>"><?php echo $auction->name; ?></a></h2>
+
+        <div class="timer auction-timer normal"><?php echo __('Ends in'); ?> <span><?php echo date(
+                    $timeFormat,
+                    $auction->closingTime
+                ); ?></span></div>
     </div>
     <div>
         <div class="tickets">
             <a href="/auctions/handbid-demo-auction/tickets">
-                <div><?php echo  __('BUY TICKETS'); ?></div>
-                <?php echo  __('TO AUCTION'); ?>
+                <div><?php echo __('BUY TICKETS'); ?></div>
+                <?php echo __('TO AUCTION'); ?>
             </a>
         </div>
         <div class="share">
