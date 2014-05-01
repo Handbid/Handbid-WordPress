@@ -214,10 +214,10 @@ class ShortCodeController {
             ];
 
             forEach($items as $item) {
-                if($item->donor) {
+                if(isset($item->donor)) {
                     $donorsDirty[] = $item->donor;
                 }
-                if($item->term) {
+                if(isset($item->term)) {
                     $categoriesDirty[] = $item->term;
                 }
             }
