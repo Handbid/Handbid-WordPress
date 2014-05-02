@@ -1,0 +1,47 @@
+<?php
+$auctions = $this->get('auctions');
+?>
+
+<div id="showcase-full-width">
+    <div class="hfeed">
+        <ul id="showcase-items" class="image-grid isotope" style="position: relative; overflow: hidden; height: 756px;">
+            <?php
+            forEach ($auctions as $auction) {
+                ?>
+
+                <li data-id="id-153" class="twocol showcase-item clearfix term-6"
+                    style="position: absolute; left: 0px; top: 0px; -webkit-transform: translate3d(0px, 0px, 0px);">
+                    <article id="post-153" class="portfolio type-portfolio status-publish has-post-thumbnail hentry">
+                        <div class="image-area animated fadeInUp" style="opacity: 0;">
+                            <a title="<?php echo $auction->name; ?>" href="/auction-detail/?auction=<?php echo $auction->_id; ?>">
+                                <img class="thumbnail" src="<?php echo $auction->image; ?>" alt="<?php echo $auction->name; ?>" title="<?php echo $auction->name; ?>">
+                            </a>
+                            <span class="image-info-buttons">
+                                <a class="lightbox-link" title="<?php echo $auction->name; ?>" href="<?php echo $auction->image; ?>">
+                                </a>
+                            </span>
+
+                            <div class="image-info">
+                                <h3 class="post-title">
+                                    <a title="<?php echo $auction->name; ?>" href="/auction-detail/?auction=<?php echo $auction->_id; ?>">
+                                        <?php echo $auction->name; ?>
+                                    </a>
+                                </h3>
+
+                                <div class="terms">
+                                    <a
+                                        href="/auction-detail/?auction=<?php echo $auction->_id; ?>">
+                                        <div><?php echo date('m/d/Y', $auction->startTime); ?></div>
+                                        <div><?php echo date('h:i a', $auction->startTime); ?></div>
+                                        </a>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                </li>
+
+            <?php
+            }
+            ?>
+    </div>
+</div>
