@@ -69,7 +69,7 @@ class HandbidAdminActionController {
 
         try {
 
-            $hb->testAppCreds();
+            $hb->testAuth();
 
             echo __('Your App is Valid');
 
