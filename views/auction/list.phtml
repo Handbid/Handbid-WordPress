@@ -4,14 +4,7 @@ if ($this->context) {
     $items      = $this->context['items'];
     $donors     = $this->context['donors'];
 
-    $showItems   = [
-        'all'       => 'All Items',
-        'forSale'   => 'For Sale',
-        'live'      => 'Live',
-        'extended'  => 'Extended',
-        'noBids'    => 'No Bids',
-        'favorites' => 'Favorites'
-    ];
+
     $priceRanges = [
         '_all' => 'All',
         '_0'   => '0 - 100',
@@ -28,59 +21,6 @@ if ($this->context) {
 ?>
 
 <div class="auctionItemListWidget">
-
-    <!-- Filtering Side Bar -->
-    <div class="sideBar widgetContainer filterBar">
-        <h3><?php echo __('Auction Items'); ?></h3>
-
-        <label class="categoryLabel"><?php echo __('Show Items'); ?> :</label>
-        <ul class="fancyRadio">
-            <?php forEach ($showItems as $k => $v) {
-                ?>
-                <li>
-                    <input id="<?php echo $k; ?>" type="radio" name="category" value="<?php echo $k; ?>">
-                    <label for="<?php echo $k; ?>"><?php echo __($v); ?></label>
-                </li>
-            <?php
-            }
-            ?>
-        </ul>
-
-        <label class="categoryLabel"><?php echo __('Categories'); ?>:</label>
-        <ul class="categorySort fancyRadio">
-            <?php
-
-            forEach ($categories as $category) {
-                ?>
-                <li>
-                    <input id="<?php echo sanitize_html_class($category); ?>" type="radio" name="category"
-                           value="<?php echo sanitize_html_class($category); ?>">
-                    <label for="<?php echo sanitize_html_class($category); ?>"><?php echo __(
-                            ucfirst($category)
-                        ); ?></label>
-                </li>
-            <?php
-            }
-
-            ?>
-        </ul>
-
-        <label class="categoryLabel"><?php echo __('Price Ranges'); ?>:</label>
-        <ul class="priceSort fancyRadio">
-            <?php
-            forEach ($priceRanges as $k => $v) {
-                ?>
-                <li>
-                    <input id="<?php echo $k; ?>" type="radio" name="category" value="<?php echo $k; ?>">
-                    <label for="<?php echo $k; ?>"><?php echo __($v); ?></label>
-                </li>
-
-                <li><input type="radio" name="priceRange" value=""></li>
-            <?php
-            }
-            ?>
-        </ul>
-    </div>
 
     <!-- Item List -->
     <div class="itemList">
@@ -116,32 +56,21 @@ if ($this->context) {
 
                 ?>
 
-                <li class="item item-tile <?php echo sanitize_html_class($terms) . $priceClass; ?> all _all">
-                    <a href="/auction-item/?item=<?php echo $item->_id; ?>">
-                        <div class="item-content-inner">
-                            <div class="image" style="background-image: url(<?php echo $item->images[0]; ?>);">
-                                <div class="block currentPrice">
-                                    <span><?php echo __('Current bid'); ?></span><span
-                                        class="price"><?php echo '$' . $currentPrice; ?></span></div>
-                                <div class="block itemCode"><?php echo __(
-                                            'Item Code'
-                                        ) . ' : ' . $item->itemCode; ?></div>
-                            </div>
-                            <div class="details">
-                                <h2><?php echo $item->name; ?></h2>
+                <li class="item item-tile <?php echo sanitize_html_class($terms) . $priceClass; ?> all _all product type-product threecol">
 
-                                <div class="bidIncrement"><?php echo __(
-                                            'Bid Increment'
-                                        ) . ': $' . $item->bidIncrement; ?></div>
-                                <?php if ($terms) {
-                                    ?>
-                                    <div class="category"><?php echo __('Category') . ' : ' . $terms; ?></div>
-                                <?php
-                                }
-                                ?>
-                            </div>
+
+                    <a href="/auction-item/?item=<?php echo $item->_id; ?>">
+                        <img src="<?php echo $item->images[0]; ?>" class="attachment-shop_catalog wp-post-image" alt="<?php echo $item->name; ?>">
+                        <div class="nameWrapper">
+                            <h3><?php echo $item->name; ?></h3>
                         </div>
+                        <div><span style="width:80%"><strong><?php echo __('Current bid'); ?></strong> <?php echo '$' . $currentPrice; ?></span></div>
+                        <div><span style="width:80%"><strong><?php echo __('Bid Increment'); ?></strong> <?php echo '$' . $item->bidIncrement; ?></span></div>
+                        <div><span style="width:80%"><strong><?php echo __('Item Code'); ?></strong> <?php echo $item->itemCode; ?></span></div>
+
                     </a>
+
+                    <a href="/auction-item/?item=<?php echo $item->_id; ?>" class="button"><?php echo __('Bid'); ?></a>
                 </li>
 
             <?php } ?>

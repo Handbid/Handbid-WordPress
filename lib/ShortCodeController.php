@@ -162,26 +162,7 @@ class ShortCodeController
 
         try {
             $auction = $this->state->currentAuction();
-
-            $url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' . urlencode(
-                    $auction->vanityAddress
-                ) . '&sensor=true';
-
-            $geolocation = json_decode(file_get_contents($url));
-            $coords      = '';
-
-            if (!$geolocation->status == "ZERO_RESULTS") {
-
-                $location = $geolocation->results[0]->geometry->location;
-
-                $coords = [
-                    $location->lat,
-                    $location->lng
-                ];
-
-            } else {
-                error_log('Recieved ZERO_RESULTS from google maps in auction banner shortCode.');
-            }
+            $coords = $auction->location->coords;
 
             $template = $this->templateFromAttributes($attributes, 'views/auction/banner');
             return $this->viewRenderer->render(

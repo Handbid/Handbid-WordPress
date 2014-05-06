@@ -6,17 +6,26 @@ if ($this->context) {
     return;
 }
 ?>
+<div class="images">
+    <?php
+    forEach ($item->images as $imageUrl) {
+        ?>
+        <a href="<?php echo $imageUrl; ?>" itemprop="image" class="woocommerce-main-image zoom" data-rel="prettyPhoto[product-gallery]">
+            <img width="300" height="300" src="<?php echo $imageUrl; ?>" class="attachment-shop_single wp-post-image">
+        </a>
+    <?php
+    }
+    ?>
 
-<div class="banner">
-    <a href="#" class="unslider-arrow prev">Previous slide</a>
-    <a href="#" class="unslider-arrow next">Next slide</a>
-    <ul>
+    <div class="thumbnails">
         <?php
         forEach ($item->images as $imageUrl) {
-            ?>
-            <li><img src="<?php echo $imageUrl; ?>"/></li>
-        <?php
-        }
         ?>
-    </ul>
+            <a href="<?php echo $imageUrl; ?>" class="zoom first" data-rel="prettyPhoto[product-gallery]">
+                <img width="90" height="90" src="<?php echo $imageUrl; ?>" class="attachment-shop_thumbnail">
+            </a>
+        <?php
+        } ?>
+    </div>
+
 </div>

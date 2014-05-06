@@ -1,12 +1,8 @@
 <?php
-if ($this->context) {
-    $auction = $this->context['auction'];
+if ($this->auction) {
+    $auction = $this->auction;
 
-    $coords = null;
-
-    if (isset($this->context['coordinates']) || is_array($this->context['coordinates'])) {
-        $coords = $this->context['coordinates'];
-    }
+    $coords = $auction->location->coords;
 
     if (isset($auction->meta)) {
         $org = $auction->meta->organization;
@@ -30,14 +26,14 @@ if (!$coords || !$org) {
 
 <div class="bannerContainer">
     <div class="statusContainer">
-        <div class="name"><a href="/organization?organization=<?php echo $org->id; ?>"><?php echo $org->name; ?></a>
+        <div class="name">
+            <a href="/organization?organization=<?php echo $org->id; ?>"><?php echo $org->name; ?></a>
         </div>
-        <div class="status closed"><? __('Auction is') . ' ' . $auction->status . ' ' . __('for Bidding'); ?></div>
+<!--        <div class="status closed">--><?php //echo __('Auction is') . ' ' . $auction->status . ' ' . __('for Bidding'); ?><!--</div>-->
     </div>
 
     <?php if ($auction->status != "closed") {
-        ?>
-        <?php if (isset($auction->closingTime)) { ?>
+        if (isset($auction->closingTime)) { ?>
             <div class="timeRemaining"><?php echo __('Auction closes in ') . $auction->closingTime; ?></div>
         <?php } ?>
     <?php
