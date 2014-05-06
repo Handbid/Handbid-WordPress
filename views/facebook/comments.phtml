@@ -1,9 +1,9 @@
 <?php
-if ($this->context) {
-    $customUrlParameter = $this->context['url'];
+if ($this->get('url')) {
+    $customUrlParameter = $this->get('url');
 } else {
     echo "Facebook comments not set";
     return;
 }
 ?>
-<div class="fb-comments" data-href="http://example.com/comments" data-numposts="5" data-colorscheme="light"></div>
+<div class="fb-comments" data-href="http://handbid.com/comments/<?php echo $customUrlParameter; ?>" data-numposts="5" data-colorscheme="light"></div>
