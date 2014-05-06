@@ -9,24 +9,29 @@ if ($this->get('item')) {
 ?>
 <h1 itemprop="name" class="product_title entry-title"><?php echo $item->name; ?></h1>
 
-<div title="Donor">
-    <div class="label"><?php echo __('Donated by') . ': '; ?></div>
-    <div class="donor"><?php echo $item->donor; ?></div>
-</div>
+<?php if(isset($item->donor) || $item->donor) {
+?>
+    <div title="Donor">
+        <div class="label"><?php echo __('Donated by') . ': '; ?></div>
+        <div class="donor"><?php echo $item->donor; ?></div>
+    </div>
+<?php
+}
+?>
 
 <div>
-    <span class="label" id="bidLabel"><?php echo __('Minimum next bid'); ?></span>
+    <span class="label" id="bidLabel"><strong><?php echo __('Minimum next bid'); ?></strong></span>
     <span class="amount">
         $<span class="value" id="bidAmountTotal"><?php echo $item->minimumBidAmount; ?></span>
     </span>
 </div>
 <div class="bidIncrement">
-    <?php echo __('Bid increments by') . ' $'; ?><span
-        class="value"><?php echo $item->bidIncrement; ?></span>
+    <strong><?php echo __('Bid increments by'); ?></strong><span
+        class="value"><?php echo ' $' . $item->bidIncrement; ?></span>
 </div>
-<form class="cart bidUpDown">
+<form class="bidUpDown">
     <div class="quantity buttons_added"><input type="button" value="-" class="minus down"><input type="number"
-                                                                                                 class="input-text qty text" value=""><input
+                                                                                                 class="value input-text qty text" value="<?php echo $item->minimumBidAmount; ?>"><input
             type="button"
             value="+"
             class="plus up">

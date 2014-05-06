@@ -16,6 +16,7 @@ $j(function () {
     var bidIncrement = parseInt($j(".bidIncrement .value").text());
 
     var bidDown = $j(".bidUpDown .down");
+
     bidDown.on('click', function () {
         if (bidAmount > basePrice) {
             bidAmount -= bidIncrement;
@@ -30,7 +31,6 @@ $j(function () {
         else {
             alert('You can not bid lower than the minimum bid');
         }
-
     });
 
     var bidUp = $j(".bidUpDown .up");

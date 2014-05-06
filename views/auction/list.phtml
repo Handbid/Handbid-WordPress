@@ -1,8 +1,8 @@
 <?php
-if ($this->context) {
-    $categories = $this->context['categories'];
-    $items      = $this->context['items'];
-    $donors     = $this->context['donors'];
+if ($this->get('categories') || $this->get('items') || $this->get('donors')) {
+    $categories = $this->get('categories');
+    $items      = $this->get('items');
+    $donors     = $this->get('donors');
 
 
     $priceRanges = [
@@ -56,7 +56,7 @@ if ($this->context) {
 
                 ?>
 
-                <li class="item item-tile <?php echo sanitize_html_class($terms) . $priceClass; ?> all _all product type-product threecol">
+                <li class="item item-tile <?php echo sanitize_html_class($terms) . $priceClass; ?> all _all threecol">
 
 
                     <a href="/auction-item/?item=<?php echo $item->_id; ?>">
