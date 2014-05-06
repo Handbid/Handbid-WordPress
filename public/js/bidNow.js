@@ -12,8 +12,8 @@ $j(function () {
     var bidLabel = document.getElementById("bidLabel");
     var proxyBid = document.getElementById('proxyBid');
 
-    var bidAmount = parseInt($j(".bidDescription .amount .value").text());
-    var bidIncrement = parseInt($j(".bidDescription .bidIncrement .value").text());
+    var bidAmount = parseInt($j(".bidUpDown .value").text());
+    var bidIncrement = parseInt($j(".bidIncrement .value").text());
 
     var bidDown = $j(".bidUpDown .down");
     bidDown.on('click', function () {

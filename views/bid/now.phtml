@@ -1,6 +1,6 @@
 <?php
-if ($this->context) {
-    $item = $this->context['item'];
+if ($this->get('item')) {
+    $item = $this->get('item');
 } else {
     echo "No Item Set";
     return;
@@ -24,14 +24,9 @@ if ($this->context) {
     <?php echo __('Bid increments by') . ' $'; ?><span
         class="value"><?php echo $item->bidIncrement; ?></span>
 </div>
-<form class="cart">
-    <div class="quantity buttons_added"><input type="button" value="-" class="minus down"><input type="number" step="1"
-                                                                                                 min="1"
-                                                                                                 name="quantity"
-                                                                                                 value="1"
-                                                                                                 title="Qty"
-                                                                                                 class="input-text qty text"
-                                                                                                 size="4"><input
+<form class="cart bidUpDown">
+    <div class="quantity buttons_added"><input type="button" value="-" class="minus down"><input type="number"
+                                                                                                 class="input-text qty text" value=""><input
             type="button"
             value="+"
             class="plus up">

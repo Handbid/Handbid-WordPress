@@ -1,16 +1,18 @@
-<div class="organizationListBlock">
-    <?php
+<div class="clientListBlock">
+    <div class="image-grid isotope">
+        <?php
 
-    $auctions = $this->get('auctions');
+        $auctions = $this->get('auctions');
 
-    forEach ($auctions as $auction) {
+        forEach ($auctions as $auction) {
+            ?>
+
+            <a href="/auction-detail/?auction=<?php echo $auction->_id; ?>" class="fancyLink auctionListLogo">
+                <img src="<?php echo $auction->image; ?>"/>
+            </a>
+
+        <?php
+        }
         ?>
-
-        <a href="/auction-detail/?auction=<?php echo $auction->_id; ?>" class="fancyLink auctionListLogo">
-            <img src="<?php echo $auction->image; ?>"/>
-        </a>
-
-    <?php
-    }
-    ?>
+    </div>
 </div>
