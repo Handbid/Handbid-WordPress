@@ -98,7 +98,7 @@ class ShortCodeController
     {
         try {
 
-            $template = $this->templateFromAttributes($attributes, 'views/auction/logo');
+            $template = $this->templateFromAttributes($attributes, 'views/organization/logo');
 
             $org = $this->state->currentOrg();
 
