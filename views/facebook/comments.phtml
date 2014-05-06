@@ -6,4 +6,4 @@ if ($this->get('url')) {
     return;
 }
 ?>
-<div class="fb-comments" data-href="http://handbid.com/comments/<?php echo $customUrlParameter; ?>" data-numposts="5" data-colorscheme="light"></div>
+<div class="fb-comments" data-href="<?php echo get_permalink(); ?>/?<?php echo $customUrlParameter; ?>" data-numposts="5" data-colorscheme="light"></div>
