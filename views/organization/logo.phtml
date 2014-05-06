@@ -1,8 +1,17 @@
-<div class="clientListBlock">
+<?php
+if ($this->auctions) {
+    $auctions = $this->get('auctions');
+} else {
+    echo "No Auction Set";
+    return;
+}
+?>
+
+<div class="organizationListBlock">
     <div class="image-grid isotope">
         <?php
 
-        $auctions = $this->get('auctions');
+
 
         forEach ($auctions as $auction) {
             ?>

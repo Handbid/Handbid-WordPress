@@ -1,8 +1,8 @@
 <?php
 
-if ($this->context) {
+if ($this->auction) {
 
-    $auction = $this->context['auction'];
+    $auction = $this->get('auction');
     $location = $auction->location;
 } else {
 

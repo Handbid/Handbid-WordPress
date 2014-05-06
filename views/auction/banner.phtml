@@ -1,6 +1,6 @@
 <?php
-if ($this->auction) {
-    $auction = $this->auction;
+if ($this->get('auction')) {
+    $auction = $this->get('auction');
 
     $coords = $auction->location->coords;
 

@@ -1,6 +1,6 @@
 <?php
-if ($this->context['organization']) {
-    $org = $this->context['organization'];
+if ($this->organization) {
+    $org = $this->get('organization');
 } else {
     echo "No Organization Set";
     return;
