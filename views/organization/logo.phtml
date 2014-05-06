@@ -1,0 +1,16 @@
+<div class="organizationListBlock">
+    <?php
+
+    $auctions = $this->get('auctions');
+
+    forEach ($auctions as $auction) {
+        ?>
+
+        <a href="/auction-detail/?auction=<?php echo $auction->_id; ?>" class="fancyLink auctionListLogo">
+            <img src="<?php echo $auction->image; ?>"/>
+        </a>
+
+    <?php
+    }
+    ?>
+</div>
