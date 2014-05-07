@@ -17,7 +17,7 @@ if ($this->auctions) {
             ?>
 
             <a href="/auction-detail/?auction=<?php echo $auction->_id; ?>" class="fancyLink auctionListLogo">
-                <img src="<?php echo $auction->image; ?>"/>
+                <img src="<?php echo $auction->image->medium; ?>"/>
             </a>
 
         <?php

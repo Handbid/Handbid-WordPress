@@ -56,23 +56,25 @@ if ($this->get('categories') || $this->get('items') || $this->get('donors')) {
 
                 ?>
 
-                <li class="item item-tile <?php echo sanitize_html_class($terms) . $priceClass; ?> all _all threecol">
+                <li class="item item-tile <?php echo sanitize_html_class($terms) . $priceClass; ?> all _all">
 
+                    <div class="itemBox">
+                        <a title="<?php echo $item->name; ?>" href="/auction-item/?item=<?php echo $item->_id; ?>">
+                            <div class="inner">
+                                <div class="image" style="background-image:url('<?php echo $item->images[0]; ?>')">
 
-                    <a href="/auction-item/?item=<?php echo $item->_id; ?>">
-                        <img src="<?php echo $item->images[0]; ?>" class="attachment-shop_catalog wp-post-image" alt="<?php echo $item->name; ?>">
-                        <div class="nameWrapper">
-                            <h3><?php echo $item->name; ?></h3>
-                        </div>
-                        <div><span style="width:80%"><strong><?php echo __('Current bid'); ?></strong> <?php echo '$' . $currentPrice; ?></span></div>
-                        <div><span style="width:80%"><strong><?php echo __('Bid Increment'); ?></strong> <?php echo '$' . $item->bidIncrement; ?></span></div>
-                        <div><span style="width:80%"><strong><?php echo __('Item Code'); ?></strong> <?php echo $item->itemCode; ?></span></div>
-
-                    </a>
-
-                    <a href="/auction-item/?item=<?php echo $item->_id; ?>" class="button"><?php echo __('Bid'); ?></a>
+                                </div>
+                                <h3 class="details">
+                                    <?php echo $item->name; ?>
+                                </h3>
+                            </div>
+                        </a>
+                    </div>
+<!---->
+<!--                    <div><span style="width:80%"><strong>--><?php //echo __('Current bid'); ?><!--</strong> --><?php //echo '$' . $currentPrice; ?><!--</span></div>-->
+<!--                    <div><span style="width:80%"><strong>--><?php //echo __('Bid Increment'); ?><!--</strong> --><?php //echo '$' . $item->bidIncrement; ?><!--</span></div>-->
+<!--                    <div><span style="width:80%"><strong>--><?php //echo __('Item Code'); ?><!--</strong> --><?php //echo $item->itemCode; ?><!--</span></div>-->
                 </li>
-
             <?php } ?>
         </ul>
     </div>

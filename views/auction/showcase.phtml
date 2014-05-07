@@ -14,10 +14,10 @@ $auctions = $this->get('auctions');
                     <article id="post-153" class="portfolio type-portfolio status-publish has-post-thumbnail hentry">
                         <div class="image-area animated fadeInUp" style="opacity: 0;">
                             <a title="<?php echo $auction->name; ?>" href="/auction-detail/?auction=<?php echo $auction->_id; ?>">
-                                <img class="thumbnail" src="<?php echo $auction->image; ?>" alt="<?php echo $auction->name; ?>" title="<?php echo $auction->name; ?>">
+                                <img class="thumbnail" src="<?php echo $auction->image->medium; ?>" alt="<?php echo $auction->name; ?>" title="<?php echo $auction->name; ?>">
                             </a>
                             <span class="image-info-buttons">
-                                <a class="lightbox-link" title="<?php echo $auction->name; ?>" href="<?php echo $auction->image; ?>">
+                                <a class="lightbox-link" title="<?php echo $auction->name; ?>" href="<?php echo $auction->image->medium; ?>">
                                 </a>
                             </span>
 
