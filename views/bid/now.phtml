@@ -5,40 +5,33 @@ if ($this->get('item')) {
     echo "No Item Set";
     return;
 }
-
 ?>
-<h1 itemprop="name" class="product_title entry-title"><?php echo $item->name; ?></h1>
 
-<?php if(isset($item->donor) || $item->donor) {
-?>
-    <div title="Donor">
-        <div class="label"><?php echo __('Donated by') . ': '; ?></div>
-        <div class="donor"><?php echo $item->donor; ?></div>
+<div class="product-info">
+    <h1><?php echo $item->name; ?></h1>
+    <div class="description">
+        <div>
+            <?php if(isset($item->donor) || $item->donor) {
+                ?>
+                <span><?php echo __('Donated by') . ':'; ?></span> <?php echo $item->donor; ?>
+            <?php
+            }
+            ?>
+        </div>
+        <div>
+            <span><?php echo __('Minimum next bid') . ':'; ?></span> <?php echo $item->minimumBidAmount; ?>
+        </div>
+        <div>
+            <span><?php echo __('Bid increments by') . ':'; ?></span> <?php echo $item->bidIncrement; ?>
+        </div>
     </div>
-<?php
-}
-?>
-
-<div>
-    <span class="label" id="bidLabel"><strong><?php echo __('Minimum next bid'); ?></strong></span>
-    <span class="amount">
-        $<span class="value" id="bidAmountTotal"><?php echo $item->minimumBidAmount; ?></span>
-    </span>
-</div>
-<div class="bidIncrement">
-    <strong><?php echo __('Bid increments by'); ?></strong><span
-        class="value"><?php echo ' $' . $item->bidIncrement; ?></span>
-</div>
-<form class="bidUpDown">
-    <div class="quantity buttons_added"><input type="button" value="-" class="minus down"><input type="number"
-                                                                                                 class="value input-text qty text" value="<?php echo $item->minimumBidAmount; ?>"><input
-            type="button"
-            value="+"
-            class="plus up">
+    <div class="product-extra clearfix">
+        <div class="quantity-adder">
+            <span class="add-up add-action button">+</span>
+            <input class="form-control" type="text" name="quantity" size="2" value="<?php echo $item->minimumBidAmount; ?>">
+            <span class="add-down add-action button">-</span>
+        </div>
+        <button type="submit" class="bidNow button"><?php echo __('Bid Now'); ?></button>
+        <button type="submit" id="proxyBid" class="proxyBid button"><?php echo __('Make a Proxy Bid'); ?></button>
     </div>
-    <div class="clear"></div>
-    <button type="submit" class="bidNow button"><?php echo __('Bid Now'); ?></button>
-    <button type="submit" id="proxyBid" class="proxyBid button"><?php echo __('Make a Proxy Bid'); ?></button>
-</form>
-
-<button class="reset"><?php echo __('Reset Bid'); ?></button>
+</div>
