@@ -15,11 +15,12 @@ $dateFormat = 'm/d/Y h:i a';
 $url = get_permalink() . '?auction=' . get_query_var('auction');
 
 ?>
-<div class="bannerContainer" style="background-image: url('<?php echo $auction->image->blur; ?>');">
+
+<div class="bannerContainer parallax" style="background-image: url('<?php echo $auction->banner; ?>');">
     <div class="innerBanner">
         <div class="statusContainer">
             <div class="name">
-                <a href="/auction-detail?auction=<?php echo $auction->name; ?>"><?php echo $auction->name; ?></a>
+                <a href="/auction-detail?auction=<?php echo $auction->_id; ?>"><?php echo $auction->name; ?></a>
                 <a class="orgTitle" href="/organization?organization=<?php echo $org->id; ?>"><?php echo $org->name; ?></a>
             </div>
             <?php if ($auction->status != "closed") {
@@ -36,7 +37,7 @@ $url = get_permalink() . '?auction=' . get_query_var('auction');
         </div>
 
         <div class="highlightImage">
-            <div class="highlightImageInner" style="background-image: url('<?php echo $auction->image->medium; ?>');"></div>
+            <div class="highlightImageInner" style="background-image: url('<?php echo $auction->logo->medium; ?>');"></div>
         </div>
         <div class="socialLinks">
             <a class="facebook"
@@ -67,9 +68,9 @@ $url = get_permalink() . '?auction=' . get_query_var('auction');
 <!--    </div>-->
 
         <div class="actionBar">
-            <a class="modalLink contactButton button" href="#modal1"><?php echo __('Contact Auction host'); ?></a>
+            <a class="modalLink contactButton" href="#modal1"><?php echo __('Help'); ?></a>
             <a href="#" class="register"><?php echo __('Register'); ?></a>
-            <a href="#" class="buyTickets"><?php echo __('Buy Tickets'); ?></a>
+            <a href="#" class="buyTickets"><?php echo __('Tickets'); ?></a>
         </div>
     </div>
 
