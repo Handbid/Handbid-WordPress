@@ -20,7 +20,9 @@ $url = get_permalink() . '?auction=' . get_query_var('auction');
     <div class="innerBanner">
         <div class="statusContainer">
             <div class="name">
-                <a href="/auction-detail?auction=<?php echo $auction->_id; ?>"><?php echo $auction->name; ?></a>
+                <div class="auctionName">
+                    <a href="/auction-detail?auction=<?php echo $auction->_id; ?>"><?php echo $auction->name; ?></a>
+                </div>
                 <a class="orgTitle" href="/organization?organization=<?php echo $org->id; ?>"><?php echo $org->name; ?></a>
             </div>
             <?php if ($auction->status != "closed") {
@@ -68,9 +70,9 @@ $url = get_permalink() . '?auction=' . get_query_var('auction');
 <!--    </div>-->
 
         <div class="actionBar">
-            <a class="modalLink contactButton" href="#modal1"><?php echo __('Help'); ?></a>
-            <a href="#" class="register"><?php echo __('Register'); ?></a>
-            <a href="#" class="buyTickets"><?php echo __('Tickets'); ?></a>
+            <a class="modalLink contactButton" href="#modal1"><span><?php echo __('Help'); ?></span></a>
+            <a href="#" class="register"><span><?php echo __('Register'); ?></span></a>
+            <a href="#" class="buyTickets"><span><?php echo __('Tickets'); ?></span></a>
         </div>
     </div>
 

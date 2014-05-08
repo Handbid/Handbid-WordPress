@@ -29,8 +29,8 @@ $url = get_permalink() . '?auction=' . get_query_var('auction');
     <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false">
     </script>
     <div style="width:100%;">
-        <div style="overflow:hidden; height:350px; width:100%;">
-            <div id="gmap_canvas" style="height:350px; width:100%;">
+        <div style="overflow:hidden; height:250px; width:100%;">
+            <div id="gmap_canvas" style="height:250px; width:100%;">
             </div>
             <a href="http://www.embed-google-map.com" class="map-data">http://www.embed-google-map.com</a>
             <iframe src="http://www.embed-google-map.com/google-map-data.php"></iframe>
@@ -49,7 +49,7 @@ $url = get_permalink() . '?auction=' . get_query_var('auction');
         </div>
         <script type="text/javascript">function init_map() {
                 var myOptions = {
-                    zoom:             17,
+                    zoom:             15,
                     center:           new google.maps.LatLng(<?php echo $coords->lat; ?>, <?php echo $coords->lon; ?>),
                     mapTypeId:        google.maps.MapTypeId.ROADMAP,
                     scrollwheel: false
