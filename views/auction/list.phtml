@@ -62,18 +62,16 @@ if ($this->get('categories') || $this->get('items') || $this->get('donors')) {
                         <a title="<?php echo $item->name; ?>" href="/auction-item/?item=<?php echo $item->_id; ?>">
                             <div class="inner">
                                 <div class="image" style="background-image:url('<?php echo $item->images[0]; ?>')">
-
+                                    <div class="itemCode"># <?php echo $item->itemCode; ?></div>
                                 </div>
-                                <h3 class="details">
-                                    <?php echo $item->name; ?>
-                                </h3>
+                                <div class="details">
+                                    <h3><?php echo $item->name; ?></h3>
+                                    <div><span style="width:80%"><strong><?php echo __('Current'); ?></strong> <?php echo '$' . $currentPrice; ?></span></div>
+                                    <div><span style="width:80%"><strong><?php echo __('Increment'); ?></strong> <?php echo '$' . $item->bidIncrement; ?></span></div>
+                                </div>
                             </div>
                         </a>
                     </div>
-<!---->
-<!--                    <div><span style="width:80%"><strong>--><?php //echo __('Current bid'); ?><!--</strong> --><?php //echo '$' . $currentPrice; ?><!--</span></div>-->
-<!--                    <div><span style="width:80%"><strong>--><?php //echo __('Bid Increment'); ?><!--</strong> --><?php //echo '$' . $item->bidIncrement; ?><!--</span></div>-->
-<!--                    <div><span style="width:80%"><strong>--><?php //echo __('Item Code'); ?><!--</strong> --><?php //echo $item->itemCode; ?><!--</span></div>-->
                 </li>
             <?php } ?>
         </ul>
