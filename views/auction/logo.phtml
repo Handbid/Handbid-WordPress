@@ -5,8 +5,7 @@
 
     forEach ($auctions as $auction) {
         ?>
-
-        <a href="/auction-detail/?auction=<?php echo $auction->_id; ?>" class="fancyLink auctionListLogo">
+        <a href="/auction-detail/?auction=<?php echo $auction->key; ?>" class="fancyLink auctionListLogo">
             <img src="<?php echo $auction->logo->medium; ?>"/>
 
             <div class="mask"></div>

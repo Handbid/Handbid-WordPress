@@ -12,7 +12,7 @@ $timeFormat = 'h:i:s';
 
 <div class="widget widget-buy-ticket">
     <div class="auction-content">
-        <h2><a href="/auction-detail/?auction=<?php echo $auction->_id; ?>"><?php echo $auction->name; ?></a></h2>
+        <h2><a href="/auction-detail/?auction=<?php echo $auction->key; ?>"><?php echo $auction->name; ?></a></h2>
 
         <div class="timer auction-timer normal"><?php echo __('Ends in'); ?> <span><?php echo date(
                     $timeFormat,

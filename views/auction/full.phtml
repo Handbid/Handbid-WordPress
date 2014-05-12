@@ -15,7 +15,7 @@ $dateFormat = 'm/d/Y h:i a';
     <?php
     forEach ($auctions as $auction) {
         ?>
-        <tr onclick="window.location.href='/auction-detail/?auction=<?php echo $auction->_id; ?>'">
+        <tr onclick="window.location.href='/auction-detail/?auction=<?php echo $auction->key; ?>'">
             <td class="cell-image cell-first">
                 <img class="alignnone animated fadeIn" alt="<?php echo $auction->name; ?>"
                      src="<?php echo $auction->logo->medium; ?>" style="opacity: 0;">

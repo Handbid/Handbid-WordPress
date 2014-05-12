@@ -40,6 +40,7 @@ class Handbid
     public $state;
     public $actionController;
     public $adminActionController;
+    public $routeController;
     public $handbid;
 
     function __construct($options = null)
@@ -48,20 +49,20 @@ class Handbid
         // Make sure handbid has everything it needs to run
         \Handbid\Handbid::includeDependencies();
 
+//        register_activation_hook( __FILE__, [ $this, 'install' ] ); // On Fresh install
         add_action('init', [$this, 'init']);
+        add_filter('query_vars', [$this, 'registerVariables']);
+
 
         // Dependency Injection
         $this->basePath              = isset($options['basePath']) ? $options['basePath'] : dirname(__FILE__);
         $this->handbid               = isset($options['handbid']) ? $options['handbid'] : $this->createHandbid();
-        $this->viewRender            = isset($options['viewRender']) ? $options['viewRender'] : $this->createViewRenderer(
-        );
+        $this->viewRender            = isset($options['viewRender']) ? $options['viewRender'] : $this->createViewRenderer();
         $this->state                 = isset($options['state']) ? $options['state'] : $this->state();
-        $this->shortCodeController   = isset($options['createShortCodeController']) ? $options['createShortCodeController'] : $this->createShortCodeController(
-        );
-        $this->actionController      = isset($options['actionController']) ? $options['actionController'] : $this->createActionController(
-        );
-        $this->adminActionController = isset($options['adminActionController']) ? $options['adminActionController'] : $this->createAdminActionController(
-        );
+        $this->shortCodeController   = isset($options['createShortCodeController']) ? $options['createShortCodeController'] : $this->createShortCodeController();
+        $this->actionController      = isset($options['actionController']) ? $options['actionController'] : $this->createActionController();
+        $this->adminActionController = isset($options['adminActionController']) ? $options['adminActionController'] : $this->createAdminActionController();
+        $this->routeController       = isset($options['routeController']) ? $options['routeController'] : $this->createRouteController();
     }
 
     function init()
@@ -69,14 +70,43 @@ class Handbid
 
         // Add javascript
         add_action('wp_enqueue_scripts', [$this, 'initJavascript']);
-
-        // Add query variable support
-        add_filter('query_vars', [$this, 'registerVariables']);
-
         // init controllers
         $this->shortCodeController->init();
         $this->adminActionController->init();
 
+    }
+
+    function install() {
+        $this->createPages();
+    }
+
+    public function createPages() {
+
+    // Insert the post into the database
+        $pages = [
+            'auctionItem' => [
+                'post_title'    => 'Auction Item',
+                'post_name'     => 'item',
+                'post_content'  => 'Auction Item',
+                'post_status'   => 'publish'
+            ],
+            'auctionDetail' => [
+                'post_title'    => 'Auction Detail',
+                'post_name'     => 'auction',
+                'post_content'  => 'Auction Detail',
+                'post_status'   => 'publish'
+            ],
+            'organizationDetail' => [
+                'post_title'    => 'Organization Detail',
+                'post_name'     => 'organization',
+                'post_content'  => 'Organization Detail.',
+                'post_status'   => 'publish'
+            ]
+        ];
+
+        foreach ( $pages as $page ) {
+            wp_insert_post( $page );
+        }
     }
 
     // Javascript
@@ -85,14 +115,14 @@ class Handbid
 
         $scripts = array(
             'handbid'             => 'public/js/handbid.js',
-            'handbidSocket'       => ' public/js/socket.js',
-            'handbidIsotope'      => ' public/js/isotope.pkgd.min.js',
-            'handbidModal'        => ' public/js/jquery.modal.min.js',
-            'handbidUnslider'     => ' public/js/unslider.min.js',
-            'handbidContactForm'  => ' public/js/contactForm.js',
-            'handbidPhotoGallery' => ' public/js/photoGallery.js',
-            'handbidAuctionList'  => ' public/js/auctionList.js',
-            'handbidBidNow'       => ' public/js/bidNow.js'
+            'handbidSocket'       => 'public/js/socket.js',
+            'handbidIsotope'      => 'public/js/isotope.pkgd.min.js',
+            'handbidModal'        => 'public/js/jquery.modal.min.js',
+            'handbidUnslider'     => 'public/js/unslider.min.js',
+            'handbidContactForm'  => 'public/js/contactForm.js',
+            'handbidPhotoGallery' => 'public/js/photoGallery.js',
+            'handbidAuctionList'  => 'public/js/auctionList.js',
+            'handbidBidNow'       => 'public/js/bidNow.js'
         );
 
         foreach ($scripts as $key => $sc) {
@@ -131,7 +161,6 @@ class Handbid
 
         return new HandbidActionController($viewRenderer);
     }
-
     function createAdminActionController($viewRenderer = false)
     {
         if (!$viewRenderer) {
@@ -139,6 +168,10 @@ class Handbid
         }
 
         return new HandbidAdminActionController($viewRenderer);
+    }
+    function createRouteController()
+    {
+        return new HandbidRouteController();
     }
 
     // View Renderer
@@ -179,6 +212,7 @@ class Handbid
         $qvars[] = 'item';
         return $qvars;
     }
+
 
 }
 

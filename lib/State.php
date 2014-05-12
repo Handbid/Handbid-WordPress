@@ -26,7 +26,7 @@ class State {
     function currentAuction() {
         if(!$this->auction) {
             $auctionId = get_query_var('auction');
-            $this->auction = $this->handbid->store('Auction')->byId($auctionId);
+            $this->auction = $this->handbid->store('Auction')->byKey($auctionId);
         }
 
         return $this->auction;
@@ -35,7 +35,7 @@ class State {
     function currentItem() {
         if(!$this->item) {
             $itemId = get_query_var('item');
-            $this->item = $this->handbid->store('Item')->byId($itemId);
+            $this->item = $this->handbid->store('Item')->byKey($itemId);
         }
 
         return $this->item;

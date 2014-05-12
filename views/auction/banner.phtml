@@ -21,9 +21,9 @@ $url = get_permalink() . '?auction=' . get_query_var('auction');
         <div class="statusContainer">
             <div class="name">
                 <div class="auctionName">
-                    <a href="/auction-detail?auction=<?php echo $auction->_id; ?>"><?php echo $auction->name; ?></a>
+                    <a href="/auction-detail?auction=<?php echo $auction->key; ?>"><?php echo $auction->name; ?></a>
                 </div>
-                <a class="orgTitle" href="/organization?organization=<?php echo $org->id; ?>"><?php echo $org->name; ?></a>
+                <a class="orgTitle" href="/organization?organization=<?php echo $org->key; ?>"><?php echo $org->name; ?></a>
             </div>
             <?php if ($auction->status != "closed") {
                 if (isset($auction->closingTime)) { ?>
