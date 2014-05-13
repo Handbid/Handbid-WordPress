@@ -37,7 +37,6 @@ $url = get_permalink() . '?auction=' . get_query_var('auction');
             <?php
             } ?>
         </div>
-
         <div class="highlightImage">
             <div class="highlightImageInner" style="background-image: url('<?php echo $auction->logo->medium; ?>');"></div>
         </div>
@@ -52,6 +51,9 @@ $url = get_permalink() . '?auction=' . get_query_var('auction');
             <a class="gplus" href="https://plus.google.com/share?url=<?php the_permalink(); ?>" onclick="javascript:window.open(this.href,
           '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">Google+</a>
         </div>
+
+        <!-- banner overlay information -->
+        <div>
 <!--    <div class="bannerContentOverlay">-->
 <!--        <div class="eventsAndDetails">-->
 <!--            <div class="detailsWrapper">-->
@@ -68,6 +70,7 @@ $url = get_permalink() . '?auction=' . get_query_var('auction');
 <!--            </div>-->
 <!--        </div>-->
 <!--    </div>-->
+        </div>
 
         <div class="actionBar">
             <a class="modalLink contactButton" href="#modal1"><span><?php echo __('Help'); ?></span></a>
@@ -77,10 +80,40 @@ $url = get_permalink() . '?auction=' . get_query_var('auction');
     </div>
 
     <div class="heroOverlay"></div>
+    <div class="statBar">
+        <div class="innerStatBar">
+            <div class="listStats">
+                <div class="statBox items">
+                    <span><?php echo __('Items'); ?></span>
+                    <span><?php echo $auction->meta->totalItems; ?></span>
+                </div>
+
+                <?php if ( is_user_logged_in() ) {
+                ?>
+                    <div class="statBox winning">
+                        <span><?php echo __('Winning'); ?></span>
+                        <span>Value</span>
+                    </div>
+                    <div class="statBox losing">
+                        <span><?php echo __('Losing'); ?></span>
+                        <span>Value</span>
+                    </div>
+                    <div class="statBox proxy">
+                        <span><?php echo __('Proxy'); ?></span>
+                        <span>Value</span>
+                    </div>
+                    <div class="statBox favorites">
+                        <span><?php echo __('Favorites'); ?></span>
+                        <span>Value</span>
+                    </div>
+                <?php } ?>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div id="modal1" class="modal">
     <h3 class="modalTitle"><?php echo __('Contact Auction Host'); ?></h3>
     <p class="closeBtn">Close</p>
-    <?php echo do_shortcode('[contact-form-7 id="6021" title="Auction Contact Form"]'); ?>
+    <?php echo do_shortcode('[gravityform id=1 title=false description=false]'); ?>
 </div>

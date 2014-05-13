@@ -16,8 +16,8 @@ class State {
     function currentOrg() {
 
         if(!$this->org) {
-            $orgId = get_query_var('organization');
-            $this->org = $this->handbid->store('Organization')->byId($orgId);
+            $orgKey = get_query_var('organization');
+            $this->org = $this->handbid->store('Organization')->byKey($orgKey);
         }
 
         return $this->org;
@@ -25,8 +25,8 @@ class State {
 
     function currentAuction() {
         if(!$this->auction) {
-            $auctionId = get_query_var('auction');
-            $this->auction = $this->handbid->store('Auction')->byKey($auctionId);
+            $auctionKey = get_query_var('auction');
+            $this->auction = $this->handbid->store('Auction')->byKey($auctionKey);
         }
 
         return $this->auction;
@@ -34,8 +34,8 @@ class State {
 
     function currentItem() {
         if(!$this->item) {
-            $itemId = get_query_var('item');
-            $this->item = $this->handbid->store('Item')->byKey($itemId);
+            $itemKey = get_query_var('item');
+            $this->item = $this->handbid->store('Item')->byKey($itemKey);
         }
 
         return $this->item;

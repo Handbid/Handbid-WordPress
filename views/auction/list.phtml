@@ -62,7 +62,11 @@ if ($this->get('categories') || $this->get('items') || $this->get('donors')) {
                         <a title="<?php echo $item->name; ?>" href="/auction-item/?item=<?php echo $item->key; ?>">
                             <div class="inner">
                                 <div class="image" style="background-image:url('<?php echo $item->images[0]; ?>')">
-                                    <div class="itemCode"># <?php echo $item->itemCode; ?></div>
+                                    <?php if($item->itemCode) { ?>
+                                        <div class="itemCode"># <?php echo $item->itemCode; ?></div>
+                                    <?php
+                                    }
+                                    ?>
                                 </div>
                                 <div class="details">
                                     <h3><?php echo $item->name; ?></h3>

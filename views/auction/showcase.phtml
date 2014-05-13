@@ -11,13 +11,8 @@ $auctions = $this->get('auctions');
                 <li class="twocol showcase-item clearfix term-6">
                     <article class="portfolio type-portfolio">
                         <div class="image-area animated fadeInUp" style="opacity: 0;">
-                            <a title="<?php echo $auction->name; ?>" href="/auction-detail/?auction=<?php echo $auction->key; ?>">
-                                <img class="thumbnail" src="<?php echo $auction->logo->medium; ?>" alt="<?php echo $auction->name; ?>" title="<?php echo $auction->name; ?>">
+                            <a title="<?php echo $auction->name; ?>" href="/auction-detail/?auction=<?php echo $auction->key; ?>" style="background-image: url('<?php echo $auction->logo->medium; ?>');">
                             </a>
-                            <span class="image-info-buttons">
-                                <a class="lightbox-link" title="<?php echo $auction->name; ?>" href="<?php echo $auction->logo->medium; ?>">
-                                </a>
-                            </span>
 
                             <div class="image-info">
                                 <h3 class="post-title">

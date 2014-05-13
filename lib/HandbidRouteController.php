@@ -1,33 +1,34 @@
 <?php
 
-class HandbidRouteController {
+class HandbidRouteController
+{
 
     public $query_vars = [
-        'organization',
-        'auction-detail',
-        'item-detail'
+        'organization' => 'organization',
+        'auction'      => 'auction-detail',
+        'item'         => 'item-detail'
     ];
 
-    public function __construct($queryVars = null) {
-        add_action( 'init', [ $this, 'init' ]);
+    public function __construct($queryVars = null)
+    {
+        add_action('init', [$this, 'init']);
+//        add_filter('page_rewrite_rules', [ $this, 'addRedirectRules' ] );
 
     }
 
-    public function init() {
-        $this->addRedirectRules();
+    public function init()
+    {
+
     }
 
     function addRedirectRules()
     {
-        forEach($this->query_vars as $var) {
+        forEach ($this->query_vars as $k => $v) {
             add_rewrite_rule(
-                '(' . $var . ')/([^/]*)$',
-                $var . '/$matches[1]',
+                $k . '/([^/]*)',
+                $v . '/?' . $k . '=$matches[1]',
                 'top'
             );
         }
-        flush_rewrite_rules();
-
     }
-
 }
