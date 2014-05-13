@@ -4,7 +4,7 @@
  * Plugin Name: Handbid
  * Author: Jon Hemstreet
  * Author URI: http://www.jonhemstreet.com
- * Version: 0.0.1.8
+ * Version: 0.0.1.9
  * Description: Handbid is fully automated mobile silent auction software specifically designed to increase revenue,
  * drive bid activity, and maximize ROI for non-profits. Eliminating the need for paper bid sheets, Handbid empowers
  * users to bid using a mobile device, the web, or a tablet (kiosk) at the event. Bidders can enter bids remotely or
@@ -53,7 +53,6 @@ class Handbid
         add_action('init', [$this, 'init']);
         add_filter('query_vars', [$this, 'registerVariables']);
 
-
         // Dependency Injection
         $this->basePath              = isset($options['basePath']) ? $options['basePath'] : dirname(__FILE__);
         $this->handbid               = isset($options['handbid']) ? $options['handbid'] : $this->createHandbid();
@@ -63,6 +62,7 @@ class Handbid
         $this->actionController      = isset($options['actionController']) ? $options['actionController'] : $this->createActionController();
         $this->adminActionController = isset($options['adminActionController']) ? $options['adminActionController'] : $this->createAdminActionController();
         $this->routeController       = isset($options['routeController']) ? $options['routeController'] : $this->createRouteController();
+
     }
 
     function init()
@@ -114,15 +114,16 @@ class Handbid
     {
 
         $scripts = array(
-            'handbid'             => 'public/js/handbid.js',
-            'handbidSocket'       => 'public/js/socket.js',
-            'handbidIsotope'      => 'public/js/isotope.pkgd.min.js',
-            'handbidModal'        => 'public/js/jquery.modal.min.js',
-            'handbidUnslider'     => 'public/js/unslider.min.js',
-            'handbidContactForm'  => 'public/js/contactForm.js',
-            'handbidPhotoGallery' => 'public/js/photoGallery.js',
-            'handbidAuctionList'  => 'public/js/auctionList.js',
-            'handbidBidNow'       => 'public/js/bidNow.js'
+            'handbid'              => 'public/js/handbid.js',
+            'handbidSocket'        => 'public/js/socket.js',
+            'handbidIsotope'       => 'public/js/isotope.pkgd.min.js',
+            'handbidModal'         => 'public/js/jquery.modal.min.js',
+            'handbidUnslider'      => 'public/js/unslider.min.js',
+            'handbidContactForm'   => 'public/js/contactForm.js',
+            'handbidPhotoGallery'  => 'public/js/photoGallery.js',
+            'handbidAuctionList'   => 'public/js/auctionList.js',
+            'handbidAuctionBanner' => 'public/js/auctionBanner.js',
+            'handbidBidNow'        => 'public/js/bidNow.js'
         );
 
         foreach ($scripts as $key => $sc) {
@@ -212,7 +213,6 @@ class Handbid
         $qvars[] = 'item';
         return $qvars;
     }
-
 
 }
 
