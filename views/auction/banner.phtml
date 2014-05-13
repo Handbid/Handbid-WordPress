@@ -83,6 +83,12 @@ $url = get_permalink() . '?auction=' . get_query_var('auction');
     <div class="statBar">
         <div class="innerStatBar">
             <div class="listStats">
+                <div class="auctionImage" style="background-image: url('<?php echo $auction->logo->small; ?>');">
+                </div>
+                <div class="statBox auctionName">
+                    <span><?php echo $auction->name; ?></span>
+                </div>
+                </div>
                 <div class="statBox items">
                     <span><?php echo __('Items'); ?></span>
                     <span><?php echo $auction->meta->totalItems; ?></span>
