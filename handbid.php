@@ -49,19 +49,30 @@ class Handbid
         // Make sure handbid has everything it needs to run
         \Handbid\Handbid::includeDependencies();
 
-//        register_activation_hook( __FILE__, [ $this, 'install' ] ); // On Fresh install
-        add_action('init', [$this, 'init']);
-        add_filter('query_vars', [$this, 'registerVariables']);
+        // Fresh Installer
+        register_activation_hook( __FILE__, [ $this, 'install' ] );
+        register_deactivation_hook( __FILE__, [ $this, 'uninstall' ] );
 
         // Dependency Injection
         $this->basePath              = isset($options['basePath']) ? $options['basePath'] : dirname(__FILE__);
         $this->handbid               = isset($options['handbid']) ? $options['handbid'] : $this->createHandbid();
-        $this->viewRender            = isset($options['viewRender']) ? $options['viewRender'] : $this->createViewRenderer();
+        $this->viewRender            = isset($options['viewRender']) ? $options['viewRender'] : $this->createViewRenderer(
+        );
         $this->state                 = isset($options['state']) ? $options['state'] : $this->state();
-        $this->shortCodeController   = isset($options['createShortCodeController']) ? $options['createShortCodeController'] : $this->createShortCodeController();
-        $this->actionController      = isset($options['actionController']) ? $options['actionController'] : $this->createActionController();
-        $this->adminActionController = isset($options['adminActionController']) ? $options['adminActionController'] : $this->createAdminActionController();
-        $this->routeController       = isset($options['routeController']) ? $options['routeController'] : $this->createRouteController();
+        $this->shortCodeController   = isset($options['createShortCodeController']) ? $options['createShortCodeController'] : $this->createShortCodeController(
+        );
+        $this->actionController      = isset($options['actionController']) ? $options['actionController'] : $this->createActionController(
+        );
+        $this->adminActionController = isset($options['adminActionController']) ? $options['adminActionController'] : $this->createAdminActionController(
+        );
+        $this->routeController       = isset($options['routeController']) ? $options['routeController'] : $this->createRouteController(
+        );
+
+        add_action('init', [$this, 'init']);
+        add_filter('query_vars', [$this, 'registerVariables']);
+
+        // Temporary fix for showing admin bar
+        add_action('after_setup_theme', [ $this, 'remove_admin_bar' ]);
 
     }
 
@@ -76,37 +87,16 @@ class Handbid
 
     }
 
-    function install() {
-        $this->createPages();
+    function install()
+    {
+        $install = new Install();
+        $install->install();
     }
 
-    public function createPages() {
-
-    // Insert the post into the database
-        $pages = [
-            'auctionItem' => [
-                'post_title'    => 'Auction Item',
-                'post_name'     => 'item',
-                'post_content'  => 'Auction Item',
-                'post_status'   => 'publish'
-            ],
-            'auctionDetail' => [
-                'post_title'    => 'Auction Detail',
-                'post_name'     => 'auction',
-                'post_content'  => 'Auction Detail',
-                'post_status'   => 'publish'
-            ],
-            'organizationDetail' => [
-                'post_title'    => 'Organization Detail',
-                'post_name'     => 'organization',
-                'post_content'  => 'Organization Detail.',
-                'post_status'   => 'publish'
-            ]
-        ];
-
-        foreach ( $pages as $page ) {
-            wp_insert_post( $page );
-        }
+    function uninstall()
+    {
+        $uninstall = new Uninstall();
+        $uninstall->uninstall();
     }
 
     // Javascript
@@ -162,6 +152,7 @@ class Handbid
 
         return new HandbidActionController($viewRenderer);
     }
+
     function createAdminActionController($viewRenderer = false)
     {
         if (!$viewRenderer) {
@@ -170,6 +161,7 @@ class Handbid
 
         return new HandbidAdminActionController($viewRenderer);
     }
+
     function createRouteController()
     {
         return new HandbidRouteController();
@@ -212,6 +204,14 @@ class Handbid
         $qvars[] = 'auction';
         $qvars[] = 'item';
         return $qvars;
+    }
+
+
+    // Temporary fix to remove admin bar
+    function remove_admin_bar() {
+        if (!current_user_can('administrator') && !is_admin()) {
+            show_admin_bar(false);
+        }
     }
 
 }

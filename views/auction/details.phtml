@@ -1,8 +1,8 @@
 <?php
 if ($this->auction) {
 
-    $auction = $this->get('auction');
-    $coords = $auction->location->coords;
+    $auction  = $this->get('auction');
+    $coords   = $auction->location->coords;
     $location = $auction->location;
 
     if (isset($auction->meta)) {
@@ -49,9 +49,9 @@ $url = get_permalink() . '?auction=' . get_query_var('auction');
         </div>
         <script type="text/javascript">function init_map() {
                 var myOptions = {
-                    zoom:             15,
-                    center:           new google.maps.LatLng(<?php echo $coords->lat; ?>, <?php echo $coords->lon; ?>),
-                    mapTypeId:        google.maps.MapTypeId.ROADMAP,
+                    zoom:        15,
+                    center:      new google.maps.LatLng(<?php echo $coords->lat; ?>, <?php echo $coords->lon; ?>),
+                    mapTypeId:   google.maps.MapTypeId.ROADMAP,
                     scrollwheel: false
                 };
                 map = new google.maps.Map(document.getElementById("gmap_canvas"), myOptions);
