@@ -21,4 +21,8 @@ $j(function () {
         }
 
     });
+
+    $j('.filterBox').click(function() {
+        $j('.bannerContainer').toggleClass("filterBarOpen");
+    });
 });

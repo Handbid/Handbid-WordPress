@@ -23,6 +23,9 @@ $j(function() {
             filterClass += '.' + $j('.priceSort input[type=radio]:checked').val();
         }
 
+        if(filterClass == null) {
+            filterClass = 'all';
+        }
         return filterClass;
 
     }

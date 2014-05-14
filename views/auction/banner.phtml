@@ -2,6 +2,10 @@
 if ($this->get('auction')) {
     $auction = $this->get('auction');
     $location = $auction->location;
+
+    $categories = $this->get('categories');
+    $donors = $this->get('donors');
+
     if (isset($auction->meta)) {
         $org = $auction->meta->organization;
     }
@@ -11,10 +15,29 @@ if ($this->get('auction')) {
     return;
 }
 
-$dateFormat = 'm/d/Y h:i a';
+// For Filter Bar
+$showItems   = [
+    'all'       => 'All Items',
+    'forSale'   => 'For Sale',
+    'live'      => 'Live',
+    'extended'  => 'Extended',
+    'noBids'    => 'No Bids',
+    'favorites' => 'Favorites'
+];
+$priceRanges = [
+    '_all' => 'All',
+    '_0'   => '0 - 100',
+    '_1'   => '101 - 250',
+    '_2'   => '251 - 500',
+    '_5'   => '501+'
+];
+
+$status = ($auction->status == "open") ? 'open' : 'closed';
+
 $url = get_permalink() . '?auction=' . get_query_var('auction');
 
 ?>
+
 
 <div class="bannerContainer parallax" style="background-image: url('<?php echo $auction->banner; ?>');">
     <div class="innerBanner">
@@ -25,17 +48,6 @@ $url = get_permalink() . '?auction=' . get_query_var('auction');
                 </div>
                 <a class="orgTitle" href="/organization?organization=<?php echo $org->key; ?>"><?php echo $org->name; ?></a>
             </div>
-            <?php if ($auction->status != "closed") {
-                if (isset($auction->closingTime)) { ?>
-                    <div class="timeRemaining"><?php echo __('Auction closes in ') . $auction->closingTime; ?></div>
-                <?php }
-                else {
-                    ?>
-                    <div class="status <?php echo $auction->status; ?>"><?php echo __('Auction is') . ' ' . $auction->status . ' ' . __('for Bidding'); ?></div>
-                <?php
-                }?>
-            <?php
-            } ?>
             <div class="highlightImage">
                 <img src="<?php echo $auction->logo->medium; ?>"/>
             </div>
@@ -88,7 +100,6 @@ $url = get_permalink() . '?auction=' . get_query_var('auction');
                 <div class="statBox auctionName">
                     <span><?php echo $auction->name; ?></span>
                 </div>
-                </div>
                 <div class="statBox items">
                     <label><?php echo __('Items'); ?></label>
                     <span><?php echo $auction->meta->totalItems; ?></span>
@@ -113,10 +124,75 @@ $url = get_permalink() . '?auction=' . get_query_var('auction');
                         <span>Value</span>
                     </div>
                 <?php } ?>
-                <div class="statBox auctionTime">
-                    <label><?php echo __('Auction Time'); ?></label>
-                    <span><?php echo date($dateFormat,$auction->startTime); ?> - <?php echo date($dateFormat, $auction->endTime); ?></span>
+                <div class="statBox date">
+                    <label><?php echo __('Date'); ?></label>
+                    <span><?php echo date('m/d/Y',$auction->startTime); ?></span>
 
+                </div>
+                <div class="statBox auctionTime">
+                    <label><?php echo __('Time'); ?></label>
+                    <span><?php echo date('h:i a',$auction->startTime); ?> - <?php echo date('h:i a', $auction->endTime); ?></span>
+
+                </div>
+                <div class="statBox statusBox">
+                    <label><?php echo __('Status'); ?></label>
+                    <span class="status <?php echo $status; ?>"><?php echo __(ucfirst($status)); ?></span>
+
+                </div>
+                <div class="statBox filterBox">
+                    <button class="button"><?php echo __('Filter'); ?></button>
+                </div>
+            </div>
+            <div class="filterBar">
+                <div class="filterGroup">
+                    <label class="categoryLabel"><?php echo __('Show Items'); ?> :</label>
+                    <ul class="fancyRadio">
+                        <?php forEach ($showItems as $k => $v) {
+                            ?>
+                            <li>
+                                <input id="<?php echo $k; ?>" type="radio" name="category" value="<?php echo $k; ?>">
+                                <label for="<?php echo $k; ?>"><?php echo __($v); ?></label>
+                            </li>
+                        <?php
+                        }
+                        ?>
+                    </ul>
+                </div>
+
+                <div class="filterGroup">
+                    <label class="categoryLabel"><?php echo __('Categories'); ?>:</label>
+                    <ul class="categorySort fancyRadio">
+                        <?php
+
+                        forEach ($categories as $category) {
+                            ?>
+                            <li>
+                                <input id="<?php echo sanitize_html_class($category); ?>" type="radio" name="category"
+                                       value="<?php echo sanitize_html_class($category); ?>">
+                                <label for="<?php echo sanitize_html_class($category); ?>"><?php echo __(
+                                        ucfirst($category)
+                                    ); ?></label>
+                            </li>
+                        <?php
+                        }
+
+                        ?>
+                    </ul>
+                </div>
+                <div class="filterGroup">
+                    <label class="categoryLabel"><?php echo __('Price Ranges'); ?>:</label>
+                    <ul class="priceSort fancyRadio">
+                        <?php
+                        forEach ($priceRanges as $k => $v) {
+                            ?>
+                            <li>
+                                <input id="<?php echo $k; ?>" type="radio" name="category" value="<?php echo $k; ?>">
+                                <label for="<?php echo $k; ?>"><?php echo __($v); ?></label>
+                            </li>
+                        <?php
+                        }
+                        ?>
+                    </ul>
                 </div>
             </div>
         </div>
