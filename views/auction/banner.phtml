@@ -108,39 +108,39 @@ $url = get_permalink() . '?auction=' . get_query_var('auction');
                 <?php if ( is_user_logged_in() ) {
                 ?>
                     <div class="statBox winning">
-                        <label><?php echo __('Winning'); ?></label>
+                        <label><?php echo __('WINNING'); ?></label>
                         <span>Value</span>
                     </div>
                     <div class="statBox losing">
-                        <label><?php echo __('Losing'); ?></label>
+                        <label><?php echo __('LOSING'); ?></label>
                         <span>Value</span>
                     </div>
                     <div class="statBox proxy">
-                        <label><?php echo __('Proxy'); ?></label>
+                        <label><?php echo __('PROXY'); ?></label>
                         <span>Value</span>
                     </div>
                     <div class="statBox favorites">
-                        <label><?php echo __('Favorites'); ?></label>
+                        <label><?php echo __('FAVORITES'); ?></label>
                         <span>Value</span>
                     </div>
                 <?php } ?>
                 <div class="statBox date">
-                    <label><?php echo __('Date'); ?></label>
+                    <label><?php echo __('DATE'); ?></label>
                     <span><?php echo date('m/d/Y',$auction->startTime); ?></span>
 
                 </div>
                 <div class="statBox auctionTime">
-                    <label><?php echo __('Time'); ?></label>
+                    <label><?php echo __('TIME'); ?></label>
                     <span><?php echo date('h:i a',$auction->startTime); ?> - <?php echo date('h:i a', $auction->endTime); ?></span>
 
                 </div>
                 <div class="statBox statusBox">
-                    <label><?php echo __('Status'); ?></label>
+                    <label><?php echo __('STATUS'); ?></label>
                     <span class="status <?php echo $status; ?>"><?php echo __(ucfirst($status)); ?></span>
 
                 </div>
                 <div class="statBox filterBox">
-                    <button class="button"><?php echo __('Filter'); ?></button>
+                    <button class="button"><?php echo __('FILTER'); ?></button>
                 </div>
             </div>
             <div class="filterBar">
