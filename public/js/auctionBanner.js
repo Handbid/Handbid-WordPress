@@ -14,6 +14,9 @@ $j(function () {
 
         if ($j(this).scrollTop() < $banner.height() && $el.css('position') == 'fixed') {
             $j('.statBar').removeClass("statBarTop");
+            if($j('.bannerContainer').hasClass("filterBarOpen")) {
+                $j('.bannerContainer').removeClass("filterBarOpen");
+            }
         }
 
         if ($j(this).scrollTop() < ( $banner.height() - $el.height())) {
