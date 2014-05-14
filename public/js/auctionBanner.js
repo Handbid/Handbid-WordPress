@@ -1,25 +1,22 @@
 var $j = jQuery.noConflict();
-$j(function() {
-    $j(window).scroll(function(e){
+$j(function () {
+    $j(window).scroll(function (e) {
         $el = $j('.statBar');
+        $banner = $j('.innerBanner');
 
-        if ($j(this).scrollTop() > 437 && $el.css('position') != 'fixed'){
+        if ($j(this).scrollTop() > $banner.height() && $el.css('position') != 'fixed') {
             $j('.statBar').addClass("statBarTop");
         }
 
-        if ($j(this).scrollTop() > ( 437 + $el.height())){
-            $j('.statBar .auctionImage').addClass("animated fadeInLeft");
-            $j('.statBar .auctionName').addClass("animated fadeInLeft");
+        if ($j(this).scrollTop() > ( $banner.height() + $el.height())) {
             $j('.statBar').addClass("statBarTopExtended");
         }
 
-        if ($j(this).scrollTop() < 437 && $el.css('position') == 'fixed'){
+        if ($j(this).scrollTop() < $banner.height() && $el.css('position') == 'fixed') {
             $j('.statBar').removeClass("statBarTop");
         }
 
-        if ($j(this).scrollTop() < ( 437 - $el.height())){
-            $j('.statBar .auctionImage').removeClass("animated fadeInLeft");
-            $j('.statBar .auctionName').removeClass("animated fadeInLeft");
+        if ($j(this).scrollTop() < ( $banner.height() - $el.height())) {
             $j('.statBar').removeClass("statBarTopExtended");
         }
 
