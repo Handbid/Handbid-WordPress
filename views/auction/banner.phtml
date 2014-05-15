@@ -51,6 +51,16 @@ $url = get_permalink() . '?auction=' . get_query_var('auction');
             <div class="highlightImage">
                 <img src="<?php echo $auction->logo->medium; ?>"/>
             </div>
+            <div class="bannerExtraInfo">
+                <div class="auctionDate">
+                    <span><?php echo date('m/d/Y',$auction->startTime); ?></span>
+
+                </div>
+                <div class="auctionTime">
+                    <span><?php echo date('h:i a',$auction->startTime); ?> - <?php echo date('h:i a', $auction->endTime); ?></span>
+
+                </div>
+            </div>
         </div>
         <div class="socialLinks">
             <a class="facebook"
@@ -101,46 +111,36 @@ $url = get_permalink() . '?auction=' . get_query_var('auction');
                     <span><?php echo $auction->name; ?></span>
                 </div>
                 <div class="statBox items">
-                    <label><?php echo __('ITEMS'); ?></label>
+                    <label><?php echo __('Items'); ?></label>
                     <span><?php echo $auction->meta->totalItems; ?></span>
                 </div>
 
                 <?php if ( is_user_logged_in() ) {
                 ?>
                     <div class="statBox winning">
-                        <label><?php echo __('WINNING'); ?></label>
+                        <label><?php echo __('Winning'); ?></label>
                         <span>Value</span>
                     </div>
                     <div class="statBox losing">
-                        <label><?php echo __('LOSING'); ?></label>
+                        <label><?php echo __('Losing'); ?></label>
                         <span>Value</span>
                     </div>
                     <div class="statBox proxy">
-                        <label><?php echo __('PROXY'); ?></label>
+                        <label><?php echo __('Proxy'); ?></label>
                         <span>Value</span>
                     </div>
                     <div class="statBox favorites">
-                        <label><?php echo __('FAVORITES'); ?></label>
+                        <label><?php echo __('Favorites'); ?></label>
                         <span>Value</span>
                     </div>
                 <?php } ?>
-                <div class="statBox date">
-                    <label><?php echo __('DATE'); ?></label>
-                    <span><?php echo date('m/d/Y',$auction->startTime); ?></span>
-
-                </div>
-                <div class="statBox auctionTime">
-                    <label><?php echo __('TIME'); ?></label>
-                    <span><?php echo date('h:i a',$auction->startTime); ?> - <?php echo date('h:i a', $auction->endTime); ?></span>
-
-                </div>
                 <div class="statBox statusBox">
-                    <label><?php echo __('STATUS'); ?></label>
+                    <label><?php echo __('Status'); ?></label>
                     <span class="status <?php echo $status; ?>"><?php echo __(ucfirst($status)); ?></span>
 
                 </div>
                 <div class="statBox filterBox">
-                    <button class="button"><?php echo __('FILTER'); ?></button>
+                    <button class="button"><?php echo __('Filter'); ?></button>
                 </div>
             </div>
             <div class="filterBar">
