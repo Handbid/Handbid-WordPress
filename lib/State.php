@@ -23,11 +23,10 @@ class State {
         return $this->org;
     }
 
-    function currentAuction() {
-        if(!$this->auction) {
-            $auctionKey = get_query_var('auction');
+    function currentAuction($attributes = null) {
+            $auctionKey = (isset($attributes['auctionkey']) && $attributes['auctionkey']) ? $attributes['auctionkey'] : get_query_var('auction');
+
             $this->auction = $this->handbid->store('Auction')->byKey($auctionKey);
-        }
 
         return $this->auction;
     }

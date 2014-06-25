@@ -161,7 +161,7 @@ class ShortCodeController
     {
 
         try {
-            $auction = $this->state->currentAuction();
+            $auction = $this->state->currentAuction($attributes);
             $coords = $auction->location->coords;
 
             $items   = $this->handbid->store('Item')->byAuction($auction->_id);
@@ -207,7 +207,7 @@ class ShortCodeController
 
         try {
             $template = $this->templateFromAttributes($attributes, 'views/auction/details');
-            $auction  = $this->state->currentAuction();
+            $auction  = $this->state->currentAuction($attributes);
             return $this->viewRenderer->render(
                 $template,
                 [
@@ -240,7 +240,7 @@ class ShortCodeController
     {
 
         try {
-            $auction = $this->state->currentAuction();
+            $auction = $this->state->currentAuction($attributes);
             $items   = $this->handbid->store('Item')->byAuction($auction->_id);
 
 
@@ -271,7 +271,7 @@ class ShortCodeController
                 ]
             );
         } catch (Exception $e) {
-            echo "Auctions could not be found, please try again later.";
+            echo "Auction could not be found, please try again later.";
             error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
             return;
         }
