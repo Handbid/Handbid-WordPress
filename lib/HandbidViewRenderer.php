@@ -14,8 +14,16 @@ class HandbidViewRenderer {
 
     public function render($templatePath, $vars = []) {
 
-        // Planning on allowing other file extensions and other rendering engines
-        $view = new HandbidView($this->basePath . '/' . $templatePath . '.phtml', $vars);
+        $path = '';
+        if(substr($templatePath, 0, 1) == '/') {
+            $path = $templatePath;
+        }
+        else
+        {
+            $path = $this->basePath . '/' . $templatePath;
+        }
+
+        $view = new HandbidView($path  . '.phtml', $vars);
         return $view->render();
     }
 }

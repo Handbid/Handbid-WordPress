@@ -3,7 +3,7 @@
 class Install {
 
     function install() {
-//        $this->createPages();
+        $this->createPages();
         $this->addRoles();
     }
 
@@ -19,18 +19,20 @@ class Install {
                 'post_status'  => 'publish'
             ],
             'auctionDetail'      => [
-                'post_title'   => 'Auction Detail',
+                'post_title'   => 'Auction',
                 'post_name'    => 'auction',
-                'post_content' => 'Auction Detail',
-                'post_status'  => 'publish'
-            ],
-            'organizationDetail' => [
-                'post_title'   => 'Organization Detail',
-                'post_name'    => 'organization',
-                'post_content' => 'Organization Detail.',
+                'post_content' => 'Auction',
                 'post_status'  => 'publish'
             ]
         ];
+
+        // For Organization page
+//        'organizationDetail' => [
+//            'post_title'   => 'Organization Detail',
+//            'post_name'    => 'organization',
+//            'post_content' => 'Organization Detail.',
+//            'post_status'  => 'publish'
+//        ]
 
         foreach ($pages as $page) {
             wp_insert_post($page);
