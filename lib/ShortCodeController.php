@@ -38,6 +38,7 @@ class ShortCodeController
         $shortCodes = [
             'handbid_organization_details'  => 'organizationDetails',
             'handbid_organization_auctions' => 'organizationAuctions',
+            'handbid_auction'               => 'auction',
             'handbid_auction_results'       => 'auctionResults',
             'handbid_auction_banner'        => 'auctionBanner',
             'handbid_auction_details'       => 'auctionDetails',
@@ -46,6 +47,7 @@ class ShortCodeController
             'handbid_bid_now'               => 'bidNow',
             'handbid_bid_history'           => 'bidHistory',
             'handbid_bid_winning'           => 'bidWinning',
+            'handbid_item'                  => 'item',
             'handbid_item_results'          => 'itemResults',
             'handbid_item_description'      => 'itemDescription',
             'handbid_item_search_bar'       => 'itemSearchBar',
@@ -126,6 +128,28 @@ class ShortCodeController
     }
 
     // Auctions
+    public function auction($attributes)
+    {
+
+        try {
+            $auction = $this->state->currentAuction($attributes);
+
+            $template = $this->templateFromAttributes($attributes, 'views/auction/auction');
+            return $this->viewRenderer->render(
+                $template,
+                [
+                    'auction'     => $auction
+                ]
+            );
+
+        } catch (Exception $e) {
+            echo "Auction banner could not be loaded, Please try again later.";
+            error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
+            return;
+        }
+
+    }
+
     public function auctionResults($attributes)
     {
 
@@ -339,6 +363,23 @@ class ShortCodeController
     }
 
     // Items
+    public function item($attributes)
+    {
+        try {
+            $template = $this->templateFromAttributes($attributes, 'views/item/item');
+            return $this->viewRenderer->render(
+                $template,
+                [
+                    'item' => $this->state->currentItem()
+                ]
+            );
+        } catch (Exception $e) {
+            echo "item results could not be loaded, Please try again later.";
+            error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
+            return;
+        }
+    }
+
     public function itemResults($attributes)
     {
         try {
