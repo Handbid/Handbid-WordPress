@@ -1,29 +1,45 @@
 <?php
+
 /*
  *
  * Handbid view renderer
  *
  */
-class HandbidViewRenderer {
+
+class HandbidViewRenderer
+{
 
     public $basePath;
 
-    public function __construct($basePath) {
+    public function __construct($basePath)
+    {
         $this->basePath = $basePath;
     }
 
-    public function render($templatePath, $vars = []) {
+    public function render($templatePath, $vars = [])
+    {
+        $templates = is_array($templatePath) ? $templatePath : [$templatePath];
+        $templates = array_reverse($templates);
 
-        $path = '';
-        if(substr($templatePath, 0, 1) == '/') {
-            $path = $templatePath;
-        }
-        else
-        {
-            $path = $this->basePath . '/' . $templatePath;
+        foreach ($templates as $template) {
+
+            $path = '';
+            if ($template[0] == '/') {
+                $path = $template;
+            } else {
+                $path = $this->basePath . '/' . $template;
+            }
+
+            $path .= '.phtml';
+
+            if (file_exists($path)) {
+                $view = new HandbidView($path, $vars);
+                return $view->render();
+            }
+
         }
 
-        $view = new HandbidView($path  . '.phtml', $vars);
-        return $view->render();
+        throw new \Exception('Failed to render templates. I looked for them at ' . print_r($templates, true));
+
     }
 }

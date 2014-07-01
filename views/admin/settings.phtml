@@ -43,6 +43,11 @@ $errors = [
                 <td><input type="text" name="handbidFacebookAppId"
                            value="<?php echo get_option('handbidFacebookAppId'); ?>"/></td>
             </tr>
+            <tr valign="top">
+                <th scope="row"><?php echo('Default Auction Id'); ?></th>
+                <td><input type="text" name="handbidDefaultAuctionKey"
+                           value="<?php echo get_option('handbidDefaultAuctionKey'); ?>"/></td>
+            </tr>
 
             <?php forEach ($pages as $k => $v) {
                 ?>

@@ -65,11 +65,21 @@ class ShortCodeController
     public function templateFromAttributes($attributes, $default)
     {
 
+        $templates = [];
+        $template  = '';
+
         if (!is_array($attributes) || !isset($attributes['template']) || !$attributes['template']) {
-            $attributes['template'] = $default;
+            $templates[] = $template = $default;
+        } else {
+            $templates[] = $template = $attributes['template'];
         }
 
-        return $attributes['template'];
+        //if the template does not start
+        if ($template != DIRECTORY_SEPARATOR) {
+            $templates[] = get_template_directory() . DIRECTORY_SEPARATOR . $template;
+        }
+
+        return $templates;
     }
 
     // Organization
@@ -138,7 +148,7 @@ class ShortCodeController
             return $this->viewRenderer->render(
                 $template,
                 [
-                    'auction'     => $auction
+                    'auction' => $auction
                 ]
             );
 
@@ -158,7 +168,11 @@ class ShortCodeController
             $template = $this->templateFromAttributes($attributes, 'views/auction/logo');
 
 
-            if (!isset($attributes['type']) || !is_array($attributes) || !in_array($attributes['type'], ['upcoming', 'all', 'past'])) {
+            if (!isset($attributes['type']) || !is_array($attributes) || !in_array(
+                    $attributes['type'],
+                    ['upcoming', 'all', 'past']
+                )
+            ) {
                 $attributes['type'] = 'upcoming';
             }
 
@@ -186,9 +200,9 @@ class ShortCodeController
 
         try {
             $auction = $this->state->currentAuction($attributes);
-            $coords = $auction->location->coords;
+            $coords  = $auction->location->coords;
 
-            $items   = $this->handbid->store('Item')->byAuction($auction->_id);
+            $items = $this->handbid->store('Item')->byAuction($auction->_id);
 
             $donorsDirty     = [];
             $categoriesDirty = [
@@ -470,7 +484,7 @@ class ShortCodeController
                 return $this->viewRenderer->render(
                     $template,
                     [
-                        'url'     => $customUrl
+                        'url' => $customUrl
                     ]
                 );
             } catch (Exception $e) {
