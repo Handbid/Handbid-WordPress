@@ -1,7 +1,8 @@
 var $j = jQuery.noConflict();
+
 $j(function() {
     var $container = $j('#container.js-isotope');
-
+$j(window).load(function() {
     $container.isotope({
         itemSelector: '.isotope-item',
         layoutMode: 'fitRows',
@@ -10,6 +11,7 @@ $j(function() {
             gutterWidth: 5
         }
     });
+});
 
     function filterClass() {
 
