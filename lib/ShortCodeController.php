@@ -43,7 +43,7 @@ class ShortCodeController
             'handbid_auction_banner'        => 'auctionBanner',
             'handbid_auction_details'       => 'auctionDetails',
             'handbid_auction_contact_form'  => 'auctionContactForm',
-            'handbid_auction_list'          => 'auctionList',
+            'handbid_auction_item_list'     => 'auctionItemList',
             'handbid_bid_now'               => 'bidNow',
             'handbid_bid_history'           => 'bidHistory',
             'handbid_bid_winning'           => 'bidWinning',
@@ -274,7 +274,7 @@ class ShortCodeController
 
     }
 
-    public function auctionList($attributes)
+    public function auctionItemList($attributes)
     {
 
         try {
@@ -299,7 +299,7 @@ class ShortCodeController
             $donors     = array_unique($donorsDirty);
             $categories = array_unique($categoriesDirty);
 
-            $template = $this->templateFromAttributes($attributes, 'views/auction/list');
+            $template = $this->templateFromAttributes($attributes, 'views/auction/itemList');
             return $this->viewRenderer->render(
                 $template,
                 [
@@ -388,7 +388,7 @@ class ShortCodeController
                 ]
             );
         } catch (Exception $e) {
-            echo "item results could not be loaded, Please try again later.";
+            echo "item could not be loaded, Please try again later.";
             error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
             return;
         }

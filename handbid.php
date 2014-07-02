@@ -51,7 +51,7 @@ class Handbid
 
         // Fresh Installer
         register_activation_hook( __FILE__, [ $this, 'install' ] );
-        register_deactivation_hook( __FILE__, [ $this, 'uninstall' ] );
+//        register_deactivation_hook( __FILE__, [ $this, 'uninstall' ] );
 
         // Dependency Injection
         $this->basePath              = isset($options['basePath']) ? $options['basePath'] : dirname(__FILE__);
