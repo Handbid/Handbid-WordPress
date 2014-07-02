@@ -153,7 +153,7 @@ class ShortCodeController
             );
 
         } catch (Exception $e) {
-            echo "Auction banner could not be loaded, Please try again later.";
+            echo "Auction could not be loaded, Please try again later.";
             error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
             return;
         }
@@ -309,7 +309,7 @@ class ShortCodeController
                 ]
             );
         } catch (Exception $e) {
-            echo "Auction could not be found, please try again later.";
+            echo "Auction Item List could not be found, please try again later.";
             error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
             return;
         }
