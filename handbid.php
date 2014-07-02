@@ -116,6 +116,9 @@ class Handbid
             'handbidBidNow'        => 'public/js/bidNow.js'
         );
 
+        wp_register_script('handbidCore', 'http://taysmacbookpro.local/sdk.js');
+        wp_enqueue_script('handbidCore');
+
         foreach ($scripts as $key => $sc) {
             wp_register_script($key, plugins_url($sc, __FILE__));
             wp_enqueue_script($key);
