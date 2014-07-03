@@ -279,7 +279,15 @@ class ShortCodeController
 
         try {
             $auction = $this->state->currentAuction($attributes);
-            $items   = $this->handbid->store('Item')->byAuction($auction->_id);
+            $query = [
+                'options' => [
+                    'images' => [
+                        'w' => 225,
+                        'h' => false
+                    ]
+                ]
+            ];
+            $items   = $this->handbid->store('Item')->byAuction($auction->_id, $query);
 
 
             $donorsDirty     = [];
