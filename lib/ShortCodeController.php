@@ -153,7 +153,7 @@ class ShortCodeController
             );
 
         } catch (Exception $e) {
-            echo "Auction banner could not be loaded, Please try again later.";
+            echo "Auction could not be loaded, Please try again later.";
             error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
             return;
         }
@@ -279,7 +279,15 @@ class ShortCodeController
 
         try {
             $auction = $this->state->currentAuction($attributes);
-            $items   = $this->handbid->store('Item')->byAuction($auction->_id);
+            $query = [
+                'options' => [
+                    'images' => [
+                        'w' => 225,
+                        'h' => false
+                    ]
+                ]
+            ];
+            $items   = $this->handbid->store('Item')->byAuction($auction->_id, $query);
 
 
             $donorsDirty     = [];
@@ -309,7 +317,7 @@ class ShortCodeController
                 ]
             );
         } catch (Exception $e) {
-            echo "Auction could not be found, please try again later.";
+            echo "Auction Item List could not be found, please try again later.";
             error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
             return;
         }

@@ -4,16 +4,25 @@ $j(function () {
 
     // Block of code written to get selectors
     // @TODO this should be put somewhere better
-    var bidAmountDom = document.getElementById("bidAmountTotal");
+    var bidAmountDom = $j(".bidAmountTotal");
+    console.log(bidAmountDom);
     if (bidAmountDom) {
         var basePrice = bidAmountDom.innerHTML;
     }
 
-    var bidLabel = document.getElementById("bidLabel");
-    var proxyBid = document.getElementById('proxyBid');
+    var proxyBid = $j('.proxyBid');
 
-    var bidAmount = parseInt($j(".bidUpDown .value").text());
+    var bidAmount = parseInt(bidAmountDom.text());
     var bidIncrement = parseInt($j(".bidIncrement .value").text());
+
+    var bidUp = $j(".bidUpDown .up");
+
+    bidUp.on('click', function () {
+        bidAmount += bidIncrement;
+        bidAmountDom.innerHTML = bidAmount;
+        proxyBid.classList.add('show');
+
+    });
 
     var bidDown = $j(".bidUpDown .down");
 
@@ -21,10 +30,8 @@ $j(function () {
         if (bidAmount > basePrice) {
             bidAmount -= bidIncrement;
             bidAmountDom.innerHTML = bidAmount;
-            bidLabel.innerHTML = "$" + (bidAmount - basePrice) + " above minimum bid";
 
             if (bidAmount == basePrice) {
-                bidLabel.innerHTML = "Minimum next bid";
                 proxyBid.classList.remove('show');
             }
         }
@@ -33,27 +40,10 @@ $j(function () {
         }
     });
 
-    var bidUp = $j(".bidUpDown .up");
-    bidUp.on('click', function () {
-        bidAmount += bidIncrement;
-        bidAmountDom.innerHTML = bidAmount;
-        bidLabel.innerHTML = "$" + (bidAmount - basePrice) + " above minimum bid";
-        proxyBid.classList.add('show');
-
-    });
-
     var bidNow = $j(".bidNow");
     bidNow.on('click', function () {
         alert('Bid submitted at ' + bidAmount);
         onItemUpdate();
-    });
-
-    var reset = $j(".bidContainer .reset");
-    reset.on('click', function () {
-        bidAmount = parseInt(basePrice);
-        bidAmountDom.innerHTML = basePrice;
-        bidLabel.innerHTML = "Minimum next bid";
-        proxyBid.classList.remove('show');
     });
 
 });
