@@ -9,15 +9,20 @@ if ($this->get('item')) {
 ?>
 <div class="photoGallery">
     <div class="banner">
-        <a href="#" class="unslider-arrow prev">Previous slide</a>
-        <a href="#" class="unslider-arrow next">Next slide</a>
         <ul>
             <?php forEach ($item->images as $imageUrl) {
-            ?>
-                <li><img src="<?= $imageUrl; ?>"/></li>
+                ?>
+                <li style="background-image: url('<?= $imageUrl; ?>')"></li>
             <?php
             }
             ?>
         </ul>
     </div>
+    <?php if(count($item->images) > 1) {
+        ?>
+        <a href="#" class="unslider-arrow prev">Previous slide</a>
+        <a href="#" class="unslider-arrow next">Next slide</a>
+    <?php
+    }
+    ?>
 </div>
