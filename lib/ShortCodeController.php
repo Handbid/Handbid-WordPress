@@ -307,7 +307,7 @@ class ShortCodeController
             $donors     = array_unique($donorsDirty);
             $categories = array_unique($categoriesDirty);
 
-            $template = $this->templateFromAttributes($attributes, 'views/auction/itemList');
+            $template = $this->templateFromAttributes($attributes, 'views/item/list');
             return $this->viewRenderer->render(
                 $template,
                 [
