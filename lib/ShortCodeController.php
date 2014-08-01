@@ -208,16 +208,20 @@ class ShortCodeController
 
             $items = $this->handbid->store('Item')->byAuction($auction->_id);
 
-            $bidderProfile = $this->handbid->store('Bidder')->myProfile();
-            $bidderProxy   = $this->handbid->store('Bidder')->myProxyBids();
+            $myWinning = null;
+            $myLosing  = null;
+            try {
 
-//            $myProxyBids   = $bidderProxy
+                $bidderProfile = $this->handbid->store('Bidder')->myProfile($auction->_id);
+                $bidderProxy   = $this->handbid->store('Bidder')->myProxyBids($auction->_id);
+                $myStats       = $this->handbid->store('Bidder')->myStats($auction->_id);
 
-            $myStats = $bidderProfile['_restMetaData']['bidStats'][$auction->_id];
-            $myWinning = ($myStats['numWinning']) ? $myStats['numWinning'] : 0;
-            $myLosing  = ($myStats['numLosing']) ? $myStats['numLosing'] : 0;
+                $myWinning = ($myStats['numWinning']) ? $myStats['numWinning'] : 0;
+                $myLosing  = ($myStats['numLosing']) ? $myStats['numLosing'] : 0;
 
-            $myFavorites = count($bidderProfile['favoriteItems']);
+            } catch (Exception $e) {
+
+            }
 
             $donorsDirty     = [];
             $categoriesDirty = [
@@ -530,7 +534,7 @@ class ShortCodeController
             return $this->viewRenderer->render(
                 $template,
                 [
-                    'profile' => $this->handbid->store('Bidder')->myProfile()
+                    'profile' => $this->handbid->store('Bidder')->myProfile($this->state->currentAuction()->_id)
                 ]
             );
         } catch (Exception $e) {
@@ -546,7 +550,7 @@ class ShortCodeController
             return $this->viewRenderer->render(
                 $template,
                 [
-                    'bids' => $this->handbid->store('Bidder')->myBids()
+                    'bids' => $this->handbid->store('Bidder')->myBids($this->state->currentAuction()->_id)
                 ]
             );
         } catch (Exception $e) {
@@ -562,7 +566,7 @@ class ShortCodeController
             return $this->viewRenderer->render(
                 $template,
                 [
-                    'bids' => $this->handbid->store('Bidder')->myProxyBids()
+                    'bids' => $this->handbid->store('Bidder')->myProxyBids($this->state->currentAuction()->_id)
                 ]
             );
         } catch (Exception $e) {
@@ -578,7 +582,7 @@ class ShortCodeController
             return $this->viewRenderer->render(
                 $template,
                 [
-                    'purchases' => $this->handbid->store('Bidder')->myPurchases()
+                    'purchases' => $this->handbid->store('Bidder')->myPurchases($this->state->currentAuction()->_id)
                 ]
             );
         } catch (Exception $e) {
