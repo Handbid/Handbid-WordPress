@@ -50,7 +50,7 @@ class Handbid
         \Handbid\Handbid::includeDependencies();
 
         // Fresh Installer
-        register_activation_hook( __FILE__, [ $this, 'install' ] );
+
 //        register_deactivation_hook( __FILE__, [ $this, 'uninstall' ] );
 
         // Dependency Injection
@@ -68,7 +68,9 @@ class Handbid
         $this->routeController       = isset($options['routeController']) ? $options['routeController'] : $this->createRouteController(
         );
 
+        register_activation_hook( __FILE__, [ $this, 'install' ] );
         add_action('init', [$this, 'init']);
+        add_action('wp_footer', [$this, 'onRenderFooter']);
         add_filter('query_vars', [$this, 'registerVariables']);
 
         // Temporary fix for showing admin bar
@@ -104,17 +106,20 @@ class Handbid
     {
 
         $scripts = array(
-            'handbid'              => 'public/js/handbid.js',
-            'handbidSocket'        => 'public/js/socket.js',
+//            'handbid'              => 'public/js/handbid.js',
+//            'handbidSocket'        => 'public/js/socket.js',
             'handbidIsotope'       => 'public/js/isotope.pkgd.min.js',
             'handbidModal'         => 'public/js/jquery.modal.min.js',
             'handbidUnslider'      => 'public/js/unslider.min.js',
-            'handbidContactForm'   => 'public/js/contactForm.js',
-            'handbidPhotoGallery'  => 'public/js/photoGallery.js',
-            'handbidAuctionList'   => 'public/js/auctionList.js',
-            'handbidAuctionBanner' => 'public/js/auctionBanner.js',
+//            'handbidContactForm'   => 'public/js/contactForm.js',
+//            'handbidPhotoGallery'  => 'public/js/photoGallery.js',
+//            'handbidAuctionList'   => 'public/js/auctionList.js',
+//            'handbidAuctionBanner' => 'public/js/auctionBanner.js',
             'handbidBidNow'        => 'public/js/bidNow.js'
         );
+
+        wp_register_script('handbidCore', 'http://handbid-js.local/handbid.js');
+        wp_enqueue_script('handbidCore');
 
         foreach ($scripts as $key => $sc) {
             wp_register_script($key, plugins_url($sc, __FILE__));
@@ -211,6 +216,14 @@ class Handbid
     function remove_admin_bar() {
         if (!current_user_can('administrator') && !is_admin()) {
             show_admin_bar(false);
+        }
+    }
+
+    function onRenderFooter() {
+        if($this->state()->currentAuction()) {
+
+            echo '<script type="text/javascript">handbid.connectToAuction("' . $this->state()->currentAuction()->key . '");</script>';
+
         }
     }
 

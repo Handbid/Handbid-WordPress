@@ -308,8 +308,8 @@ class ShortCodeController
                     ]
                 ]
             ];
-            $items   = $this->handbid->store('Item')->byAuction($auction->_id, $query);
 
+            $items   = $this->handbid->store('Item')->byAuction($auction->_id, $query);
 
             $donorsDirty     = [];
             $categoriesDirty = [
