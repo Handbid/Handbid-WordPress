@@ -37,7 +37,9 @@ class State
             $auctionKey = get_option('handbidDefaultAuctionKey');
         }
 
-        $this->auction = $this->handbid->store('Auction')->byKey($auctionKey);
+        if($auctionKey) {
+            $this->auction = $this->handbid->store('Auction')->byKey($auctionKey);
+        }
 
         return $this->auction;
     }
