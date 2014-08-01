@@ -6,7 +6,7 @@ if ($this->get('auction')) {
     $categories = $this->get('categories');
     $donors = $this->get('donors');
 
-    if (isset($auction->meta)) {
+    if (isset($auction->meta->organization)) {
         $org = $auction->meta->organization;
     }
 

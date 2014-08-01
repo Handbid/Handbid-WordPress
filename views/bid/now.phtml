@@ -6,32 +6,46 @@ if ($this->get('item')) {
     return;
 }
 ?>
-
 <div class="product-info">
-    <h1><?php echo $item->name; ?></h1>
-    <div class="description">
-        <div>
-            <?php if(isset($item->donor) || $item->donor) {
-                ?>
-                <span><?php echo __('Donated by') . ':'; ?></span> <?php echo $item->donor; ?>
-            <?php
-            }
+    <ul class="description dividedList">
+        <?php if(isset($item->donor) || $item->donor) {
             ?>
-        </div>
-        <div>
-            <span><?php echo __('Minimum next bid') . ':'; ?></span> <?php echo $item->minimumBidAmount; ?>
-        </div>
-        <div>
-            <span><?php echo __('Bid increments by') . ':'; ?></span> <?php echo $item->bidIncrement; ?>
-        </div>
-    </div>
-    <div class="product-extra clearfix">
-        <div class="quantity-adder">
-            <span class="add-up add-action button">+</span>
-            <input class="form-control" type="text" name="quantity" size="2" value="<?php echo $item->minimumBidAmount; ?>">
-            <span class="add-down add-action button">-</span>
-        </div>
-        <button type="submit" class="bidNow button"><?php echo __('Bid Now'); ?></button>
-        <button type="submit" id="proxyBid" class="proxyBid button"><?php echo __('Set Max Bid'); ?></button>
-    </div>
+            <li>
+                <span><?php echo __('Donated by') . ':'; ?></span><span><?php echo $item->donor; ?></span>
+            </li>
+        <?php
+        }
+        ?>
+        <?php if(isset($item->closingTime) || $item->closingTime) {
+            ?>
+            <li>
+                <span><?php echo __('Closing Time') . ':'; ?></span><span><?php echo date('g:i A m/d/Y', $item->closingTime); ?></span>
+            </li>
+        <?php
+        }
+        ?>
+        <?php if(isset($item->highestBid) || $item->highestBid) {
+            ?>
+            <li>
+                <span><?php echo __('Current Bid') . ':'; ?></span><span>$<?php echo $item->highestBid; ?></span>
+            </li>
+        <?php
+        }
+        ?>
+        <li>
+            <div class="bid-adder bidUpDown">
+                <span class="add-up up add-action button">+</span>
+                <span class="add-down down add-action button">-</span>
+            </div>
+            <p class="bid-value bidAmountTotal"><?php echo $item->minimumBidAmount; ?></p>
+            <div class="bidBar">
+                <button type="submit" class="bidNow button"><?php echo __('Bid'); ?></button>
+                <button type="submit" class="proxyBid button"><?php echo __('Max Bid'); ?></button>
+            </div>
+        </li>
+        <li>
+            <span><?php echo __('Bid increment') . ':'; ?></span><span class="bidIncrement">$<?php echo $item->bidIncrement; ?></span>
+        </li>
+    </ul>
+
 </div>
