@@ -1,0 +1,41 @@
+<?php
+if ($this->get('purchases')) {
+    $purchases = $this->get('purchases');
+} else {
+    echo "I could not find your purchases";
+    return;
+}
+
+//Total	Item	Price Per Item	Quantity
+?>
+
+<table class="bidder-table">
+    <thead>
+    <tr>
+        <th>Total</th>
+        <th>Item</th>
+        <th>Price Per Item</th>
+        <th>Quantity</th>
+    </tr>
+    </thead>
+    <?php forEach ($purchases as $item) {
+        ?>
+        <tr>
+            <td>
+                <?php echo $item['grandTotal']; ?>
+            </td>
+            <td>
+                <?php echo $item['name']; ?>
+            </td>
+            <td>
+                <?php echo $item['pricePerItem']; ?>
+            </td>
+            <td>
+                <?php echo $item['quantity']; ?>
+            </td>
+        </tr>
+    <?php
+    }
+    ?>
+
+</table>
