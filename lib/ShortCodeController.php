@@ -53,7 +53,11 @@ class ShortCodeController
             'handbid_item_search_bar'       => 'itemSearchBar',
             'handbid_ticket_buy'            => 'ticketBuy',
             'handbid_image_gallery'         => 'imageGallery',
-            'handbid_facebook_comments'     => 'facebookComments'
+            'handbid_facebook_comments'     => 'facebookComments',
+            'handbid_bidder_profile'        => 'myProfile',
+            'handbid_bidder_bids'           => 'myBids',
+            'handbid_bidder_proxy_bids'     => 'myProxyBids',
+            'handbid_bidder_purchases'      => 'myPurchases'
         ];
 
         forEach ($shortCodes as $shortCode => $callback) {
@@ -204,6 +208,17 @@ class ShortCodeController
 
             $items = $this->handbid->store('Item')->byAuction($auction->_id);
 
+            $bidderProfile = $this->handbid->store('Bidder')->myProfile();
+            $bidderProxy   = $this->handbid->store('Bidder')->myProxyBids();
+
+//            $myProxyBids   = $bidderProxy
+
+            $myStats = $bidderProfile['_restMetaData']['bidStats'][$auction->_id];
+            $myWinning = ($myStats['numWinning']) ? $myStats['numWinning'] : 0;
+            $myLosing  = ($myStats['numLosing']) ? $myStats['numLosing'] : 0;
+
+            $myFavorites = count($bidderProfile['favoriteItems']);
+
             $donorsDirty     = [];
             $categoriesDirty = [
                 '_all' => 'All'
@@ -225,10 +240,12 @@ class ShortCodeController
             return $this->viewRenderer->render(
                 $template,
                 [
-                    'auction'     => $auction,
-                    'coordinates' => $coords,
-                    'categories'  => $categories,
-                    'donors'      => $donors
+                    'auction'       => $auction,
+                    'coordinates'   => $coords,
+                    'categories'    => $categories,
+                    'donors'        => $donors,
+                    'myWinningBids' => $myWinning,
+                    'myLosingBids'  => $myLosing
                 ]
             );
 
@@ -502,5 +519,72 @@ class ShortCodeController
             }
         }
 
+    }
+
+    // Bidder
+    public function myProfile($attributes)
+    {
+
+        try {
+            $template = $this->templateFromAttributes($attributes, 'views/bidder/profile');
+            return $this->viewRenderer->render(
+                $template,
+                [
+                    'profile' => $this->handbid->store('Bidder')->myProfile()
+                ]
+            );
+        } catch (Exception $e) {
+            echo "bids could not be loaded, Please try again later.";
+            error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
+            return;
+        }
+    }
+    public function myBids($attributes)
+    {
+        try {
+            $template = $this->templateFromAttributes($attributes, 'views/bidder/bids');
+            return $this->viewRenderer->render(
+                $template,
+                [
+                    'bids' => $this->handbid->store('Bidder')->myBids()
+                ]
+            );
+        } catch (Exception $e) {
+            echo "bids could not be loaded, Please try again later.";
+            error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
+            return;
+        }
+    }
+    public function myProxyBids($attributes)
+    {
+        try {
+            $template = $this->templateFromAttributes($attributes, 'views/bidder/proxybids');
+            return $this->viewRenderer->render(
+                $template,
+                [
+                    'bids' => $this->handbid->store('Bidder')->myProxyBids()
+                ]
+            );
+        } catch (Exception $e) {
+            echo "proxy bids could not be loaded, Please try again later.";
+            error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
+            return;
+        }
+    }
+    public function myPurchases($attributes)
+    {
+        try {
+            $template = $this->templateFromAttributes($attributes, 'views/bidder/purchases');
+            return $this->viewRenderer->render(
+                $template,
+                [
+                    'purchases' => $this->handbid->store('Bidder')->myPurchases()
+                ]
+            );
+        } catch (Exception $e) {
+            echo "purchases could not be loaded, Please try again later.";
+            error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
+            return;
+        }
     }
 }

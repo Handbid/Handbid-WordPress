@@ -1,0 +1,32 @@
+<?php
+if ($this->get('bids')) {
+    $bids = $this->get('bids');
+} else {
+    echo "I could not find your proxy bids";
+    return;
+}
+
+?>
+
+<table class="bidder-table">
+    <thead>
+    <tr>
+        <th>Max Amount</th>
+        <th>Item</th>
+    </tr>
+    </thead>
+    <?php forEach ($bids as $bid) {
+        ?>
+        <tr>
+            <td>
+                <?php echo $bid['maxAmount']; ?>
+            </td>
+            <td>
+                <?php echo $bid['name']; ?>
+            </td>
+        </tr>
+    <?php
+    }
+    ?>
+
+</table>

@@ -58,6 +58,7 @@ class HandbidAdminActionController
     function registerPluginSettings()
     {
 
+        // Registering Handbid admin setting fields
         $settings = [
             'handbidConsumerKey',
             'handbidConsumerSecret',
