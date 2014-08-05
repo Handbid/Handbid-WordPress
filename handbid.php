@@ -118,7 +118,7 @@ class Handbid
 //            'handbidBidNow'        => 'public/js/bidNow.js'
         );
 
-        wp_register_script('handbidCore', 'http://handbid-js.local/handbid.js');
+        wp_register_script('handbidCore', 'https://handbid-js-handbid.netdna-ssl.com/handbid.js');
         wp_enqueue_script('handbidCore');
 
         foreach ($scripts as $key => $sc) {
