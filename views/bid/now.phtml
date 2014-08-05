@@ -2,21 +2,21 @@
 if ($this->get('item')) {
     $item = $this->get('item');
 } else {
-    echo "No Item Set";
+    echo "No item found.";
     return;
 }
 ?>
-<div class="product-info">
+<div class="product-info" data-handbid-bid data-handbid-item-key="<?php echo $item->key; ?>">
     <ul class="description dividedList">
-        <?php if(isset($item->donor) || $item->donor) {
+        <?php if($item->donor) {
             ?>
             <li>
-                <span><?php echo __('Donated by') . ':'; ?></span><span><?php echo $item->donor; ?></span>
+                <span><?php echo __('Donated by') . ':'; ?></span><span data-handbid-item-attribute="donor"><?php echo $item->donor; ?></span>
             </li>
         <?php
         }
         ?>
-        <?php if(isset($item->closingTime) || $item->closingTime) {
+        <?php if($item->closingTime) {
             ?>
             <li>
                 <span><?php echo __('Closing Time') . ':'; ?></span><span><?php echo date('g:i A m/d/Y', $item->closingTime); ?></span>
@@ -24,27 +24,27 @@ if ($this->get('item')) {
         <?php
         }
         ?>
-        <?php if(isset($item->highestBid) || $item->highestBid) {
+        <?php if($item->highestBid) {
             ?>
             <li>
-                <span><?php echo __('Current Bid') . ':'; ?></span><span>$<?php echo $item->highestBid; ?></span>
+                <span><?php echo __('Current Bid') . ':'; ?></span><span>$<span data-handbid-item-attribute="highestBid"><?php echo $item->highestBid; ?></span></span>
             </li>
         <?php
         }
         ?>
         <li>
             <div class="bid-adder bidUpDown">
-                <span class="add-up up add-action button">+</span>
-                <span class="add-down down add-action button">-</span>
+                <a href="#" class="add-up up add-action button" data-handbid-bid-button="up">+</a>
+                <a href="#" class="add-down down add-action button" data-handbid-bid-button="down">-</a>
             </div>
-            <p class="bid-value bidAmountTotal"><?php echo $item->minimumBidAmount; ?></p>
+            <p class="bid-value bidAmountTotal" data-handbid-bid-amount><?php echo $item->minimumBidAmount; ?></p>
             <div class="bidBar">
-                <button type="submit" class="bidNow button"><?php echo __('Bid'); ?></button>
-                <button type="submit" class="proxyBid button"><?php echo __('Max Bid'); ?></button>
+                <button type="submit" class="bidNow button" data-handbid-bid-button="bid"><?php echo __('Bid'); ?></button>
+                <button type="submit" class="proxyBid button" data-handbid-bid-button="proxy"><?php echo __('Max Bid'); ?></button>
             </div>
         </li>
         <li>
-            <span><?php echo __('Bid increment') . ':'; ?></span><span class="bidIncrement">$<?php echo $item->bidIncrement; ?></span>
+            <span><?php echo __('Bid increment') . ':'; ?></span><span class="bidIncrement">$<span data-handbid-item-attribute="bidIncrement"><?php echo $item->bidIncrement; ?></span></span>
         </li>
     </ul>
 

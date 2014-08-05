@@ -28,17 +28,12 @@ class ShortCodeController
 
     public function init()
     {
-        $this->initShortCode();
-    }
-
-    function initShortCode()
-    {
-
         // Add Plugin ShortCodes
         $shortCodes = [
             'handbid_organization_details'  => 'organizationDetails',
             'handbid_organization_auctions' => 'organizationAuctions',
             'handbid_auction'               => 'auction',
+            'handbid_connect'               => 'connect',
             'handbid_auction_results'       => 'auctionResults',
             'handbid_auction_banner'        => 'auctionBanner',
             'handbid_auction_details'       => 'auctionDetails',
@@ -257,6 +252,32 @@ class ShortCodeController
             error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
             return;
         }
+
+    }
+
+    public function connect($attributes) {
+
+        try {
+            $template   = $this->templateFromAttributes($attributes, 'views/connect');
+            $bidder     = $this->state->currentBidder($attributes);
+            $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+
+            $default    = $protocol . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+
+            return $this->viewRenderer->render(
+                $template,
+                [
+                    'bidder' => $bidder,
+                    'passUrl' => isset($attributes['passUrl']) ? $attributes['passUrl'] : $default,
+                    'failUrl' => isset($attributes['failUrl']) ? $attributes['failUrl'] : $default,
+                ]
+            );
+        } catch (Exception $e) {
+            echo "Rendering connect button failed.";
+            error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
+            return;
+        }
+
 
     }
 
@@ -533,7 +554,7 @@ class ShortCodeController
             return $this->viewRenderer->render(
                 $template,
                 [
-                    'profile' => $this->handbid->store('Bidder')->myProfile($this->state->currentAuction()->_id)
+                    'profile' => $this->handbid->store('Bidder')->myProfile()
                 ]
             );
         } catch (Exception $e) {

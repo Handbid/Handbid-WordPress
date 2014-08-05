@@ -15,7 +15,7 @@ class State
         $this->handbid  = $handbid;
     }
 
-    function currentOrg()
+    public function currentOrg()
     {
 
         if (!$this->org) {
@@ -26,7 +26,7 @@ class State
         return $this->org;
     }
 
-    function currentAuction($attributes = null)
+    public function currentAuction($attributes = null)
     {
 
         $auctionKey = (isset($attributes['auctionkey']) && $attributes['auctionkey']) ? $attributes['auctionkey'] : get_query_var(
@@ -37,18 +37,25 @@ class State
             $auctionKey = get_option('handbidDefaultAuctionKey');
         }
 
-        if($auctionKey) {
+        if ($auctionKey) {
             $this->auction = $this->handbid->store('Auction')->byKey($auctionKey);
         }
 
         return $this->auction;
     }
 
-    function currentItem()
+    public function currentBidder()
+    {
+        return $this->handbid->store('Bidder')->myProfile();
+    }
+
+    public function currentItem()
     {
         if (!$this->item) {
             $itemKey    = get_query_var('item');
-            $this->item = $this->handbid->store('Item')->byKey($itemKey);
+            if($itemKey) {
+                $this->item = $this->handbid->store('Item')->byKey($itemKey);
+            }
         }
 
         return $this->item;

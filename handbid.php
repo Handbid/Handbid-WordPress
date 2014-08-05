@@ -115,7 +115,7 @@ class Handbid
 //            'handbidPhotoGallery'  => 'public/js/photoGallery.js',
 //            'handbidAuctionList'   => 'public/js/auctionList.js',
 //            'handbidAuctionBanner' => 'public/js/auctionBanner.js',
-            'handbidBidNow'        => 'public/js/bidNow.js'
+//            'handbidBidNow'        => 'public/js/bidNow.js'
         );
 
         wp_register_script('handbidCore', 'http://handbid-js.local/handbid.js');
