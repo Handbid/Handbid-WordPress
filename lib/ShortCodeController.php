@@ -171,7 +171,6 @@ class ShortCodeController
 
             $template = $this->templateFromAttributes($attributes, 'views/auction/logo');
 
-
             if (!isset($attributes['type']) || !is_array($attributes) || !in_array(
                     $attributes['type'],
                     ['upcoming', 'all', 'past']
