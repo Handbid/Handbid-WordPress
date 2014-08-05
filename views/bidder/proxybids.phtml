@@ -19,10 +19,10 @@ if ($this->get('bids')) {
         ?>
         <tr>
             <td>
-                <?php echo $bid['maxAmount']; ?>
+                <?php echo '$' . $bid->maxAmount; ?>
             </td>
             <td>
-                <?php echo $bid['name']; ?>
+                <?php echo $bid->name; ?>
             </td>
         </tr>
     <?php

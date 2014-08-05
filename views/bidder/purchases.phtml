@@ -22,16 +22,16 @@ if ($this->get('purchases')) {
         ?>
         <tr>
             <td>
-                <?php echo $item['grandTotal']; ?>
+                <?php echo '$' . $item->grandTotal; ?>
             </td>
             <td>
-                <?php echo $item['name']; ?>
+                <?php echo $item->name; ?>
             </td>
             <td>
-                <?php echo $item['pricePerItem']; ?>
+                <?php echo '$' . $item->pricePerItem; ?>
             </td>
             <td>
-                <?php echo $item['quantity']; ?>
+                <?php echo $item->quantity; ?>
             </td>
         </tr>
     <?php

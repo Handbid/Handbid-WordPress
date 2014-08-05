@@ -7,6 +7,7 @@ if ($this->get('bids')) {
 }
 
 ?>
+<h4 class="winning-item">Winning</h4>
 <table class="bidder-table">
     <thead>
     <tr>
@@ -16,19 +17,51 @@ if ($this->get('bids')) {
     </tr>
     </thead>
     <?php forEach ($bids as $bid) {
-        ?>
-        <tr>
-            <td>
-                <?php echo $bid['amount']; ?>
-            </td>
-            <td>
-                <?php echo $bid['name']; ?>
-            </td>
-            <td>
-                <?php echo date("m/d/Y g:i a", $bid['microtime']); ?>
-            </td>
-        </tr>
-    <?php
+        if($bid->status =='winning') {
+            ?>
+            <tr>
+                <td>
+                    <?php echo '$' . $bid->amount; ?>
+                </td>
+                <td>
+                    <?php echo $bid->name; ?>
+                </td>
+                <td>
+                    <?php echo date("m/d/Y g:i a", $bid->microtime); ?>
+                </td>
+            </tr>
+        <?php
+        }
+    }
+    ?>
+
+</table>
+
+<h4 class="losing-item">Losing</h4>
+<table class="bidder-table">
+    <thead>
+    <tr>
+        <th>Amount</th>
+        <th>Item</th>
+        <th>Date Inserted</th>
+    </tr>
+    </thead>
+    <?php forEach ($bids as $bid) {
+        if($bid->status =='losing') {
+            ?>
+            <tr>
+                <td>
+                    <?php echo '$' . $bid->amount; ?>
+                </td>
+                <td>
+                    <?php echo $bid->name; ?>
+                </td>
+                <td>
+                    <?php echo date("m/d/Y g:i a", $bid->microtime); ?>
+                </td>
+            </tr>
+        <?php
+        }
     }
     ?>
 
