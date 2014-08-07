@@ -30,7 +30,6 @@ if ($handle = opendir($libFolder)) {
 
 require_once($libFolder . '/Handbid-Php/src/Handbid.php');
 
-
 class Handbid
 {
 
