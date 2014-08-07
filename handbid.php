@@ -106,8 +106,6 @@ class Handbid
     {
 
         $scripts = array(
-//            'handbid'              => 'public/js/handbid.js',
-//            'handbidSocket'        => 'public/js/socket.js',
             'handbidIsotope'       => 'public/js/isotope.pkgd.min.js',
             'handbidModal'         => 'public/js/jquery.modal.min.js',
             'handbidUnslider'      => 'public/js/unslider.min.js',
@@ -115,7 +113,6 @@ class Handbid
 //            'handbidPhotoGallery'  => 'public/js/photoGallery.js',
 //            'handbidAuctionList'   => 'public/js/auctionList.js',
 //            'handbidAuctionBanner' => 'public/js/auctionBanner.js',
-//            'handbidBidNow'        => 'public/js/bidNow.js'
         );
 
 //        wp_register_script('handbidCore', '//handbid-js.local/handbid.js');
