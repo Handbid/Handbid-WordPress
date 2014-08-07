@@ -197,23 +197,28 @@ class ShortCodeController
     {
 
         try {
+
             $auction = $this->state->currentAuction($attributes);
             $coords  = $auction->location->coords;
 
-            $items = $this->handbid->store('Item')->byAuction($auction->_id);
+            $items          = $this->handbid->store('Item')->byAuction($auction->_id);
+            $profile        = null;
+            $totalProxies   = null;
+            $totalWinning   = null;
+            $totalLosing    = null;
 
-            $myWinning = null;
-            $myLosing  = null;
             try {
 
-                $bidderProfile = $this->handbid->store('Bidder')->myProfile($auction->_id);
-                $bidderProxy   = $this->handbid->store('Bidder')->myProxyBids($auction->_id);
-                $myStats       = $this->handbid->store('Bidder')->myStats($auction->_id);
+                $profile        = $this->handbid->store('Bidder')->myProfile($auction->_id);
+                $myStats        = $this->handbid->store('Bidder')->myStats($auction->_id);
 
-                $myWinning = ($myStats['numWinning']) ? $myStats['numWinning'] : 0;
-                $myLosing  = ($myStats['numLosing']) ? $myStats['numLosing'] : 0;
+                $totalWinning      = ($myStats['numWinning']) ? $myStats['numWinning'] : 0;
+                $totalLosing       = ($myStats['numLosing']) ? $myStats['numLosing'] : 0;
+                $totalProxies      = ($myStats['numLosing']) ? $myStats['numLosing'] : 0;
 
             } catch (Exception $e) {
+
+
 
             }
 
@@ -223,18 +228,21 @@ class ShortCodeController
             ];
 
             forEach ($items as $item) {
+
                 if (isset($item->donor)) {
                     $donorsDirty[] = $item->donor;
                 }
+
                 if (isset($item->term)) {
                     $categoriesDirty[] = $item->term;
                 }
+
             }
 
             $donors     = array_unique($donorsDirty);
             $categories = array_unique($categoriesDirty);
+            $template   = $this->templateFromAttributes($attributes, 'views/auction/banner');
 
-            $template = $this->templateFromAttributes($attributes, 'views/auction/banner');
             return $this->viewRenderer->render(
                 $template,
                 [
@@ -242,32 +250,38 @@ class ShortCodeController
                     'coordinates'   => $coords,
                     'categories'    => $categories,
                     'donors'        => $donors,
-                    'myWinningBids' => $myWinning,
-                    'myLosingBids'  => $myLosing
+                    'winningBids'   => $totalWinning,
+                    'losingBids'    => $totalLosing,
+                    'profile'       => $profile,
+                    'proxies'       => $totalProxies
                 ]
             );
 
         } catch (Exception $e) {
+
             echo "Auction banner could not be loaded, Please try again later.";
             error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
+
             return;
+
         }
 
     }
 
-    public function connect($attributes) {
+    public function connect($attributes)
+    {
 
         try {
-            $template   = $this->templateFromAttributes($attributes, 'views/connect');
-            $bidder     = $this->state->currentBidder($attributes);
+            $template = $this->templateFromAttributes($attributes, 'views/connect');
+            $bidder   = $this->state->currentBidder($attributes);
             $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
 
-            $default    = $protocol . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+            $default = $protocol . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
 
             return $this->viewRenderer->render(
                 $template,
                 [
-                    'bidder' => $bidder,
+                    'bidder'  => $bidder,
                     'passUrl' => isset($attributes['passUrl']) ? $attributes['passUrl'] : $default,
                     'failUrl' => isset($attributes['failUrl']) ? $attributes['failUrl'] : $default,
                 ]
@@ -320,7 +334,7 @@ class ShortCodeController
 
         try {
             $auction = $this->state->currentAuction($attributes);
-            $query = [
+            $query   = [
                 'options' => [
                     'images' => [
                         'w' => 225,
@@ -329,7 +343,7 @@ class ShortCodeController
                 ]
             ];
 
-            $items   = $this->handbid->store('Item')->byAuction($auction->_id, $query);
+            $items = $this->handbid->store('Item')->byAuction($auction->_id, $query);
 
             $donorsDirty     = [];
             $categoriesDirty = [
@@ -377,8 +391,10 @@ class ShortCodeController
                 ]
             );
         } catch (Exception $e) {
+
             echo "Bid now feature could not be loaded, please try again later.";
             error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
+
             return;
         }
     }
@@ -386,11 +402,13 @@ class ShortCodeController
     public function bidHistory($attributes)
     {
         try {
+
             $auction    = $this->state->currentAuction();
             $item       = $this->state->currentItem();
             $bidHistory = $this->handbid->store('Bid')->byItem($auction->_id, $item->_id);
 
             $template = $this->templateFromAttributes($attributes, 'views/bid/history');
+
             return $this->viewRenderer->render(
                 $template,
                 [
@@ -398,9 +416,12 @@ class ShortCodeController
                     'bidHistory' => $bidHistory
                 ]
             );
+
         } catch (Exception $e) {
+
             echo "Bid history could not be loaded, please try again later.";
             error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
+
             return;
         }
 
@@ -563,6 +584,7 @@ class ShortCodeController
             return;
         }
     }
+
     public function myBids($attributes)
     {
         try {
@@ -579,6 +601,7 @@ class ShortCodeController
             return;
         }
     }
+
     public function myProxyBids($attributes)
     {
         try {
@@ -595,6 +618,7 @@ class ShortCodeController
             return;
         }
     }
+
     public function myPurchases($attributes)
     {
         try {

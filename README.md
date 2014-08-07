@@ -16,7 +16,7 @@ If you want to override a template with a local one, add in the get_template_dir
 you do not need to add an extension to the file, it will be appended on ( .phtml )
 
 ```
-    echo do_shortcode('[handbid_auction_banner template="' . get_template_directory() . '/views/auction/banner"]');
+    echo do_shortcode('[handbid_auction_banner template="views/auction/banner"]');
 ```
 
 ### Auction Specific Shortcode
