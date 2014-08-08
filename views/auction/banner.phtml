@@ -1,5 +1,6 @@
 <?php
 if ($this->get('auction')) {
+
     $auction = $this->get('auction');
     $location = $auction->location;
 
@@ -95,22 +96,19 @@ $url = get_permalink() . '?auction=' . get_query_var('auction');
                     <span><?php echo $auction->meta->totalItems; ?></span>
                 </div>
 
-                <?php if ( is_user_logged_in() ) {
+                <?php if ( $this->get('profile') ) {
                 ?>
                     <div class="statBox winning">
                         <label><?php echo __('Winning'); ?></label>
-                        <span>Value</span>
+                        <span><?php echo $this->get('winningBids'); ?></span>
                     </div>
                     <div class="statBox losing">
                         <label><?php echo __('Losing'); ?></label>
-                        <span>Value</span>
+                        <span><?php echo $this->get('losingBids'); ?></span>
                     </div>
                     <div class="statBox proxy">
                         <label><?php echo __('Proxy'); ?></label>
-                        <span>Value</span>
-                    </div>
-                    <div class="statBox favorites">
-                        <label><?php echo __('Favorites'); ?></label>
+                        <span><?php echo $this->get('proxies'); ?></span>
                         <span>Value</span>
                     </div>
                 <?php } ?>

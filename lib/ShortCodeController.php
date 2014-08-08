@@ -206,18 +206,21 @@ class ShortCodeController
             $totalProxies   = null;
             $totalWinning   = null;
             $totalLosing    = null;
+            $totalPurchases = null;
 
             try {
 
-                $profile        = $this->handbid->store('Bidder')->myProfile($auction->_id);
-                $myStats        = $this->handbid->store('Bidder')->myStats($auction->_id);
+                $profile           = $this->handbid->store('Bidder')->myProfile($auction->_id);
 
-                $totalWinning      = ($myStats['numWinning']) ? $myStats['numWinning'] : 0;
-                $totalLosing       = ($myStats['numLosing']) ? $myStats['numLosing'] : 0;
-                $totalProxies      = ($myStats['numLosing']) ? $myStats['numLosing'] : 0;
+                $totalWinning      = count($this->handbid->store('Bidder')->myBids($auction->_id));
+                $totalLosing       = count($this->handbid->store('Bidder')->myLosing($auction->_id));
+                $totalProxies      = count($this->handbid->store('Bidder')->myProxyBids($auction->_id));
+                $totalPurchases    = count($this->handbid->store('Bidder')->myPurchases($auction->_id));
 
             } catch (Exception $e) {
 
+                $in = $e;
+                //                debug();
 
 
             }
@@ -252,6 +255,7 @@ class ShortCodeController
                     'donors'        => $donors,
                     'winningBids'   => $totalWinning,
                     'losingBids'    => $totalLosing,
+                    'purchases'     => $totalPurchases,
                     'profile'       => $profile,
                     'proxies'       => $totalProxies
                 ]
