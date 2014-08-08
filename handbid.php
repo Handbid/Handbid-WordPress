@@ -128,6 +128,9 @@ class Handbid
     function createHandbid()
     {
         $endpoint = get_option('handbidRestEndpoint');
+
+        echo 'handbid endpoint: ' . $endpoint;
+
         return new \Handbid\Handbid(
             get_option('handbidConsumerKey'), get_option('handbidConsumerSecret'), [
                 'endpoint' => ($endpoint) ? $endpoint : null
