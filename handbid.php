@@ -117,7 +117,7 @@ class Handbid
         //make this a settings
 //        wp_register_script('handbidCore', '//handbid-js.local/handbid.js');
 //        wp_register_script('handbidCore', 'https://handbid-js-handbid.netdna-ssl.com/handbid.js?cachebuster=234234');
-        wp_register_script('handbidCore', '//beta.js.handbid.com/handbid.js?cachebuster=23423423');
+        wp_register_script('handbidCore', '//beta.js.handbid.com/handbid.js?cachebuster=234234234');
         wp_enqueue_script('handbidCore');
 
         foreach ($scripts as $key => $sc) {
