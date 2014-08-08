@@ -114,9 +114,10 @@ class Handbid
 //            'handbidAuctionBanner' => 'public/js/auctionBanner.js',
         );
 
+        //make this a settings
 //        wp_register_script('handbidCore', '//handbid-js.local/handbid.js');
 //        wp_register_script('handbidCore', 'https://handbid-js-handbid.netdna-ssl.com/handbid.js?cachebuster=234234');
-        wp_register_script('handbidCore', '//beta.js.handbid.com/handbid.js?cachebuster=12341234123');
+        wp_register_script('handbidCore', '//beta.js.handbid.com/handbid.js?cachebuster=23423423');
         wp_enqueue_script('handbidCore');
 
         foreach ($scripts as $key => $sc) {
@@ -128,8 +129,6 @@ class Handbid
     function createHandbid()
     {
         $endpoint = get_option('handbidRestEndpoint');
-
-        echo 'handbid endpoint: ' . $endpoint;
 
         return new \Handbid\Handbid(
             get_option('handbidConsumerKey'), get_option('handbidConsumerSecret'), [
