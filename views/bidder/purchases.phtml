@@ -2,7 +2,7 @@
 if ($this->get('purchases')) {
     $purchases = $this->get('purchases');
 } else {
-    echo "I could not find your purchases";
+    echo "You must be logged in to view your purchases";
     return;
 }
 

@@ -2,7 +2,7 @@
 if ($this->get('bids')) {
     $bids = $this->get('bids');
 } else {
-    echo "No proxy bids.";
+    echo "You must be logged in to view your proxy bids.";
     return;
 }
 
@@ -23,6 +23,9 @@ if ($this->get('bids')) {
             </td>
             <td>
                 <?php echo $bid->name; ?>
+            </td>
+            <td>
+                <a href="#"><?php __('Delete'); ?></a>
             </td>
         </tr>
     <?php
