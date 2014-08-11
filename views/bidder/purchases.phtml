@@ -1,8 +1,8 @@
 <?php
-if ($this->get('purchases')) {
+if (!is_null($this->get('purchases'))) {
     $purchases = $this->get('purchases');
 } else {
-    echo "You must be logged in to view your purchases";
+    echo "I could not find your purchases.";
     return;
 }
 
