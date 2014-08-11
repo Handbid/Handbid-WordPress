@@ -347,7 +347,7 @@ class ShortCodeController
                 ]
             ];
 
-            $items = $this->handbid->store('Item')->byAuction($auction->_id, $query);
+            $items = $this->handbid->store('Item')->biddableByAuction($auction->_id, $query);
 
             $donorsDirty     = [];
             $categoriesDirty = [
@@ -576,10 +576,21 @@ class ShortCodeController
 
         try {
             $template = $this->templateFromAttributes($attributes, 'views/bidder/profile');
+            $profile = $this->handbid->store('Bidder')->myProfile();
+
+
+            $image = wp_get_image_editor($profile->photo);
+
+            if ( ! is_wp_error( $image ) ) {
+                $image->resize( 300, 300, true );
+                $image->save($profile->pin . '.jpg');
+            }
+
+
             return $this->viewRenderer->render(
                 $template,
                 [
-                    'profile' => $this->handbid->store('Bidder')->myProfile()
+                    'profile' => $this->handbid->store('Bidder')->myProfile(),
                 ]
             );
         } catch (Exception $e) {

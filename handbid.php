@@ -84,6 +84,7 @@ class Handbid
         add_action('wp_enqueue_scripts', [$this, 'initJavascript']);
         // init controllers
         $this->shortCodeController->init();
+        $this->actionController->init();
         $this->adminActionController->init();
 
     }
@@ -155,7 +156,7 @@ class Handbid
             $viewRenderer = $this->viewRender;
         }
 
-        return new HandbidActionController($viewRenderer);
+        return new HandbidActionController($viewRenderer, $this->handbid);
     }
 
     function createAdminActionController($viewRenderer = false)
