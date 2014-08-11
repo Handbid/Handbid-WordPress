@@ -203,7 +203,6 @@ class ShortCodeController
             $auction = $this->state->currentAuction($attributes);
             $coords  = $auction->location->coords;
 
-            $items          = $this->handbid->store('Item')->byAuction($auction->_id);
             $profile        = null;
             $totalProxies   = null;
             $totalWinning   = null;
@@ -225,25 +224,6 @@ class ShortCodeController
 
             }
 
-            $donorsDirty     = [];
-            $categoriesDirty = [
-                '_all' => 'All'
-            ];
-
-            forEach ($items as $item) {
-
-                if (isset($item->donor)) {
-                    $donorsDirty[] = $item->donor;
-                }
-
-                if (isset($item->term)) {
-                    $categoriesDirty[] = $item->term;
-                }
-
-            }
-
-            $donors     = array_unique($donorsDirty);
-            $categories = array_unique($categoriesDirty);
             $template   = $this->templateFromAttributes($attributes, 'views/auction/banner');
 
             return $this->viewRenderer->render(
@@ -251,8 +231,6 @@ class ShortCodeController
                 [
                     'auction'       => $auction,
                     'coordinates'   => $coords,
-                    'categories'    => $categories,
-                    'donors'        => $donors,
                     'winningBids'   => $totalWinning,
                     'losingBids'    => $totalLosing,
                     'purchases'     => $totalPurchases,
