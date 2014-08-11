@@ -7,7 +7,7 @@
             <tr valign="top">
                 <th scope="row"><?php echo('Rest Api Url ( Default : https://handbid.com )'); ?></th>
                 <td><input type="text" name="handbidRestEndpoint"
-                           value="<?php echo get_option('handbidRestEndpoint'); ?>"/></td>
+                           value="<?php echo get_option('handbidRestEndpoint', 'https://handbid.com'); ?>"/></td>
             </tr>
 
             <tr valign="top">
@@ -19,6 +19,12 @@
                 <th scope="row"><?php echo('Default Auction Id'); ?></th>
                 <td><input type="text" name="handbidDefaultAuctionKey"
                            value="<?php echo get_option('handbidDefaultAuctionKey'); ?>"/></td>
+            </tr>
+
+            <tr valign="top">
+                <th scope="row"><?php echo('HandbidJS'); ?></th>
+                <td><input type="text" name="handbidJs"
+                           value="<?php echo get_option('handbidJs', 'https://handbid-js-handbid.netdna-ssl.com/handbid.js?cachebuster=234234'); ?>"/></td>
             </tr>
         </table>
         <?php submit_button(); ?>

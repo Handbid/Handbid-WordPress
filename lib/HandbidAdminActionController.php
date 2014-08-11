@@ -61,7 +61,8 @@ class HandbidAdminActionController
         $settings = [
             'handbidRestEndpoint',
             'handbidFacebookAppId',
-            'handbidDefaultAuctionKey'
+            'handbidDefaultAuctionKey',
+            'handbidJs'
         ];
 
         forEach ($settings as $setting) {
