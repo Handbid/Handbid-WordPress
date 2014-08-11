@@ -29,6 +29,10 @@ class State
     public function currentAuction($attributes = null)
     {
 
+        if($this->auction) {
+            return $this->auction;
+        }
+
         $auctionKey = (isset($attributes['auctionkey']) && $attributes['auctionkey']) ? $attributes['auctionkey'] : get_query_var(
             'auction'
         );
