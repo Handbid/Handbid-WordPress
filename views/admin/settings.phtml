@@ -1,39 +1,11 @@
-<?php
-$pages = [
-    'handbidOrganization'  => 'Organization Landing Page Slug',
-    'handbidAuctionDetail' => 'Auction Detail Landing Page Slug',
-    'handbidItemDetail'    => 'Item Detail Landing Page Slug'
-];
-
-$errors = [
-    'handbidOrganizationNotFound' => 'Organization not found error message',
-    'handbidAuctionNotFound'      => 'Auction not found error message',
-    'handbidItemNotFound'         => 'Item not found error message'
-]
-?>
-
 <div class="wrap">
     <h2>Handbid</h2>
-    <button class="button testRestEndpoint"><?php echo __('Test Rest Endpoint'); ?></button>
-
     <form method="post" action="options.php">
         <?php settings_fields('handbid-admin'); ?>
         <?php do_settings_fields('handbid-admin-dashboard', 'handbid-admin'); ?>
         <table class="form-table">
             <tr valign="top">
-                <th scope="row"><?php echo('Consumer Key'); ?></th>
-                <td><input type="text" name="handbidConsumerKey"
-                           value="<?php echo get_option('handbidConsumerKey'); ?>"/></td>
-            </tr>
-
-            <tr valign="top">
-                <th scope="row"><?php echo('Consumer Secret'); ?></th>
-                <td><input type="password" name="handbidConsumerSecret"
-                           value="<?php echo get_option('handbidConsumerSecret'); ?>"/></td>
-            </tr>
-
-            <tr valign="top">
-                <th scope="row"><?php echo('Rest Api Url ( Default : https://rest.handbid.com )'); ?></th>
+                <th scope="row"><?php echo('Rest Api Url ( Default : https://handbid.com )'); ?></th>
                 <td><input type="text" name="handbidRestEndpoint"
                            value="<?php echo get_option('handbidRestEndpoint'); ?>"/></td>
             </tr>
@@ -48,26 +20,6 @@ $errors = [
                 <td><input type="text" name="handbidDefaultAuctionKey"
                            value="<?php echo get_option('handbidDefaultAuctionKey'); ?>"/></td>
             </tr>
-
-            <?php forEach ($pages as $k => $v) {
-                ?>
-                <tr valign="top">
-                    <th scope="row"><?php echo($v); ?></th>
-                    <td><input type="text" name="<?php echo $k; ?>" value="<?php echo get_option($k); ?>"/></td>
-                </tr>
-            <?php
-            }
-            ?>
-
-            <?php forEach ($errors as $k => $v) {
-                ?>
-                <tr valign="top">
-                    <th scope="row"><?php echo($v); ?></th>
-                    <td><input type="text" name="<?php echo $k; ?>" value="<?php echo get_option($k); ?>"/></td>
-                </tr>
-            <?php
-            }
-            ?>
         </table>
         <?php submit_button(); ?>
 

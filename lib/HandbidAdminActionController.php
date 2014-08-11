@@ -14,7 +14,6 @@ class HandbidAdminActionController
     {
         add_action('admin_init', [$this, 'initAdminArea']);
         add_action('admin_menu', [$this, 'initAdminMenu']);
-        add_action('wp_ajax_test_app_creds', [$this, 'testAppCredsAjax']);
     }
 
     function initAdminMenu()
@@ -60,16 +59,8 @@ class HandbidAdminActionController
 
         // Registering Handbid admin setting fields
         $settings = [
-            'handbidConsumerKey',
-            'handbidConsumerSecret',
-            'handbidAuctionDetail',
-            'handbidItemDetail',
-            'handbidOrganization',
             'handbidRestEndpoint',
             'handbidFacebookAppId',
-            'handbidOrganizationNotFound',
-            'handbidAuctionNotFound',
-            'handbidItemNotFound',
             'handbidDefaultAuctionKey'
         ];
 
@@ -83,25 +74,4 @@ class HandbidAdminActionController
         echo $this->viewRenderer->render('views/admin/settings');
     }
 
-    function testAppCredsAjax()
-    {
-        $appId = $_POST['appId'];
-        $apiKey = $_POST['apiKey'];
-
-        $hb = new \Handbid\Handbid($appId, $apiKey);
-
-        try {
-
-            $hb->testAuth();
-
-            echo __('Your App is Valid');
-
-        } catch (\Handbid\Exception\App $e) {
-            echo $e->getMessage();
-        } catch (\Exception $e) {
-            echo $e->getMessage();
-        }
-
-        exit;
-    }
 }
