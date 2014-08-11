@@ -52,7 +52,9 @@ class ShortCodeController
             'handbid_bidder_profile'        => 'myProfile',
             'handbid_bidder_bids'           => 'myBids',
             'handbid_bidder_proxy_bids'     => 'myProxyBids',
-            'handbid_bidder_purchases'      => 'myPurchases'
+            'handbid_bidder_purchases'      => 'myPurchases',
+            'handbid_is_logged_in'          => 'isLoggedIn',
+            'handbid_is_logged_out'         => 'isLoggedOut'
         ];
 
         forEach ($shortCodes as $shortCode => $callback) {
@@ -648,6 +650,20 @@ class ShortCodeController
             echo "purchases could not be loaded, Please try again later.";
             error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
             return;
+        }
+    }
+
+    public function isLoggedIn($attributes, $content) {
+        $profile = $this->handbid->store('Bidder')->myProfile();
+        if($profile) {
+            echo do_shortcode($content);
+        }
+    }
+
+    public function isLoggedOut($attributes, $content) {
+        $profile = $this->handbid->store('Bidder')->myProfile();
+        if(!$profile) {
+            echo do_shortcode($content);
         }
     }
 }
