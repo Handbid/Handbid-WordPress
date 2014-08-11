@@ -228,6 +228,10 @@ class Handbid
         }
     }
 
+    function logout() {
+        $this->handbid->logout();
+    }
+
 }
 
 new Handbid;
