@@ -213,7 +213,6 @@ class ShortCodeController
             try {
 
                 $profile           = $this->handbid->store('Bidder')->myProfile($auction->_id);
-
                 $totalWinning      = count($this->handbid->store('Bidder')->myBids($auction->_id));
                 $totalLosing       = count($this->handbid->store('Bidder')->myLosing($auction->_id));
                 $totalProxies      = count($this->handbid->store('Bidder')->myProxyBids($auction->_id));
@@ -223,7 +222,6 @@ class ShortCodeController
 
                 $in = $e;
                 //                debug();
-
 
             }
 
