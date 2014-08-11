@@ -91,10 +91,6 @@ $url = get_permalink() . '?auction=' . get_query_var('auction');
                 <div class="statBox auctionName">
                     <span><?php echo $auction->name; ?></span>
                 </div>
-                <div class="statBox items">
-                    <label><?php echo __('Items'); ?></label>
-                    <span><?php echo $auction->meta->totalItems; ?></span>
-                </div>
 
                 <?php if ( $this->get('profile') ) {
                 ?>
