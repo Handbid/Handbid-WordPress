@@ -1,8 +1,8 @@
 <?php
-if ($this->get('profile')) {
+if (!is_null($this->get('profile'))) {
     $profile = $this->get('profile');
 } else {
-    echo "You must be logged in to view your bidder profile";
+    echo "You must be logged in to view your profile.";
     return;
 }
 
@@ -19,7 +19,7 @@ if ($this->get('profile')) {
     </thead>
     <tr>
         <td>
-            <img src="<?php echo $profile->photo; ?>"/>
+            <img src="<?php echo $profile->photo; ?>" height="100"/>
         </td>
         <td>
             <?php echo $profile->firstName . ' ' . $profile->lastName; ?>

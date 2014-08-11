@@ -1,8 +1,8 @@
 <?php
-if ($this->get('bids')) {
+if (!is_null($this->get('bids'))) {
     $bids = $this->get('bids');
 } else {
-    echo "You must be logged in to view your proxy bids.";
+    echo "I could not find you proxy bids.";
     return;
 }
 
