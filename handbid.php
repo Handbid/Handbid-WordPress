@@ -109,10 +109,10 @@ class Handbid
             'handbidIsotope'       => 'public/js/isotope.pkgd.min.js',
             'handbidModal'         => 'public/js/jquery.modal.min.js',
             'handbidUnslider'      => 'public/js/unslider.min.js',
-//            'handbidContactForm'   => 'public/js/contactForm.js',
-//            'handbidPhotoGallery'  => 'public/js/photoGallery.js',
+            'handbidPhotoGallery'  => 'public/js/photoGallery.js',
 //            'handbidAuctionList'   => 'public/js/auctionList.js',
 //            'handbidAuctionBanner' => 'public/js/auctionBanner.js',
+//            'handbidContactForm'   => 'public/js/contactForm.js',
         );
 
         //make this a settings
