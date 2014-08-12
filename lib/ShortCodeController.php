@@ -559,7 +559,7 @@ class ShortCodeController
 
             $img = wp_get_image_editor( $profile->photo );
             if ( ! is_wp_error( $img ) ) {
-                $img->resize( 250, 250, true );
+                $img->resize( 250, false, true );
                 $img->save(ABSPATH.'wp-content/uploads/user-photos/' . $profile->pin . '.jpg');
                 $newPhoto = get_site_url() . '/wp-content/uploads/user-photos/' . $profile->pin . '.jpg';
             }
