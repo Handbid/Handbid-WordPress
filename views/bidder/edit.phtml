@@ -1,0 +1,15 @@
+<?php
+if (!is_null($this->get('profile'))) {
+    $profile = $this->get('profile');
+} else {
+    echo "You must be logged in to view your profile.";
+    return;
+}
+
+?>
+
+
+<form action="#" method="post">
+    <input type="text" name="name"/>
+    <input type="submit" value="submit"/>
+</form>

@@ -13,6 +13,7 @@ if (!is_null($this->get('bids'))) {
     <tr>
         <th>Max Amount</th>
         <th>Item</th>
+        <th>Change</th>
     </tr>
     </thead>
     <?php forEach ($bids as $bid) {
@@ -25,7 +26,7 @@ if (!is_null($this->get('bids'))) {
                 <?php echo $bid->name; ?>
             </td>
             <td>
-                <a href="#" data-handbid-delete-proxy="idOfProxyBid"><?php __('Delete'); ?></a>
+                <a href="#" data-handbid-delete-proxy="<?php echo $bid->_id; ?>"><?php echo __('Delete'); ?></a>
             </td>
         </tr>
     <?php

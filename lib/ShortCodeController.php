@@ -53,6 +53,7 @@ class ShortCodeController
             'handbid_bidder_bids'           => 'myBids',
             'handbid_bidder_proxy_bids'     => 'myProxyBids',
             'handbid_bidder_purchases'      => 'myPurchases',
+            'handbid_bidder_update'         => 'updateBidder',
             'handbid_is_logged_in'          => 'isLoggedIn',
             'handbid_is_logged_out'         => 'isLoggedOut'
         ];
@@ -564,7 +565,9 @@ class ShortCodeController
                 $newPhoto = get_site_url() . '/wp-content/uploads/user-photos/' . $profile->pin . '.jpg';
             }
 
-            $profile->photo = $newPhoto;
+            if(isset($newPhoto)) {
+                $profile->photo = $newPhoto;
+            }
 
             return $this->viewRenderer->render(
                 $template,
@@ -607,7 +610,7 @@ class ShortCodeController
                 ]
             );
         } catch (Exception $e) {
-            echo "proxy bids could not be loaded, Please try again later.";
+            echo "Max bids could not be loaded, Please try again later.";
             error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
             return;
         }
@@ -625,6 +628,23 @@ class ShortCodeController
             );
         } catch (Exception $e) {
             echo "purchases could not be loaded, Please try again later.";
+            error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
+            return;
+        }
+    }
+
+    public function updateBidder($attributes)
+    {
+        try {
+            $template = $this->templateFromAttributes($attributes, 'views/bidder/profile');
+            return $this->viewRenderer->render(
+                $template,
+                [
+                    'bidder' => $this->handbid->store('Bidder')->updateProfile()
+                ]
+            );
+        } catch (Exception $e) {
+            echo "Your profile could not be loaded, Please try again later.";
             error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
             return;
         }
