@@ -557,13 +557,14 @@ class ShortCodeController
             $profile = $this->handbid->store('Bidder')->myProfile();
 
 
-//            $image = wp_get_image_editor($profile->photo);
-//
-//            if ( ! is_wp_error( $image ) ) {
-//                $image->resize( 300, 300, true );
-//                $image->save($profile->pin . '.jpg');
-//            }
+            $img = wp_get_image_editor( $profile->photo );
+            if ( ! is_wp_error( $img ) ) {
+                $img->resize( 250, 250, true );
+                $img->save(ABSPATH.'wp-content/uploads/user-photos/' . $profile->pin . '.jpg');
+                $newPhoto = get_site_url() . '/wp-content/uploads/user-photos/' . $profile->pin . '.jpg';
+            }
 
+            $profile->photo = $newPhoto;
 
             return $this->viewRenderer->render(
                 $template,
