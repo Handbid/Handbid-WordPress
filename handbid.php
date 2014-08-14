@@ -81,11 +81,14 @@ class Handbid
     {
 
         // Add javascript
-        add_action('wp_enqueue_scripts', [$this, 'initJavascript']);
+        add_action('wp_enqueue_scripts', [$this, 'initScripts']);
         // init controllers
         $this->shortCodeController->init();
         $this->actionController->init();
         $this->adminActionController->init();
+
+        add_action('admin_post_submit-form', [$this->actionController, '_handle_form_action']); // If the user is logged in
+        add_action('admin_post_nopriv_submit-form', [$this->actionController, '_handle_form_action']); // If the user in not logged in
 
     }
 
@@ -102,7 +105,7 @@ class Handbid
     }
 
     // Javascript
-    function initJavascript()
+    function initScripts()
     {
 
         $scripts = array(
@@ -110,9 +113,9 @@ class Handbid
             'handbidModal'         => 'public/js/jquery.modal.min.js',
             'handbidUnslider'      => 'public/js/unslider.min.js',
             'handbidPhotoGallery'  => 'public/js/photoGallery.js',
-//            'handbidAuctionList'   => 'public/js/auctionList.js',
-//            'handbidAuctionBanner' => 'public/js/auctionBanner.js',
-//            'handbidContactForm'   => 'public/js/contactForm.js',
+            'handbidLeanModal'     => 'public/js/jquery.leanModal.min.js',
+            'handbidModal'         => 'public/js/modal.js',
+            'handbidCss'           => 'public/css/handbid.css'
         );
 
         //make this a settings
@@ -232,6 +235,8 @@ class Handbid
     function logout() {
         $this->handbid->logout();
     }
+
+
 
 }
 
