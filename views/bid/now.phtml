@@ -32,8 +32,8 @@ if ($this->get('item')) {
                 <span><?php echo __('Winning Bid') . ':'; ?></span>
                 <span>$<span data-handbid-item-attribute="highestBid"><?php echo $item->highestBid; ?></span>
                     by
-                    <span class="highest-bidder-pin" data-handbid-item-attribute="leadingBidderAlias">
-                        <?php echo ($profile->pin == $item->_restMetaData->leadingBidderAlias) ? ' You' : $item->_restMetaData->leadingBidderAlias; ?>
+                    <span class="highest-bidder-pin" data-handbid-item-attribute="winningBidderAlias">
+                        <?php echo ($profile->pin == $item->winningBidderAlias) ? ' You' : $item->winningBidderAlias; ?>
                     </span>
                 </span>
             </li>

@@ -372,7 +372,6 @@ class ShortCodeController
 
             $itemStore  = $this->handbid->store('Item');
             $bids       = $itemStore->bids($item->_id);
-            $maxBids    = $itemStore->proxyBids($item->_id);
             $profile = $this->handbid->store('Bidder')->myProfile();
 
             return $this->viewRenderer->render(
