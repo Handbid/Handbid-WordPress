@@ -81,7 +81,7 @@ class Handbid
     {
 
         // Add javascript
-        add_action('wp_enqueue_scripts', [$this, 'initScripts']);
+        add_action('wp_enqueue_scripts', [$this, 'initJavascript']);
         // init controllers
         $this->shortCodeController->init();
         $this->actionController->init();
@@ -89,6 +89,7 @@ class Handbid
 
         add_action('admin_post_submit-form', [$this->actionController, '_handle_form_action']); // If the user is logged in
         add_action('admin_post_nopriv_submit-form', [$this->actionController, '_handle_form_action']); // If the user in not logged in
+
 
     }
 
@@ -105,17 +106,14 @@ class Handbid
     }
 
     // Javascript
-    function initScripts()
+    function initJavascript()
     {
 
-        // Init Javascript
         $scripts = array(
             'handbidIsotope'       => 'public/js/isotope.pkgd.min.js',
             'handbidModal'         => 'public/js/jquery.modal.min.js',
             'handbidUnslider'      => 'public/js/unslider.min.js',
-            'handbidPhotoGallery'  => 'public/js/photoGallery.js',
-            'handbidLeanModal'     => 'public/js/jquery.leanModal.min.js',
-            'handbidModal'         => 'public/js/modal.js'
+            'handbidPhotoGallery'  => 'public/js/photoGallery.js'
         );
 
         //make this a settings
@@ -129,9 +127,6 @@ class Handbid
             wp_register_script($key, plugins_url($sc, __FILE__));
             wp_enqueue_script($key);
         }
-
-        wp_register_style( 'handbid_css', plugins_url('public/css/handbid.css', __FILE__));
-        wp_enqueue_style( 'handbid_css' );
     }
 
     function createHandbid()
