@@ -111,9 +111,8 @@ class Handbid
 
         $scripts = array(
             'handbidIsotope'       => 'public/js/isotope.pkgd.min.js',
-            'handbidModal'         => 'public/js/jquery.modal.min.js',
             'handbidUnslider'      => 'public/js/unslider.min.js',
-            'handbidPhotoGallery'  => 'public/js/photoGallery.js'
+            'handbidPhotoGallery'  => 'public/js/photoGallery.js',
         );
 
         //make this a settings
