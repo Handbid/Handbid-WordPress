@@ -1,6 +1,8 @@
 <?php
 if ($this->get('item')) {
     $item = $this->get('item');
+    $bids = $this->get('bids');
+    $profile = $this->get('profile');
 } else {
     echo "No item found.";
     return;
@@ -27,8 +29,15 @@ if ($this->get('item')) {
         <?php if($item->highestBid) {
             ?>
             <li>
-                <span><?php echo __('Current Bid') . ':'; ?></span><span>$<span data-handbid-item-attribute="highestBid"><?php echo $item->highestBid; ?></span></span>
+                <span><?php echo __('Winning Bid') . ':'; ?></span>
+                <span>$<span data-handbid-item-attribute="highestBid"><?php echo $item->highestBid; ?></span>
+                    by
+                    <span class="highest-bidder-pin" data-handbid-item-attribute="leadingBidderAlias">
+                        <?php echo ($profile->pin == $item->_restMetaData->leadingBidderAlias) ? ' You' : $item->_restMetaData->leadingBidderAlias; ?>
+                    </span>
+                </span>
             </li>
+
         <?php
         }
         ?>
@@ -45,6 +54,27 @@ if ($this->get('item')) {
                 <button type="submit" class="bidNow button" data-handbid-bid-button="bid"><?php echo __('Bid'); ?></button>
                 <button type="submit" class="proxyBid button" data-handbid-bid-button="proxy"><?php echo __('Max Bid'); ?></button>
             </div>
+        </li>
+        <li>
+            <span><?php echo __('Bid history'); ?></span>
+            <span></span>
+            <table class="bid-history">
+                <thead>
+                <tr>
+                    <th><?php echo __('Amount'); ?></th>
+                    <th><?php echo __('Bidder Pin'); ?></th>
+                </tr>
+                </thead>
+                <?php forEach($bids as $bid) {
+                    ?>
+                    <tr>
+                        <td>$<?php echo $bid->amount; ?></td>
+                        <td><?php echo ($profile->pin == $bid->_restMetaData->bidderPin) ? 'You' : $bid->_restMetaData->bidderPin; ?></td>
+                    </tr>
+                    <?php
+                }
+                ?>
+            </table>
         </li>
     </ul>
 

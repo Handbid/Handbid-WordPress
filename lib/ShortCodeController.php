@@ -367,10 +367,20 @@ class ShortCodeController
     {
         try {
             $template = $this->templateFromAttributes($attributes, 'views/bid/now');
+
+            $item = $this->state->currentItem();
+
+            $itemStore  = $this->handbid->store('Item');
+            $bids       = $itemStore->bids($item->_id);
+            $maxBids    = $itemStore->proxyBids($item->_id);
+            $profile = $this->handbid->store('Bidder')->myProfile();
+
             return $this->viewRenderer->render(
                 $template,
                 [
-                    'item' => $this->state->currentItem()
+                    'item'    => $item,
+                    'bids'    => $bids,
+                    'profile' => $profile
                 ]
             );
         } catch (Exception $e) {
