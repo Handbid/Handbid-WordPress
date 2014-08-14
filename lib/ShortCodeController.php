@@ -53,7 +53,7 @@ class ShortCodeController
             'handbid_bidder_bids'           => 'myBids',
             'handbid_bidder_proxy_bids'     => 'myProxyBids',
             'handbid_bidder_purchases'      => 'myPurchases',
-            'handbid_bidder_update'         => 'updateBidder',
+            'handbid_bidder_profile_form'   => 'bidderProfileForm',
             'handbid_is_logged_in'          => 'isLoggedIn',
             'handbid_is_logged_out'         => 'isLoggedOut'
         ];
@@ -633,21 +633,26 @@ class ShortCodeController
         }
     }
 
-    public function updateBidder($attributes)
+    public function bidderProfileForm($attributes)
     {
         try {
-            $template = $this->templateFromAttributes($attributes, 'views/bidder/profile');
+            $template = $this->templateFromAttributes($attributes, 'views/bidder/profile-form');
             return $this->viewRenderer->render(
                 $template,
                 [
-                    'bidder' => $this->handbid->store('Bidder')->updateProfile()
-                ]
+                    'profile' => $this->handbid->store('Bidder')->myProfile()
+
+            ]
             );
         } catch (Exception $e) {
             echo "Your profile could not be loaded, Please try again later.";
             error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
             return;
         }
+    }
+
+    public function updateBidderFormSubmit() {
+
     }
 
     public function isLoggedIn($attributes, $content) {

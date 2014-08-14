@@ -33,6 +33,9 @@ if ($this->get('item')) {
         }
         ?>
         <li>
+            <span><?php echo __('Bid increment') . ':'; ?></span><span class="bidIncrement">$<span data-handbid-item-attribute="bidIncrement"><?php echo $item->bidIncrement; ?></span></span>
+        </li>
+        <li>
             <div class="bid-adder bidUpDown">
                 <a href="#" class="add-up up add-action button" data-handbid-bid-button="up">+</a>
                 <a href="#" class="add-down down add-action button" data-handbid-bid-button="down">-</a>
@@ -42,9 +45,6 @@ if ($this->get('item')) {
                 <button type="submit" class="bidNow button" data-handbid-bid-button="bid"><?php echo __('Bid'); ?></button>
                 <button type="submit" class="proxyBid button" data-handbid-bid-button="proxy"><?php echo __('Max Bid'); ?></button>
             </div>
-        </li>
-        <li>
-            <span><?php echo __('Bid increment') . ':'; ?></span><span class="bidIncrement">$<span data-handbid-item-attribute="bidIncrement"><?php echo $item->bidIncrement; ?></span></span>
         </li>
     </ul>
 
