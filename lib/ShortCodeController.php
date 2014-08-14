@@ -40,12 +40,11 @@ class ShortCodeController
             'handbid_auction_contact_form'  => 'auctionContactForm',
             'handbid_auction_item_list'     => 'auctionItemList',
             'handbid_bid_now'               => 'bidNow',
-            'handbid_bid_history'           => 'bidHistory',
-            'handbid_bid_winning'           => 'bidWinning',
             'handbid_item'                  => 'item',
             'handbid_item_results'          => 'itemResults',
             'handbid_item_description'      => 'itemDescription',
             'handbid_item_search_bar'       => 'itemSearchBar',
+            'handbid_item_bid_history'      => 'itemBidHistory',
             'handbid_ticket_buy'            => 'ticketBuy',
             'handbid_image_gallery'         => 'imageGallery',
             'handbid_facebook_comments'     => 'facebookComments',
@@ -391,50 +390,32 @@ class ShortCodeController
         }
     }
 
-    public function bidHistory($attributes)
+    public function itemBidHistory($attributes)
     {
         try {
+            $template = $this->templateFromAttributes($attributes, 'views/item/bid-history');
 
-            $auction    = $this->state->currentAuction();
-            $item       = $this->state->currentItem();
-            $bidHistory = $this->handbid->store('Bid')->byItem($auction->_id, $item->_id);
+            $item = $this->state->currentItem();
 
-            $template = $this->templateFromAttributes($attributes, 'views/bid/history');
+            $itemStore  = $this->handbid->store('Item');
+            $bids       = $itemStore->bids($item->_id);
+            $profile = $this->handbid->store('Bidder')->myProfile();
 
             return $this->viewRenderer->render(
                 $template,
                 [
-                    'item'       => $this->state->currentItem(),
-                    'bidHistory' => $bidHistory
+                    'item'    => $item,
+                    'bids'    => $bids,
+                    'profile' => $profile
                 ]
             );
-
         } catch (Exception $e) {
 
-            echo "Bid history could not be loaded, please try again later.";
+            echo "Bid now feature could not be loaded, please try again later.";
             error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
 
             return;
         }
-
-    }
-
-    public function bidWinning($attributes)
-    {
-        try {
-            $template = $this->templateFromAttributes($attributes, 'views/bid/winning');
-            return $this->viewRenderer->render(
-                $template,
-                [
-                    'item' => $this->state->currentItem()
-                ]
-            );
-        } catch (Exception $e) {
-            echo "winning bid could note be loaded, Please try again later.";
-            error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
-            return;
-        }
-
 
     }
 

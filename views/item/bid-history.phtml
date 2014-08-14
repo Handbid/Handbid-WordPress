@@ -1,0 +1,27 @@
+<?php
+if ($this->get('item')) {
+    $item = $this->get('item');
+    $bids = $this->get('bids');
+    $profile = $this->get('profile');
+} else {
+    echo "No item found.";
+    return;
+}
+?>
+<table class="bid-history">
+    <thead>
+    <tr>
+        <th><?php echo __('Amount'); ?></th>
+        <th><?php echo __('Bidder Pin'); ?></th>
+    </tr>
+    </thead>
+    <?php forEach($bids as $bid) {
+        ?>
+        <tr>
+            <td>$<?php echo $bid->amount; ?></td>
+            <td><?php echo ($profile->pin == $bid->_restMetaData->bidderPin) ? 'You' : $bid->_restMetaData->bidderPin; ?></td>
+        </tr>
+    <?php
+    }
+    ?>
+</table>
