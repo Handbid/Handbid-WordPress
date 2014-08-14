@@ -108,14 +108,14 @@ class Handbid
     function initScripts()
     {
 
+        // Init Javascript
         $scripts = array(
             'handbidIsotope'       => 'public/js/isotope.pkgd.min.js',
             'handbidModal'         => 'public/js/jquery.modal.min.js',
             'handbidUnslider'      => 'public/js/unslider.min.js',
             'handbidPhotoGallery'  => 'public/js/photoGallery.js',
             'handbidLeanModal'     => 'public/js/jquery.leanModal.min.js',
-            'handbidModal'         => 'public/js/modal.js',
-            'handbidCss'           => 'public/css/handbid.css'
+            'handbidModal'         => 'public/js/modal.js'
         );
 
         //make this a settings
@@ -129,6 +129,9 @@ class Handbid
             wp_register_script($key, plugins_url($sc, __FILE__));
             wp_enqueue_script($key);
         }
+
+        wp_register_style( 'handbid_css', plugins_url('public/css/handbid.css', __FILE__));
+        wp_enqueue_style( 'handbid_css' );
     }
 
     function createHandbid()
