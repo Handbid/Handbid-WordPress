@@ -400,9 +400,9 @@ class ShortCodeController
 
             $item = $this->state->currentItem();
 
-            $itemStore  = $this->handbid->store('Item');
-            $bids       = $itemStore->bids($item->_id);
-            $profile = $this->handbid->store('Bidder')->myProfile();
+            $bidStore   = $this->handbid->store('Bid');
+            $bids       = $bidStore->itemBids($item->_id);
+            $profile    = $this->handbid->store('Bidder')->myProfile();
 
             return $this->viewRenderer->render(
                 $template,
