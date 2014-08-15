@@ -369,8 +369,7 @@ class ShortCodeController
 
             $item = $this->state->currentItem();
 
-            $bidStore   = $this->handbid->store('Bid');
-            $bids       = $bidStore->itemBids($item->_id);
+            $bids       = $this->handbid->store('Item')->bids($item->_id);
             $profile    = $this->handbid->store('Bidder')->myProfile();
 
             return $this->viewRenderer->render(
@@ -411,7 +410,7 @@ class ShortCodeController
             );
         } catch (Exception $e) {
 
-            echo "Bid now feature could not be loaded, please try again later.";
+            echo "Bid history feature could not be loaded, please try again later.";
             error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
 
             return;
