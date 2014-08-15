@@ -212,10 +212,14 @@ class ShortCodeController
             try {
 
                 $profile           = $this->handbid->store('Bidder')->myProfile($auction->_id);
-                $totalWinning      = count($this->handbid->store('Bid')->myBids($profile->pin, $auction->_id));
-                $totalLosing       = count($this->handbid->store('Bid')->myLosing($profile->pin, $auction->_id));
-                $totalProxies      = count($this->handbid->store('Bid')->myProxyBids($profile->pin, $auction->_id));
-                $totalPurchases    = count($this->handbid->store('Bid')->myPurchases($profile->pin, $auction->_id));
+                if($profile) {
+
+                    $totalWinning      = count($this->handbid->store('Bid')->myBids($profile->pin, $auction->_id));
+                    $totalLosing       = count($this->handbid->store('Bid')->myLosing($profile->pin, $auction->_id));
+                    $totalProxies      = count($this->handbid->store('Bid')->myProxyBids($profile->pin, $auction->_id));
+                    $totalPurchases    = count($this->handbid->store('Bid')->myPurchases($profile->pin, $auction->_id));
+
+                }
 
             } catch (Exception $e) {
 
