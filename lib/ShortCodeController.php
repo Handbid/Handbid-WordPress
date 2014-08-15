@@ -212,10 +212,10 @@ class ShortCodeController
             try {
 
                 $profile           = $this->handbid->store('Bidder')->myProfile($auction->_id);
-                $totalWinning      = count($this->handbid->store('Bidder')->myBids($auction->_id));
-                $totalLosing       = count($this->handbid->store('Bidder')->myLosing($auction->_id));
-                $totalProxies      = count($this->handbid->store('Bidder')->myProxyBids($auction->_id));
-                $totalPurchases    = count($this->handbid->store('Bidder')->myPurchases($auction->_id));
+                $totalWinning      = count($this->handbid->store('Bid')->myBids($profile->pin, $auction->_id));
+                $totalLosing       = count($this->handbid->store('Bid')->myLosing($profile->pin, $auction->_id));
+                $totalProxies      = count($this->handbid->store('Bid')->myProxyBids($profile->pin, $auction->_id));
+                $totalPurchases    = count($this->handbid->store('Bid')->myPurchases($profile->pin, $auction->_id));
 
             } catch (Exception $e) {
 
@@ -369,9 +369,9 @@ class ShortCodeController
 
             $item = $this->state->currentItem();
 
-            $itemStore  = $this->handbid->store('Item');
-            $bids       = $itemStore->bids($item->_id);
-            $profile = $this->handbid->store('Bidder')->myProfile();
+            $bidStore   = $this->handbid->store('Bid');
+            $bids       = $bidStore->itemBids($item->_id);
+            $profile    = $this->handbid->store('Bidder')->myProfile();
 
             return $this->viewRenderer->render(
                 $template,
@@ -575,11 +575,14 @@ class ShortCodeController
     public function myBids($attributes)
     {
         try {
+
             $template = $this->templateFromAttributes($attributes, 'views/bidder/bids');
+            $profile  = $this->handbid->store('Bidder')->myProfile();
+
             return $this->viewRenderer->render(
                 $template,
                 [
-                    'bids' => $this->handbid->store('Bidder')->myBids($this->state->currentAuction()->_id)
+                    'bids' => $this->handbid->store('Bid')->myBids($profile->pin, $this->state->currentAuction()->_id)
                 ]
             );
         } catch (Exception $e) {
