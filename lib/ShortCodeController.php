@@ -373,7 +373,7 @@ class ShortCodeController
 
             $item = $this->state->currentItem();
 
-            $bids       = $this->handbid->store('Item')->bids($item->_id);
+            $bids       = $this->handbid->store('Bid')->itemBids($item->_id);
             $profile    = $this->handbid->store('Bidder')->myProfile();
 
             return $this->viewRenderer->render(
