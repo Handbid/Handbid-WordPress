@@ -16,7 +16,9 @@ if (!is_null($this->get('bids'))) {
         <th>Change</th>
     </tr>
     </thead>
-    <?php forEach ($bids as $bid) {
+    <?php
+    if(count($bids) > 0) {
+        forEach ($bids as $bid) {
         ?>
         <tr>
             <td>
@@ -27,6 +29,17 @@ if (!is_null($this->get('bids'))) {
             </td>
             <td>
                 <a href="#" data-handbid-delete-proxy="<?php echo $bid->_id; ?>"><?php echo __('Delete'); ?></a>
+            </td>
+        </tr>
+        <?php
+        }
+    }
+    else
+    {
+        ?>
+        <tr>
+            <td>
+                <?php echo __('You do not have any active proxy bids'); ?>
             </td>
         </tr>
     <?php

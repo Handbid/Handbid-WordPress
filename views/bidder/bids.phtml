@@ -16,22 +16,35 @@ if (!is_null($this->get('bids'))) {
         <th>Date Inserted</th>
     </tr>
     </thead>
-    <?php forEach ($bids as $bid) {
-        if($bid->status =='winning') {
-            ?>
-            <tr>
-                <td>
-                    <?php echo '$' . $bid->amount; ?>
-                </td>
-                <td>
-                    <?php echo $bid->name; ?>
-                </td>
-                <td>
-                    <?php echo date("m/d/Y g:i a", $bid->microtime); ?>
-                </td>
-            </tr>
-        <?php
+    <?php
+    if(count($bids) > 0) {
+        forEach ($bids as $bid) {
+            if($bid->status =='winning') {
+                ?>
+                <tr>
+                    <td>
+                        <?php echo '$' . $bid->amount; ?>
+                    </td>
+                    <td>
+                        <?php echo $bid->name; ?>
+                    </td>
+                    <td>
+                        <?php echo date("m/d/Y g:i a", $bid->microtime); ?>
+                    </td>
+                </tr>
+            <?php
+            }
         }
+    }
+    else
+    {
+        ?>
+        <tr>
+            <td>
+                <?php echo __('You do not have any active bids'); ?>
+            </td>
+        </tr>
+        <?php
     }
     ?>
 
@@ -46,22 +59,36 @@ if (!is_null($this->get('bids'))) {
         <th>Date Inserted</th>
     </tr>
     </thead>
-    <?php forEach ($bids as $bid) {
-        if($bid->status =='losing') {
-            ?>
-            <tr>
-                <td>
-                    <?php echo '$' . $bid->amount; ?>
-                </td>
-                <td>
-                    <?php echo $bid->name; ?>
-                </td>
-                <td>
-                    <?php echo date("m/d/Y g:i a", $bid->microtime); ?>
-                </td>
-            </tr>
-        <?php
+    <?php
+    if(count($bids) > 0) {
+
+        forEach ($bids as $bid) {
+            if($bid->status =='losing') {
+                ?>
+                <tr>
+                    <td>
+                        <?php echo '$' . $bid->amount; ?>
+                    </td>
+                    <td>
+                        <?php echo $bid->name; ?>
+                    </td>
+                    <td>
+                        <?php echo date("m/d/Y g:i a", $bid->microtime); ?>
+                    </td>
+                </tr>
+            <?php
+            }
         }
+    }
+    else
+    {
+        ?>
+        <tr>
+            <td>
+                <?php echo __('You do not have any active bids'); ?>
+            </td>
+        </tr>
+    <?php
     }
     ?>
 
