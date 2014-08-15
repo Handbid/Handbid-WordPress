@@ -6,35 +6,48 @@ if (!is_null($this->get('profile'))) {
     return;
 }
 ?>
-<form class="edit-profile" action="<?php echo get_admin_url() . 'admin-post.php'; ?>" method="post" enctype="multipart/form-data">
 
-    <ul>
-        <li>
-            <label>First Name</label>
-            <input type="text" name="firstName" value="<?php echo $profile->firstName; ?>"/>
-        </li>
-        <li>
-            <label>Last Name</label>
-            <input type="text" name="lastName" value="<?php echo $profile->lastName; ?>"/>
-        </li>
-        <li>
-            <label>Email</label>
-            <input type="email" name="email" value="<?php echo $profile->email; ?>"/>
-        </li>
-        <li>
-            <label>Photo</label>
-            <input type="file" name="photo"/>
-        </li>
-        <li>
-            <label>Password</label>
-            <input type="password" name="password" placeholder="<?php echo $profile->password; ?>"/>
-            <label>Confirm Password</label>
-            <input type="password" name="password2" placeholder="<?php echo $profile->password; ?>"/>
-        </li>
-        <li>
-            <input type="submit" value="submit"/>
-        </li>
-    </ul>
-    <input type='hidden' name='form-id' value='handbid-update-bidder' />
-    <input type='hidden' name='action' value='submit-form' />
-</form>
+<a href="#modal-edit">Edit Profile</a>
+
+<div class="modal edit-profile-modal" id="modal-edit" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-header">
+            <h2>Edit Profile</h2>
+            <a href="#close" class="btn-close" aria-hidden="true">×</a> <!--CHANGED TO "#close"-->
+        </div>
+        <div class="modal-body">
+            <form class="edit-profile" action="<?php echo get_admin_url() . 'admin-post.php'; ?>" method="post" enctype="multipart/form-data">
+
+                <ul>
+                    <li>
+                        <label>First Name</label>
+                        <input type="text" name="firstName" value="<?php echo $profile->firstName; ?>"/>
+                    </li>
+                    <li>
+                        <label>Last Name</label>
+                        <input type="text" name="lastName" value="<?php echo $profile->lastName; ?>"/>
+                    </li>
+                    <li>
+                        <label>Email</label>
+                        <input type="email" name="email" value="<?php echo $profile->email; ?>"/>
+                    </li>
+                    <li>
+                        <label>Photo</label>
+                        <input type="file" name="photo"/>
+                    </li>
+                    <li>
+                        <label>Password</label>
+                        <input type="password" name="password" placeholder="<?php echo $profile->password; ?>"/>
+                        <label>Confirm Password</label>
+                        <input type="password" name="password2" placeholder="<?php echo $profile->password; ?>"/>
+                    </li>
+                    <li>
+                        <input type="submit" value="submit"/>
+                    </li>
+                </ul>
+                <input type='hidden' name='form-id' value='handbid-update-bidder' />
+                <input type='hidden' name='action' value='submit-form' />
+            </form>
+        </div>
+    </div>
+</div>
