@@ -1,0 +1,11 @@
+.handbid-fatal-error {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 25px;
+    background: rgba(255,0,0,0.4);
+    color: #fff;
+    text-align: center;
+    font-size: 2em;
+}
