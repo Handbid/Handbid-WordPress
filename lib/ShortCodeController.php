@@ -54,7 +54,8 @@ class ShortCodeController
             'handbid_bidder_purchases'      => 'myPurchases',
             'handbid_bidder_profile_form'   => 'bidderProfileForm',
             'handbid_is_logged_in'          => 'isLoggedIn',
-            'handbid_is_logged_out'         => 'isLoggedOut'
+            'handbid_is_logged_out'         => 'isLoggedOut',
+            'handbid_breadcrumb'            => 'breadcrumbs'
         ];
 
         forEach ($shortCodes as $shortCode => $callback) {
@@ -664,6 +665,28 @@ class ShortCodeController
         $profile = $this->handbid->store('Bidder')->myProfile();
         if(!$profile) {
             echo do_shortcode($content);
+        }
+    }
+
+    public function breadcrumbs($attributes) {
+
+        try {
+            $template = $this->templateFromAttributes($attributes, 'views/navigation/breadcrumb');
+            $auction = $this->state->currentAuction([
+                    'breadcrumb' => true
+                ]);
+
+            return $this->viewRenderer->render(
+                $template,
+                [
+                    'auction' => $auction,
+                    'item'    => $this->state->currentItem()
+                ]
+            );
+        } catch (Exception $e) {
+            echo "Breadcrumb could not be loaded, Please try again later.";
+            error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
+            return;
         }
     }
 }

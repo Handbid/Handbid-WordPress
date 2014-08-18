@@ -1,0 +1,28 @@
+<?php
+    $auction = $this->get('auction');
+    $item    = $this->get('item');
+
+if (!is_front_page()) {
+    // print out home
+    echo '<a href="'. get_option('home') . '">' . bloginfo('name') . '</a> > ';
+    if(isset($auction)) {
+        // If there is an auction set drop in the link
+        echo '<a href="/auction/' . $auction->key . '">' . $auction->name . '</a>';
+        if(isset($item)) {
+            // If there is an auction and an item set drop in the link
+            echo ' > ' . $item->name;
+        }
+    }
+    else
+    {
+        if (is_category() || is_single()) {
+            the_category('title_li=');
+            if (is_single()) {
+                echo " > ";
+                the_title();
+            }
+        } elseif (is_page()) {
+            echo the_title();
+        }
+    }
+}

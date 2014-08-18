@@ -29,15 +29,14 @@ class State
     public function currentAuction($attributes = null)
     {
 
-        if($this->auction) {
+        if($this->auction && !isset($attributes['breadcrumb'])) {
             return $this->auction;
         }
 
         $auctionKey = (isset($attributes['auctionkey']) && $attributes['auctionkey']) ? $attributes['auctionkey'] : get_query_var(
             'auction'
         );
-
-        if (!$auctionKey) {
+        if (!$auctionKey && !isset($attributes['breadcrumb'])) {
             $auctionKey = get_option('handbidDefaultAuctionKey');
         }
 
