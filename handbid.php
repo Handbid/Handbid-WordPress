@@ -86,6 +86,7 @@ class Handbid
         $this->shortCodeController->init();
         $this->actionController->init();
         $this->adminActionController->init();
+        $this->routeController->init();
 
         add_action('admin_post_submit-form', [$this->actionController, '_handle_form_action']); // If the user is logged in
         add_action('admin_post_nopriv_submit-form', [$this->actionController, '_handle_form_action']); // If the user in not logged in
@@ -97,6 +98,7 @@ class Handbid
     {
         $install = new Install();
         $install->install();
+        flush_rewrite_rules();
     }
 
     function uninstall()
@@ -127,8 +129,16 @@ class Handbid
             wp_enqueue_script($key);
         }
 
-        wp_register_style( 'handbid_css', plugins_url('public/css/modal.css', __FILE__));
-        wp_enqueue_style( 'handbid_css' );
+        $styles = array(
+            'handidModal' => 'public/css/modal.css',
+            'handbidGenericStyles' => 'public/css/handbid.css'
+        );
+
+        foreach ($styles as $key => $sc) {
+            wp_register_style( $key, plugins_url($sc, __FILE__));
+            wp_enqueue_style( $key );
+        }
+
     }
 
     function createHandbid()

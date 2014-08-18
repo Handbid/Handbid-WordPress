@@ -347,6 +347,7 @@ class ShortCodeController
 
             $donors     = array_unique($donorsDirty);
             $categories = array_unique($categoriesDirty);
+            $auction    = $this->state->currentAuction();
 
             $template = $this->templateFromAttributes($attributes, 'views/item/list');
             return $this->viewRenderer->render(
@@ -354,7 +355,8 @@ class ShortCodeController
                 [
                     'categories' => $categories,
                     'items'      => $items,
-                    'donors'     => $donors
+                    'donors'     => $donors,
+                    'auction'    => $auction
                 ]
             );
         } catch (Exception $e) {

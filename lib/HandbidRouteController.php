@@ -20,15 +20,4 @@ class HandbidRouteController
     {
 
     }
-
-    function addRedirectRules()
-    {
-        forEach ($this->query_vars as $k => $v) {
-            add_rewrite_rule(
-                $k . '/([^/]*)',
-                $v . '/?' . $k . '=$matches[1]',
-                'top'
-            );
-        }
-    }
 }
