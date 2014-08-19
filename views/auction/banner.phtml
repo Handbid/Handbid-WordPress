@@ -1,108 +1,82 @@
 <?php
-if ($this->get('auction')) {
 
-    $auction = $this->get('auction');
-    $location = $auction->location;
+$auction        = $this->get('auction');
+$location       = $auction->location;
 
-    if (isset($auction->meta->organization)) {
-        $org = $auction->meta->organization;
-    }
+$winningBids    = $this->get('winningBids');
+$losingBids     = $this->get('losingBids');
 
-} else {
+$profile        = $this->get('profile');
+
+if (isset($auction->meta)) {
+    $org = $auction->meta->organization;
+}
+
+
+if (!$auction) {
     echo "No Auction Set";
     return;
 }
 
 $status = ($auction->status == "open") ? 'open' : 'closed';
-
-$url = get_permalink() . '?auction=' . get_query_var('auction');
+$url    = get_permalink() . '?auction=' . get_query_var('auction');
 
 ?>
 
-
-<div class="bannerContainer parallax" style="background-image: url('<?php echo $auction->banner; ?>');">
-    <div class="innerBanner">
-        <div class="statusContainer">
-            <div class="name">
-                <div class="auctionName">
-                    <a href="/auction-detail?auction=<?php echo $auction->key; ?>"><?php echo $auction->name; ?></a>
-                </div>
-                <a class="orgTitle" href="/organization?organization=<?php echo $org->key; ?>"><?php echo $org->name; ?></a>
-            </div>
-            <div class="highlightImage">
-                <img src="<?php echo $auction->logo->medium; ?>"/>
-            </div>
-            <div class="bannerExtraInfo">
-                <div class="auctionDate">
-                    <span><?php echo date('m/d/Y',$auction->startTime); ?></span>
-
-                </div>
-                <div class="auctionTime">
-                    <span><?php echo date('h:i a',$auction->startTime); ?></span>
-
-                </div>
-            </div>
-        </div>
-        <div class="socialLinks">
-            <a class="facebook"
-               href="https://www.facebook.com/sharer/sharer.php?u=<?php htmlspecialchars($url, ENT_QUOTES); ?>"
-               title="Share on Facebook." target="_blank">Facebook</a>
-            <a class="twitter"
-               href="http://twitter.com/home/?status=<?php echo urlencode($auction->name); ?> - <?php echo $url; ?>"
-               title="Tweet this!" target="_blank">Twitter</a>
-
-            <a class="gplus" href="https://plus.google.com/share?url=<?php the_permalink(); ?>" onclick="javascript:window.open(this.href,
-          '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">Google+</a>
-        </div>
-
-        <div class="actionBar">
-            <a class="modalLink contactButton" href="#modal1"><span><?php echo __('Help'); ?></span></a>
-            <a href="#" class="register"><span><?php echo __('Register'); ?></span></a>
-            <a href="#" class="buyTickets"><span><?php echo __('Tickets'); ?></span></a>
-        </div>
-    </div>
-
-    <div class="heroOverlay"></div>
-    <div class="statBar">
-        <div class="innerStatBar">
-            <div class="listStats">
-                <div class="auctionImage" style="background-image: url('<?php echo $auction->logo->small; ?>');">
-                </div>
-                <div class="statBox auctionName">
-                    <span><?php echo $auction->name; ?></span>
-                </div>
-
-                <?php if ( $this->get('profile') ) {
-                ?>
-                    <div class="statBox winning">
-                        <label><?php echo __('Winning'); ?></label>
-                        <span><?php echo $this->get('winningBids'); ?></span>
-                    </div>
-                    <div class="statBox losing">
-                        <label><?php echo __('Losing'); ?></label>
-                        <span><?php echo $this->get('losingBids'); ?></span>
-                    </div>
-                    <div class="statBox proxy">
-                        <label><?php echo __('Max Bids'); ?></label>
-                        <span><?php echo $this->get('proxies'); ?></span>
-                        <span>Value</span>
-                    </div>
-                <?php } ?>
-                <div class="statBox statusBox">
-                    <label><?php echo __('Status'); ?></label>
-                    <span class="status <?php echo $status; ?>"><?php echo __(ucfirst($status)); ?></span>
-
-                </div>
-                <div class="statBox filterBox">
-                    <button class="button"><?php echo __('Filter'); ?></button>
-                </div>
-            </div>
-        </div>
-    </div>
+<div class="section-title">
+    <h1 class="title">
+        <?php echo $auction->name; ?>
+        <span class="auctionDateTime">
+            <?php echo date('h:i a m/d/Y', $auction->startTime); ?>
+        </span>
+    </h1>
 </div>
 
-<div id="modal1" class="modal">
-    <h3 class="modalTitle"><?php echo __('Contact Auction Host'); ?></h3>
-    <p class="closeBtn">Close</p>
-    <?php echo do_shortcode('[gravityform id=1 title=false description=false]'); ?>
+<div class="bannerContainer">
+    <div class="innerBanner">
+        <div class="section-title statBar">
+
+            <div class="innerStatBar">
+
+                <?php if ($profile) { ?>
+
+                    <div class="statBox winning">
+                        <label><?php echo __('Winning'); ?></label>
+                        <span><?php echo $winningBids; ?></span>
+                    </div>
+
+                    <div class="statBox losing">
+                        <label><?php echo __('Losing'); ?></label>
+                        <span><?php echo $losingBids; ?></span>
+                    </div>
+
+                    <div class="statBox proxy">
+                        <label><?php echo __('Proxy'); ?></label>
+                        <span><?php echo $this->get('proxies'); ?></span>
+                    </div>
+
+                <?php } ?>
+
+                <div class="statBox statusBox auction-<?php echo $status; ?>">
+                    <label><?php echo __(ucfirst($status)); ?></label>
+                </div>
+                <?php if (!$profile) {
+
+                    ?>
+                    <a class="handbid-connect" href="#" data-handbid-connect></a>
+                <?php
+                }
+                else
+                {
+                    ?>
+                    <div class="statBox bidderProfile">
+                        <label><?php echo $profile->name ?></label>
+                        <span><?php echo 'Pin # ' . $profile->pin; ?></span>
+                    </div>
+                <?php
+                }
+                ?>
+            </div>
+        </div>
+    </div>
 </div>
