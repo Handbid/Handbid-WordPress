@@ -62,6 +62,7 @@ class HandbidAdminActionController
             'handbidRestEndpoint',
             'handbidFacebookAppId',
             'handbidDefaultAuctionKey',
+            'handbidDefaultOrganizationKey',
             'handbidJs'
         ];
 

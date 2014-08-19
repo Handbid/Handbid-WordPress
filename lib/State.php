@@ -19,7 +19,14 @@ class State
     {
 
         if (!$this->org) {
-            $orgKey    = get_query_var('organization');
+            $orgKey = (isset($attributes['orgkey']) && $attributes['orgkey']) ? $attributes['orgkey'] : get_query_var(
+                'orgkey'
+            );
+
+            if (!$orgKey) {
+                $orgKey = get_option('handbidDefaultOrganizationKey');
+            }
+
             $this->org = $this->handbid->store('Organization')->byKey($orgKey);
         }
 

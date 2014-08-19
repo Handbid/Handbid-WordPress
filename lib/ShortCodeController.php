@@ -117,7 +117,13 @@ class ShortCodeController
             $org = $this->state->currentOrg();
 
 
-            if (!in_array($attributes['type'], ['upcoming', 'all', 'past'])) {
+            if(isset($attributes['type'])) {
+                if (!in_array($attributes['type'], ['upcoming', 'all', 'past'])) {
+                    $attributes['type'] = 'upcoming';
+                }
+            }
+            else
+            {
                 $attributes['type'] = 'upcoming';
             }
 
