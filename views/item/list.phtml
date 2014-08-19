@@ -60,7 +60,7 @@ if ($this->get('categories') || $this->get('items') || $this->get('donors')) {
                 <li class="item item-tile <?php echo sanitize_html_class($terms) . $priceClass; ?> all _all">
 
                     <div class="itemBox">
-                        <a title="<?php echo $item->name; ?>" href="/auction/<?php echo $auction->key; ?>/item/<?php echo $item->key; ?>">
+                        <a title="<?php echo $item->name; ?>" href="/auctions/<?php echo $auction->key; ?>/item/<?php echo $item->key; ?>">
                             <div class="inner">
                                 <div class="image" style="background-image:url('<?php echo $item->images[0]; ?>')">
                                     <?php if($item->itemCode) { ?>
