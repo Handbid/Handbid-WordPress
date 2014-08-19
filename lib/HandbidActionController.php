@@ -33,9 +33,7 @@ class HandbidActionController {
             $values = [
                 'firstName'  => $_POST['firstName'],
                 'lastName'   => $_POST['lastName'],
-                'email'      => $_POST['email'],
-//                'cellPhone'  => $_POST['cellPhone'],
-
+                'email'      => $_POST['email']
             ];
 
             if(isset($_FILES['photo'])) {

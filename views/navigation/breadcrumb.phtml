@@ -7,7 +7,7 @@ if (!is_front_page()) {
     <div class="handbid-breadcrumb">
         <?php
         // print out home
-        echo '<a href="' . get_option('home') . '">' . get_bloginfo('name') . '</a> > ';
+        echo '<a href="' . get_option('home') . '">' . get_bloginfo('name') . '</a>';
         if (isset($auction)) {
             // If there is an auction set drop in the link
             echo '<a href="/auction/' . $auction->key . '">' . $auction->name . '</a>';
@@ -23,6 +23,7 @@ if (!is_front_page()) {
                     the_title();
                 }
             } elseif (is_page()) {
+                echo " > ";
                 echo the_title();
             }
         }
