@@ -594,7 +594,8 @@ class ShortCodeController
             return $this->viewRenderer->render(
                 $template,
                 [
-                    'bids' => $this->handbid->store('Bid')->myBids($profile->pin, $this->state->currentAuction()->_id)
+                    'winning' => $this->handbid->store('Bid')->myBids($profile->pin, $this->state->currentAuction()->_id),
+                    'losing' => $this->handbid->store('Bid')->myLosing($profile->pin, $this->state->currentAuction()->_id)
                 ]
             );
         } catch (Exception $e) {
@@ -608,10 +609,11 @@ class ShortCodeController
     {
         try {
             $template = $this->templateFromAttributes($attributes, 'views/bidder/proxybids');
+            $profile  = $this->handbid->store('Bidder')->myProfile();
             return $this->viewRenderer->render(
                 $template,
                 [
-                    'bids' => $this->handbid->store('Bidder')->myProxyBids($this->state->currentAuction()->_id)
+                    'bids' => $this->handbid->store('Bid')->myProxyBids($profile->pin, $this->state->currentAuction()->_id)
                 ]
             );
         } catch (Exception $e) {
@@ -625,10 +627,11 @@ class ShortCodeController
     {
         try {
             $template = $this->templateFromAttributes($attributes, 'views/bidder/purchases');
+            $profile  = $this->handbid->store('Bidder')->myProfile();
             return $this->viewRenderer->render(
                 $template,
                 [
-                    'purchases' => $this->handbid->store('Bidder')->myPurchases($this->state->currentAuction()->_id)
+                    'purchases' => $this->handbid->store('Bid')->myPurchases($profile->pin, $this->state->currentAuction()->_id)
                 ]
             );
         } catch (Exception $e) {
