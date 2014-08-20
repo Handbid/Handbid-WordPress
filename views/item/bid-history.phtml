@@ -24,7 +24,7 @@ if ($this->get('item')) {
             ?>
             <tr>
                 <td>$<?php echo $bid->amount; ?></td>
-                <td><?php echo ($profile->pin == $bid->winningBidder->pin) ? 'You' : $bid->winningBidder->pin; ?></td>
+                <td><?php echo (isset($profile->pin) && $profile->pin == $bid->winningBidder->pin) ? 'You' : $bid->winningBidder->pin;?></td>
             </tr>
         <?php
         }
