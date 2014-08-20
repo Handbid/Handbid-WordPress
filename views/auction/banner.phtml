@@ -27,7 +27,7 @@ $url    = get_permalink() . '?auction=' . get_query_var('auction');
     <h1 class="title">
         <?php echo $auction->name; ?>
         <span class="auctionDateTime">
-            <?php echo date('h:i a m/d/Y', $auction->startTime); ?>
+            Auction Start: <?php echo date('h:i a m/d/Y', $auction->startTime); ?>
         </span>
     </h1>
 </div>
