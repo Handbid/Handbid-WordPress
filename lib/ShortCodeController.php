@@ -642,12 +642,18 @@ class ShortCodeController
     {
         try {
             $template = $this->templateFromAttributes($attributes, 'views/bidder/profile-form');
+
+            $profile = $this->handbid->store('Bidder')->myProfile();
+            $creditCard = $this->handbid->store('CreditCard')->getCardByOwnerId($profile->_id);
+
+
             return $this->viewRenderer->render(
                 $template,
                 [
-                    'profile' => $this->handbid->store('Bidder')->myProfile()
+                    'profile'    => $profile,
+                    'creditCard' => $creditCard
 
-            ]
+                ]
             );
         } catch (Exception $e) {
             echo "Your profile could not be loaded, Please try again later.";
