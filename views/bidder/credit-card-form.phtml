@@ -10,51 +10,24 @@
                 <table>
                     <tr>
                         <td>
-                            <label>Name</label>
-                            <input type="text" name="name" placeholder="Name"/>
-                        </td>
-
-                        <td>
                             <label>Name on Card</label>
                             <input type="text" name="nameOnCard" placeholder="John Doe"/>
                         </td>
-                    </tr>
-                    <tr>
                         <td>
                             <label>Card Number</label>
                             <input type="text" name="cardNum" placeholder="Credit Card Number"/>
                         </td>
+                    </tr>
+                    <tr>
                         <td>
                             <label>CVC</label>
                             <input type="text" name="cvc"/>
                         </td>
-
-                    </tr>
-                    <tr>
-                        <td>
-                            <label>Card Type</label>
-                            <select name="cardType">
-                                <?php forEach ($cardType as $k => $v) {
-                                    ?>
-                                    <option value="<?php echo $k; ?>"><?php echo $v; ?></option>
-                                <?php
-                                }
-                                ?>
-                            </select>
-                        </td>
-                        <td></td>
                     </tr>
                     <tr>
                         <td>
                             <label>Exp Month</label>
-                            <select name="expMonth">
-                                <?php forEach ($expMonth as $k => $v) {
-                                    ?>
-                                    <option value="<?php echo $k; ?>"><?php echo $v; ?></option>
-                                <?php
-                                }
-                                ?>
-                            </select>
+                            <input type="text" name="expMonth" placeholder="xx"/>
                         </td>
                         <td>
                             <label>Exp Year</label>
@@ -72,3 +45,4 @@
             </form>
         </div>
     </div>
+</div>

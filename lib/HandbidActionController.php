@@ -37,6 +37,8 @@ class HandbidActionController
     function _handle_form_action()
     {
 
+        $redirect = '/bidder';
+
         if ($_POST['form-id'] == "handbid-update-bidder") {
             $values = [
                 'firstName' => $_POST['firstName'],
@@ -54,13 +56,12 @@ class HandbidActionController
             }
 
             $this->handbid->store('Bidder')->updateProfile($values);
-            wp_redirect('/bidder');
         }
 
-        if ($_POST['form-id'] == "handbid-add-creditcard") {
+        else if ($_POST['form-id'] == "handbid-add-creditcard") {
+
             $values = [
-                'name'     => $_POST['name'],
-                'cardType' => $_POST['cardType'],
+                'nameOnCard'     => $_POST['nameOnCard'],
                 'cardNum'  => $_POST['cardNum'],
                 'cvc'      => $_POST['cvc'],
                 'expMonth' => $_POST['expMonth'],
@@ -71,10 +72,16 @@ class HandbidActionController
 
             $bidder = $this->handbid->store('Bidder')->myProfile();
 
-            $this->handbid->store('CreditCard')->saveCardByOwnerId($bidder->_id, $values);
+            try {
+                $this->handbid->store('CreditCard')->add($bidder->_id, $values);
+            } catch(\Exception $e) {
+                $redirect .= '?error=' . urlencode($e->getMessage());
+            }
         }
 
-
+        //send them on their way
+        wp_redirect($redirect);
+        exit;
     }
 
     function handbid_logout_callback()
