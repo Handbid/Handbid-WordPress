@@ -1,0 +1,74 @@
+<a href="#handbid-add-card-dialog">Add Credit Card</a>
+<div class="modal edit-profile-modal" id="handbid-add-card-dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-header">
+            <h2>Add Card</h2>
+            <a href="#close" class="btn-close" aria-hidden="true">×</a> <!--CHANGED TO "#close"-->
+        </div>
+        <div class="modal-body">
+            <form class="add-creditcard" action="<?php echo get_admin_url() . 'admin-post.php'; ?>" method="post" enctype="multipart/form-data">
+                <table>
+                    <tr>
+                        <td>
+                            <label>Name</label>
+                            <input type="text" name="name" placeholder="Name"/>
+                        </td>
+
+                        <td>
+                            <label>Name on Card</label>
+                            <input type="text" name="nameOnCard" placeholder="John Doe"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Card Number</label>
+                            <input type="text" name="cardNum" placeholder="Credit Card Number"/>
+                        </td>
+                        <td>
+                            <label>CVC</label>
+                            <input type="text" name="cvc"/>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Card Type</label>
+                            <select name="cardType">
+                                <?php forEach ($cardType as $k => $v) {
+                                    ?>
+                                    <option value="<?php echo $k; ?>"><?php echo $v; ?></option>
+                                <?php
+                                }
+                                ?>
+                            </select>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Exp Month</label>
+                            <select name="expMonth">
+                                <?php forEach ($expMonth as $k => $v) {
+                                    ?>
+                                    <option value="<?php echo $k; ?>"><?php echo $v; ?></option>
+                                <?php
+                                }
+                                ?>
+                            </select>
+                        </td>
+                        <td>
+                            <label>Exp Year</label>
+                            <input type="text" name="expYear" placeholder="20xx"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <input type="submit" class="button greenButton" value="submit"/>
+                            <input type='hidden' name='form-id' value='handbid-add-creditcard'/>
+                            <input type='hidden' name='action' value='submit-form'/>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>

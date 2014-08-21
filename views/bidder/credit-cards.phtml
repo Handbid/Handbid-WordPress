@@ -1,0 +1,39 @@
+<?php
+if (!is_null($this->get('cards'))) {
+    $cards = $this->get('cards');
+} else {
+    echo "I could not find your credit cards.";
+    return;
+}
+
+
+if(count($cards) > 0) {
+?>
+
+<table class="bidder-table">
+    <thead>
+    <tr>
+        <th>Amount</th>
+        <th>Item</th>
+        <th>Date Inserted</th>
+    </tr>
+    </thead>
+    <?php
+    forEach ($cards as $card) {
+        ?>
+        <tr>
+            <td>
+                <?php echo '$' . $bid->amount; ?>
+            </td>
+            <td>
+                <?php echo $bid->name; ?>
+            </td>
+            <td>
+                <?php echo date("m/d/Y g:i a", $bid->microtime); ?>
+            </td>
+        </tr>
+    <?php } ?>
+</table>
+<?php } else { ?>
+You have no cards on file. <?php echo do_shortcode('[handbid_bidder_credit_card_form]'); ?>
+<?php } ?>

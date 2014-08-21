@@ -11,10 +11,11 @@ if (!is_null($this->get('profile'))) {
 <table class="bidder-table">
     <thead>
     <tr>
-        <th>Photo</th>
+        <th></th>
         <th>Name</th>
         <th>Cell Phone</th>
         <th>Email</th>
+        <th></th>
     </tr>
     </thead>
     <tr>
@@ -29,6 +30,9 @@ if (!is_null($this->get('profile'))) {
         </td>
         <td>
             <?php echo $profile->email; ?>
+        </td>
+        <td>
+            <?php echo do_shortcode('[handbid_bidder_profile_form]'); ?>
         </td>
     </tr>
 </table>
