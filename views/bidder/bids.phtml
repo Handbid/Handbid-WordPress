@@ -1,7 +1,8 @@
 <?php
 if (!is_null($this->get('winning'))) {
     $winning = $this->get('winning');
-    $losing = $this->get('losing');
+    $losing  = $this->get('losing');
+    $auction = $this->get('auction');
 } else {
     echo "I could not find your bids.";
     return;
@@ -26,7 +27,7 @@ if (!is_null($this->get('winning'))) {
             <?php echo '$' . $bid->amount; ?>
         </td>
         <td>
-            <?php echo $bid->name; ?>
+            <a href="/auctions/<?php echo $auction->key; ?>/item/<?php echo $bid->meta['itemKey']; ?>"><?php echo $bid->name; ?></a>
         </td>
         <td>
             <?php echo date("m/d/Y g:i a", $bid->microtime); ?>
