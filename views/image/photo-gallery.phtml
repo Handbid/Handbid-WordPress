@@ -10,19 +10,7 @@ if ($this->get('item')) {
 <div class="photoGallery">
     <div class="banner">
         <ul>
-            <?php forEach ($item->images as $imageUrl) {
-                ?>
-                <li style="background-image: url('<?= $imageUrl; ?>')"></li>
-            <?php
-            }
-            ?>
+            <li style=""><?php echo generate_plate($item->name); ?></li>
         </ul>
     </div>
-    <?php if(count($item->images) > 1) {
-        ?>
-        <a href="#" class="unslider-arrow prev">Previous slide</a>
-        <a href="#" class="unslider-arrow next">Next slide</a>
-    <?php
-    }
-    ?>
 </div>
