@@ -590,18 +590,14 @@ class ShortCodeController
 
             $template = $this->templateFromAttributes($attributes, 'views/bidder/bids');
             $profile  = $this->handbid->store('Bidder')->myProfile();
+            $auction  = $this->state->currentAuction();
 
             return $this->viewRenderer->render(
                 $template,
                 [
-                    'winning' => $this->handbid->store('Bid')->myBids(
-                            $profile->pin,
-                            $this->state->currentAuction()->_id
-                        ),
-                    'losing'  => $this->handbid->store('Bid')->myLosing(
-                            $profile->pin,
-                            $this->state->currentAuction()->_id
-                        )
+                    'winning' => $this->handbid->store('Bid')->myBids($profile->pin, $auction->_id),
+                    'losing'  => $this->handbid->store('Bid')->myLosing($profile->pin, $auction->_id),
+                    'auction' => $auction
                 ]
             );
         } catch (Exception $e) {
@@ -616,13 +612,13 @@ class ShortCodeController
         try {
             $template = $this->templateFromAttributes($attributes, 'views/bidder/proxybids');
             $profile  = $this->handbid->store('Bidder')->myProfile();
+            $auction  = $this->state->currentAuction();
+
             return $this->viewRenderer->render(
                 $template,
                 [
-                    'bids' => $this->handbid->store('Bid')->myProxyBids(
-                            $profile->pin,
-                            $this->state->currentAuction()->_id
-                        )
+                    'bids'    => $this->handbid->store('Bid')->myProxyBids($profile->pin, $auction->_id),
+                    'auction' => $auction
                 ]
             );
         } catch (Exception $e) {
@@ -656,14 +652,13 @@ class ShortCodeController
 
             $template = $this->templateFromAttributes($attributes, 'views/bidder/purchases');
             $profile  = $this->handbid->store('Bidder')->myProfile();
+            $auction  = $this->state->currentAuction();
 
             return $this->viewRenderer->render(
                 $template,
                 [
-                    'purchases' => $this->handbid->store('Bid')->myPurchases(
-                            $profile->pin,
-                            $this->state->currentAuction()->_id
-                        )
+                    'purchases' => $this->handbid->store('Bid')->myPurchases($profile->pin, $auction->_id),
+                    'auction'   => $auction
                 ]
             );
 

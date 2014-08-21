@@ -1,6 +1,7 @@
 <?php
 if (!is_null($this->get('bids'))) {
-    $bids = $this->get('bids');
+    $bids    = $this->get('bids');
+    $auction = $this->get('auction');
 } else {
     echo "I could not find you max bids.";
     return;
@@ -25,7 +26,7 @@ if (!is_null($this->get('bids'))) {
                 <?php echo '$' . $bid->maxAmount; ?>
             </td>
             <td>
-                <?php echo $bid->name; ?>
+                <a href="/auctions/<?php echo $auction->key; ?>/item/<?php echo $bid->meta['itemKey']; ?>"><?php echo $bid->name; ?></a>
             </td>
             <td>
                 <a href="#" data-handbid-delete-proxy="<?php echo $bid->_id; ?>"><?php echo __('Delete'); ?></a>
