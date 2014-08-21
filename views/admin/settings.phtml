@@ -31,6 +31,11 @@
                 <td><input type="text" name="handbidJs"
                            value="<?php echo get_option('handbidJs', 'https://handbid-js-handbid.netdna-ssl.com/handbid.js?cachebuster=234234'); ?>"/></td>
             </tr>
+            <tr valign="top">
+                <th scope="row"><?php echo('Show Only My Auctions'); ?><br/> ( Not Implemented )</span></th>
+                <td><input type="checkbox" checked name="handbidShowAllAuctions"
+                           value="<?php echo get_option('handbidShowAllAuctions'); ?>"/></td>
+            </tr>
         </table>
         <?php submit_button(); ?>
 

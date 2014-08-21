@@ -63,7 +63,8 @@ class HandbidAdminActionController
             'handbidFacebookAppId',
             'handbidDefaultAuctionKey',
             'handbidDefaultOrganizationKey',
-            'handbidJs'
+            'handbidJs',
+            'handbidShowAllAuctions'
         ];
 
         forEach ($settings as $setting) {

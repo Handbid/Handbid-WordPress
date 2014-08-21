@@ -8,35 +8,41 @@ if (!is_null($this->get('bids'))) {
 }
 
 ?>
-
-<table class="bidder-table">
-    <thead>
-    <tr>
-        <th>Max Amount</th>
-        <th>Item</th>
-        <th>Change</th>
-    </tr>
-    </thead>
+<div class="bidder-info-container">
     <?php
-    if(count($bids) > 0) {
-        forEach ($bids as $bid) {
+    if (count($bids) > 0) {
         ?>
-        <tr>
-            <td>
-                <?php echo '$' . $bid->maxAmount; ?>
-            </td>
-            <td>
-                <a href="/auctions/<?php echo $auction->key; ?>/item/<?php echo $bid->meta['itemKey']; ?>"><?php echo $bid->name; ?></a>
-            </td>
-            <td>
-                <a href="#" data-handbid-delete-proxy="<?php echo $bid->_id; ?>"><?php echo __('Delete'); ?></a>
-            </td>
-        </tr>
-        <?php
-        }
-    }
-    else
-    {
+
+        <table class="bidder-table">
+            <thead>
+            <tr>
+                <th>Max Amount</th>
+                <th>Item</th>
+                <th>Change</th>
+            </tr>
+            </thead>
+            <?php
+            forEach ($bids as $bid) {
+                ?>
+                <tr>
+                    <td>
+                        <?php echo '$' . $bid->maxAmount; ?>
+                    </td>
+                    <td>
+                        <a href="/auctions/<?php echo $auction->key; ?>/item/<?php echo $bid->meta['itemKey']; ?>"><?php echo $bid->name; ?></a>
+                    </td>
+                    <td>
+                        <a href="#" data-handbid-delete-proxy="<?php echo $bid->_id; ?>"><?php echo __('Delete'); ?></a>
+                    </td>
+                </tr>
+            <?php
+            }
+
+            ?>
+        </table>
+
+    <?php
+    } else {
         ?>
         <tr>
             <td>
@@ -46,5 +52,4 @@ if (!is_null($this->get('bids'))) {
     <?php
     }
     ?>
-
-</table>
+</div>

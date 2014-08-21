@@ -7,32 +7,38 @@ if (!is_null($this->get('profile'))) {
 }
 
 ?>
+<div class="bidder-info-container">
+    <div class="bidder-image" style="background-image: url(<?php echo $profile->photo; ?>)"></div>
 
-<table class="bidder-table">
-    <thead>
-    <tr>
-        <th></th>
-        <th>Name</th>
-        <th>Cell Phone</th>
-        <th>Email</th>
-        <th></th>
-    </tr>
-    </thead>
-    <tr>
-        <td>
-            <img src="<?php echo $profile->photo; ?>"/>
-        </td>
-        <td>
-            <?php echo $profile->firstName . ' ' . $profile->lastName; ?>
-        </td>
-        <td>
-            <?php echo $profile->cellPhone->value; ?>
-        </td>
-        <td>
-            <?php echo $profile->email; ?>
-        </td>
-        <td>
-            <?php echo do_shortcode('[handbid_bidder_profile_form]'); ?>
-        </td>
-    </tr>
-</table>
+    <table class="bidder-info">
+        <tr>
+            <td><label>Name:</label></td>
+            <td>
+                <?php echo $profile->firstName . ' ' . $profile->lastName; ?>
+            </td>
+        </tr>
+        <tr>
+            <td><label>Pin:</label></td>
+            <td>
+                <?php echo $profile->pin; ?>
+            </td>
+        </tr>
+        <tr>
+            <td><label>Cellphone:</label></td>
+            <td>
+                <?php echo $profile->cellPhone->value; ?>
+            </td>
+        </tr>
+        <tr>
+            <td><label>Email:</label></td>
+            <td>
+                <?php echo $profile->email; ?>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <?php echo do_shortcode('[handbid_bidder_profile_form]'); ?>
+            </td>
+        </tr>
+    </table>
+</div>

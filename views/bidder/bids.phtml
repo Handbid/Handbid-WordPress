@@ -7,64 +7,72 @@ if (!is_null($this->get('winning'))) {
     echo "I could not find your bids.";
     return;
 }
-
 ?>
-<?php if ($winning) { ?>
-<h4 class="winning-item">Winning</h4>
-<table class="bidder-table">
-    <thead>
-    <tr>
-        <th>Amount</th>
-        <th>Item</th>
-        <th>Date Inserted</th>
-    </tr>
-    </thead>
+<div class="bidder-info-container">
     <?php
-    forEach ($winning as $bid) {
+    if (!$winning && !$losing) {
+        echo "You have no bids";
+    }
     ?>
-    <tr>
-        <td>
-            <?php echo '$' . $bid->amount; ?>
-        </td>
-        <td>
-            <a href="/auctions/<?php echo $auction->key; ?>/item/<?php echo $bid->meta['itemKey']; ?>"><?php echo $bid->name; ?></a>
-        </td>
-        <td>
-            <?php echo date("m/d/Y g:i a", $bid->microtime); ?>
-        </td>
-    </tr>
+
+    <?php if ($winning) { ?>
+
+        <h4 class="winning-item">Winning</h4>
+        <table class="bidder-table">
+            <thead>
+            <tr>
+                <th>Amount</th>
+                <th>Item</th>
+                <th>Date Inserted</th>
+            </tr>
+            </thead>
+            <?php
+            forEach ($winning as $bid) {
+                ?>
+                <tr>
+                    <td>
+                        <?php echo '$' . $bid->amount; ?>
+                    </td>
+                    <td>
+                        <a href="/auctions/<?php echo $auction->key; ?>/item/<?php echo $bid->meta['itemKey']; ?>"><?php echo $bid->name; ?></a>
+                    </td>
+                    <td>
+                        <?php echo date("m/d/Y g:i a", $bid->microtime); ?>
+                    </td>
+                </tr>
+            <?php } ?>
+        </table>
     <?php } ?>
-</table>
-<?php } ?>
 
 
-<?php if ($losing) { ?>
-<h4 class="losing-item">Losing</h4>
-<table class="bidder-table">
-    <thead>
-    <tr>
-        <th>Amount</th>
-        <th>Item</th>
-        <th>Date Inserted</th>
-    </tr>
-    </thead>
-    <?php
-    forEach ($losing as $bid) {
-        ?>
-        <tr>
-            <td>
-                <?php echo '$' . $bid->amount; ?>
-            </td>
-            <td>
-                <?php echo $bid->name; ?>
-            </td>
-            <td>
-                <?php echo date("m/d/Y g:i a", $bid->microtime); ?>
-            </td>
-        </tr>
-    <?php
-    } ?>
+    <?php if ($losing) { ?>
+        <h4 class="losing-item">Losing</h4>
+        <table class="bidder-table">
+            <thead>
+            <tr>
+                <th>Amount</th>
+                <th>Item</th>
+                <th>Date Inserted</th>
+            </tr>
+            </thead>
+            <?php
+            forEach ($losing as $bid) {
+                ?>
+                <tr>
+                    <td>
+                        <?php echo '$' . $bid->amount; ?>
+                    </td>
+                    <td>
+                        <?php echo $bid->name; ?>
+                    </td>
+                    <td>
+                        <?php echo date("m/d/Y g:i a", $bid->microtime); ?>
+                    </td>
+                </tr>
+            <?php
+            } ?>
 
-</table>
+        </table>
 
-<?php } ?>
+    <?php } ?>
+</div>
