@@ -30,32 +30,34 @@ class ShortCodeController
     {
         // Add Plugin ShortCodes
         $shortCodes = [
-            'handbid_organization_details'  => 'organizationDetails',
-            'handbid_organization_auctions' => 'organizationAuctions',
-            'handbid_auction'               => 'auction',
-            'handbid_connect'               => 'connect',
-            'handbid_auction_results'       => 'auctionResults',
-            'handbid_auction_banner'        => 'auctionBanner',
-            'handbid_auction_details'       => 'auctionDetails',
-            'handbid_auction_contact_form'  => 'auctionContactForm',
-            'handbid_auction_item_list'     => 'auctionItemList',
-            'handbid_bid_now'               => 'bidNow',
-            'handbid_item'                  => 'item',
-            'handbid_item_results'          => 'itemResults',
-            'handbid_item_description'      => 'itemDescription',
-            'handbid_item_search_bar'       => 'itemSearchBar',
-            'handbid_item_bid_history'      => 'itemBidHistory',
-            'handbid_ticket_buy'            => 'ticketBuy',
-            'handbid_image_gallery'         => 'imageGallery',
-            'handbid_facebook_comments'     => 'facebookComments',
-            'handbid_bidder_profile'        => 'myProfile',
-            'handbid_bidder_bids'           => 'myBids',
-            'handbid_bidder_proxy_bids'     => 'myProxyBids',
-            'handbid_bidder_purchases'      => 'myPurchases',
-            'handbid_bidder_profile_form'   => 'bidderProfileForm',
-            'handbid_is_logged_in'          => 'isLoggedIn',
-            'handbid_is_logged_out'         => 'isLoggedOut',
-            'handbid_breadcrumb'            => 'breadcrumbs'
+            'handbid_organization_details'    => 'organizationDetails',
+            'handbid_organization_auctions'   => 'organizationAuctions',
+            'handbid_auction'                 => 'auction',
+            'handbid_connect'                 => 'connect',
+            'handbid_auction_results'         => 'auctionResults',
+            'handbid_auction_banner'          => 'auctionBanner',
+            'handbid_auction_details'         => 'auctionDetails',
+            'handbid_auction_contact_form'    => 'auctionContactForm',
+            'handbid_auction_item_list'       => 'auctionItemList',
+            'handbid_bid_now'                 => 'bidNow',
+            'handbid_item'                    => 'item',
+            'handbid_item_results'            => 'itemResults',
+            'handbid_item_description'        => 'itemDescription',
+            'handbid_item_search_bar'         => 'itemSearchBar',
+            'handbid_item_bid_history'        => 'itemBidHistory',
+            'handbid_ticket_buy'              => 'ticketBuy',
+            'handbid_image_gallery'           => 'imageGallery',
+            'handbid_facebook_comments'       => 'facebookComments',
+            'handbid_bidder_profile'          => 'myProfile',
+            'handbid_bidder_bids'             => 'myBids',
+            'handbid_bidder_proxy_bids'       => 'myProxyBids',
+            'handbid_bidder_purchases'        => 'myPurchases',
+            'handbid_bidder_profile_form'     => 'bidderProfileForm',
+            'handbid_is_logged_in'            => 'isLoggedIn',
+            'handbid_is_logged_out'           => 'isLoggedOut',
+            'handbid_breadcrumb'              => 'breadcrumbs',
+            'handbid_bidder_credit_cards'     => 'myCreditCards',
+            'handbid_bidder_credit_card_form' => 'bidderCreditCardForm'
         ];
 
         forEach ($shortCodes as $shortCode => $callback) {
@@ -117,13 +119,11 @@ class ShortCodeController
             $org = $this->state->currentOrg();
 
 
-            if(isset($attributes['type'])) {
+            if (isset($attributes['type'])) {
                 if (!in_array($attributes['type'], ['upcoming', 'all', 'past'])) {
                     $attributes['type'] = 'upcoming';
                 }
-            }
-            else
-            {
+            } else {
                 $attributes['type'] = 'upcoming';
             }
 
@@ -218,13 +218,13 @@ class ShortCodeController
 
             try {
 
-                $profile           = $this->handbid->store('Bidder')->myProfile($auction->_id);
-                if($profile) {
+                $profile = $this->handbid->store('Bidder')->myProfile($auction->_id);
+                if ($profile) {
 
-                    $totalWinning      = count($this->handbid->store('Bid')->myBids($profile->pin, $auction->_id));
-                    $totalLosing       = count($this->handbid->store('Bid')->myLosing($profile->pin, $auction->_id));
-                    $totalProxies      = count($this->handbid->store('Bid')->myProxyBids($profile->pin, $auction->_id));
-                    $totalPurchases    = count($this->handbid->store('Bid')->myPurchases($profile->pin, $auction->_id));
+                    $totalWinning   = count($this->handbid->store('Bid')->myBids($profile->pin, $auction->_id));
+                    $totalLosing    = count($this->handbid->store('Bid')->myLosing($profile->pin, $auction->_id));
+                    $totalProxies   = count($this->handbid->store('Bid')->myProxyBids($profile->pin, $auction->_id));
+                    $totalPurchases = count($this->handbid->store('Bid')->myPurchases($profile->pin, $auction->_id));
 
                 }
 
@@ -235,18 +235,18 @@ class ShortCodeController
 
             }
 
-            $template   = $this->templateFromAttributes($attributes, 'views/auction/banner');
+            $template = $this->templateFromAttributes($attributes, 'views/auction/banner');
 
             return $this->viewRenderer->render(
                 $template,
                 [
-                    'auction'       => $auction,
-                    'coordinates'   => $coords,
-                    'winningBids'   => $totalWinning,
-                    'losingBids'    => $totalLosing,
-                    'purchases'     => $totalPurchases,
-                    'profile'       => $profile,
-                    'proxies'       => $totalProxies
+                    'auction'     => $auction,
+                    'coordinates' => $coords,
+                    'winningBids' => $totalWinning,
+                    'losingBids'  => $totalLosing,
+                    'purchases'   => $totalPurchases,
+                    'profile'     => $profile,
+                    'proxies'     => $totalProxies
                 ]
             );
 
@@ -382,8 +382,8 @@ class ShortCodeController
 
             $item = $this->state->currentItem();
 
-            $bids       = $this->handbid->store('Bid')->itemBids($item->_id);
-            $profile    = $this->handbid->store('Bidder')->myProfile();
+            $bids    = $this->handbid->store('Bid')->itemBids($item->_id);
+            $profile = $this->handbid->store('Bidder')->myProfile();
 
             return $this->viewRenderer->render(
                 $template,
@@ -409,9 +409,9 @@ class ShortCodeController
 
             $item = $this->state->currentItem();
 
-            $bidStore   = $this->handbid->store('Bid');
-            $bids       = $bidStore->itemBids($item->_id);
-            $profile    = $this->handbid->store('Bidder')->myProfile();
+            $bidStore = $this->handbid->store('Bid');
+            $bids     = $bidStore->itemBids($item->_id);
+            $profile  = $this->handbid->store('Bidder')->myProfile();
 
             return $this->viewRenderer->render(
                 $template,
@@ -557,17 +557,17 @@ class ShortCodeController
 
         try {
             $template = $this->templateFromAttributes($attributes, 'views/bidder/profile');
-            $profile = $this->handbid->store('Bidder')->myProfile();
+            $profile  = $this->handbid->store('Bidder')->myProfile();
 
 
-            $img = wp_get_image_editor( $profile->photo );
-            if ( ! is_wp_error( $img ) ) {
-                $img->resize( 250, false, true );
-                $img->save(ABSPATH.'wp-content/uploads/user-photos/' . $profile->pin . '.jpg');
+            $img = wp_get_image_editor($profile->photo);
+            if (!is_wp_error($img)) {
+                $img->resize(250, false, true);
+                $img->save(ABSPATH . 'wp-content/uploads/user-photos/' . $profile->pin . '.jpg');
                 $newPhoto = get_site_url() . '/wp-content/uploads/user-photos/' . $profile->pin . '.jpg';
             }
 
-            if(isset($newPhoto)) {
+            if (isset($newPhoto)) {
                 $profile->photo = $newPhoto;
             }
 
@@ -578,7 +578,7 @@ class ShortCodeController
                 ]
             );
         } catch (Exception $e) {
-            echo "Profile could not be loaded, Please try again later.";
+            echo "Profile could not be loaded. Please try again later.";
             error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
             return;
         }
@@ -622,7 +622,25 @@ class ShortCodeController
                 ]
             );
         } catch (Exception $e) {
-            echo "Max bids could not be loaded, Please try again later.";
+            echo "Max bids could not be loaded. Please try again later.";
+            error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
+            return;
+        }
+    }
+
+    public function myCreditCards($attributes)
+    {
+        try {
+            $template = $this->templateFromAttributes($attributes, 'views/bidder/credit-cards');
+            $profile  = $this->handbid->store('Bidder')->myProfile();
+            return $this->viewRenderer->render(
+                $template,
+                [
+                    'cards' => $this->handbid->store('CreditCard')->byOwner($profile->_id)
+                ]
+            );
+        } catch (Exception $e) {
+            echo "You credit cards could not be loaded. Please try again later.";
             error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
             return;
         }
@@ -631,6 +649,7 @@ class ShortCodeController
     public function myPurchases($attributes)
     {
         try {
+
             $template = $this->templateFromAttributes($attributes, 'views/bidder/purchases');
             $profile  = $this->handbid->store('Bidder')->myProfile();
             $auction  = $this->state->currentAuction();
@@ -642,6 +661,7 @@ class ShortCodeController
                     'auction'   => $auction
                 ]
             );
+
         } catch (Exception $e) {
             echo "purchases could not be loaded, Please try again later.";
             error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
@@ -652,52 +672,79 @@ class ShortCodeController
     public function bidderProfileForm($attributes)
     {
         try {
+
             $template = $this->templateFromAttributes($attributes, 'views/bidder/profile-form');
-
-            $profile = $this->handbid->store('Bidder')->myProfile();
-            $creditCard = $this->handbid->store('CreditCard')->getCardByOwnerId($profile->_id);
-
+            $profile  = $this->handbid->store('Bidder')->myProfile();
 
             return $this->viewRenderer->render(
                 $template,
                 [
-                    'profile'    => $profile,
-                    'creditCard' => $creditCard
+                    'profile' => $profile
 
                 ]
             );
         } catch (Exception $e) {
+
             echo "Your profile could not be loaded, Please try again later.";
+            error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
+
+            return;
+        }
+    }
+
+    public function bidderCreditCardForm($attributes)
+    {
+        try {
+
+            $template = $this->templateFromAttributes($attributes, 'views/bidder/credit-card-form');
+            $profile  = $this->handbid->store('Bidder')->myProfile();
+
+            return $this->viewRenderer->render(
+                $template,
+                [
+                    'profile' => $profile
+
+                ]
+            );
+
+        } catch (Exception $e) {
+            echo "Your credit cards could not be loaded, Please try again later.";
             error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
             return;
         }
     }
 
-    public function updateBidderFormSubmit() {
+    public function updateBidderFormSubmit()
+    {
 
     }
 
-    public function isLoggedIn($attributes, $content) {
+    public function isLoggedIn($attributes, $content)
+    {
         $profile = $this->handbid->store('Bidder')->myProfile();
-        if($profile) {
+        if ($profile) {
             echo do_shortcode($content);
         }
     }
 
-    public function isLoggedOut($attributes, $content) {
+    public function isLoggedOut($attributes, $content)
+    {
         $profile = $this->handbid->store('Bidder')->myProfile();
-        if(!$profile) {
+        if (!$profile) {
             echo do_shortcode($content);
         }
     }
 
-    public function breadcrumbs($attributes) {
+    public function breadcrumbs($attributes)
+    {
 
         try {
             $template = $this->templateFromAttributes($attributes, 'views/navigation/breadcrumb');
-            $auction = $this->state->currentAuction([
+            $auction  = $this->state->currentAuction(
+                [
                     'breadcrumb' => true
-                ]);
+                ]
+            );
 
             return $this->viewRenderer->render(
                 $template,
