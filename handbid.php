@@ -96,8 +96,8 @@ class Handbid
 
     function install()
     {
-        $install = new Install();
-        $install->install();
+        // As of PHP4 this will create a new Class of Install and call the install function
+        new Install();
         flush_rewrite_rules();
     }
 
@@ -118,9 +118,6 @@ class Handbid
         );
 
         //make this a settings
-//        wp_register_script('handbidCore', '//handbid-js.local/handbid.js');
-//        wp_register_script('handbidCore', 'https://handbid-js-handbid.netdna-ssl.com/handbid.js?cachebuster=234234');
-//        wp_register_script('handbidCore', '//beta.js.handbid.com/handbid.js?cachebuster=234234234');
         wp_register_script('handbidCore', get_option('handbidJs', 'https://handbid-js-handbid.netdna-ssl.com/handbid.js?cachebuster=234234'));
         wp_enqueue_script('handbidCore');
 

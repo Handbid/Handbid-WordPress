@@ -16,10 +16,19 @@ Cd into the newly cloned handbid folder and init and update the submodule
     - git submodule init
     - git submodule update
 
-Now that we have the plugin cloned and ready to go lets hop into the admin area and install it (/wp-admin/plugins.php)
+Now the joys of submodules, lets cd inside /lib/Handbid-Php and make sure we are on the master branch and pull just to make sure!
+    - git checkout master
+    - git pull
+
+Next lets hop into the admin area and install the handbid plugin (/wp-admin/plugins.php)
 
 Let's now hop into the handbid admin dashboard to configure our plugin, you can do so by either clicking the handbid link
 in the menu bar or by going to (/wp-admin/admin.php?page=handbid-admin-dashboard).
     - Default Auction key will be used on any auction related shortcodes if a auctionkey is not provided as an attribute
     - Default Organization key will be used if an organization key is not passed as an attribute
     - Facebook App Id will be used for facebook comments support
+
+
+Now that we have the plugin configured we need to make a change to the way wordpress renders its urls so that it is more human friendly to read.
+    - Lets go to the admin sidebar menu and go "Settings" > "Permalinks", change the setting from "Default" to "Post Name"
+
