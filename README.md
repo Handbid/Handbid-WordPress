@@ -1,4 +1,4 @@
-![alt tag](https://raw.githubusercontent.com/Handbid/Handbid-WordPress/master/docs/images/logo.jpg "Handbid")
+->![alt tag](https://raw.githubusercontent.com/Handbid/Handbid-WordPress/master/docs/images/logo.jpg "Handbid")<-
 
 Wordpress Plugin
 ==
