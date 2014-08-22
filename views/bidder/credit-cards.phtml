@@ -9,10 +9,7 @@ if (!is_null($this->get('cards'))) {
 <div class="bidder-info-container">
     <?php
     if (count($cards) > 0) {
-
-    forEach ($cards as $card) {
-    ?>
-
+?>
     <table class="bidder-table">
         <thead>
         <tr>
@@ -22,6 +19,9 @@ if (!is_null($this->get('cards'))) {
             <th>Expiration Year</th>
         </tr>
         </thead>
+<?php
+    forEach ($cards as $card) {
+    ?>
         <tr>
             <td>
                 <?php echo $card->nameOnCard; ?>
@@ -36,10 +36,14 @@ if (!is_null($this->get('cards'))) {
                 <?php echo $card->expYear; ?>
             </td>
         </tr>
-        <?php } ?>
-        <?php } else { ?>
-            You have no cards on file.
-        <?php } ?>
-        <?php echo do_shortcode('[handbid_bidder_credit_card_form]'); ?>
+        <?php
+    }
+    ?>
+
     </table>
+    <?php
+        } else { ?>
+        You have no cards on file.
+    <?php } ?>
+    <?php echo do_shortcode('[handbid_bidder_credit_card_form]'); ?>
 </div>

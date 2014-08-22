@@ -8,35 +8,37 @@ if ($this->get('item')) {
     return;
 }
 ?>
-<table class="bid-history">
-    <?php
-
-    if(count($bids) > 0) {
-        ?>
-        <thead>
-        <tr>
-            <th><?php echo __('Amount'); ?></th>
-            <th><?php echo __('Bidder Pin'); ?></th>
-        </tr>
-        </thead>
+<div class="bidder-info-container">
+    <table class="bidder-table bid-history">
         <?php
-        forEach($bids as $bid) {
+
+        if(count($bids) > 0) {
             ?>
+            <thead>
             <tr>
-                <td>$<?php echo $bid->amount; ?></td>
-                <td><?php echo (isset($profile->pin) && $profile->pin == $bid->winningBidder->pin) ? 'You' : $bid->winningBidder->pin;?></td>
+                <th><?php echo __('Amount'); ?></th>
+                <th><?php echo __('Bidder Pin'); ?></th>
             </tr>
-        <?php
+            </thead>
+            <?php
+            forEach($bids as $bid) {
+                ?>
+                <tr>
+                    <td>$<?php echo $bid->amount; ?></td>
+                    <td><?php echo (isset($profile->pin) && $profile->pin == $bid->winningBidder->pin) ? 'You' : $bid->winningBidder->pin;?></td>
+                </tr>
+            <?php
+            }
         }
-    }
-    else
-    {
-        ?>
-            <tr>
-                <?php echo __('There are no bids on this item'); ?>
-            </tr>
-        <?php
-    }
-        ?>
+        else
+        {
+            ?>
+                <tr>
+                    <?php echo __('There are no bids on this item'); ?>
+                </tr>
+            <?php
+        }
+            ?>
 
-</table>
+    </table>
+</div>
