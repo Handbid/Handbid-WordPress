@@ -49,6 +49,7 @@ $ git pull
 
 ### step 2 - configure the plugin
 Are you using [VVV](https://github.com/Varying-Vagrant-Vagrants/VVV)? If not, you should, it's pretty nice.
+
 1. Visit local.wordpress.dev/wp-admin/plugins.php and activate the plugin
 2. Select the `Handbid` option in the left menu of the admin area
 3. Complete the form
