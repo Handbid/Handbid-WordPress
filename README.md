@@ -53,4 +53,4 @@ Are you using [VVV](https://github.com/Varying-Vagrant-Vagrants/VVV)? If not, yo
 1. Visit local.wordpress.dev/wp-admin/plugins.php and activate the plugin
 2. Select the `Handbid` option in the left menu of the admin area
 3. Complete the form
-4. Visit "Settings" > "Permalinks" and change "Default" to "Post Name
+4. Visit "Settings" > "Permalinks" and change "Default" to "Post Name"
