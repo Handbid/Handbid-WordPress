@@ -64,7 +64,7 @@ Are you using [VVV](https://github.com/Varying-Vagrant-Vagrants/VVV)? If not, yo
 4. Same empty shortcode exists for items [handbid_item]. it seems to have turned into [handbid_item_detail]
     - suggest you remove unused shortcodes
 5. views/auction/logo.phtml puts all auctions in a div with class="clientListBlock"
-    - suggest you change it to auctionListBlock (unless "client" means something)
+    - suggest you change it to auction-list (unless "client" or "block" means something)
 6. there is a mix of camelCase and hyphen-seperated class names
      - suggest you go with hyphen '-' since that is what bootstrap and wordpress use (and this is the worpdress plugin)
 7. views/auction/full.phtml errors out of the gate: https://www.dropbox.com/s/znmx83tn9ytdbqo/Screenshot%202014-08-25%2016.53.56.png?dl=0
