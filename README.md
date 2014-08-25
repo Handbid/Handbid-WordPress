@@ -1,6 +1,6 @@
 ![alt tag](https://raw.githubusercontent.com/Handbid/Handbid-WordPress/master/docs/images/handbid.png "Handbid")
 
-Wordpress Plugin
+Wordpress Plugin - Dev only (not for use by non-contributors yet)
 ====
 
 **This plugin is a work in progress**.
@@ -32,3 +32,24 @@ in the menu bar or by going to (/wp-admin/admin.php?page=handbid-admin-dashboard
 Now that we have the plugin configured we need to make a change to the way wordpress renders its urls so that it is more human friendly to read.
     - Lets go to the admin sidebar menu and go "Settings" > "Permalinks", change the setting from "Default" to "Post Name"
 
+
+
+### step 1 - get the code
+We'll assume you are in the root of your Wordpress install.
+
+```bash
+$git clone git@github.com:Handbi/Handbid-Worpdress.git wp-content/plugins/handbid
+$cd wp-content/plugins/handbid
+$git submodule init
+$git submodule update
+$cd lib/Handbid-Php
+$git checkout master
+$git pull
+```
+
+### step 2 - configure the plugin
+Are you using [VVV](https://github.com/Varying-Vagrant-Vagrants/VVV)? If not, you should, it's pretty nice.
+1. Visit local.wordpress.dev/wp-admin/plugins.php and activate the plugin
+2. Select the `Handbid` option in the left menu of the admin area
+3. Complete the form
+4. Visit "Settings" > "Permalinks" and change "Default" to "Post Name
