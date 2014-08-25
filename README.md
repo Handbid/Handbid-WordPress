@@ -38,13 +38,13 @@ Now that we have the plugin configured we need to make a change to the way wordp
 We'll assume you are in the root of your Wordpress install.
 
 ```bash
-$git clone git@github.com:Handbi/Handbid-Worpdress.git wp-content/plugins/handbid
-$cd wp-content/plugins/handbid
-$git submodule init
-$git submodule update
-$cd lib/Handbid-Php
-$git checkout master
-$git pull
+$ git clone git@github.com:Handbi/Handbid-Worpdress.git wp-content/plugins/handbid
+$ cd wp-content/plugins/handbid
+$ git submodule init
+$ git submodule update
+$ cd lib/Handbid-Php
+$ git checkout master
+$ git pull
 ```
 
 ### step 2 - configure the plugin
