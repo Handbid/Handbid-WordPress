@@ -34,7 +34,8 @@ class ShortCodeController
             'handbid_organization_auctions'   => 'organizationAuctions',
             'handbid_auction'                 => 'auction',
             'handbid_connect'                 => 'connect',
-            'handbid_auction_results'         => 'auctionResults',
+            'handbid_auction_results'         => 'auctionList', //<- this one is named wrong (or handbid_auction_item_list is)
+            'handbid_auction_list'            => 'auctionList', //<- so I made this one thinking we should deprecate the handbid_auction_results
             'handbid_auction_banner'          => 'auctionBanner',
             'handbid_auction_details'         => 'auctionDetails',
             'handbid_auction_contact_form'    => 'auctionContactForm',
@@ -168,7 +169,7 @@ class ShortCodeController
 
     }
 
-    public function auctionResults($attributes)
+    public function auctionList($attributes)
     {
 
         try {
@@ -183,8 +184,13 @@ class ShortCodeController
                 $attributes['type'] = 'upcoming';
             }
 
-            // Get orgs from handbid server
-            $auctions = $this->handbid->store('Auction')->{$attributes['type']}();
+            //paging and sort
+            $page           = isset($attributes['page']) ? $attributes['page'] : 0;
+            $perPage        = isset($attributes['perpage']) ? $attributes['perPage'] : 25;
+            $sortField      = isset($attributes['sortfield']) ? $attributes['sortfield'] : "name";
+            $sortDirection  = isset($attributes['sortdirection']) ? $attributes['sortdirection'] : "asc";
+
+            $auctions = $this->handbid->store('Auction')->{$attributes['type']}($page, $perPage, $sortField, $sortDirection);
 
             $markup = $this->viewRenderer->render(
                 $template,

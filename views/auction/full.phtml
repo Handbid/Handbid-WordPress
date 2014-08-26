@@ -14,6 +14,7 @@ $dateFormat = 'm/d/Y h:i a';
     </thead>
     <?php
     forEach ($auctions as $auction) {
+
         ?>
         <tr onclick="window.location.href='/auction-detail/?auction=<?php echo $auction->key; ?>'">
             <td class="cell-image cell-first">
