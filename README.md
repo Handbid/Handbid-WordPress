@@ -38,7 +38,7 @@ Now that we have the plugin configured we need to make a change to the way wordp
 We'll assume you are in the root of your Wordpress install.
 
 ```bash
-$ git clone git@github.com:Handbi/Handbid-Worpdress.git wp-content/plugins/handbid
+$ git clone git@github.com:Handbid/Handbid-WordPress.git wp-content/plugins/handbid handbid
 $ cd wp-content/plugins/handbid
 $ git submodule init
 $ git submodule update
@@ -54,3 +54,5 @@ Are you using [VVV](https://github.com/Varying-Vagrant-Vagrants/VVV)? If not, yo
 2. Select the `Handbid` option in the left menu of the admin area
 3. Complete the form
 4. Visit "Settings" > "Permalinks" and change "Default" to "Post Name"
+
+chec
