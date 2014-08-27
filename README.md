@@ -75,3 +75,5 @@ Are you using [VVV](https://github.com/Varying-Vagrant-Vagrants/VVV)? If not, yo
     - suggest we prefix `Handbid` to every class name where it is not already done
 10. redundant code https://www.dropbox.com/s/vct0k5s0ebvny5h/Screenshot%202014-08-25%2017.31.04.png?dl=0
     - consider having itemDescription call item itemResults passing the proper template (or when a change is made, you'll be making the change in many spots)
+11. i added [handbid_organization_list] whose default template is views/organization/list.phtml
+    - maybe we have all [handbid_*_list] default to views/*/list.phtml for consistency?
