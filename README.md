@@ -37,7 +37,7 @@ Now that we have the plugin configured we need to make a change to the way wordp
 We'll assume you are in the root of your Wordpress install.
 
 ```bash
-$ git clone git@github.com:Handbid/Handbid-WordPress.git wp-content/plugins/handbid handbid
+$ git clone git@github.com:Handbid/Handbid-WordPress.git wp-content/plugins/handbid
 $ cd wp-content/plugins/handbid
 $ git submodule init
 $ git submodule update
