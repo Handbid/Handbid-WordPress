@@ -19,7 +19,7 @@ $dateFormat = 'm/d/Y h:i a';
         <tr onclick="window.location.href='/auction-detail/?auction=<?php echo $auction->key; ?>'">
             <td class="cell-image cell-first">
                 <img class="alignnone animated fadeIn" alt="<?php echo $auction->name; ?>"
-                     src="<?php echo $auction->logo; ?>" style="opacity: 0;">
+                     src="<?php echo $auction->logo->medium; ?>" style="opacity: 0;">
             </td>
             <td class="cell-name">
                 <div class="name"><?php echo $auction->name; ?></div>
