@@ -30,15 +30,14 @@ class ShortCodeController
     {
         // Add Plugin ShortCodes
         $shortCodes = [
+            'handbid_pager'                   => 'pager',
             'handbid_organization_list'       => 'organizationList',
             'handbid_organization_details'    => 'organizationDetails',
             'handbid_organization_auctions'   => 'organizationAuctions',
             'handbid_auction'                 => 'auction',
             'handbid_connect'                 => 'connect',
             'handbid_auction_results'         => 'auctionList',
-            //<- this one is named wrong (or handbid_auction_item_list is)
             'handbid_auction_list'            => 'auctionList',
-            //<- so I made this one thinking we should deprecate the handbid_auction_results
             'handbid_auction_banner'          => 'auctionBanner',
             'handbid_auction_details'         => 'auctionDetails',
             'handbid_auction_contact_form'    => 'auctionContactForm',
@@ -189,21 +188,33 @@ class ShortCodeController
 
             //paging and sort
             $page          = isset($attributes['page']) ? $attributes['page'] : 0;
-            $perPage       = isset($attributes['perpage']) ? $attributes['perPage'] : 25;
-            $sortField     = isset($attributes['sortfield']) ? $attributes['sortfield'] : "name";
-            $sortDirection = isset($attributes['sortdirection']) ? $attributes['sortdirection'] : "asc";
+            $pageSize      = isset($attributes['page_size']) ? $attributes['page_size'] : 25;
+            $sortField     = isset($attributes['sort_field']) ? $attributes['sort_field'] : "name";
+            $sortDirection = isset($attributes['sort_direction']) ? $attributes['sort_direction'] : "asc";
+            $id            = isset($attributes['id']) ? $attributes['id'] : 'auctions';
+
+            $query         = [];
 
             $auctions = $this->handbid->store('Auction')->{$attributes['type']}(
                 $page,
-                $perPage,
+                $pageSize,
                 $sortField,
-                $sortDirection
+                $sortDirection,
+                $query
             );
+
+            $total = $this->handbid->store('Auction')->count($query);
+
 
             $markup = $this->viewRenderer->render(
                 $template,
                 [
-                    'auctions' => $auctions
+                    'auctions' => $auctions,
+                    'total'         => $total,
+                    'id'            => $id,
+                    'total'         => $total,
+                    'page_size'     => $pageSize,
+                    'page'          => $page
                 ]
             );
 
@@ -226,19 +237,21 @@ class ShortCodeController
 
             //paging and sort
             $page          = isset($attributes['page']) ? $attributes['page'] : 0;
-            $perPage       = isset($attributes['perpage']) ? $attributes['perPage'] : 25;
-            $sortField     = isset($attributes['sortfield']) ? $attributes['sortfield'] : "name";
-            $sortDirection = isset($attributes['sortdirection']) ? $attributes['sortdirection'] : "asc";
-            $logoWidth     = isset($attributes['logowidth']) ? $attributes['logowidth'] : 200;
-            $logoHeight    = isset($attributes['logoheight']) ? $attributes['logoheight'] : false;
+            $pageSize      = isset($attributes['page_size']) ? $attributes['page_size'] : 25;
+            $sortField     = isset($attributes['sort_field']) ? $attributes['sort_field'] : "name";
+            $sortDirection = isset($attributes['sort_direction']) ? $attributes['sort_direction'] : "asc";
+            $logoWidth     = isset($attributes['logo_width']) ? $attributes['logo_width'] : 200;
+            $logoHeight    = isset($attributes['logo_height']) ? $attributes['logo_height'] : false;
+            $id            = isset($attributes['id']) ? $attributes['id'] : 'orgs';
 
+            $query = [];
 
             $organizations = $this->handbid->store('Organization')->all(
                 $page,
-                $perPage,
+                $pageSize,
                 $sortField,
                 $sortDirection,
-                [],
+                $query,
                 [
                     'logo' => [
                         'w' => $logoWidth,
@@ -247,10 +260,17 @@ class ShortCodeController
                 ]
             );
 
+            $total = $this->handbid->store('Organization')->count($query);
+
             $markup = $this->viewRenderer->render(
                 $template,
                 [
-                    'organizations' => $organizations
+                    'organizations' => $organizations,
+                    'total'         => $total,
+                    'id'            => $id,
+                    'total'         => $total,
+                    'page_size'     => $pageSize,
+                    'page'          => $page
                 ]
             );
 
@@ -816,9 +836,47 @@ class ShortCodeController
                 ]
             );
         } catch (Exception $e) {
+
             echo "Breadcrumb could not be loaded, Please try again later.";
             error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
+
             return;
+
         }
     }
+
+
+    public function pager($attributes)
+    {
+
+        try {
+
+            $template = $this->templateFromAttributes($attributes, 'views/navigation/pager');
+
+            $page     = $attributes['page'];
+            $pageSize = $attributes['page_size'];
+            $total    = $attributes['total'];
+            $id       = $attributes['id'];
+
+
+            return $this->viewRenderer->render(
+                $template,
+                [
+                    'page'      => $page,
+                    'page_size' => $pageSize,
+                    'total'     => $total,
+                    'id'        => $id
+                ]
+            );
+        } catch (Exception $e) {
+
+            error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
+
+            return;
+
+        }
+
+
+    }
+
 }

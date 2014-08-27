@@ -1,0 +1,22 @@
+<?php
+
+$total = $this->get('total');
+$page = $this->get('page');
+$pageSize = $this->get('page_size');
+$pages = ceil($total / $pageSize);
+
+?>
+<ul class="page">
+    <li><a href="#">First</a></li>
+    <li><a href="#">Previous</a></li>
+
+    <?php for ($p = 1; $p <= $pages; $p++) { ?>
+
+        <li><a href="#"><?php echo $p; ?></a></li>
+
+    <?php } ?>
+
+
+    <li><a href="#">Next</a></li>
+    <li><a href="#">Last</a></li>
+</ul>
