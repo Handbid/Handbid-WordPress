@@ -1,0 +1,20 @@
+<?php
+    $organizations = $this->get('organizations');
+?>
+
+<div class="organization-list">
+    <div class="image-grid isotope">
+        <?php
+
+        forEach ($organizations as $org) {
+            ?>
+
+            <a href="/organizations/<?php echo $org->key; ?>" class="">
+                <?php echo $org->name; ?>
+            </a>
+
+        <?php
+        }
+        ?>
+    </div>
+</div>
