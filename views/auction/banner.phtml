@@ -27,18 +27,11 @@ $url    = get_permalink() . '?auction=' . get_query_var('auction');
     <h1 class="title">
         <?php echo $auction->name; ?>
         <span class="auctionDateTime">
-            <?php if($auction->startTime > time()) {
-                ?>
-                Auction Start: <?php echo date('h:i a m/d/Y', $auction->startTime); ?>
-            <?php
-            }
-            else
-            {
-                ?>
-                Auction Closes: <?php echo date('h:i a m/d/Y', $auction->endTime); ?>
-            <?php
-            }
-            ?>
+             <?php if (in_array($auction->status, ['setup', 'presale', 'preview'])) { ?>
+                 Auction Start: <?php echo date('h:i a m/d/Y', $auction->startTime); ?>
+             <?php } else { ?>
+                 Auction End: <?php echo date('h:i a m/d/Y', $auction->endTime); ?>
+             <?php } ?>
         </span>
     </h1>
 </div>
