@@ -55,6 +55,7 @@ class HandbidActionController
                 $values['password2'] = $_POST['password2'];
             }
 
+            $redirect .= '?handbid-notice=' . urlencode('Your profile has been updated.');
             $this->handbid->store('Bidder')->updateProfile($values);
         }
 
@@ -74,8 +75,9 @@ class HandbidActionController
 
             try {
                 $this->handbid->store('CreditCard')->add($bidder->_id, $values);
+                $redirect .= '?handbid-notice=' . urlencode('Your card has been added. Thank you.');
             } catch(\Exception $e) {
-                $redirect .= '?error=' . urlencode($e->getMessage());
+                $redirect .= '?handbid-error=' . urlencode($e->getMessage());
             }
         }
 
