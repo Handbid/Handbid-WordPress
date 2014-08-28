@@ -11,11 +11,11 @@
 }
 
 .powered-by-handbid {
-    display: block;
-    width: 100%;
+    display: inline-block;
     height: 55px;
+    width: 130px;
     background: url('../images/powered-by-handbid.svg') right center no-repeat;
     text-indent: -999em;
     overflow: hidden;
-
+    float: right;
 }

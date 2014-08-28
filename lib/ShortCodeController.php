@@ -715,10 +715,14 @@ class ShortCodeController
         try {
             $template = $this->templateFromAttributes($attributes, 'views/bidder/credit-cards');
             $profile  = $this->handbid->store('Bidder')->myProfile();
+
+            $error    = get_query_var('error');
+
             return $this->viewRenderer->render(
                 $template,
                 [
-                    'cards' => $this->handbid->store('CreditCard')->byOwner($profile->_id)
+                    'cards' => $this->handbid->store('CreditCard')->byOwner($profile->_id),
+                    'error' => $error
                 ]
             );
         } catch (Exception $e) {
