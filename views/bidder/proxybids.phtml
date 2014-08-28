@@ -8,7 +8,7 @@ if (!is_null($this->get('bids'))) {
 }
 
 ?>
-<div class="bidder-info-container">
+<div class="bidder-info-container max-bids">
     <?php
     if (count($bids) > 0) {
         ?>
@@ -18,7 +18,7 @@ if (!is_null($this->get('bids'))) {
             <tr>
                 <th>Max Amount</th>
                 <th>Item</th>
-                <th colspan="2">Action</th>
+                <th>Action</th>
             </tr>
             </thead>
             <?php
@@ -29,10 +29,7 @@ if (!is_null($this->get('bids'))) {
                         <?php echo '$' . $bid->maxAmount; ?>
                     </td>
                     <td>
-                        <a href="/auctions/<?php echo $auction->key; ?>/item/<?php echo $bid->meta['itemKey']; ?>"><?php echo $bid->name; ?></a>
-                    </td>
-                    <td>
-                        <a class="button greenButton" href="/auctions/<?php echo $auction->key; ?>/item/<?php echo $bid->meta['itemKey']; ?>">View</a>
+                        <a href="/auctions/<?php echo $auction->key; ?>/item/<?php echo $bid->meta['itemKey']; ?>"><?php echo ($bid->meta['itemName']) ? $bid->meta['itemName'] : $bid->name; ?></a>
                     </td>
                     <td>
                         <a class="button greenButton" href="#" data-handbid-delete-proxy="<?php echo $bid->_id; ?>"><?php echo __('Delete'); ?></a>
