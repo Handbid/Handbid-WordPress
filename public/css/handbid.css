@@ -9,3 +9,13 @@
     text-align: center;
     font-size: 2em;
 }
+
+.powered-by-handbid {
+    display: block;
+    width: 100%;
+    height: 55px;
+    background: url('../images/powered-by-handbid.svg') right center no-repeat;
+    text-indent: -999em;
+    overflow: hidden;
+
+}
