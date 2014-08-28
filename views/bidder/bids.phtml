@@ -8,7 +8,7 @@ if (!is_null($this->get('winning'))) {
     return;
 }
 ?>
-<div class="bidder-info-container">
+<div class="bidder-info-container winning-losing-bids">
     <?php
     if (!$winning && !$losing) {
         echo "You have no bids";
@@ -34,7 +34,7 @@ if (!is_null($this->get('winning'))) {
                         <?php echo '$' . $bid->amount; ?>
                     </td>
                     <td>
-                        <a href="/auctions/<?php echo $auction->key; ?>/item/<?php echo $bid->meta['itemKey']; ?>"><?php echo $bid->name; ?></a>
+                        <a href="/auctions/<?php echo $auction->key; ?>/item/<?php echo $bid->meta['itemKey']; ?>"><?php echo ($bid->meta['itemKey']) ? $bid->meta['itemKey'] : $bid->name; ?></a>
                     </td>
                     <td>
                         <?php echo date("m/d/Y g:i a", $bid->microtime); ?>
@@ -63,7 +63,7 @@ if (!is_null($this->get('winning'))) {
                         <?php echo '$' . $bid->amount; ?>
                     </td>
                     <td>
-                        <a href="/auctions/<?php echo $auction->key; ?>/item/<?php echo $bid->meta['itemKey']; ?>"><?php echo $bid->name; ?></a>
+                        <a href="/auctions/<?php echo $auction->key; ?>/item/<?php echo $bid->meta['itemKey']; ?>"><?php echo ($bid->meta['itemKey']) ? $bid->meta['itemKey'] : $bid->name; ?></a>
                     </td>
                     <td>
                         <?php echo date("m/d/Y g:i a", $bid->microtime); ?>
