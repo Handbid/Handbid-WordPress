@@ -77,3 +77,10 @@ Are you using [VVV](https://github.com/Varying-Vagrant-Vagrants/VVV)? If not, yo
     - consider having itemDescription call item itemResults passing the proper template (or when a change is made, you'll be making the change in many spots)
 11. i added [handbid_organization_list] whose default template is views/organization/list.phtml
     - maybe we have all [handbid_*_list] default to views/*/list.phtml for consistency?
+
+### Attribution
+Place the following markup at the bottom of any page that uses handbid functionality
+
+```html
+<a href="http://handbid.com" target="_blank" class="powered-by-handbid">Powered by Handbid</a>
+```
