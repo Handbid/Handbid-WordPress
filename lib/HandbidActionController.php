@@ -5,11 +5,13 @@ class HandbidActionController
 
     public $viewRenderer;
     public $handbid;
+    public $state;
 
-    public function __construct(HandbidViewRenderer $viewRenderer, $handbid)
+    public function __construct(HandbidViewRenderer $viewRenderer, $handbid, $state)
     {
         $this->viewRenderer = $viewRenderer;
         $this->handbid      = $handbid;
+        $this->state        = $state;
 
     }
 
@@ -17,6 +19,68 @@ class HandbidActionController
     {
         add_feed('handbid-logout', [$this, 'handbid_logout_callback']);
         $this->rewriteRules();
+
+        $titleForPost = function ($title, $post, $sep = null) {
+
+            $title = '';
+
+            if ($post && $post->post_name == 'auction-item') {
+
+                $item = $this->state->currentItem();
+                if($item) {
+                    $post->post_title = $item->name;
+                    if($sep) {
+                        $title = ' ' . $sep . ' ' . $post->post_title;
+                    } else {
+                        $title = $post->post_title;
+                    }
+
+                }
+
+            } else if($post && $post->post_name == 'auction') {
+
+                $auction = $this->state->currentAuction();
+                if($auction) {
+                    $post->post_title = $auction->name;
+                    if($sep) {
+                        $title = ' ' . $sep . ' ' . $post->post_title;
+                    } else {
+                        $title = $post->post_title;
+                    }
+                }
+
+            }
+
+            return $title;
+        };
+
+        add_filter('wp_title', function ($title, $sep, $seplocation) use ($titleForPost) {
+
+                global $post;
+
+                return $titleForPost($title, $post, $sep);
+
+                return $title;
+
+        }, 10, 3);
+
+        //modify currently loaded post to match auction or item name
+        add_filter(
+            'the_title',
+            function ($pageTitle, $id) use ($titleForPost) {
+
+                global $post;
+
+                if($post->ID != $id) {
+                    return $pageTitle;
+                }
+
+                return $titleForPost('', $post);
+
+
+
+            }, 10, 2
+        );
     }
 
     function rewriteRules()
@@ -57,27 +121,27 @@ class HandbidActionController
 
             $redirect .= '?handbid-notice=' . urlencode('Your profile has been updated.');
             $this->handbid->store('Bidder')->updateProfile($values);
-        }
+        } else {
+            if ($_POST['form-id'] == "handbid-add-creditcard") {
 
-        else if ($_POST['form-id'] == "handbid-add-creditcard") {
+                $values = [
+                    'nameOnCard' => $_POST['nameOnCard'],
+                    'cardNum'    => $_POST['cardNum'],
+                    'cvc'        => $_POST['cvc'],
+                    'expMonth'   => $_POST['expMonth'],
+                    'expYear'    => $_POST['expYear'],
+                ];
+                // handbid-add-creditcard
+                //handbid-edit-creditcard-x
 
-            $values = [
-                'nameOnCard'     => $_POST['nameOnCard'],
-                'cardNum'  => $_POST['cardNum'],
-                'cvc'      => $_POST['cvc'],
-                'expMonth' => $_POST['expMonth'],
-                'expYear'  => $_POST['expYear'],
-            ];
-            // handbid-add-creditcard
-            //handbid-edit-creditcard-x
+                $bidder = $this->handbid->store('Bidder')->myProfile();
 
-            $bidder = $this->handbid->store('Bidder')->myProfile();
-
-            try {
-                $this->handbid->store('CreditCard')->add($bidder->_id, $values);
-                $redirect .= '?handbid-notice=' . urlencode('Your card has been added. Thank you.');
-            } catch(\Exception $e) {
-                $redirect .= '?handbid-error=' . urlencode($e->getMessage());
+                try {
+                    $this->handbid->store('CreditCard')->add($bidder->_id, $values);
+                    $redirect .= '?handbid-notice=' . urlencode('Your card has been added. Thank you.');
+                } catch (\Exception $e) {
+                    $redirect .= '?handbid-error=' . urlencode($e->getMessage());
+                }
             }
         }
 

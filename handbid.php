@@ -167,7 +167,7 @@ class Handbid
             $viewRenderer = $this->viewRender;
         }
 
-        return new HandbidActionController($viewRenderer, $this->handbid);
+        return new HandbidActionController($viewRenderer, $this->handbid, $this->state);
     }
 
     function createAdminActionController($viewRenderer = false)
