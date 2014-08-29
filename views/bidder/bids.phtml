@@ -63,7 +63,7 @@ if (!is_null($this->get('winning'))) {
                         <?php echo '$' . $bid->amount; ?>
                     </td>
                     <td>
-                        <a href="/auctions/<?php echo $auction->key; ?>/item/<?php echo $bid->meta['itemKey']; ?>"><?php echo ($bid->meta['itemName']) ? $bid->meta['itemName'] : $bid->name; ?></a>
+                        <a class="losing-item" href="/auctions/<?php echo $auction->key; ?>/item/<?php echo $bid->meta['itemKey']; ?>"><?php echo ($bid->meta['itemName']) ? $bid->meta['itemName'] : $bid->name; ?></a>
                     </td>
                     <td>
                         <?php echo date("m/d/Y g:i a", $bid->microtime); ?>
