@@ -22,8 +22,6 @@ class HandbidActionController
 
         $titleForPost = function ($title, $post, $sep = null) {
 
-            $title = '';
-
             if ($post && $post->post_name == 'auction-item') {
 
                 $item = $this->state->currentItem();
@@ -75,7 +73,7 @@ class HandbidActionController
                     return $pageTitle;
                 }
 
-                return $titleForPost('', $post);
+                return $titleForPost($pageTitle, $post);
 
 
 
