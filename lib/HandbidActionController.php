@@ -89,6 +89,7 @@ class HandbidActionController
                     $item = $this->state->currentItem();
                     if($item) {
                         echo '<meta property="og:image" content="' . $item->images[0] . '" />';
+                        echo '<link rel=”image_src” href=”' . $item->images[0] . '” />';
                     }
                 }
         });
