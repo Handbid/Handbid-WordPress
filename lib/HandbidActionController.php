@@ -79,6 +79,19 @@ class HandbidActionController
 
             }, 10, 2
         );
+
+        add_action('wp_head', function() {
+
+                global $post;
+
+                if ($post && $post->post_name == 'auction-item') {
+
+                    $item = $this->state->currentItem();
+                    if($item) {
+                        echo '<meta property="og:image" content="' . $item->images[0] . '" />';
+                    }
+                }
+        });
     }
 
     function rewriteRules()

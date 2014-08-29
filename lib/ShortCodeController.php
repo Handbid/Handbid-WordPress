@@ -36,7 +36,6 @@ class ShortCodeController
             'handbid_organization_auctions'   => 'organizationAuctions',
             'handbid_auction'                 => 'auction',
             'handbid_connect'                 => 'connect',
-            'handbid_auction_results'         => 'auctionList',
             'handbid_auction_list'            => 'auctionList',
             'handbid_auction_banner'          => 'auctionBanner',
             'handbid_auction_details'         => 'auctionDetails',
@@ -193,7 +192,7 @@ class ShortCodeController
             $sortDirection = isset($attributes['sort_direction']) ? $attributes['sort_direction'] : "asc";
             $id            = isset($attributes['id']) ? $attributes['id'] : 'auctions';
 
-            $query         = [];
+            $query = [];
 
             $auctions = $this->handbid->store('Auction')->{$attributes['type']}(
                 $page,
@@ -209,12 +208,12 @@ class ShortCodeController
             $markup = $this->viewRenderer->render(
                 $template,
                 [
-                    'auctions' => $auctions,
-                    'total'         => $total,
-                    'id'            => $id,
-                    'total'         => $total,
-                    'page_size'     => $pageSize,
-                    'page'          => $page
+                    'auctions'  => $auctions,
+                    'total'     => $total,
+                    'id'        => $id,
+                    'total'     => $total,
+                    'page_size' => $pageSize,
+                    'page'      => $page
                 ]
             );
 
@@ -716,13 +715,10 @@ class ShortCodeController
             $template = $this->templateFromAttributes($attributes, 'views/bidder/credit-cards');
             $profile  = $this->handbid->store('Bidder')->myProfile();
 
-            $error    = get_query_var('error');
-
             return $this->viewRenderer->render(
                 $template,
                 [
-                    'cards' => $this->handbid->store('CreditCard')->byOwner($profile->_id),
-                    'error' => $error
+                    'cards' => $this->handbid->store('CreditCard')->byOwner($profile->_id)
                 ]
             );
         } catch (Exception $e) {

@@ -220,7 +220,6 @@ class Handbid
         $qvars[] = 'organization';
         $qvars[] = 'auction';
         $qvars[] = 'item';
-        $qvars[] = 'error';
         return $qvars;
     }
 
