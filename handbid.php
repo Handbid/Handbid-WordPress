@@ -2,8 +2,8 @@
 
 /**
  * Plugin Name: Handbid
- * Author: Jon Hemstreet
- * Author URI: http://www.jonhemstreet.com
+ * Author: Handbid
+ * Author URI: http://www.handbid.com
  * Version: 0.0.1.9
  * Description: Handbid is fully automated mobile silent auction software specifically designed to increase revenue,
  * drive bid activity, and maximize ROI for non-profits. Eliminating the need for paper bid sheets, Handbid empowers
