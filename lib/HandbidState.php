@@ -1,6 +1,6 @@
 <?php
 
-class State
+class HandbidState
 {
 
     public $basePath;

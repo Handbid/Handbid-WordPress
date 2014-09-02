@@ -1,10 +1,9 @@
 <?php
 
-class Install
+class HandbidInstall
 {
 
-    function install()
-    {
+    function __construct() {
         $this->createPages();
     }
 
@@ -36,10 +35,17 @@ class Install
             'auctionItem' => [
                 'post_type'    => 'page',
                 'post_title'   => 'Auction Item',
-                'post_name'    => 'item',
+                'post_name'    => 'auction item',
                 'post_content' => 'Auction Item',
                 'post_status'  => 'publish'
             ],
+            'bidder' => [
+                'post_type'    => 'page',
+                'post_title'   => 'Bidder',
+                'post_name'    => 'bidder',
+                'post_content' => 'Bidder',
+                'post_status'  => 'publish'
+            ]
         ];
 
 

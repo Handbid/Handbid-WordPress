@@ -20,7 +20,7 @@ Now the joys of submodules, lets cd inside /lib/Handbid-Php and make sure we are
     - git checkout master
     - git pull
 
-Next lets hop into the admin area and install the handbid plugin (/wp-admin/plugins.php)
+Next lets hop into the admin area in the browser and install the handbid plugin (/wp-admin/plugins.php)
 
 Let's now hop into the handbid admin dashboard to configure our plugin, you can do so by either clicking the handbid link
 in the menu bar or by going to (/wp-admin/admin.php?page=handbid-admin-dashboard).
@@ -63,15 +63,15 @@ Are you using [VVV](https://github.com/Varying-Vagrant-Vagrants/VVV)? If not, yo
     - suggest you remove unused shortcodes
 4. Same empty shortcode exists for items [handbid_item]. it seems to have turned into [handbid_item_detail]
     - suggest you remove unused shortcodes
-5. views/auction/logo.phtml puts all auctions in a div with class="clientListBlock"
+√ 5. views/auction/logo.phtml puts all auctions in a div with class="clientListBlock"
     - suggest you change it to auction-list (unless "client" or "block" means something)
 6. there is a mix of camelCase and hyphen-seperated class names
      - suggest you go with hyphen '-' since that is what bootstrap and wordpress use (and this is the worpdress plugin)
 7. views/auction/full.phtml errors out of the gate: https://www.dropbox.com/s/znmx83tn9ytdbqo/Screenshot%202014-08-25%2016.53.56.png?dl=0
     - suggest you test every template so they don't ship with errors
-8. stylesheet id's are hyphen seperated for everything but ours (which are camelCase) https://www.dropbox.com/s/3xvpoewmz1z4nrr/Screenshot%202014-08-25%2017.21.10.png?dl=0
+√ 8. stylesheet id's are hyphen seperated for everything but ours (which are camelCase) https://www.dropbox.com/s/3xvpoewmz1z4nrr/Screenshot%202014-08-25%2017.21.10.png?dl=0
     - we should always stay consistent with the environment we are using (we are guests here)
-9. shouldn't ShortCodeController be prefixed with Handbid? In fact, shouldn't every class we introduce into Wordpress be named that way? https://www.dropbox.com/s/voe1f9hznxh6nj3/Screenshot%202014-08-25%2017.23.31.png?dl=0
+√ 9. shouldn't ShortCodeController be prefixed with Handbid? In fact, shouldn't every class we introduce into Wordpress be named that way? https://www.dropbox.com/s/voe1f9hznxh6nj3/Screenshot%202014-08-25%2017.23.31.png?dl=0
     - suggest we prefix `Handbid` to every class name where it is not already done
 10. redundant code https://www.dropbox.com/s/vct0k5s0ebvny5h/Screenshot%202014-08-25%2017.31.04.png?dl=0
     - consider having itemDescription call item itemResults passing the proper template (or when a change is made, you'll be making the change in many spots)
@@ -79,7 +79,6 @@ Are you using [VVV](https://github.com/Varying-Vagrant-Vagrants/VVV)? If not, yo
     - maybe we have all [handbid_*_list] default to views/*/list.phtml for consistency?
 
 ### Attribution
-Place the following markup at the bottom of any page that uses handbid functionality
 
 ```html
 <a href="http://handbid.com" target="_blank" class="powered-by-handbid">Powered by Handbid</a>

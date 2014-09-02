@@ -1,6 +1,6 @@
 <?php
 
-class Auth {
+class HandbidAuth {
     var $appId = null,
         $apiKey = null;
 

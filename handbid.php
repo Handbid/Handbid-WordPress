@@ -67,13 +67,13 @@ class Handbid
         $this->routeController       = isset($options['routeController']) ? $options['routeController'] : $this->createRouteController(
         );
 
-        register_activation_hook( __FILE__, [ $this, 'install' ] );
+        register_activation_hook(__FILE__, [$this, 'install']);
         add_action('init', [$this, 'init']);
         add_action('wp_footer', [$this, 'onRenderFooter']);
         add_filter('query_vars', [$this, 'registerVariables']);
 
         // Temporary fix for showing admin bar
-        add_action('after_setup_theme', [ $this, 'remove_admin_bar' ]);
+        add_action('after_setup_theme', [$this, 'remove_admin_bar']);
 
     }
 
@@ -88,8 +88,14 @@ class Handbid
         $this->adminActionController->init();
         $this->routeController->init();
 
-        add_action('admin_post_submit-form', [$this->actionController, '_handle_form_action']); // If the user is logged in
-        add_action('admin_post_nopriv_submit-form', [$this->actionController, '_handle_form_action']); // If the user in not logged in
+        add_action(
+            'admin_post_submit-form',
+            [$this->actionController, '_handle_form_action']
+        ); // If the user is logged in
+        add_action(
+            'admin_post_nopriv_submit-form',
+            [$this->actionController, '_handle_form_action']
+        ); // If the user in not logged in
 
 
     }
@@ -97,28 +103,26 @@ class Handbid
     function install()
     {
         // As of PHP4 this will create a new Class of Install and call the install function
-        new Install();
+        new HandbidInstall();
         flush_rewrite_rules();
     }
 
-    function uninstall()
-    {
-        $uninstall = new Uninstall();
-        $uninstall->uninstall();
-    }
 
     // Javascript
     function initScripts()
     {
 
         $scripts = array(
-            'handbidIsotope'       => 'public/js/isotope.pkgd.min.js',
-            'handbidUnslider'      => 'public/js/unslider.min.js',
-            'handbidPhotoGallery'  => 'public/js/photoGallery.js',
+            'handbid-isotope'       => 'public/js/isotope.pkgd.min.js',
+            'handbid-unslider'      => 'public/js/unslider.min.js',
+            'handbid-photo-gallery' => 'public/js/photoGallery.js',
         );
 
         //make this a settings
-        wp_register_script('handbidCore', get_option('handbidJs', 'https://handbid-js-handbid.netdna-ssl.com/handbid.js?cachebuster=234234'));
+        wp_register_script(
+            'handbidCore',
+            get_option('handbidJs', 'https://handbid-js-handbid.netdna-ssl.com/handbid.js?cachebuster=234234')
+        );
         wp_enqueue_script('handbidCore');
 
         foreach ($scripts as $key => $sc) {
@@ -127,13 +131,13 @@ class Handbid
         }
 
         $styles = array(
-            'handidModal' => 'public/css/modal.css',
-            'handbidGenericStyles' => 'public/css/handbid.css'
+            'handid-modal'           => 'public/css/modal.css',
+            'handbid-generic-styles' => 'public/css/handbid.css'
         );
 
         foreach ($styles as $key => $sc) {
-            wp_register_style( $key, plugins_url($sc, __FILE__));
-            wp_enqueue_style( $key );
+            wp_register_style($key, plugins_url($sc, __FILE__));
+            wp_enqueue_style($key);
         }
 
     }
@@ -154,7 +158,7 @@ class Handbid
     {
 
         if (!$this->state) {
-            $this->state = new state($this->basePath, $this->handbid);
+            $this->state = new HandbidState($this->basePath, $this->handbid);
         }
 
         return $this->state;
@@ -210,7 +214,7 @@ class Handbid
         if (!$state) {
             $state = $this->state;
         }
-        return new ShortCodeController($handbid, $viewRenderer, $this->basePath, $state);
+        return new HandbidShortCodeController($handbid, $viewRenderer, $this->basePath, $state);
 
     }
 
@@ -225,24 +229,27 @@ class Handbid
 
 
     // Temporary fix to remove admin bar
-    function remove_admin_bar() {
+    function remove_admin_bar()
+    {
         if (!current_user_can('administrator') && !is_admin()) {
             show_admin_bar(false);
         }
     }
 
-    function onRenderFooter() {
-        if($this->state()->currentAuction()) {
+    function onRenderFooter()
+    {
+        if ($this->state()->currentAuction()) {
 
-            echo '<script type="text/javascript">handbid.connectToAuction("' . $this->state()->currentAuction()->key . '");</script>';
+            echo '<script type="text/javascript">handbid.connectToAuction("' . $this->state()->currentAuction(
+                )->key . '");</script>';
 
         }
     }
 
-    function logout() {
+    function logout()
+    {
         $this->handbid->logout();
     }
-
 
 
 }
