@@ -28,8 +28,8 @@ if ($this->get('categories') || $this->get('items') || $this->get('donors')) {
                     <div class="itemBox" data-handbid-item-key="<?php echo $item->key; ?>">
                         <a title="<?php echo $item->name; ?>" href="/auctions/<?php echo $auction->key; ?>/item/<?php echo $item->key; ?>">
                             <div class="inner">
-                                <div class="topBox" data-style="background-image:url('<?php echo $item->images[0]; ?>')">
-                                    <?php echo generate_plate($item->name); ?>
+                                <div class="topBox">
+                                    <img src="<?php echo $item->images[0]; ?>"/>
                                 </div>
                                 <?php if ($item->status == "sold") {
                                     ?>

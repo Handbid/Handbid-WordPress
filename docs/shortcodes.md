@@ -15,3 +15,8 @@ keep in mind that these are only useful for auction shortcodes and will not work
 ```
    echo do_shortcode('[handbid_auction_banner auctionKey="my-awesome-auction"]');
 ```
+
+### Item
+```
+    [handbid_item template="views/item/description"]
+```

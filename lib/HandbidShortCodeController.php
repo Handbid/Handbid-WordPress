@@ -1,6 +1,6 @@
 <?php
 
-class ShortCodeController
+class HandbidShortCodeController
 {
 
     public $viewRenderer;
@@ -44,7 +44,6 @@ class ShortCodeController
             'handbid_bid_now'                 => 'bidNow',
             'handbid_item'                    => 'item',
             'handbid_item_results'            => 'itemResults',
-            'handbid_item_description'        => 'itemDescription',
             'handbid_item_search_bar'         => 'itemSearchBar',
             'handbid_item_bid_history'        => 'itemBidHistory',
             'handbid_ticket_buy'              => 'ticketBuy',
@@ -419,31 +418,14 @@ class ShortCodeController
 
             $items = $this->handbid->store('Item')->biddableByAuction($auction->_id, $query);
 
-            $donorsDirty     = [];
-            $categoriesDirty = [
-                '_all' => 'All'
-            ];
-
-            forEach ($items as $item) {
-                if (isset($item->donor)) {
-                    $donorsDirty[] = $item->donor;
-                }
-                if (isset($item->term)) {
-                    $categoriesDirty[] = $item->term;
-                }
-            }
-
-            $donors     = array_unique($donorsDirty);
-            $categories = array_unique($categoriesDirty);
             $auction    = $this->state->currentAuction();
 
             $template = $this->templateFromAttributes($attributes, 'views/item/list');
+
             return $this->viewRenderer->render(
                 $template,
                 [
-                    'categories' => $categories,
                     'items'      => $items,
-                    'donors'     => $donors,
                     'auction'    => $auction
                 ]
             );
