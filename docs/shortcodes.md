@@ -6,6 +6,7 @@ Table of Contents
 ===
 - [Auctions](#auctions)
 - [Items](#items)
+- [Control Flow](#control-flow)
 - [Customization](#customization)
 
 ### Auctions
@@ -24,6 +25,26 @@ If you want to specify which auction you want the to display ( other than the de
 ### Items
 ```
     [handbid_item template="views/item/description"]
+```
+
+## Control flow
+Handbid has the ability to know if a user is logged in vs logged out. You can do so by wrapping any logic you
+wish to be only available to certain users by wrapping the content in the shortcode
+
+```
+    [handbid_is_logged_in]
+        Logged In
+    [/handbid_is_logged_in]
+    [handbid_is_logged_out]
+        Logged Out
+    [/handbid_is_logged_out]
+```
+
+You are also provided with breadcrumb support which is a basic bread crumb system with the
+ability to distinguish what auctions and or Item you are on, this will output a bread crumb menu
+
+```
+    [handbid_breadcrumb]
 ```
 
 ### Customization

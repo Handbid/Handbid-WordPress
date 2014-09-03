@@ -42,6 +42,7 @@ class HandbidShortCodeController
             'handbid_auction_contact_form'    => 'auctionContactForm',
             'handbid_auction_item_list'       => 'auctionItemList',
             'handbid_bid_now'                 => 'bidNow',
+            'handbid_item'                    => 'item',
             'handbid_item_results'            => 'itemResults',
             'handbid_item_search_bar'         => 'itemSearchBar',
             'handbid_item_bid_history'        => 'itemBidHistory',
