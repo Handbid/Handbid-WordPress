@@ -46,7 +46,6 @@ class HandbidShortCodeController
             'handbid_item_results'            => 'itemResults',
             'handbid_item_search_bar'         => 'itemSearchBar',
             'handbid_item_bid_history'        => 'itemBidHistory',
-            'handbid_ticket_buy'              => 'ticketBuy',
             'handbid_image_gallery'           => 'imageGallery',
             'handbid_facebook_comments'       => 'facebookComments',
             'handbid_bidder_profile'          => 'myProfile',
@@ -531,18 +530,6 @@ class HandbidShortCodeController
         try {
         } catch (Exception $e) {
             echo "Search bar could not be loaded, Please try again later.";
-            error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
-            return;
-        }
-    }
-
-    // Tickets
-    public function ticketBuy($attributes)
-    {
-        try {
-            $auction = $this->state->currentAuction();
-        } catch (Exception $e) {
-            echo "Ticket purchase could not be loaded, Please try again later.";
             error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
             return;
         }

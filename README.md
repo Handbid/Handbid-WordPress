@@ -57,6 +57,12 @@ Are you using [VVV](https://github.com/Varying-Vagrant-Vagrants/VVV)? If not, yo
 ### Shortcodes
 [Learn The Shortcodes](docs/shortcodes.md)
 
+### Attribution
+
+```html
+<a href="http://handbid.com" target="_blank" class="powered-by-handbid">Powered by Handbid</a>
+```
+
 ###Questions for Jon
 1. Why does [handbid_auction_results] show a list of auctions while [handbid_item_results] only show a single item?
     - I added [handbid_auction_list] and [handbid_item_list] and both do what is expected, but i left the old ones in there
@@ -64,13 +70,6 @@ Are you using [VVV](https://github.com/Varying-Vagrant-Vagrants/VVV)? If not, yo
     - I have created [handbid_item_details]
 3. there is a mix of camelCase and hyphen-seperated class names
      - suggest you go with hyphen '-' since that is what bootstrap and wordpress use (and this is the worpdress plugin)
-4. views/auction/full.phtml errors out of the gate: https://www.dropbox.com/s/znmx83tn9ytdbqo/Screenshot%202014-08-25%2016.53.56.png?dl=0
-    - suggest you test every template so they don't ship with errors
-5. redundant code https://www.dropbox.com/s/vct0k5s0ebvny5h/Screenshot%202014-08-25%2017.31.04.png?dl=0
+4. redundant code https://www.dropbox.com/s/vct0k5s0ebvny5h/Screenshot%202014-08-25%2017.31.04.png?dl=0
     - consider having itemDescription call item itemResults passing the proper template (or when a change is made, you'll be making the change in many spots)
-
-### Attribution
-
-```html
-<a href="http://handbid.com" target="_blank" class="powered-by-handbid">Powered by Handbid</a>
-```
+5. [handbid_item] seems redundant
