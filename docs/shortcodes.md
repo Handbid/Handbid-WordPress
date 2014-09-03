@@ -1,6 +1,6 @@
 ## Shortcodes
 
-Shortcodes can be found in [`lib/HandbidShortcodeController.php`](lib/HandbidShortcodeController.php) inside `init()`.
+Shortcodes can be found in [`lib/HandbidShortcodeController.php`](/lib/HandbidShortcodeController.php) inside `init()`.
 
 Table of Contents
 ===
@@ -9,7 +9,7 @@ Table of Contents
 - [Customization](#customization)
 
 ### Auctions
-To achieve a list of auctions we can pass a few parameters to the [handbid_auction_list] shortcode.
+To achieve a list of aguctions we can pass a few parameters to the [handbid_auction_list] shortcode.
 By default this shortcode will default to upcoming auctions but you can change that by changing the type to "all" or "past"
 ```
     [handbid_auction_list]
