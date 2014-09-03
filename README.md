@@ -40,7 +40,7 @@ Handbid will create a few pages for you Auction, Auctions, Auction Item and Bidd
     - Auction Item will be for viewing an individual auction item, the url will be /auctions/{{auctionKey}}/item/{{itemKey}}
     - Bidder Dashboard will be for managing and updating the currently logged in users profile.
     - Organizations will be for viewing all organizations
-    - Organization will be for viewing a single organization's auctions
+    - Organization will be for viewing a single organization's details
 
 ### Attribution
 
@@ -53,5 +53,3 @@ Handbid will create a few pages for you Auction, Auctions, Auction Item and Bidd
     - I added [handbid_auction_list] and [handbid_item_list] and both do what is expected, but i left the old ones in there
 2. [handbid_auction_details] acts just like [handbid_item_results]
     - I have created [handbid_item_details]
-3. there is a mix of camelCase and hyphen-seperated class names
-     - suggest you go with hyphen '-' since that is what bootstrap and wordpress use (and this is the worpdress plugin)
