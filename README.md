@@ -1,8 +1,9 @@
+<p style="width: 100%; display: block; text-align: center;">
+<img src="docs/images/handbid.png"
+ alt="Handbid logo" title="Handbid" />
+</p>
 Wordpress Plugin - Dev only (not for use by non-contributors yet)
 ====
-
-<img src="docs/images/handbid.png"
- alt="Handbid logo" title="Handbid" align="right" />
 
 **This plugin is a work in progress**.
 
