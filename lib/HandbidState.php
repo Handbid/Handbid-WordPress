@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * Class HandbidState
+ *
+ * Determines the current state of Handbid. Which Organization, Auction and / or Item is one currently being
+ * looked at
+ *
+ */
 class HandbidState
 {
 

@@ -1,11 +1,12 @@
 <?php
 
-/*
+/**
  *
- * Handbid view renderer
+ * Class HandbidViewRenderer
+ *
+ * This class is used for determining the template candidates
  *
  */
-
 class HandbidViewRenderer
 {
 

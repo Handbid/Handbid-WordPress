@@ -1,5 +1,12 @@
 <?php
 
+/**
+ *
+ * Class HandbidAdminActionController
+ *
+ * Handles all of the admin related actions, Controls the Handbid admin menu item and admin options
+ *
+ */
 class HandbidAdminActionController
 {
 
@@ -12,46 +19,26 @@ class HandbidAdminActionController
 
     function init()
     {
-        add_action('admin_init', [$this, 'initAdminArea']);
+        add_action('admin_init', [$this, 'registerPluginSettings']);
         add_action('admin_menu', [$this, 'initAdminMenu']);
     }
 
     function initAdminMenu()
     {
+        // Add in a Handbid menu item in the admin bar on the left
         add_menu_page(
-            'Handbid',
-            'Handbid',
-            'administrator',
-            'handbid-admin-dashboard',
-            [$this, 'adminSettingsAction'],
-            plugins_url() . '/handbid/public/images/favicon.png'
+            'Handbid', // Page Title
+            'Handbid', // Menu Title
+            'administrator', // Role of which user can view this menu
+            'handbid-admin-dashboard', // url slug
+            [$this, 'adminSettingsAction'], // Callback function
+            plugins_url() . '/handbid/public/images/favicon.png' // image for menu item path
         );
     }
 
     function initAdminArea()
     {
-        add_action('admin_footer', [$this, 'initAdminJavascript']);
         $this->registerPluginSettings();
-    }
-
-    function initAdminJavascript()
-    {
-
-        $scripts = ['handbidAdmin' => 'public/js/handbidAdmin.js'];
-
-        foreach ($scripts as $key => $sc) {
-            wp_register_script($key, plugins_url() . '/handbid/' . $sc);
-            wp_enqueue_script($key);
-        }
-
-        wp_localize_script(
-            'handbidAdmin',
-            'handbidAdmin',
-            [
-                'endpoint' => admin_url('admin-ajax.php')
-            ]
-        );
-
     }
 
     function registerPluginSettings()

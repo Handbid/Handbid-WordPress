@@ -31,6 +31,15 @@ Are you using [VVV](https://github.com/Varying-Vagrant-Vagrants/VVV)? If not, yo
 ### Shortcodes
 [Learn The Shortcodes](docs/shortcodes.md)
 
+
+### Get up to speed
+Handbid will create a few pages for you Auction, Auctions, Auction Item and Bidder Dashboard
+
+    - Auction will be to view your default auction. You can send a user to /auction and they will see your auction.
+    - Auctions will list out your auctions for your organization. By default this will filter by upcoming, you can also use all or Past.
+    - Auction Item will be for viewing an individual auction item, the url will be /auctions/{{auctionKey}}/item/{{itemKey}}
+    - Bidder Dashboard will be for managing and updating the currently logged in users profile.
+
 ### Attribution
 
 ```html

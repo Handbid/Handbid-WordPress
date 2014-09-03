@@ -6,14 +6,14 @@ if ($this->organization) {
     return;
 }
 ?>
-<header id="title-area" class="clearfix headerCover">
+<header id="title-area" class="clearfix header-cover">
     <div class="inner" style="opacity: 1;"><h1 class="page-title entry-title"><?php echo $org->name; ?></h1></div>
 </header>
 
-<div class="organizationDetailsContainer">
+<div class="organization-details-container">
     <img src="<?php echo $org->logo; ?>"/>
 
-    <div class="orgDetails">
+    <div class="org-details">
         <div class="address">
             <?php echo $org->address->full; ?>
         </div>

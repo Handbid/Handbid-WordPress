@@ -1,5 +1,12 @@
 <?php
 
+/**
+ *
+ * Class HandbidView
+ *
+ * Handles the actual rendering of the templates as well as variable mixins
+ *
+ */
 class HandbidView {
 
     public $fullPath;

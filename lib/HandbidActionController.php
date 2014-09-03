@@ -1,5 +1,12 @@
 <?php
 
+/**
+ *
+ * Class HandbidActionController
+ *
+ * Handles all of the front end facing actions
+ *
+ */
 class HandbidActionController
 {
 
@@ -12,13 +19,11 @@ class HandbidActionController
         $this->viewRenderer = $viewRenderer;
         $this->handbid      = $handbid;
         $this->state        = $state;
-
     }
 
     function init()
     {
         add_feed('handbid-logout', [$this, 'handbid_logout_callback']);
-        $this->rewriteRules();
 
         $titleForPost = function ($title, $post, $sep = null) {
 
@@ -69,7 +74,7 @@ class HandbidActionController
 
                 global $post;
 
-                if($post->ID != $id) {
+                if(isset($post) && $post->ID != $id) {
                     return $pageTitle;
                 }
 
@@ -93,21 +98,6 @@ class HandbidActionController
                     }
                 }
         });
-    }
-
-    function rewriteRules()
-    {
-        /*
-         * This function will be called everytime but will not add overhead as add_rewrite_rules will not go into
-         * effect until you flush the rewrite rules. These rules will be flushed on install of the Handbid plugin
-         */
-        add_rewrite_rule(
-            'auctions/([^/]+)/?/item/([^/]+)/?',
-            'index.php?pagename=auction-item&auction=$matches[1]&item=$matches[2]',
-            'top'
-        );
-        add_rewrite_rule('auctions/([^/]+)/?', 'index.php?pagename=auction&auction=$matches[1]', 'top');
-
     }
 
     function _handle_form_action()

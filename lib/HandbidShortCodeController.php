@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * Class HandbidShortCodeController
+ *
+ * Handles all of the wordpress shortcode mapping to the plugin. This is where all of the shortcodes can
+ * be seen and how they interact with the Handbid plugin
+ *
+ */
 class HandbidShortCodeController
 {
 
@@ -29,7 +36,7 @@ class HandbidShortCodeController
     public function init()
     {
         // Loop through and add in shortcodes, it goes:
-        // [wordpress_shortcode]              => 'mapped functions'
+        // [wordpress_shortcode]              => 'mappedFunctions'
         $shortCodes = [
             'handbid_pager'                   => 'pager',
             'handbid_organization_list'       => 'organizationList',
@@ -43,10 +50,7 @@ class HandbidShortCodeController
             'handbid_auction_item_list'       => 'auctionItemList',
             'handbid_bid_now'                 => 'bidNow',
             'handbid_item'                    => 'item',
-            'handbid_item_results'            => 'itemResults',
-            'handbid_item_search_bar'         => 'itemSearchBar',
             'handbid_item_bid_history'        => 'itemBidHistory',
-            'handbid_image_gallery'           => 'imageGallery',
             'handbid_facebook_comments'       => 'facebookComments',
             'handbid_bidder_profile'          => 'myProfile',
             'handbid_bidder_bids'             => 'myBids',
@@ -57,7 +61,6 @@ class HandbidShortCodeController
             'handbid_is_logged_out'           => 'isLoggedOut',
             'handbid_breadcrumb'              => 'breadcrumbs',
             'handbid_bidder_credit_cards'     => 'myCreditCards',
-            'handbid_bidder_credit_card_form' => 'bidderCreditCardForm'
         ];
 
         forEach ($shortCodes as $shortCode => $callback) {
@@ -105,7 +108,7 @@ class HandbidShortCodeController
             return $markup;
         } catch (Exception $e) {
             echo "Oops we could not find the organization you were looking for, Please try again later.";
-            error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
+            $this->throwError($e);
             return;
         }
     }
@@ -140,8 +143,8 @@ class HandbidShortCodeController
 
             return $markup;
         } catch (Exception $e) {
-            echo "Organizations Auctions could not be found, please try again later.";
-            error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
+            echo "Organizations auctions could not be found, please try again later. Please make sure you have the proper organization key set";
+            $this->throwError($e);
             return;
         }
     }
@@ -199,7 +202,7 @@ class HandbidShortCodeController
 
         } catch (Exception $e) {
             echo "Auctions could not be found, please try again later.";
-            error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
+            $this->throwError($e);
             return;
         }
 
@@ -255,7 +258,7 @@ class HandbidShortCodeController
 
         } catch (Exception $e) {
             echo "Organizations could not be found, please try again later.";
-            error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
+            $this->throwError($e);
             return;
         }
 
@@ -312,7 +315,7 @@ class HandbidShortCodeController
         } catch (Exception $e) {
 
             echo "Auction banner could not be loaded, Please try again later.";
-            error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
+            $this->throwError($e);
 
             return;
 
@@ -340,7 +343,7 @@ class HandbidShortCodeController
             );
         } catch (Exception $e) {
             echo "Rendering connect button failed.";
-            error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
+            $this->throwError($e);
             return;
         }
 
@@ -361,7 +364,7 @@ class HandbidShortCodeController
             );
         } catch (Exception $e) {
             echo "Auction details could not be loaded, Please try again later.";
-            error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
+            $this->throwError($e);
             return;
         }
 
@@ -375,7 +378,7 @@ class HandbidShortCodeController
             return $this->viewRenderer->render($template, $this->state->currentAuction());
         } catch (Exception $e) {
             echo "Contact form could not be loaded, Please try again later.";
-            error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
+            $this->throwError($e);
             return;
         }
 
@@ -410,7 +413,7 @@ class HandbidShortCodeController
             );
         } catch (Exception $e) {
             echo "Auction Item List could not be found, please try again later.";
-            error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
+            $this->throwError($e);
             return;
         }
 
@@ -438,7 +441,7 @@ class HandbidShortCodeController
         } catch (Exception $e) {
 
             echo "Bid now feature could not be loaded, please try again later.";
-            error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
+            $this->throwError($e);
 
             return;
         }
@@ -466,7 +469,7 @@ class HandbidShortCodeController
         } catch (Exception $e) {
 
             echo "Bid history feature could not be loaded, please try again later.";
-            error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
+            $this->throwError($e);
 
             return;
         }
@@ -486,70 +489,7 @@ class HandbidShortCodeController
             );
         } catch (Exception $e) {
             echo "item could not be loaded, Please try again later.";
-            error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
-            return;
-        }
-    }
-
-    public function itemResults($attributes)
-    {
-        try {
-            $template = $this->templateFromAttributes($attributes, 'views/item/results');
-            return $this->viewRenderer->render(
-                $template,
-                [
-                    'item' => $this->state->currentItem()
-                ]
-            );
-        } catch (Exception $e) {
-            echo "item results could not be loaded, Please try again later.";
-            error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
-            return;
-        }
-    }
-
-    public function itemDescription($attributes)
-    {
-        try {
-            $template = $this->templateFromAttributes($attributes, 'views/item/description');
-            return $this->viewRenderer->render(
-                $template,
-                [
-                    'item' => $this->state->currentItem()
-                ]
-            );
-        } catch (Exception $e) {
-            echo "Item description could not be loaded, Please try again later.";
-            error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
-            return;
-        }
-    }
-
-    public function itemSearchBar($attributes)
-    {
-        try {
-        } catch (Exception $e) {
-            echo "Search bar could not be loaded, Please try again later.";
-            error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
-            return;
-        }
-    }
-
-    // Image
-    public function imageGallery($attributes)
-    {
-        try {
-            $item     = $this->state->currentItem();
-            $template = $this->templateFromAttributes($attributes, 'views/image/photo-gallery');
-            return $this->viewRenderer->render(
-                $template,
-                [
-                    'item' => $item
-                ]
-            );
-        } catch (Exception $e) {
-            echo "Image gallery could not be loaded, Please try again later.";
-            error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
+            $this->throwError($e);
             return;
         }
     }
@@ -559,11 +499,10 @@ class HandbidShortCodeController
     {
         {
             try {
-                $org     = get_query_var('organization');
-                $auction = get_query_var('auction');
-                $item    = get_query_var('item');
+                $auction = $this->state->currentAuction();
+                $item    = $this->state->currentItem();
 
-                $customUrl = $org . $auction . $item;
+                $customUrl = isset($auction->key) ? $auction->key : '' . isset($item->key) ? $item->key : '';
 
                 $template = $this->templateFromAttributes($attributes, 'views/facebook/comments');
                 return $this->viewRenderer->render(
@@ -574,7 +513,7 @@ class HandbidShortCodeController
                 );
             } catch (Exception $e) {
                 echo "Facebook Comments could not be loaded, Please try again later.";
-                error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
+                $this->throwError($e);
                 return;
             }
         }
@@ -609,7 +548,7 @@ class HandbidShortCodeController
             );
         } catch (Exception $e) {
             echo "Profile could not be loaded. Please try again later.";
-            error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
+            $this->throwError($e);
             return;
         }
     }
@@ -632,7 +571,7 @@ class HandbidShortCodeController
             );
         } catch (Exception $e) {
             echo "bids could not be loaded, Please try again later.";
-            error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
+            $this->throwError($e);
             return;
         }
     }
@@ -653,7 +592,7 @@ class HandbidShortCodeController
             );
         } catch (Exception $e) {
             echo "Max bids could not be loaded. Please try again later.";
-            error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
+            $this->throwError($e);
             return;
         }
     }
@@ -672,7 +611,7 @@ class HandbidShortCodeController
             );
         } catch (Exception $e) {
             echo "You credit cards could not be loaded. Please try again later.";
-            error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
+            $this->throwError($e);
             return;
         }
     }
@@ -695,7 +634,7 @@ class HandbidShortCodeController
 
         } catch (Exception $e) {
             echo "purchases could not be loaded, Please try again later.";
-            error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
+            $this->throwError($e);
             return;
         }
     }
@@ -717,30 +656,8 @@ class HandbidShortCodeController
         } catch (Exception $e) {
 
             echo "Your profile could not be loaded, Please try again later.";
-            error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
+            $this->throwError($e);
 
-            return;
-        }
-    }
-
-    public function bidderCreditCardForm($attributes)
-    {
-        try {
-
-            $template = $this->templateFromAttributes($attributes, 'views/bidder/credit-card-form');
-            $profile  = $this->handbid->store('Bidder')->myProfile();
-
-            return $this->viewRenderer->render(
-                $template,
-                [
-                    'profile' => $profile
-
-                ]
-            );
-
-        } catch (Exception $e) {
-            echo "Your credit cards could not be loaded, Please try again later.";
-            error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
             return;
         }
     }
@@ -788,7 +705,7 @@ class HandbidShortCodeController
         } catch (Exception $e) {
 
             echo "Breadcrumb could not be loaded, Please try again later.";
-            error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
+            $this->throwError($e);
 
             return;
 
@@ -819,13 +736,17 @@ class HandbidShortCodeController
             );
         } catch (Exception $e) {
 
-            error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
-
+            $this->throwError($e);
             return;
 
         }
 
 
+    }
+
+    public function throwError($e)
+    {
+        error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
     }
 
 }
