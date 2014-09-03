@@ -1,7 +1,5 @@
-<p style="width: 100%; display: block; text-align: center;">
-<img src="docs/images/handbid.png"
- alt="Handbid logo" title="Handbid" />
-</p>
+![alt tag](docs/images/handbid.png "Handbid")
+
 Wordpress Plugin - Dev only (not for use by non-contributors yet)
 ====
 
