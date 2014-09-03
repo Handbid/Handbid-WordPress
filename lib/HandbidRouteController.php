@@ -32,5 +32,7 @@ class HandbidRouteController
         );
         add_rewrite_rule('auctions/([^/]+)/?', 'index.php?pagename=auction&auction=$matches[1]', 'top');
 
+        add_rewrite_rule('organizations/([^/]+)/?', 'index.php?pagename=organization&organization=$matches[1]', 'top');
+
     }
 }

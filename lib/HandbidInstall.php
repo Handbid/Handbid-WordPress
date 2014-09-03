@@ -44,6 +44,10 @@ class HandbidInstall
                            "\tYou must be logged in to view your profile.\n" .
                            "[/handbid_is_logged_out]";
 
+        $organizations   = "[handbid_organization_list]";
+
+        $organization    = "[handbid_organization_auctions]";
+
         // Insert the post into the database
         $pages = [
             // Used for individual auction
@@ -76,6 +80,20 @@ class HandbidInstall
                 'post_name'    => 'bidder',
                 'post_status'  => 'publish',
                 'post_content' => $bidder
+            ],
+            'organizations'      => [
+                'post_type'    => 'page',
+                'post_title'   => 'Organizations',
+                'post_name'    => 'organizations',
+                'post_status'  => 'publish',
+                'post_content' => $organizations
+            ],
+            'organization'      => [
+                'post_type'    => 'page',
+                'post_title'   => 'Organization',
+                'post_name'    => 'organization',
+                'post_status'  => 'publish',
+                'post_content' => $organization
             ]
         ];
 

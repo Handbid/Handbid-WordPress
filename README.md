@@ -35,10 +35,12 @@ Are you using [VVV](https://github.com/Varying-Vagrant-Vagrants/VVV)? If not, yo
 ### Get up to speed
 Handbid will create a few pages for you Auction, Auctions, Auction Item and Bidder Dashboard
 
-    - Auction will be to view your default auction. You can send a user to /auction and they will see your auction.
     - Auctions will list out your auctions for your organization. By default this will filter by upcoming, you can also use all or Past.
+    - Auction will be to view your default auction. You can send a user to /auction and they will see your auction.
     - Auction Item will be for viewing an individual auction item, the url will be /auctions/{{auctionKey}}/item/{{itemKey}}
     - Bidder Dashboard will be for managing and updating the currently logged in users profile.
+    - Organizations will be for viewing all organizations
+    - Organization will be for viewing a single organization's auctions
 
 ### Attribution
 
@@ -53,6 +55,3 @@ Handbid will create a few pages for you Auction, Auctions, Auction Item and Bidd
     - I have created [handbid_item_details]
 3. there is a mix of camelCase and hyphen-seperated class names
      - suggest you go with hyphen '-' since that is what bootstrap and wordpress use (and this is the worpdress plugin)
-4. redundant code https://www.dropbox.com/s/vct0k5s0ebvny5h/Screenshot%202014-08-25%2017.31.04.png?dl=0
-    - consider having itemDescription call item itemResults passing the proper template (or when a change is made, you'll be making the change in many spots)
-5. [handbid_item] seems redundant

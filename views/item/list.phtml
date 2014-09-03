@@ -10,10 +10,10 @@ if ($this->get('items')) {
 
 ?>
 
-<div class="auctionItemListWidget">
+<div class="auction-item-list-widget">
 
     <!-- Item List -->
-    <div class="itemList">
+    <div class="item-list">
         <ul id="container" class="items js-isotope">
             <?php forEach ($items as $item) {
 
@@ -36,7 +36,7 @@ if ($this->get('items')) {
                                 }
                                 ?>
                                 <div class="details">
-                                    <ul class="itemStats">
+                                    <ul class="item-stats">
                                         <li><?php echo __('Current'); ?><span> $<span
                                                     data-handbid-item-attribute="currentPrice"><?php echo $currentPrice; ?></span></span>
                                         </li>

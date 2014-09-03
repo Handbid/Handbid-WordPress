@@ -26,7 +26,7 @@ $url    = get_permalink() . '?auction=' . get_query_var('auction');
 <div class="section-title">
     <h1 class="title">
         <?php echo $auction->name; ?>
-        <span class="auctionDateTime">
+        <span class="auction-date-time">
              <?php if (in_array($auction->status, ['setup', 'presale', 'preview'])) { ?>
                  Auction Start: <?php echo date('h:i a m/d/Y', $auction->startTime); ?>
              <?php } else { ?>
@@ -36,32 +36,32 @@ $url    = get_permalink() . '?auction=' . get_query_var('auction');
     </h1>
 </div>
 
-<div class="bannerContainer">
-    <div class="innerBanner">
-        <div class="section-title statBar">
+<div class="banner-container">
+    <div class="inner-banner">
+        <div class="section-title stat-bar">
 
-            <div class="innerStatBar">
+            <div class="inner-stat-bar">
 
                 <?php if ($profile) { ?>
 
-                    <div class="statBox winning">
+                    <div class="stat-box winning">
                         <label><?php echo __('Winning'); ?></label>
                         <span><?php echo $winningBids; ?></span>
                     </div>
 
-                    <div class="statBox losing">
+                    <div class="stat-box losing">
                         <label><?php echo __('Losing'); ?></label>
                         <span><?php echo $losingBids; ?></span>
                     </div>
 
-                    <div class="statBox proxy">
+                    <div class="stat-box proxy">
                         <label><?php echo __('Max Bid'); ?></label>
                         <span><?php echo $this->get('proxies'); ?></span>
                     </div>
 
                 <?php } ?>
 
-                <div class="statBox statusBox auction-<?php echo $status; ?>">
+                <div class="stat-box status-box auction-<?php echo $status; ?>">
                     <label><?php echo __(ucfirst($status)); ?></label>
                 </div>
                 <?php if (!$profile) {
@@ -73,7 +73,7 @@ $url    = get_permalink() . '?auction=' . get_query_var('auction');
                 else
                 {
                     ?>
-                    <div class="statBox bidderProfile">
+                    <div class="stat-box bidder-profile">
                         <label><?php echo $profile->name ?></label>
                         <span><?php echo 'Pin # ' . $profile->pin; ?></span>
                     </div>

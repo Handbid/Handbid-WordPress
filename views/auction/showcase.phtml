@@ -11,19 +11,19 @@ $auctions = $this->get('auctions');
                 <li class="twocol showcase-item clearfix term-6">
                     <article class="portfolio type-portfolio">
                         <div class="image-area animated fadeInUp" style="opacity: 0;">
-                            <a title="<?php echo $auction->name; ?>" href="/auction-detail/?auction=<?php echo $auction->key; ?>" style="background-image: url('<?php echo $auction->logo->medium; ?>'); background-size: cover;">
+                            <a title="<?php echo $auction->name; ?>" href="/auctions/<?php echo $auction->key; ?>" style="background-image: url('<?php echo $auction->logo->medium; ?>'); background-size: cover;">
                             </a>
 
                             <div class="image-info">
                                 <h3 class="post-title">
-                                    <a title="<?php echo $auction->name; ?>" href="/auction-detail/?auction=<?php echo $auction->key; ?>">
+                                    <a title="<?php echo $auction->name; ?>" href="/auctions/<?php echo $auction->key; ?>">
                                         <?php echo $auction->name; ?>
                                     </a>
                                 </h3>
 
                                 <div class="terms">
                                     <a
-                                        href="/auction-detail/?auction=<?php echo $auction->key; ?>">
+                                        href="/auctions/<?php echo $auction->key; ?>">
                                         <div><?php echo date('m/d/Y', $auction->startTime); ?></div>
                                         <div><?php echo date('h:i a', $auction->startTime); ?></div>
                                         </a>

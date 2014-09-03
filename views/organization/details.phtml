@@ -1,6 +1,7 @@
 <?php
 if ($this->organization) {
     $org = $this->get('organization');
+    $address = $org->address;
 } else {
     echo "No Organization Set";
     return;
@@ -14,9 +15,15 @@ if ($this->organization) {
     <img src="<?php echo $org->logo; ?>"/>
 
     <div class="org-details">
-        <div class="address">
-            <?php echo $org->address->full; ?>
-        </div>
+        <address class="vcard">
+            <div class="street-address"><?php echo $address->street1; ?></div>
+            <div class="street-address"><?php echo $address->street2; ?></div>
+            <div class="city"><?php echo $address->city; ?></div>
+            <div class="province"><?php echo $address->province; ?></div>
+            <div class="postal-code"><?php echo $address->postalCode; ?></div >
+            <div class="country-name"><?php echo $address->country; ?></div >
+        </address>
+
         <div class="website">
             <a href="<?php echo $org->website; ?>" target="_blank"><?php echo $org->website; ?></a>
         </div>

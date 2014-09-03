@@ -26,8 +26,8 @@ class HandbidState
     {
 
         if (!$this->org) {
-            $orgKey = (isset($attributes['orgkey']) && $attributes['orgkey']) ? $attributes['orgkey'] : get_query_var(
-                'orgkey'
+            $orgKey = (isset($attributes['organization']) && $attributes['organization']) ? $attributes['organization'] : get_query_var(
+                'organization'
             );
 
             if (!$orgKey) {
