@@ -35,7 +35,6 @@ class HandbidShortCodeController
             'handbid_organization_list'       => 'organizationList',
             'handbid_organization_details'    => 'organizationDetails',
             'handbid_organization_auctions'   => 'organizationAuctions',
-            'handbid_auction'                 => 'auction',
             'handbid_connect'                 => 'connect',
             'handbid_auction_list'            => 'auctionList',
             'handbid_auction_banner'          => 'auctionBanner',
@@ -43,7 +42,6 @@ class HandbidShortCodeController
             'handbid_auction_contact_form'    => 'auctionContactForm',
             'handbid_auction_item_list'       => 'auctionItemList',
             'handbid_bid_now'                 => 'bidNow',
-            'handbid_item'                    => 'item',
             'handbid_item_results'            => 'itemResults',
             'handbid_item_search_bar'         => 'itemSearchBar',
             'handbid_item_bid_history'        => 'itemBidHistory',
@@ -149,27 +147,6 @@ class HandbidShortCodeController
     }
 
     // Auctions
-    public function auction($attributes)
-    {
-
-        try {
-            $auction = $this->state->currentAuction($attributes);
-
-            $template = $this->templateFromAttributes($attributes, 'views/auction/auction');
-            return $this->viewRenderer->render(
-                $template,
-                [
-                    'auction' => $auction
-                ]
-            );
-
-        } catch (Exception $e) {
-            echo "Auction could not be loaded, Please try again later.";
-            error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
-            return;
-        }
-
-    }
 
     public function auctionList($attributes)
     {
