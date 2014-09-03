@@ -1,5 +1,5 @@
 ## Shortcodes
-g
+
 Shortcodes can be found in [`lib/HandbidShortCodeController.php`](/lib/HandbidShortCodeController.php) inside `init()`.
 
 Table of Contents
@@ -35,4 +35,4 @@ you do not need to add an extension to the file, it will be appended on ( .phtml
     [handbid_auction_banner template="views/auction/banner"]
 ```
 
-[Back to main doc](/)
+[Back to main doc](/README.md)
