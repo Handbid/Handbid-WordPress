@@ -397,15 +397,15 @@ class HandbidShortCodeController
 
             $items = $this->handbid->store('Item')->biddableByAuction($auction->_id, $query);
 
-            $auction    = $this->state->currentAuction();
+            $auction = $this->state->currentAuction();
 
             $template = $this->templateFromAttributes($attributes, 'views/item/list');
 
             return $this->viewRenderer->render(
                 $template,
                 [
-                    'items'      => $items,
-                    'auction'    => $auction
+                    'items'   => $items,
+                    'auction' => $auction
                 ]
             );
         } catch (Exception $e) {

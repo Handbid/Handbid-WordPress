@@ -7,6 +7,7 @@ Table of Contents
 - [Auctions](#auctions)
 - [Items](#items)
 - [Control Flow](#control-flow)
+- [Authentication](#authentication)
 - [Customization](#customization)
 
 ### Auctions
@@ -46,6 +47,15 @@ ability to distinguish what auctions and or Item you are on, this will output a 
 ```
     [handbid_breadcrumb]
 ```
+
+### Authentication
+There is a shortcode plugin to allow users to login / signup with Handbid, this will drop in a connect to handbid button.
+```
+    [handbid_connect]
+```
+
+Once logged in you can use the [Logged in / Logged Out Shortcodes](#control-flow) to show or hide content based on user status.
+To log out send the uses to /handbid-logout to log them out
 
 ### Customization
 This is the file that maps all of the functions to call when a wordpress shortcode is called.
