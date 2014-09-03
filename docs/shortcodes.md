@@ -1,12 +1,12 @@
 ## Shortcodes
 
-Shortcodes can be found in `lib/HandbidShortcodeController.php` inside `init()`.
+Shortcodes can be found in [`lib/HandbidShortcodeController.php`](lib/HandbidShortcodeController.php) inside `init()`.
 
 Table of Contents
 ===
-    - [Auctions](#auctions)
-    - [Items](#items)
-    - [Customization](#customization)
+- [Auctions](#auctions)
+- [Items](#items)
+- [Customization](#customization)
 
 ### Auctions
 To achieve a list of auctions we can pass a few parameters to the [handbid_auction_list] shortcode.
@@ -34,3 +34,5 @@ you do not need to add an extension to the file, it will be appended on ( .phtml
 ```
     [handbid_auction_banner template="views/auction/banner"]
 ```
+
+[Back to main doc](/)
