@@ -1,9 +1,7 @@
 <?php
-if ($this->get('categories') || $this->get('items') || $this->get('donors')) {
+if ($this->get('items')) {
     $auction    = $this->get('auction');
-    $categories = $this->get('categories');
     $items      = $this->get('items');
-    $donors     = $this->get('donors');
 
 } else {
     echo "No Categories / Items Found";
