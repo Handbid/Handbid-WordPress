@@ -1,6 +1,6 @@
 ## Shortcodes
-
-Shortcodes can be found in [`lib/HandbidShortcodeController.php`](/lib/HandbidShortcodeController.php) inside `init()`.
+g
+Shortcodes can be found in [`lib/HandbidShortCodeController.php`](/lib/HandbidShortCodeController.php) inside `init()`.
 
 Table of Contents
 ===
