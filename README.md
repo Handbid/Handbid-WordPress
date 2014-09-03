@@ -1,4 +1,5 @@
-![alt tag](docs/images/handbid.png "Handbid")
+<img src="docs/images/handbid.png"
+ alt="Handbid logo" title="Handbid" align="center" />
 
 Wordpress Plugin - Dev only (not for use by non-contributors yet)
 ====
