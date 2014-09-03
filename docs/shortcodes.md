@@ -1,12 +1,12 @@
 ## Shortcodes
 
-Shortcodes can be found in `HandbidShortcodeController.php` inside `init()`.
+Shortcodes can be found in `lib/HandbidShortcodeController.php` inside `init()`.
 
 Table of Contents
 ===
-[Auctions](#auctions)
-[Items](#items)
-[Customization](#customization)
+    - [Auctions](#auctions)
+    - [Items](#items)
+    - [Customization](#customization)
 
 ### Auctions
 To achieve a list of auctions we can pass a few parameters to the [handbid_auction_list] shortcode.
@@ -15,7 +15,7 @@ By default this shortcode will default to upcoming auctions but you can change t
     [handbid_auction_list]
 ```
 
-If you want to specify which auction you want the to display ( other than the default one )on a certain page you can do so by passing an auction key to the argument "auctionKey" in the shortcode.
+If you want to specify which auction you want the to display ( other than the default one ) on a certain page you can do so by passing an auction key to the argument "auctionKey" in the shortcode.
 
 ```
    [handbid_auction_banner auctionKey="handbid-demo-auction"]

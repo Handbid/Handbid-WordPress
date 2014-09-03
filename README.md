@@ -1,4 +1,4 @@
-![alt tag](https://raw.githubusercontent.com/Handbid/Handbid-WordPress/master/docs/images/handbid.png "Handbid")
+![alt tag](docs/images/handbid.png "Handbid")
 
 Wordpress Plugin - Dev only (not for use by non-contributors yet)
 ====
@@ -53,6 +53,9 @@ Are you using [VVV](https://github.com/Varying-Vagrant-Vagrants/VVV)? If not, yo
 2. Select the `Handbid` option in the left menu of the admin area
 3. Complete the form
 4. Visit "Settings" > "Permalinks" and change "Default" to "Post Name"
+
+### Shortcodes
+[Learn The Shortcodes](docs/shortcodes.md)
 
 ###Questions for Jon
 1. Why does [handbid_auction_results] show a list of auctions while [handbid_item_results] only show a single item?
