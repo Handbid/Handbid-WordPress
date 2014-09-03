@@ -28,7 +28,8 @@ class HandbidShortCodeController
 
     public function init()
     {
-        // Add Plugin ShortCodes
+        // Loop through and add in shortcodes, it goes:
+        // [wordpress_shortcode]              => 'mapped functions'
         $shortCodes = [
             'handbid_pager'                   => 'pager',
             'handbid_organization_list'       => 'organizationList',
@@ -111,6 +112,7 @@ class HandbidShortCodeController
         }
     }
 
+    //
     public function organizationAuctions($attributes)
     {
         try {
@@ -174,7 +176,7 @@ class HandbidShortCodeController
 
         try {
 
-            $template = $this->templateFromAttributes($attributes, 'views/auction/logo');
+            $template = $this->templateFromAttributes($attributes, 'views/auction/list');
 
             if (!isset($attributes['type']) || !is_array($attributes) || !in_array(
                     $attributes['type'],
@@ -783,6 +785,7 @@ class HandbidShortCodeController
 
     }
 
+    // Control flow
     public function isLoggedIn($attributes, $content)
     {
         $profile = $this->handbid->store('Bidder')->myProfile();
@@ -826,7 +829,6 @@ class HandbidShortCodeController
 
         }
     }
-
 
     public function pager($attributes)
     {
