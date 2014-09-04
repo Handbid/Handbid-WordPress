@@ -20,7 +20,7 @@ By default this shortcode will default to upcoming auctions but you can change t
 ShortCode                      |  Optional Attributes                           | Template Vars
 -------------------------------|------------------------------------------------|--------------
 [handbid_auction_list]         | <ul><li>template="{{'views/auction/list'}}</li><li>type="{{all,upcoming,past}}"</li> <li>page="{{0,...,25}}"</li> <li>page_size="{{0,...,25}}"</li> <li>sort_field="{{'any_field_you_want'}}"</li> <li>sort_direction="{{asc,dsc}}"</li> <li>id="{{'any_unique_id_you_want_for_the_page'}}"</li></ul> | <ul><li>auctions</li><li>total</li><li>id</li><li>total</li><li>page_size</li><li>page</li></ul>
-[handbid_auction_banner]       | <ul><li>template="{{'views/auction/banner'}}</li></ul>                         | <ul><li>auction</li><li>coordinates</li><li>winningBids</li><li>losingBids</li><li>purchases</li> <li>profile</li><li>proxies</li></ul>
+[handbid_auction_banner]       | <ul><li>template="{{'views/auction/banner'}}</li></ul>                         | <ul><li>auction</li><li>winningBids</li><li>losingBids</li><li>purchases</li> <li>profile</li><li>proxies</li></ul>
 [handbid_auction_details]      | <ul><li>template="{{'views/auction/details'}}</li></ul>                         | <ul><li>auction</li></ul>
 
 
@@ -35,8 +35,8 @@ it. From there you can [customize](#customization) the template to suit your nee
 
 ShortCode                      |  Optional Attributes                                | Template Vars
 -------------------------------|-----------------------------------------------------|--------------
-[handbid_item]                 | <ul><li>template="{{'views/item/item'}}</li></ul>   | <ul><li>item</li></ul>
-[handbid_auction_item_list]    | <ul><li>template="{{'views/item/list'}}</li></ul>   | <ul><li>items</li><li>auction</li></ul>
+[handbid_item]                 | <ul><li>template="{{'views/item/item'}}</li><li>itemKey="{{item_key}}</li></ul>   | <ul><li>item</li></ul>
+[handbid_auction_item_list]    | <ul><li>template="{{'views/item/list'}}</li><li>auctionKey="{{auction_key}}</li></ul>   | <ul><li>items</li><li>auction</li></ul>
 [handbid_bid]                  | <ul><li>template="{{'views/item/bid'}}</li></ul>    | <ul><li>item</li><li>bids</li><li>profile</li></ul>
 
 ### Organizations
@@ -69,6 +69,14 @@ ShortCode                       |  Optional Attributes                          
 Handbid has the ability to know if a user is logged in vs logged out. You can do so by wrapping any logic you
 wish to be only available to certain users by wrapping the content in the shortcode
 
+
+ShortCode                       |  Optional Attributes                                | Template Vars
+--------------------------------|-----------------------------------------------------|--------------
+[handbid_is_logged_in]        | <ul><li>None</li></ul>   | <ul><li>None</li></ul>
+[handbid_is_logged_out]           | <ul><li>None</li></ul>   | <ul><li>None</li></ul>
+[handbid_breadcrumb]     | <ul><li>template="{{'views/navigation/breadcrumb'}}</li></ul>    | <ul><li>auction</li><li>item</li></ul>
+[handbid_pager]     | <ul><li>template="{{'views/navigation/pager'}}</li><li>page="{{page}}"</li><li>page_size="{{5}}"</li><li>total="{{5}}"</li><li>id="{{id_of_pager}}"</li></ul>    | <ul><li>page</li><li>page_size</li><li>total</li><li>id</li></ul>
+
 ```
 [handbid_is_logged_in]
     Logged In
@@ -79,14 +87,6 @@ wish to be only available to certain users by wrapping the content in the shortc
 ```
 You are also provided with `[handbid_breadcrumb]` support which is a basic bread crumb system with the
 ability to distinguish what auctions and or Item you are on, this will output a bread crumb menu.
-
-
-ShortCode                       |  Optional Attributes                                | Template Vars
---------------------------------|-----------------------------------------------------|--------------
-[handbid_is_logged_in]        | <ul><li>None</li></ul>   | <ul><li>None</li></ul>
-[handbid_is_logged_out]           | <ul><li>None</li></ul>   | <ul><li>None</li></ul>
-[handbid_breadcrumb]     | <ul><li>template="{{'views/navigation/breadcrumb'}}</li></ul>    | <ul><li>auction</li><li>item</li></ul>
-[handbid_pager]     | <ul><li>template="{{'views/navigation/pager'}}</li><li>page="{{page}}"</li><li>page_size="{{5}}"</li><li>total="{{5}}"</li><li>id="{{id_of_pager}}"</li></ul>    | <ul><li>page</li><li>page_size</li><li>total</li><li>id</li></ul>
 
 ### Authentication
 There is a shortcode plugin to allow users to login / signup with Handbid, this will drop in a connect to handbid button.

@@ -268,7 +268,6 @@ class HandbidShortCodeController
         try {
 
             $auction = $this->state->currentAuction($attributes);
-            $coords  = $auction->location->coords;
 
             $profile        = null;
             $totalProxies   = null;
@@ -301,7 +300,6 @@ class HandbidShortCodeController
                 $template,
                 [
                     'auction'     => $auction,
-                    'coordinates' => $coords,
                     'winningBids' => $totalWinning,
                     'losingBids'  => $totalLosing,
                     'purchases'   => $totalPurchases,

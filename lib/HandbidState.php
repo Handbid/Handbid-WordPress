@@ -69,7 +69,11 @@ class HandbidState
     public function currentItem()
     {
         if (!$this->item) {
-            $itemKey    = get_query_var('item');
+
+            $itemKey = (isset($attributes['itemkey']) && $attributes['itemkey']) ? $attributes['itemkey'] : get_query_var(
+                'item'
+            );
+
             if($itemKey) {
                 $this->item = $this->handbid->store('Item')->byKey($itemKey);
             }
