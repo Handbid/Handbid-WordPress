@@ -48,9 +48,8 @@ class HandbidShortCodeController
             'handbid_auction_details'         => 'auctionDetails',
             'handbid_auction_contact_form'    => 'auctionContactForm',
             'handbid_auction_item_list'       => 'auctionItemList',
-            'handbid_bid_now'                 => 'bidNow',
             'handbid_item'                    => 'item',
-            'handbid_item_bid_history'        => 'itemBidHistory',
+            'handbid_bid'                     => 'bidNow',
             'handbid_facebook_comments'       => 'facebookComments',
             'handbid_bidder_profile'          => 'myProfile',
             'handbid_bidder_bids'             => 'myBids',
@@ -445,35 +444,6 @@ class HandbidShortCodeController
 
             return;
         }
-    }
-
-    public function itemBidHistory($attributes)
-    {
-        try {
-            $template = $this->templateFromAttributes($attributes, 'views/item/bid-history');
-
-            $item = $this->state->currentItem();
-
-            $bidStore = $this->handbid->store('Bid');
-            $bids     = $bidStore->itemBids($item->_id);
-            $profile  = $this->handbid->store('Bidder')->myProfile();
-
-            return $this->viewRenderer->render(
-                $template,
-                [
-                    'item'    => $item,
-                    'bids'    => $bids,
-                    'profile' => $profile
-                ]
-            );
-        } catch (Exception $e) {
-
-            echo "Bid history feature could not be loaded, please try again later.";
-            $this->throwError($e);
-
-            return;
-        }
-
     }
 
     // Items

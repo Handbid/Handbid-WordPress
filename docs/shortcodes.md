@@ -19,6 +19,22 @@ By default this shortcode will default to upcoming auctions but you can change t
 [handbid_auction_list]
 ```
 
+
+ShortCode                      | Vars                                           | Optional Attributes
+-------------------------------|------------------------------------------------|--------------
+[handbid_auction_list]         |  auctions, total, id, total, page_size, page   | type="{all|upcoming|past}" page="{0|...|25}" page_size="{{0|...|25}}" sort_field="{{any_field_you_want}}" sort_direction="{asc|dsc}" id="{{any_unique_id_you_want_for_the_pag}}"
+[handbid_auction_banner]       |     test                                           | Content Cell
+[handbid_auction_details]      |                                                | Content Cell
+[handbid_auction_contact_form] |                                                | Content Cell
+[handbid_auction_item_list]    |                                                | Content Cell
+
+
+
+
+
+
+
+
 If you want to specify which auction you want the to display ( other than the default one ) on a certain page you can do so by passing an auction key to the argument "auctionKey" in the shortcode.
 
 
@@ -28,10 +44,15 @@ If you want to specify which auction you want the to display ( other than the de
 
 ### Items
 Handbid_item is the generic item shortcode to cover the most basic functionality. The view receives an item which is the current
-it. From there you can [customize](#customization) the template to suit your needs. If this generic shortcode does not cover your use case you can look into the other
-shortcodes available that provides support for items.
+it. From there you can [customize](#customization) the template to suit your needs.
 ```
-[handbid_item template="views/item/description"]
+[handbid_item]
+```
+
+`handbid_bid` shortcode gives you the ability to access item, bids, profile. This will allow you to
+retrieve place bids and show bid history.
+```
+[handbid_bid]
 ```
 
 ### Organizations
