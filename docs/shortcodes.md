@@ -20,19 +20,13 @@ By default this shortcode will default to upcoming auctions but you can change t
 ```
 
 
-ShortCode                      | Vars                                           | Optional Attributes
+ShortCode                      |  Optional Attributes                           | Template Vars
 -------------------------------|------------------------------------------------|--------------
-[handbid_auction_list]         | <ul><li>auctions</li><li>total</li><li>id</li><li>total</li><li>page_size</li><li>page</li></ul>   | <ul><li>type="{all,upcoming,past}"</li> <li>page="{0,...,25}"</li> <li>page_size="{{0,...,25}}"</li> <li>sort_field="{{any_field_you_want}}"</li> <li>sort_direction="{asc,dsc}"</li> <li>id="{{any_unique_id_you_want_for_the_pag}}"</li></ul>
+[handbid_auction_list]         | <ul><li>type="{all,upcoming,past}"</li> <li>page="{0,...,25}"</li> <li>page_size="{{0,...,25}}"</li> <li>sort_field="{{any_field_you_want}}"</li> <li>sort_direction="{asc,dsc}"</li> <li>id="{{any_unique_id_you_want_for_the_pag}}"</li></ul> | <ul><li>auctions</li><li>total</li><li>id</li><li>total</li><li>page_size</li><li>page</li></ul>
 [handbid_auction_banner]       |     test                                       | Content Cell
 [handbid_auction_details]      |                                                | Content Cell
 [handbid_auction_contact_form] |                                                | Content Cell
 [handbid_auction_item_list]    |                                                | Content Cell
-
-
-
-
-
-
 
 
 If you want to specify which auction you want the to display ( other than the default one ) on a certain page you can do so by passing an auction key to the argument "auctionKey" in the shortcode.
