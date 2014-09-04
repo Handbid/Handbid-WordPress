@@ -46,7 +46,6 @@ class HandbidShortCodeController
             'handbid_auction_list'            => 'auctionList',
             'handbid_auction_banner'          => 'auctionBanner',
             'handbid_auction_details'         => 'auctionDetails',
-            'handbid_auction_contact_form'    => 'auctionContactForm',
             'handbid_auction_item_list'       => 'auctionItemList',
             'handbid_item'                    => 'item',
             'handbid_bid'                     => 'bidNow',
@@ -366,21 +365,6 @@ class HandbidShortCodeController
             $this->throwError($e);
             return;
         }
-
-
-    }
-
-    public function auctionContactForm($attributes)
-    {
-        try {
-            $template = $this->templateFromAttributes($attributes, 'views/auction/contact-form');
-            return $this->viewRenderer->render($template, $this->state->currentAuction());
-        } catch (Exception $e) {
-            echo "Contact form could not be loaded, Please try again later.";
-            $this->throwError($e);
-            return;
-        }
-
     }
 
     public function auctionItemList($attributes)
