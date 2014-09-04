@@ -47,9 +47,3 @@ Handbid will create a few pages for you Auction, Auctions, Auction Item and Bidd
 ```html
 <a href="http://handbid.com" target="_blank" class="powered-by-handbid">Powered by Handbid</a>
 ```
-
-###Questions for Jon
-1. Why does [handbid_auction_results] show a list of auctions while [handbid_item_results] only show a single item?
-    - I added [handbid_auction_list] and [handbid_item_list] and both do what is expected, but i left the old ones in there
-2. [handbid_auction_details] acts just like [handbid_item_results]
-    - I have created [handbid_item_details]
