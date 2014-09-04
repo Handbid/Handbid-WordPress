@@ -66,9 +66,6 @@ ShortCode                       |  Optional Attributes                          
 
 
 ## Control flow
-Handbid has the ability to know if a user is logged in vs logged out. You can do so by wrapping any logic you
-wish to be only available to certain users by wrapping the content in the shortcode
-
 
 ShortCode                       |  Optional Attributes                                | Template Vars
 --------------------------------|-----------------------------------------------------|--------------
@@ -76,6 +73,10 @@ ShortCode                       |  Optional Attributes                          
 [handbid_is_logged_out]           | <ul><li>None</li></ul>   | <ul><li>None</li></ul>
 [handbid_breadcrumb]     | <ul><li>template="{{'views/navigation/breadcrumb'}}</li></ul>    | <ul><li>auction</li><li>item</li></ul>
 [handbid_pager]     | <ul><li>template="{{'views/navigation/pager'}}</li><li>page="{{page}}"</li><li>page_size="{{5}}"</li><li>total="{{5}}"</li><li>id="{{id_of_pager}}"</li></ul>    | <ul><li>page</li><li>page_size</li><li>total</li><li>id</li></ul>
+
+
+Handbid has the ability to know if a user is logged in vs logged out. You can do so by wrapping any logic you
+wish to be only available to certain users by wrapping the content in the shortcode
 
 ```
 [handbid_is_logged_in]
