@@ -22,7 +22,7 @@ By default this shortcode will default to upcoming auctions but you can change t
 
 ShortCode                      | Vars                                           | Optional Attributes
 -------------------------------|------------------------------------------------|--------------
-[handbid_auction_list]         |  auctions, total, id, total, page_size, page   | type="{all|upcoming|past}" page="{0|...|25}" page_size="{{0|...|25}}" sort_field="{{any_field_you_want}}" sort_direction="{asc|dsc}" id="{{any_unique_id_you_want_for_the_pag}}"
+[handbid_auction_list]         |  auctions, total, id, total, page_size, page   | type="{all,upcoming,past}" page="{0,...,25}" page_size="{{0,...,25}}" sort_field="{{any_field_you_want}}" sort_direction="{asc,dsc}" id="{{any_unique_id_you_want_for_the_pag}}"
 [handbid_auction_banner]       |     test                                           | Content Cell
 [handbid_auction_details]      |                                                | Content Cell
 [handbid_auction_contact_form] |                                                | Content Cell
