@@ -1,4 +1,4 @@
-![alt tag](docs/images/handbid.png "Handbid")
+![alt tag](docs/images/handbid-logo.svg "Handbid")
 
 Wordpress Plugin - Dev only (not for use by non-contributors yet)
 ====
