@@ -116,7 +116,7 @@ class HandbidShortCodeController
     {
         try {
 
-            $template = $this->templateFromAttributes($attributes, 'views/organization/logo');
+            $template = $this->templateFromAttributes($attributes, 'views/auction/list');
 
             $org = $this->state->currentOrg();
 
@@ -402,11 +402,27 @@ class HandbidShortCodeController
 
     }
 
-    // Bids
+    // Items
+    public function item($attributes)
+    {
+        try {
+            $template = $this->templateFromAttributes($attributes, 'views/item/item');
+            return $this->viewRenderer->render(
+                $template,
+                [
+                    'item' => $this->state->currentItem()
+                ]
+            );
+        } catch (Exception $e) {
+            echo "item could not be loaded, Please try again later.";
+            $this->throwError($e);
+            return;
+        }
+    }
     public function bidNow($attributes)
     {
         try {
-            $template = $this->templateFromAttributes($attributes, 'views/bid/now');
+            $template = $this->templateFromAttributes($attributes, 'views/item/bid');
 
             $item = $this->state->currentItem();
 
@@ -426,24 +442,6 @@ class HandbidShortCodeController
             echo "Bid now feature could not be loaded, please try again later.";
             $this->throwError($e);
 
-            return;
-        }
-    }
-
-    // Items
-    public function item($attributes)
-    {
-        try {
-            $template = $this->templateFromAttributes($attributes, 'views/item/item');
-            return $this->viewRenderer->render(
-                $template,
-                [
-                    'item' => $this->state->currentItem()
-                ]
-            );
-        } catch (Exception $e) {
-            echo "item could not be loaded, Please try again later.";
-            $this->throwError($e);
             return;
         }
     }
@@ -551,25 +549,6 @@ class HandbidShortCodeController
         }
     }
 
-    public function myCreditCards($attributes)
-    {
-        try {
-            $template = $this->templateFromAttributes($attributes, 'views/bidder/credit-cards');
-            $profile  = $this->handbid->store('Bidder')->myProfile();
-
-            return $this->viewRenderer->render(
-                $template,
-                [
-                    'cards' => $this->handbid->store('CreditCard')->byOwner($profile->_id)
-                ]
-            );
-        } catch (Exception $e) {
-            echo "You credit cards could not be loaded. Please try again later.";
-            $this->throwError($e);
-            return;
-        }
-    }
-
     public function myPurchases($attributes)
     {
         try {
@@ -616,9 +595,23 @@ class HandbidShortCodeController
         }
     }
 
-    public function updateBidderFormSubmit()
+    public function myCreditCards($attributes)
     {
+        try {
+            $template = $this->templateFromAttributes($attributes, 'views/bidder/credit-cards');
+            $profile  = $this->handbid->store('Bidder')->myProfile();
 
+            return $this->viewRenderer->render(
+                $template,
+                [
+                    'cards' => $this->handbid->store('CreditCard')->byOwner($profile->_id)
+                ]
+            );
+        } catch (Exception $e) {
+            echo "You credit cards could not be loaded. Please try again later.";
+            $this->throwError($e);
+            return;
+        }
     }
 
     // Control flow
