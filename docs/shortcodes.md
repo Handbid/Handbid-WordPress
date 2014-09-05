@@ -100,7 +100,7 @@ ShortCode                       |  Optional Attributes                          
 
 ShortCode                       |  Optional Attributes                                | Template Vars
 --------------------------------|-----------------------------------------------------|--------------
-[handbid_facebook_comments]        | <ul><li>template="{{'views/facebook/comments'}}</li><li>auctionkey="{{auction_key}}"</li><li>item="{{item_key}}"</li></ul>   | <ul><li>url</li></ul>
+[handbid_facebook_comments]        | <ul><li>template="{{'views/facebook/comments'}}</li><li>auctionkey="{{auction_key}}"</li><li>itemKey="{{item_key}}"</li></ul>   | <ul><li>url</li></ul>
 
 Once logged in you can use the [Logged in / Logged Out Shortcodes](#control-flow) to show or hide content based on user status.
 To log out send the uses to /handbid-logout to log them out
