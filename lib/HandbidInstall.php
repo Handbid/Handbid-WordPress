@@ -98,7 +98,9 @@ class HandbidInstall
         ];
 
         foreach ($pages as $page) {
-            wp_insert_post($page);
+            if(get_page_by_path($page['post_name']) == NULL) {
+                wp_insert_post($page);
+            }
         }
     }
 }
