@@ -42,6 +42,8 @@ class Handbid
     public $routeController;
     public $handbid;
 
+    static public $_instance;
+
     function __construct($options = null)
     {
 
@@ -248,6 +250,24 @@ class Handbid
     }
 
 
+    /**
+     * Sets the current instance for retrieval via Handbid::instance().
+     *
+     * @param $instance Handbid
+     */
+    static function setInstance($instance) {
+        static::$_instance = $instance;
+    }
+
+    /**
+     * Our singleton instance
+     *
+     * @return $this
+     */
+    static public function instance() {
+        return static::$_instance;
+    }
 }
 
-new Handbid;
+$__hb = new Handbid;
+Handbid::setInstance($__hb);
