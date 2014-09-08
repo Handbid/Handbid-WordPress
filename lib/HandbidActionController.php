@@ -46,7 +46,7 @@ class HandbidActionController
                 if($auction) {
                     $post->post_title = $auction->name;
                     if($sep) {
-                        $title = ' ' . $sep . ' ' . $post->post_title;
+                        $title = $post->post_title . ' ' . $sep . ' ' . esc_attr(get_bloginfo('name'));
                     } else {
                         $title = $post->post_title;
                     }
