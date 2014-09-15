@@ -25,61 +25,82 @@ class HandbidState
     public function currentOrg()
     {
 
-        if (!$this->org) {
-            $orgKey = (isset($attributes['organization']) && $attributes['organization']) ? $attributes['organization'] : get_query_var(
-                'organization'
-            );
+        try {
+            if (!$this->org) {
+                $orgKey = (isset($attributes['organization']) && $attributes['organization']) ? $attributes['organization'] : get_query_var(
+                    'organization'
+                );
 
-            if (!$orgKey) {
-                $orgKey = get_option('handbidDefaultOrganizationKey');
+                if (!$orgKey) {
+                    $orgKey = get_option('handbidDefaultOrganizationKey');
+                }
+
+                $this->org = $this->handbid->store('Organization')->byKey($orgKey);
             }
 
-            $this->org = $this->handbid->store('Organization')->byKey($orgKey);
+            return $this->org;
+        } catch (Exception $e) {
+            return null;
         }
-
-        return $this->org;
     }
 
     public function currentAuction($attributes = null)
     {
 
-        if($this->auction && !isset($attributes['breadcrumb'])) {
+        try {
+            if ($this->auction && !isset($attributes['breadcrumb'])) {
+                return $this->auction;
+            }
+
+            $auctionKey = (isset($attributes['auctionkey']) && $attributes['auctionkey']) ? $attributes['auctionkey'] : get_query_var(
+                'auction'
+            );
+            if (!$auctionKey && !isset($attributes['breadcrumb'])) {
+                $auctionKey = get_option('handbidDefaultAuctionKey');
+            }
+
+            if ($auctionKey) {
+                $this->auction = $this->handbid->store('Auction')->byKey($auctionKey);
+            }
+
             return $this->auction;
-        }
 
-        $auctionKey = (isset($attributes['auctionkey']) && $attributes['auctionkey']) ? $attributes['auctionkey'] : get_query_var(
-            'auction'
-        );
-        if (!$auctionKey && !isset($attributes['breadcrumb'])) {
-            $auctionKey = get_option('handbidDefaultAuctionKey');
+        } catch (Exception $e) {
+            return null;
         }
-
-        if ($auctionKey) {
-            $this->auction = $this->handbid->store('Auction')->byKey($auctionKey);
-        }
-
-        return $this->auction;
     }
 
     public function currentBidder()
     {
-        return $this->handbid->store('Bidder')->myProfile();
+        try {
+            return $this->handbid->store('Bidder')->myProfile();
+        } catch (Exception $e) {
+            return null;
+        }
+
     }
 
     public function currentItem()
     {
-        if (!$this->item) {
+        try {
 
-            $itemKey = (isset($attributes['itemkey']) && $attributes['itemkey']) ? $attributes['itemkey'] : get_query_var(
-                'item'
-            );
+            if (!$this->item) {
 
-            if($itemKey) {
-                $this->item = $this->handbid->store('Item')->byKey($itemKey);
+                $itemKey = (isset($attributes['itemkey']) && $attributes['itemkey']) ? $attributes['itemkey'] : get_query_var(
+                    'item'
+                );
+
+                if ($itemKey) {
+                    $this->item = $this->handbid->store('Item')->byKey($itemKey);
+                }
             }
+
+            return $this->item;
+
+        } catch (Exception $e) {
+            return null;
         }
 
-        return $this->item;
     }
 
 }

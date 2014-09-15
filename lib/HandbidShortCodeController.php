@@ -38,27 +38,27 @@ class HandbidShortCodeController
         // Loop through and add in shortcodes, it goes:
         // [wordpress_shortcode]              => 'mappedFunctions'
         $shortCodes = [
-            'handbid_pager'                   => 'pager',
-            'handbid_organization_list'       => 'organizationList',
-            'handbid_organization_details'    => 'organizationDetails',
-            'handbid_organization_auctions'   => 'organizationAuctions',
-            'handbid_connect'                 => 'connect',
-            'handbid_auction_list'            => 'auctionList',
-            'handbid_auction_banner'          => 'auctionBanner',
-            'handbid_auction_details'         => 'auctionDetails',
-            'handbid_auction_item_list'       => 'auctionItemList',
-            'handbid_item'                    => 'item',
-            'handbid_bid'                     => 'bidNow',
-            'handbid_facebook_comments'       => 'facebookComments',
-            'handbid_bidder_profile'          => 'myProfile',
-            'handbid_bidder_bids'             => 'myBids',
-            'handbid_bidder_proxy_bids'       => 'myProxyBids',
-            'handbid_bidder_purchases'        => 'myPurchases',
-            'handbid_bidder_profile_form'     => 'bidderProfileForm',
-            'handbid_is_logged_in'            => 'isLoggedIn',
-            'handbid_is_logged_out'           => 'isLoggedOut',
-            'handbid_breadcrumb'              => 'breadcrumbs',
-            'handbid_bidder_credit_cards'     => 'myCreditCards',
+            'handbid_pager'                 => 'pager',
+            'handbid_organization_list'     => 'organizationList',
+            'handbid_organization_details'  => 'organizationDetails',
+            'handbid_organization_auctions' => 'organizationAuctions',
+            'handbid_connect'               => 'connect',
+            'handbid_auction_list'          => 'auctionList',
+            'handbid_auction_banner'        => 'auctionBanner',
+            'handbid_auction_details'       => 'auctionDetails',
+            'handbid_auction_item_list'     => 'auctionItemList',
+            'handbid_item'                  => 'item',
+            'handbid_bid'                   => 'bidNow',
+            'handbid_facebook_comments'     => 'facebookComments',
+            'handbid_bidder_profile'        => 'myProfile',
+            'handbid_bidder_bids'           => 'myBids',
+            'handbid_bidder_proxy_bids'     => 'myProxyBids',
+            'handbid_bidder_purchases'      => 'myPurchases',
+            'handbid_bidder_profile_form'   => 'bidderProfileForm',
+            'handbid_is_logged_in'          => 'isLoggedIn',
+            'handbid_is_logged_out'         => 'isLoggedOut',
+            'handbid_breadcrumb'            => 'breadcrumbs',
+            'handbid_bidder_credit_cards'   => 'myCreditCards',
         ];
 
         forEach ($shortCodes as $shortCode => $callback) {
@@ -350,25 +350,33 @@ class HandbidShortCodeController
 
         try {
 
-            $template       = $this->templateFromAttributes($attributes, 'views/auction/details');
-            $auction        = $this->state->currentAuction($attributes);
-            $categoryStore  = $this->handbid->store('ItemCategory');
-            $categories     = $categoryStore->byAuction($auction->_id);
-            $itemQuery      = ['options' => ['images' => [
-                'w' => 225,
-                'h' => false
-            ]]];
+            $template = $this->templateFromAttributes($attributes, 'views/auction/details');
+            $auction  = $this->state->currentAuction($attributes);
+            if (!$auction) {
+                throw new Exception('Auction could not be found.');
+            }
 
-            $items          = $this->handbid->store('Item')->byAuction($auction->_id, $itemQuery);
+            $categoryStore = $this->handbid->store('ItemCategory');
+            $categories    = $categoryStore->byAuction($auction->_id);
+            $itemQuery     = [
+                'options' => [
+                    'images' => [
+                        'w' => 225,
+                        'h' => false
+                    ]
+                ]
+            ];
+
+            $items = $this->handbid->store('Item')->byAuction($auction->_id, $itemQuery);
 
             $categoryStore->populateNumItems($categories, $items);
 
             return $this->viewRenderer->render(
                 $template,
                 [
-                    'auction'       => $auction,
-                    'categories'    => $categories,
-                    'items'         => $items
+                    'auction'    => $auction,
+                    'categories' => $categories,
+                    'items'      => $items
                 ]
             );
 
@@ -393,9 +401,9 @@ class HandbidShortCodeController
                 ]
             ];
 
-            $items      = $this->handbid->store('Item')->byAuction($auction->_id, $query);
-            $auction    = $this->state->currentAuction();
-            $template   = $this->templateFromAttributes($attributes, 'views/item/list');
+            $items    = $this->handbid->store('Item')->byAuction($auction->_id, $query);
+            $auction  = $this->state->currentAuction();
+            $template = $this->templateFromAttributes($attributes, 'views/item/list');
 
             return $this->viewRenderer->render(
                 $template,
@@ -429,6 +437,7 @@ class HandbidShortCodeController
             return;
         }
     }
+
     public function bidNow($attributes)
     {
         try {
