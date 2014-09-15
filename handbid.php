@@ -39,7 +39,7 @@ class Handbid
     public $state;
     public $actionController;
     public $adminActionController;
-    public $routeController;
+    public $router;
     public $handbid;
 
     static public $_instance;
@@ -55,9 +55,8 @@ class Handbid
         $this->handbid               = isset($options['handbid']) ? $options['handbid'] : $this->createHandbid();
         $this->viewRender            = isset($options['viewRender']) ? $options['viewRender'] : $this->createViewRenderer(
         );
-        $this->routeController       = isset($options['routeController']) ? $options['routeController'] : $this->createRouteController(
-        );
         $this->state                 = isset($options['state']) ? $options['state'] : $this->state();
+        $this->router                = isset($options['router']) ? $options['router'] : $this->createRouteController();
         $this->shortCodeController   = isset($options['createShortCodeController']) ? $options['createShortCodeController'] : $this->createShortCodeController(
         );
         $this->actionController      = isset($options['actionController']) ? $options['actionController'] : $this->createActionController(
@@ -81,7 +80,7 @@ class Handbid
         // Add javascript
         add_action('wp_enqueue_scripts', [$this, 'initScripts']);
         // init controllers
-        $this->routeController->init();
+        $this->router->init();
         $this->shortCodeController->init();
         $this->actionController->init();
         $this->adminActionController->init();
@@ -181,9 +180,13 @@ class Handbid
         return new HandbidAdminActionController($viewRenderer);
     }
 
-    function createRouteController()
+    function createRouteController($state = null)
     {
-        return new HandbidRouteController();
+        if (!$state) {
+            $state = $this->state;
+        }
+
+        return new HandbidRouter($state);
     }
 
     // View Renderer
@@ -214,7 +217,7 @@ class Handbid
         }
 
         if (!$routeController) {
-            $routeController = $this->routeController;
+            $routeController = $this->router;
         }
 
         return new HandbidShortCodeController($handbid, $viewRenderer, $this->basePath, $state, $routeController);
@@ -260,7 +263,8 @@ class Handbid
      *
      * @param $instance Handbid
      */
-    static function setInstance($instance) {
+    static function setInstance($instance)
+    {
         static::$_instance = $instance;
     }
 
@@ -269,7 +273,8 @@ class Handbid
      *
      * @return $this
      */
-    static public function instance() {
+    static public function instance()
+    {
         return static::$_instance;
     }
 }
