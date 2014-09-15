@@ -55,14 +55,14 @@ class Handbid
         $this->handbid               = isset($options['handbid']) ? $options['handbid'] : $this->createHandbid();
         $this->viewRender            = isset($options['viewRender']) ? $options['viewRender'] : $this->createViewRenderer(
         );
+        $this->routeController       = isset($options['routeController']) ? $options['routeController'] : $this->createRouteController(
+        );
         $this->state                 = isset($options['state']) ? $options['state'] : $this->state();
         $this->shortCodeController   = isset($options['createShortCodeController']) ? $options['createShortCodeController'] : $this->createShortCodeController(
         );
         $this->actionController      = isset($options['actionController']) ? $options['actionController'] : $this->createActionController(
         );
         $this->adminActionController = isset($options['adminActionController']) ? $options['adminActionController'] : $this->createAdminActionController(
-        );
-        $this->routeController       = isset($options['routeController']) ? $options['routeController'] : $this->createRouteController(
         );
 
         register_activation_hook(__FILE__, [$this, 'install']);
@@ -81,10 +81,10 @@ class Handbid
         // Add javascript
         add_action('wp_enqueue_scripts', [$this, 'initScripts']);
         // init controllers
+        $this->routeController->init();
         $this->shortCodeController->init();
         $this->actionController->init();
         $this->adminActionController->init();
-        $this->routeController->init();
 
         add_action(
             'admin_post_submit-form',
@@ -198,7 +198,7 @@ class Handbid
     }
 
     // ShortCodes
-    function createShortCodeController($handbid = null, $viewRenderer = false, $state = false)
+    function createShortCodeController($handbid = null, $viewRenderer = false, $state = false, $routeController = null)
     {
 
         if (!$viewRenderer) {
@@ -212,7 +212,12 @@ class Handbid
         if (!$state) {
             $state = $this->state;
         }
-        return new HandbidShortCodeController($handbid, $viewRenderer, $this->basePath, $state);
+
+        if (!$routeController) {
+            $routeController = $this->routeController;
+        }
+
+        return new HandbidShortCodeController($handbid, $viewRenderer, $this->basePath, $state, $routeController);
 
     }
 

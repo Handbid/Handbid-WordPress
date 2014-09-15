@@ -14,18 +14,21 @@ class HandbidShortCodeController
     public $basePath;
     public $state;
     public $handbid;
+    public $routeController;
 
     public function __construct(
         \Handbid\Handbid $handbid,
         HandbidViewRenderer $viewRenderer,
         $basePath,
         $state,
+        $routeController,
         $config = []
     ) {
-        $this->handbid      = $handbid;
-        $this->viewRenderer = $viewRenderer;
-        $this->basePath     = $basePath;
-        $this->state        = $state;
+        $this->handbid         = $handbid;
+        $this->viewRenderer    = $viewRenderer;
+        $this->basePath        = $basePath;
+        $this->state           = $state;
+        $this->routeController = $routeController;
 
         // loop through our objects and save them as parameters
         forEach ($config as $k => $v) {
@@ -353,7 +356,7 @@ class HandbidShortCodeController
             $template = $this->templateFromAttributes($attributes, 'views/auction/details');
             $auction  = $this->state->currentAuction($attributes);
             if (!$auction) {
-                throw new Exception('Auction could not be found.');
+                throw new Exception('Auction could not be found.', 404);
             }
 
             $categoryStore = $this->handbid->store('ItemCategory');
@@ -381,8 +384,14 @@ class HandbidShortCodeController
             );
 
         } catch (Exception $e) {
-            echo "Auction details could not be loaded, Please try again later.";
-            $this->throwError($e);
+            if ($e->getCode() == 404) {
+                $this->routeController->throw404();
+            }
+            else {
+                echo "Auction details could not be loaded, Please try again later.";
+                $this->throwError($e);
+            }
+
             return;
         }
     }

@@ -18,8 +18,8 @@ class HandbidState
 
     public function __construct($basePath, $handbid)
     {
-        $this->basePath = $basePath;
-        $this->handbid  = $handbid;
+        $this->basePath        = $basePath;
+        $this->handbid         = $handbid;
     }
 
     public function currentOrg()
@@ -40,6 +40,7 @@ class HandbidState
 
             return $this->org;
         } catch (Exception $e) {
+
             return null;
         }
     }
@@ -66,6 +67,7 @@ class HandbidState
             return $this->auction;
 
         } catch (Exception $e) {
+
             return null;
         }
     }
@@ -75,6 +77,7 @@ class HandbidState
         try {
             return $this->handbid->store('Bidder')->myProfile();
         } catch (Exception $e) {
+
             return null;
         }
 
@@ -98,6 +101,7 @@ class HandbidState
             return $this->item;
 
         } catch (Exception $e) {
+
             return null;
         }
 
