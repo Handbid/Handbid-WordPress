@@ -183,7 +183,6 @@ class HandbidShortCodeController
 
             $total = $this->handbid->store('Auction')->count($query);
 
-
             $markup = $this->viewRenderer->render(
                 $template,
                 [
@@ -350,17 +349,29 @@ class HandbidShortCodeController
     {
 
         try {
-            $template = $this->templateFromAttributes($attributes, 'views/auction/details');
-            $auction  = $this->state->currentAuction($attributes);
-            $categories = $this->handbid->store('ItemCategory')->byAuction($auction->_id);
+
+            $template       = $this->templateFromAttributes($attributes, 'views/auction/details');
+            $auction        = $this->state->currentAuction($attributes);
+            $categoryStore  = $this->handbid->store('ItemCategory');
+            $categories     = $categoryStore->byAuction($auction->_id);
+            $itemQuery      = ['options' => ['images' => [
+                'w' => 225,
+                'h' => false
+            ]]];
+
+            $items          = $this->handbid->store('Item')->byAuction($auction->_id, $itemQuery);
+
+            $categoryStore->populateNumItems($categories, $items);
 
             return $this->viewRenderer->render(
                 $template,
                 [
-                    'auction' => $auction,
-                    'categories' => $categories
+                    'auction'       => $auction,
+                    'categories'    => $categories,
+                    'items'         => $items
                 ]
             );
+
         } catch (Exception $e) {
             echo "Auction details could not be loaded, Please try again later.";
             $this->throwError($e);
@@ -382,11 +393,9 @@ class HandbidShortCodeController
                 ]
             ];
 
-            $items = $this->handbid->store('Item')->biddableByAuction($auction->_id, $query);
-
-            $auction = $this->state->currentAuction();
-
-            $template = $this->templateFromAttributes($attributes, 'views/item/list');
+            $items      = $this->handbid->store('Item')->byAuction($auction->_id, $query);
+            $auction    = $this->state->currentAuction();
+            $template   = $this->templateFromAttributes($attributes, 'views/item/list');
 
             return $this->viewRenderer->render(
                 $template,
