@@ -15,7 +15,7 @@ class HandbidRouter
     {
         add_action('init', [$this, 'init']);
         $this->state = $state;
-        add_action('send_headers', [$this, 'checkPageState']);
+        add_action('wp', [$this, 'checkPageState']);
     }
 
     public function init()
@@ -44,7 +44,7 @@ class HandbidRouter
     function throw404() {
 
 //        ob_clean();
-//        header("HTTP/1.0 404 Not Found - Archive Empty");
+        header("HTTP/1.0 404 Not Found - Archive Empty");
         require TEMPLATEPATH.'/404.php';
 
         exit;
@@ -53,7 +53,6 @@ class HandbidRouter
     function checkPageState() {
 
         global $post;
-
 
         if((get_page_by_path('auction') || get_page_by_path('auctions')) && !$this->state->currentAuction()) {
             $this->throw404();
