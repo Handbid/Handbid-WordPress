@@ -109,7 +109,7 @@ class HandbidShortCodeController
             return $markup;
         } catch (Exception $e) {
             echo "Oops we could not find the organization you were looking for, Please try again later.";
-            $this->throwError($e);
+            $this->logException($e);
             return;
         }
     }
@@ -145,7 +145,7 @@ class HandbidShortCodeController
             return $markup;
         } catch (Exception $e) {
             echo "Organizations auctions could not be found, please try again later. Please make sure you have the proper organization key set";
-            $this->throwError($e);
+            $this->logException($e);
             return;
         }
     }
@@ -202,7 +202,7 @@ class HandbidShortCodeController
 
         } catch (Exception $e) {
             echo "Auctions could not be found, please try again later.";
-            $this->throwError($e);
+            $this->logException($e);
             return;
         }
 
@@ -258,7 +258,7 @@ class HandbidShortCodeController
 
         } catch (Exception $e) {
             echo "Organizations could not be found, please try again later.";
-            $this->throwError($e);
+            $this->logException($e);
             return;
         }
 
@@ -313,7 +313,7 @@ class HandbidShortCodeController
         } catch (Exception $e) {
 
             echo "Auction banner could not be loaded, Please try again later.";
-            $this->throwError($e);
+            $this->logException($e);
 
             return;
 
@@ -341,7 +341,7 @@ class HandbidShortCodeController
             );
         } catch (Exception $e) {
             echo "Rendering connect button failed.";
-            $this->throwError($e);
+            $this->logException($e);
             return;
         }
 
@@ -355,9 +355,6 @@ class HandbidShortCodeController
 
             $template = $this->templateFromAttributes($attributes, 'views/auction/details');
             $auction  = $this->state->currentAuction($attributes);
-            if (!$auction) {
-                throw new Exception('Auction could not be found.', 404);
-            }
 
             $categoryStore = $this->handbid->store('ItemCategory');
             $categories    = $categoryStore->byAuction($auction->_id);
@@ -384,13 +381,9 @@ class HandbidShortCodeController
             );
 
         } catch (Exception $e) {
-            if ($e->getCode() == 404) {
-                $this->routeController->throw404();
-            }
-            else {
-                echo "Auction details could not be loaded, Please try again later.";
-                $this->throwError($e);
-            }
+
+            echo "Auction details could not be loaded, Please try again later.";
+            $this->logException($e);
 
             return;
         }
@@ -423,7 +416,7 @@ class HandbidShortCodeController
             );
         } catch (Exception $e) {
             echo "Auction Item List could not be found, please try again later.";
-            $this->throwError($e);
+            $this->logException($e);
             return;
         }
 
@@ -442,7 +435,7 @@ class HandbidShortCodeController
             );
         } catch (Exception $e) {
             echo "item could not be loaded, Please try again later.";
-            $this->throwError($e);
+            $this->logException($e);
             return;
         }
     }
@@ -468,7 +461,7 @@ class HandbidShortCodeController
         } catch (Exception $e) {
 
             echo "Bid now feature could not be loaded, please try again later.";
-            $this->throwError($e);
+            $this->logException($e);
 
             return;
         }
@@ -493,7 +486,7 @@ class HandbidShortCodeController
                 );
             } catch (Exception $e) {
                 echo "Facebook Comments could not be loaded, Please try again later.";
-                $this->throwError($e);
+                $this->logException($e);
                 return;
             }
         }
@@ -508,16 +501,17 @@ class HandbidShortCodeController
             $template = $this->templateFromAttributes($attributes, 'views/bidder/profile');
             $profile  = $this->handbid->store('Bidder')->myProfile();
 
+            if ($profile) {
+                $img = wp_get_image_editor($profile->photo);
+                if (!is_wp_error($img)) {
+                    $img->resize(250, false, true);
+                    $img->save(ABSPATH . 'wp-content/uploads/user-photos/' . $profile->pin . '.jpg');
+                    $newPhoto = get_site_url() . '/wp-content/uploads/user-photos/' . $profile->pin . '.jpg';
+                }
 
-            $img = wp_get_image_editor($profile->photo);
-            if (!is_wp_error($img)) {
-                $img->resize(250, false, true);
-                $img->save(ABSPATH . 'wp-content/uploads/user-photos/' . $profile->pin . '.jpg');
-                $newPhoto = get_site_url() . '/wp-content/uploads/user-photos/' . $profile->pin . '.jpg';
-            }
-
-            if (isset($newPhoto)) {
-                $profile->photo = $newPhoto;
+                if (isset($newPhoto)) {
+                    $profile->photo = $newPhoto;
+                }
             }
 
             return $this->viewRenderer->render(
@@ -528,7 +522,7 @@ class HandbidShortCodeController
             );
         } catch (Exception $e) {
             echo "Profile could not be loaded. Please try again later.";
-            $this->throwError($e);
+            $this->logException($e);
             return;
         }
     }
@@ -551,7 +545,7 @@ class HandbidShortCodeController
             );
         } catch (Exception $e) {
             echo "bids could not be loaded, Please try again later.";
-            $this->throwError($e);
+            $this->logException($e);
             return;
         }
     }
@@ -572,7 +566,7 @@ class HandbidShortCodeController
             );
         } catch (Exception $e) {
             echo "Max bids could not be loaded. Please try again later.";
-            $this->throwError($e);
+            $this->logException($e);
             return;
         }
     }
@@ -595,7 +589,7 @@ class HandbidShortCodeController
 
         } catch (Exception $e) {
             echo "purchases could not be loaded, Please try again later.";
-            $this->throwError($e);
+            $this->logException($e);
             return;
         }
     }
@@ -617,7 +611,7 @@ class HandbidShortCodeController
         } catch (Exception $e) {
 
             echo "Your profile could not be loaded, Please try again later.";
-            $this->throwError($e);
+            $this->logException($e);
 
             return;
         }
@@ -637,7 +631,7 @@ class HandbidShortCodeController
             );
         } catch (Exception $e) {
             echo "You credit cards could not be loaded. Please try again later.";
-            $this->throwError($e);
+            $this->logException($e);
             return;
         }
     }
@@ -680,7 +674,7 @@ class HandbidShortCodeController
         } catch (Exception $e) {
 
             echo "Breadcrumb could not be loaded, Please try again later.";
-            $this->throwError($e);
+            $this->logException($e);
 
             return;
 
@@ -711,7 +705,7 @@ class HandbidShortCodeController
             );
         } catch (Exception $e) {
 
-            $this->throwError($e);
+            $this->logException($e);
             return;
 
         }
@@ -719,8 +713,9 @@ class HandbidShortCodeController
 
     }
 
-    public function throwError($e)
+    public function logException($e)
     {
+
         error_log($e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine());
     }
 

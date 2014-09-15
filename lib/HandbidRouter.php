@@ -54,16 +54,16 @@ class HandbidRouter
 
         global $post;
 
-        if((get_page_by_path('auction') || get_page_by_path('auctions')) && !$this->state->currentAuction()) {
+        if(($post->post_name == 'auction' || $post->post_name == 'auctions') && !$this->state->currentAuction()) {
             $this->throw404();
         }
-        else if((get_page_by_path('organization') || get_page_by_path('organizations')) && !$this->state->currentOrg()) {
+        else if(($post->post_name == 'organization' || $post->post_name == 'organizations') && !$this->state->currentOrg()) {
             $this->throw404();
         }
-        else if(get_page_by_path('auction-item') && !$this->state->currentItem()) {
+        else if($post->post_name == 'auction-item' && !$this->state->currentItem()) {
             $this->throw404();
         }
-        else if(get_page_by_path('bidder') && !$this->state->currentBidder()) {
+        else if($post->post_name == 'bidder' && !$this->state->currentBidder()) {
             $this->throw404();
         }
 
