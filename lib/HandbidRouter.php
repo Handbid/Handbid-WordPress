@@ -54,10 +54,10 @@ class HandbidRouter
 
         global $post;
 
-        if(($post->post_name == 'auction' || $post->post_name == 'auctions') && !$this->state->currentAuction()) {
+        if($post->post_name == 'auction' && !$this->state->currentAuction()) {
             $this->throw404();
         }
-        else if(($post->post_name == 'organization' || $post->post_name == 'organizations') && !$this->state->currentOrg()) {
+        else if($post->post_name == 'organization' && !$this->state->currentOrg()) {
             $this->throw404();
         }
         else if($post->post_name == 'auction-item' && !$this->state->currentItem()) {
