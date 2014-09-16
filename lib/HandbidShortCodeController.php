@@ -45,23 +45,24 @@ class HandbidShortCodeController
             'handbid_organization_list'     => 'organizationList',
             'handbid_organization_details'  => 'organizationDetails',
             'handbid_organization_auctions' => 'organizationAuctions',
-            'handbid_connect'               => 'connect',
-            'handbid_auction_list'          => 'auctionList',
-            'handbid_auction_banner'        => 'auctionBanner',
-            'handbid_auction_details'       => 'auctionDetails',
-            'handbid_auction_item_list'     => 'auctionItemList',
-            'handbid_item_details'          => 'itemDetails',
-            'handbid_bid'                   => 'bidNow',
-            'handbid_facebook_comments'     => 'facebookComments',
-            'handbid_bidder_profile'        => 'myProfile',
-            'handbid_bidder_bids'           => 'myBids',
-            'handbid_bidder_proxy_bids'     => 'myProxyBids',
-            'handbid_bidder_purchases'      => 'myPurchases',
-            'handbid_bidder_profile_form'   => 'bidderProfileForm',
-            'handbid_is_logged_in'          => 'isLoggedIn',
-            'handbid_is_logged_out'         => 'isLoggedOut',
-            'handbid_breadcrumb'            => 'breadcrumbs',
-            'handbid_bidder_credit_cards'   => 'myCreditCards',
+            'handbid_connect' => 'connect',
+            'handbid_auction_list' => 'auctionList',
+            'handbid_auction_banner' => 'auctionBanner',
+            'handbid_auction_details' => 'auctionDetails',
+            'handbid_auction_item_list' => 'auctionItemList',
+            'handbid_item_details' => 'itemDetails',
+            'handbid_item_bids' => 'itemBids',
+            'handbid_bid' => 'bidNow',
+            'handbid_facebook_comments' => 'facebookComments',
+            'handbid_bidder_profile' => 'myProfile',
+            'handbid_bidder_bids' => 'myBids',
+            'handbid_bidder_proxy_bids' => 'myProxyBids',
+            'handbid_bidder_purchases' => 'myPurchases',
+            'handbid_bidder_profile_form' => 'bidderProfileForm',
+            'handbid_is_logged_in' => 'isLoggedIn',
+            'handbid_is_logged_out' => 'isLoggedOut',
+            'handbid_breadcrumb' => 'breadcrumbs',
+            'handbid_bidder_credit_cards' => 'myCreditCards'
         ];
 
         forEach ($shortCodes as $shortCode => $callback) {
@@ -426,11 +427,45 @@ class HandbidShortCodeController
     public function itemDetails($attributes)
     {
         try {
-            $template = $this->templateFromAttributes($attributes, 'views/item/details.phtml');
+
+            $template = $this->templateFromAttributes($attributes, 'views/item/details');
+
+            $item = $this->state->currentItem($attributes);
+
+
             return $this->viewRenderer->render(
                 $template,
                 [
-                    'item' => $this->state->currentItem()
+                    'item' => $item
+                ]
+            );
+        } catch (Exception $e) {
+            echo "item could not be loaded, Please try again later.";
+            $this->logException($e);
+            return;
+        }
+    }
+
+    public function itemBids($attributes)
+    {
+        try {
+
+            $template = $this->templateFromAttributes($attributes, 'views/item/bids');
+
+            $item = $this->state->currentItem($attributes);
+            $profile = $this->state->currentBidder();
+            $bids = null;
+
+            if ($item) {
+                $bids = $this->handbid->store('Bid')->itemBids($item->_id);
+            }
+
+            return $this->viewRenderer->render(
+                $template,
+                [
+                    'item' => $item,
+                    'profile' => $profile,
+                    'bids' => $bids
                 ]
             );
         } catch (Exception $e) {
@@ -522,11 +557,11 @@ class HandbidShortCodeController
             $auction = $this->state->currentAuction();
 
             $winning = null;
-            $losing  = null;
+            $losing = null;
 
             if ($auction) {
                 $winning = $this->handbid->store('Bid')->myBids($profile->pin, $auction->_id);
-                $losing  = $this->handbid->store('Bid')->myLosing($profile->pin, $auction->_id);
+                $losing = $this->handbid->store('Bid')->myLosing($profile->pin, $auction->_id);
             }
 
             return $this->viewRenderer->render(
@@ -534,7 +569,7 @@ class HandbidShortCodeController
                 [
                     'profile' => $profile,
                     'winning' => $winning,
-                    'losing'  => $losing
+                    'losing' => $losing
                 ]
             );
         } catch (Exception $e) {
