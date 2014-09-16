@@ -559,7 +559,7 @@ class HandbidShortCodeController
             $winning = null;
             $losing = null;
 
-            if ($auction) {
+            if ($auction && $profile) {
                 $winning = $this->handbid->store('Bid')->myBids($profile->pin, $auction->_id);
                 $losing = $this->handbid->store('Bid')->myLosing($profile->pin, $auction->_id);
             }
