@@ -28,9 +28,9 @@ class HandbidInstall
         $auctionsContent = "[handbid_organization_auctions template=\"views/auction/list\" type=\"upcoming\"]";
 
         $auctionItem     = "[handbid_auction_banner]\n" .
-                           "[handbid_item template=\"views/image/photo-gallery\"]\n" .
+                           "[handbid_item_details template=\"views/image/photo-gallery\"]\n" .
                            "[handbid_bid template=\"views/item/bid\"]\n" .
-                           "[handbid_bid template=\"views/item/bid-history\"]\n" .
+                           "[handbid_item_bid template=\"views/item/bid-history\"]\n" .
                            "[handbid_facebook_comments]";
 
         $bidder          = "[handbid_is_logged_in]\n" .

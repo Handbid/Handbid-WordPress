@@ -52,6 +52,7 @@ class HandbidShortCodeController
             'handbid_auction_details' => 'auctionDetails',
             'handbid_auction_item_list' => 'auctionItemList',
             'handbid_item_details' => 'itemDetails',
+            'handbid_item_bids' => 'itemBids',
             'handbid_bid' => 'bidNow',
             'handbid_facebook_comments' => 'facebookComments',
             'handbid_bidder_profile' => 'myProfile',
@@ -446,6 +447,35 @@ class HandbidShortCodeController
         }
     }
 
+    public function itemBids($attributes)
+    {
+        try {
+
+            $template = $this->templateFromAttributes($attributes, 'views/item/bids');
+
+            $item = $this->state->currentItem($attributes);
+            $profile = $this->state->currentBidder();
+            $bids = null;
+
+            if ($item) {
+                $bids = $this->handbid->store('Bid')->itemBids($item->_id);
+            }
+
+            return $this->viewRenderer->render(
+                $template,
+                [
+                    'item' => $item,
+                    'profile' => $profile,
+                    'bids' => $bids
+                ]
+            );
+        } catch (Exception $e) {
+            echo "item could not be loaded, Please try again later.";
+            $this->logException($e);
+            return;
+        }
+    }
+
     public function bidNow($attributes)
     {
         try {
@@ -523,11 +553,11 @@ class HandbidShortCodeController
             $auction = $this->state->currentAuction();
 
             $winning = null;
-            $losing  = null;
+            $losing = null;
 
-            if($auction) {
+            if ($auction) {
                 $winning = $this->handbid->store('Bid')->myBids($profile->pin, $auction->_id);
-                $losing  = $this->handbid->store('Bid')->myLosing($profile->pin, $auction->_id);
+                $losing = $this->handbid->store('Bid')->myLosing($profile->pin, $auction->_id);
             }
 
             return $this->viewRenderer->render(
@@ -535,7 +565,7 @@ class HandbidShortCodeController
                 [
                     'profile' => $profile,
                     'winning' => $winning,
-                    'losing'  => $losing
+                    'losing' => $losing
                 ]
             );
         } catch (Exception $e) {
