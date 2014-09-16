@@ -2,7 +2,10 @@
 if (!is_null($this->get('profile'))) {
     $profile = $this->get('profile');
 } else {
-    echo "You must be logged in to view your profile.";
+    ?>
+        <a href="#" data-handbid-connect>Connect</a>
+    <?php
+
     return;
 }
 

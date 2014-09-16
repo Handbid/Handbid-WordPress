@@ -514,10 +514,14 @@ class HandbidShortCodeController
                 }
             }
 
+            $auction = $this->state->currentAuction();
+
             return $this->viewRenderer->render(
                 $template,
                 [
-                    'profile' => $profile
+                    'profile' => $profile,
+                    'winning' => $this->handbid->store('Bid')->myBids($profile->pin, $auction->_id),
+                    'losing'  => $this->handbid->store('Bid')->myLosing($profile->pin, $auction->_id),
                 ]
             );
         } catch (Exception $e) {
