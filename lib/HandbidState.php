@@ -49,19 +49,31 @@ class HandbidState
     {
 
         try {
-            if ($this->auction && !isset($attributes['breadcrumb'])) {
+
+            if ($this->auction && !$attributes) {
                 return $this->auction;
             }
 
-            $auctionKey = (isset($attributes['auctionkey']) && $attributes['auctionkey']) ? $attributes['auctionkey'] : get_query_var(
+            $auctionKey = (isset($attributes['key']) && $attributes['key']) ? $attributes['key'] : get_query_var(
                 'auction'
             );
-            if (!$auctionKey && !isset($attributes['breadcrumb'])) {
+            if (!$auctionKey) {
                 $auctionKey = get_option('handbidDefaultAuctionKey');
             }
 
             if ($auctionKey) {
-                $this->auction = $this->handbid->store('Auction')->byKey($auctionKey);
+
+                $query = ['options' => []];
+
+                if(isset($attributes['thumb_width'])) {
+                    $query['options']['images'] = ['w' => $attributes['thumb_width']];
+                }
+
+                if(isset($attributes['thumb_height'])) {
+                    $query['options']['images'] = ['h' => $attributes['thumb_height']];
+                }
+
+                $this->auction = $this->handbid->store('Auction')->byKey($auctionKey, $query);
             }
 
             return $this->auction;
@@ -83,18 +95,29 @@ class HandbidState
 
     }
 
-    public function currentItem()
+    public function currentItem($attributes = null)
     {
         try {
 
-            if (!$this->item) {
+            if (!$this->item && !$attributes) {
 
-                $itemKey = (isset($attributes['itemkey']) && $attributes['itemkey']) ? $attributes['itemkey'] : get_query_var(
+                $itemKey = (isset($attributes['key']) && $attributes['key']) ? $attributes['key'] : get_query_var(
                     'item'
                 );
 
                 if ($itemKey) {
-                    $this->item = $this->handbid->store('Item')->byKey($itemKey);
+
+                    $query = ['options' => []];
+
+                    if(isset($attributes['thumb_width'])) {
+                        $query['options']['images'] = ['w' => $attributes['thumb_width']];
+                    }
+
+                    if(isset($attributes['thumb_height'])) {
+                        $query['options']['images'] = ['h' => $attributes['thumb_height']];
+                    }
+
+                    $this->item = $this->handbid->store('Item')->byKey($itemKey, $query);
                 }
             }
 

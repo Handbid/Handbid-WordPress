@@ -427,11 +427,16 @@ class HandbidShortCodeController
     public function itemDetails($attributes)
     {
         try {
-            $template = $this->templateFromAttributes($attributes, 'views/item/details.phtml');
+
+            $template = $this->templateFromAttributes($attributes, 'views/item/details');
+
+            $item = $this->state->currentItem($attributes);
+
+
             return $this->viewRenderer->render(
                 $template,
                 [
-                    'item' => $this->state->currentItem()
+                    'item' => $item
                 ]
             );
         } catch (Exception $e) {
