@@ -202,7 +202,7 @@ class HandbidShortCodeController
             return $markup;
 
         } catch (Exception $e) {
-            echo "Auctions could not be found, please try again later.";
+            echo "Auctions could not be loaded, please try again later.";
             $this->logException($e);
             return;
         }
