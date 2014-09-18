@@ -5,6 +5,9 @@ if ($this->get('url')) {
     echo "Facebook comments not set";
     return;
 }
+
+$url = 'http://' . $_SERVER['SERVER_NAME'] . '/' . $_SERVER['REQUEST_URI']
+
 ?>
 
-<div class="fb-comments" data-href="<?php echo get_permalink(); ?>?<?php echo $customUrlParameter; ?>" data-numposts="5" data-colorscheme="light"></div>
+<div class="fb-comments" data-href="<?php echo $url; ?>" data-numposts="5" data-colorscheme="light"></div>
