@@ -495,10 +495,10 @@ class HandbidShortCodeController
             return $this->viewRenderer->render(
                 $template,
                 [
-                    'item' => $item,
-                    'bids' => $bids,
-                    'profile' => $profile,
-                    'auction' => $auction
+                    'item'      => $item,
+                    'bids'      => $bids,
+                    'profile'   => $profile,
+                    'auction'   => $auction
                 ]
             );
         } catch (Exception $e) {
