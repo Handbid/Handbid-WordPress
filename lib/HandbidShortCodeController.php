@@ -46,24 +46,24 @@ class HandbidShortCodeController
             'handbid_organization_list' => 'organizationList',
             'handbid_organization_details' => 'organizationDetails',
             'handbid_organization_auctions' => 'organizationAuctions',
-            'handbid_connect' => 'connect',
-            'handbid_auction_list' => 'auctionList',
-            'handbid_auction_banner' => 'auctionBanner',
-            'handbid_auction_details' => 'auctionDetails',
-            'handbid_auction_item_list' => 'auctionItemList',
-            'handbid_item_details' => 'itemDetails',
-            'handbid_item_bids' => 'itemBids',
-            'handbid_bid' => 'bidNow',
-            'handbid_facebook_comments' => 'facebookComments',
-            'handbid_bidder_profile' => 'myProfile',
-            'handbid_bidder_bids' => 'myBids',
-            'handbid_bidder_proxy_bids' => 'myProxyBids',
-            'handbid_bidder_purchases' => 'myPurchases',
-            'handbid_bidder_profile_form' => 'bidderProfileForm',
-            'handbid_is_logged_in' => 'isLoggedIn',
-            'handbid_is_logged_out' => 'isLoggedOut',
-            'handbid_breadcrumb' => 'breadcrumbs',
-            'handbid_bidder_credit_cards' => 'myCreditCards'
+            'handbid_connect'               => 'connect',
+            'handbid_auction_list'          => 'auctionList',
+            'handbid_auction_banner'        => 'auctionBanner',
+            'handbid_auction_details'       => 'auctionDetails',
+            'handbid_auction_item_list'     => 'auctionItemList',
+            'handbid_item_details'          => 'itemDetails',
+            'handbid_item_bids'             => 'itemBids',
+            'handbid_bid'                   => 'bidNow',
+            'handbid_facebook_comments'     => 'facebookComments',
+            'handbid_bidder_profile'        => 'myProfile',
+            'handbid_bidder_bids'           => 'myBids',
+            'handbid_bidder_proxy_bids'     => 'myProxyBids',
+            'handbid_bidder_purchases'      => 'myPurchases',
+            'handbid_bidder_profile_form'   => 'bidderProfileForm',
+            'handbid_is_logged_in'          => 'isLoggedIn',
+            'handbid_is_logged_out'         => 'isLoggedOut',
+            'handbid_breadcrumb'            => 'breadcrumbs',
+            'handbid_bidder_credit_cards'   => 'myCreditCards'
         ];
 
         forEach ($shortCodes as $shortCode => $callback) {
@@ -458,9 +458,9 @@ class HandbidShortCodeController
 
             $template = $this->templateFromAttributes($attributes, 'views/item/bids');
 
-            $item = $this->state->currentItem($attributes);
+            $item    = $this->state->currentItem($attributes);
             $profile = $this->state->currentBidder();
-            $bids = null;
+            $bids    = null;
 
             if ($item) {
                 $bids = $this->handbid->store('Bid')->itemBids($item->_id);
@@ -469,9 +469,9 @@ class HandbidShortCodeController
             return $this->viewRenderer->render(
                 $template,
                 [
-                    'item' => $item,
+                    'item'    => $item,
                     'profile' => $profile,
-                    'bids' => $bids
+                    'bids'    => $bids
                 ]
             );
         } catch (Exception $e) {
@@ -546,10 +546,9 @@ class HandbidShortCodeController
                 $img = wp_get_image_editor($profile->photo);
                 if (!is_wp_error($img)) {
 
-                    $thumbWidth = isset($attributes['thumb_width']) ? $attributes['thumb_width'] : 250;
+                    $thumbWidth  = isset($attributes['thumb_width']) ? $attributes['thumb_width'] : 250;
                     $thumbHeight = isset($attributes['thumb_height']) ? $attributes['thumb_height'] : false;
-                    $thumbCrop = isset($attributes['thumb_crop']) ? $attributes['thumb_crop'] : true;
-
+                    $thumbCrop   = isset($attributes['thumb_crop']) ? $attributes['thumb_crop'] : true;
                     $img->resize($thumbWidth, $thumbHeight, $thumbCrop);
                     $img->save(ABSPATH . 'wp-content/uploads/user-photos/' . $profile->pin . '.jpg');
                     $newPhoto = get_site_url() . '/wp-content/uploads/user-photos/' . $profile->pin . '.jpg';
@@ -567,7 +566,7 @@ class HandbidShortCodeController
 
             if ($auction && $profile) {
                 $winning = $this->handbid->store('Bid')->myBids($profile->pin, $auction->_id);
-                $losing = $this->handbid->store('Bid')->myLosing($profile->pin, $auction->_id);
+                $losing  = $this->handbid->store('Bid')->myLosing($profile->pin, $auction->_id);
             }
 
             return $this->viewRenderer->render(
@@ -575,7 +574,7 @@ class HandbidShortCodeController
                 [
                     'profile' => $profile,
                     'winning' => $winning,
-                    'losing' => $losing
+                    'losing'  => $losing
                 ]
             );
         } catch (Exception $e) {
