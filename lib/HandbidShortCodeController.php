@@ -432,6 +432,7 @@ class HandbidShortCodeController
             $template = $this->templateFromAttributes($attributes, 'views/item/details');
 
             $item       = $this->state->currentItem($attributes);
+            $auction    = $this->state->currentAuction();
             $related    = null;
 
             if ($item && in_array( 'include_related', $attributes)) {
@@ -442,7 +443,8 @@ class HandbidShortCodeController
                 $template,
                 [
                     'item' => $item,
-                    'related' => $related
+                    'related' => $related,
+                    'auction' => $auction
                 ]
             );
         } catch (Exception $e) {
