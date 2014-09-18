@@ -486,17 +486,19 @@ class HandbidShortCodeController
         try {
             $template = $this->templateFromAttributes($attributes, 'views/item/bid');
 
-            $item = $this->state->currentItem();
+            $item       = $this->state->currentItem();
+            $auction    = $this->state->currentAuction();
 
-            $bids = $this->handbid->store('Bid')->itemBids($item->_id);
-            $profile = $this->handbid->store('Bidder')->myProfile();
+            $bids       = $this->handbid->store('Bid')->itemBids($item->_id);
+            $profile    = $this->handbid->store('Bidder')->myProfile();
 
             return $this->viewRenderer->render(
                 $template,
                 [
                     'item' => $item,
                     'bids' => $bids,
-                    'profile' => $profile
+                    'profile' => $profile,
+                    'auction' => $auction
                 ]
             );
         } catch (Exception $e) {
@@ -515,10 +517,9 @@ class HandbidShortCodeController
             try {
                 $auction = $this->state->currentAuction();
                 $item = $this->state->currentItem();
-
                 $customUrl = isset($auction->key) ? $auction->key : '' . isset($item->key) ? $item->key : '';
-
                 $template = $this->templateFromAttributes($attributes, 'views/facebook/comments');
+
                 return $this->viewRenderer->render(
                     $template,
                     [
