@@ -36,6 +36,10 @@ class HandbidView {
         return $this->context[$name];
     }
 
+    public function set($name, $value) {
+        $this->context[$name] = $value;
+    }
+
     public function get($name) {
         return $this->$name;
     }

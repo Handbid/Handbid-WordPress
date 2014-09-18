@@ -23,11 +23,12 @@ class HandbidShortCodeController
         $state,
         $routeController,
         $config = []
-    ) {
-        $this->handbid         = $handbid;
-        $this->viewRenderer    = $viewRenderer;
-        $this->basePath        = $basePath;
-        $this->state           = $state;
+    )
+    {
+        $this->handbid = $handbid;
+        $this->viewRenderer = $viewRenderer;
+        $this->basePath = $basePath;
+        $this->state = $state;
         $this->routeController = $routeController;
 
         // loop through our objects and save them as parameters
@@ -41,9 +42,9 @@ class HandbidShortCodeController
         // Loop through and add in shortcodes, it goes:
         // [wordpress_shortcode]              => 'mappedFunctions'
         $shortCodes = [
-            'handbid_pager'                 => 'pager',
-            'handbid_organization_list'     => 'organizationList',
-            'handbid_organization_details'  => 'organizationDetails',
+            'handbid_pager' => 'pager',
+            'handbid_organization_list' => 'organizationList',
+            'handbid_organization_details' => 'organizationDetails',
             'handbid_organization_auctions' => 'organizationAuctions',
             'handbid_connect' => 'connect',
             'handbid_auction_list' => 'auctionList',
@@ -75,7 +76,7 @@ class HandbidShortCodeController
     {
 
         $templates = [];
-        $template  = '';
+        $template = '';
 
         if (!is_array($attributes) || !isset($attributes['template']) || !$attributes['template']) {
             $templates[] = $template = $default;
@@ -169,11 +170,11 @@ class HandbidShortCodeController
             }
 
             //paging and sort
-            $page          = isset($attributes['page']) ? $attributes['page'] : 0;
-            $pageSize      = isset($attributes['page_size']) ? $attributes['page_size'] : 25;
-            $sortField     = isset($attributes['sort_field']) ? $attributes['sort_field'] : "name";
+            $page = isset($attributes['page']) ? $attributes['page'] : 0;
+            $pageSize = isset($attributes['page_size']) ? $attributes['page_size'] : 25;
+            $sortField = isset($attributes['sort_field']) ? $attributes['sort_field'] : "name";
             $sortDirection = isset($attributes['sort_direction']) ? $attributes['sort_direction'] : "asc";
-            $id            = isset($attributes['id']) ? $attributes['id'] : 'auctions';
+            $id = isset($attributes['id']) ? $attributes['id'] : 'auctions';
 
             $query = [];
 
@@ -190,12 +191,12 @@ class HandbidShortCodeController
             $markup = $this->viewRenderer->render(
                 $template,
                 [
-                    'auctions'  => $auctions,
-                    'total'     => $total,
-                    'id'        => $id,
-                    'total'     => $total,
+                    'auctions' => $auctions,
+                    'total' => $total,
+                    'id' => $id,
+                    'total' => $total,
                     'page_size' => $pageSize,
-                    'page'      => $page
+                    'page' => $page
                 ]
             );
 
@@ -217,13 +218,13 @@ class HandbidShortCodeController
             $template = $this->templateFromAttributes($attributes, 'views/organization/list');
 
             //paging and sort
-            $page          = isset($attributes['page']) ? $attributes['page'] : 0;
-            $pageSize      = isset($attributes['page_size']) ? $attributes['page_size'] : 25;
-            $sortField     = isset($attributes['sort_field']) ? $attributes['sort_field'] : "name";
+            $page = isset($attributes['page']) ? $attributes['page'] : 0;
+            $pageSize = isset($attributes['page_size']) ? $attributes['page_size'] : 25;
+            $sortField = isset($attributes['sort_field']) ? $attributes['sort_field'] : "name";
             $sortDirection = isset($attributes['sort_direction']) ? $attributes['sort_direction'] : "asc";
-            $logoWidth     = isset($attributes['logo_width']) ? $attributes['logo_width'] : 200;
-            $logoHeight    = isset($attributes['logo_height']) ? $attributes['logo_height'] : false;
-            $id            = isset($attributes['id']) ? $attributes['id'] : 'orgs';
+            $logoWidth = isset($attributes['logo_width']) ? $attributes['logo_width'] : 200;
+            $logoHeight = isset($attributes['logo_height']) ? $attributes['logo_height'] : false;
+            $id = isset($attributes['id']) ? $attributes['id'] : 'orgs';
 
             $query = [];
 
@@ -247,11 +248,11 @@ class HandbidShortCodeController
                 $template,
                 [
                     'organizations' => $organizations,
-                    'total'         => $total,
-                    'id'            => $id,
-                    'total'         => $total,
-                    'page_size'     => $pageSize,
-                    'page'          => $page
+                    'total' => $total,
+                    'id' => $id,
+                    'total' => $total,
+                    'page_size' => $pageSize,
+                    'page' => $page
                 ]
             );
 
@@ -272,10 +273,10 @@ class HandbidShortCodeController
 
             $auction = $this->state->currentAuction($attributes);
 
-            $profile        = null;
-            $totalProxies   = null;
-            $totalWinning   = null;
-            $totalLosing    = null;
+            $profile = null;
+            $totalProxies = null;
+            $totalWinning = null;
+            $totalLosing = null;
             $totalPurchases = null;
 
             try {
@@ -283,9 +284,9 @@ class HandbidShortCodeController
                 $profile = $this->handbid->store('Bidder')->myProfile($auction->_id);
                 if ($profile) {
 
-                    $totalWinning   = count($this->handbid->store('Bid')->myBids($profile->pin, $auction->_id));
-                    $totalLosing    = count($this->handbid->store('Bid')->myLosing($profile->pin, $auction->_id));
-                    $totalProxies   = count($this->handbid->store('Bid')->myProxyBids($profile->pin, $auction->_id));
+                    $totalWinning = count($this->handbid->store('Bid')->myBids($profile->pin, $auction->_id));
+                    $totalLosing = count($this->handbid->store('Bid')->myLosing($profile->pin, $auction->_id));
+                    $totalProxies = count($this->handbid->store('Bid')->myProxyBids($profile->pin, $auction->_id));
                     $totalPurchases = count($this->handbid->store('Bid')->myPurchases($profile->pin, $auction->_id));
 
                 }
@@ -302,12 +303,12 @@ class HandbidShortCodeController
             return $this->viewRenderer->render(
                 $template,
                 [
-                    'auction'     => $auction,
+                    'auction' => $auction,
                     'winningBids' => $totalWinning,
-                    'losingBids'  => $totalLosing,
-                    'purchases'   => $totalPurchases,
-                    'profile'     => $profile,
-                    'proxies'     => $totalProxies
+                    'losingBids' => $totalLosing,
+                    'purchases' => $totalPurchases,
+                    'profile' => $profile,
+                    'proxies' => $totalProxies
                 ]
             );
 
@@ -327,7 +328,7 @@ class HandbidShortCodeController
 
         try {
             $template = $this->templateFromAttributes($attributes, 'views/connect');
-            $bidder   = $this->state->currentBidder($attributes);
+            $bidder = $this->state->currentBidder($attributes);
             $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
 
             $default = $protocol . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
@@ -335,7 +336,7 @@ class HandbidShortCodeController
             return $this->viewRenderer->render(
                 $template,
                 [
-                    'bidder'  => $bidder,
+                    'bidder' => $bidder,
                     'passUrl' => isset($attributes['passUrl']) ? $attributes['passUrl'] : $default,
                     'failUrl' => isset($attributes['failUrl']) ? $attributes['failUrl'] : $default,
                 ]
@@ -355,11 +356,11 @@ class HandbidShortCodeController
         try {
 
             $template = $this->templateFromAttributes($attributes, 'views/auction/details');
-            $auction  = $this->state->currentAuction($attributes);
+            $auction = $this->state->currentAuction($attributes);
 
             $categoryStore = $this->handbid->store('ItemCategory');
-            $categories    = $categoryStore->byAuction($auction->_id);
-            $itemQuery     = [
+            $categories = $categoryStore->byAuction($auction->_id);
+            $itemQuery = [
                 'options' => [
                     'images' => [
                         'w' => 225,
@@ -375,9 +376,9 @@ class HandbidShortCodeController
             return $this->viewRenderer->render(
                 $template,
                 [
-                    'auction'    => $auction,
+                    'auction' => $auction,
                     'categories' => $categories,
-                    'items'      => $items
+                    'items' => $items
                 ]
             );
 
@@ -395,7 +396,7 @@ class HandbidShortCodeController
 
         try {
             $auction = $this->state->currentAuction($attributes);
-            $query   = [
+            $query = [
                 'options' => [
                     'images' => [
                         'w' => 225,
@@ -404,14 +405,14 @@ class HandbidShortCodeController
                 ]
             ];
 
-            $items    = $this->handbid->store('Item')->byAuction($auction->_id, $query);
-            $auction  = $this->state->currentAuction();
+            $items = $this->handbid->store('Item')->byAuction($auction->_id, $query);
+            $auction = $this->state->currentAuction();
             $template = $this->templateFromAttributes($attributes, 'views/item/list');
 
             return $this->viewRenderer->render(
                 $template,
                 [
-                    'items'   => $items,
+                    'items' => $items,
                     'auction' => $auction
                 ]
             );
@@ -430,17 +431,22 @@ class HandbidShortCodeController
 
             $template = $this->templateFromAttributes($attributes, 'views/item/details');
 
-            $item = $this->state->currentItem($attributes);
+            $item       = $this->state->currentItem($attributes);
+            $related    = null;
 
+            if ($item && in_array( 'include_related', $attributes)) {
+                $related = $this->handbid->store('Item')->related($item->_id);
+            }
 
             return $this->viewRenderer->render(
                 $template,
                 [
-                    'item' => $item
+                    'item' => $item,
+                    'related' => $related
                 ]
             );
         } catch (Exception $e) {
-            echo "item could not be loaded, Please try again later.";
+            echo "Item could not be loaded. Please try again later.";
             $this->logException($e);
             return;
         }
@@ -469,7 +475,7 @@ class HandbidShortCodeController
                 ]
             );
         } catch (Exception $e) {
-            echo "item could not be loaded, Please try again later.";
+            echo "Item could not be loaded. Please try again later.";
             $this->logException($e);
             return;
         }
@@ -482,14 +488,14 @@ class HandbidShortCodeController
 
             $item = $this->state->currentItem();
 
-            $bids    = $this->handbid->store('Bid')->itemBids($item->_id);
+            $bids = $this->handbid->store('Bid')->itemBids($item->_id);
             $profile = $this->handbid->store('Bidder')->myProfile();
 
             return $this->viewRenderer->render(
                 $template,
                 [
-                    'item'    => $item,
-                    'bids'    => $bids,
+                    'item' => $item,
+                    'bids' => $bids,
                     'profile' => $profile
                 ]
             );
@@ -508,7 +514,7 @@ class HandbidShortCodeController
         {
             try {
                 $auction = $this->state->currentAuction();
-                $item    = $this->state->currentItem();
+                $item = $this->state->currentItem();
 
                 $customUrl = isset($auction->key) ? $auction->key : '' . isset($item->key) ? $item->key : '';
 
@@ -534,15 +540,15 @@ class HandbidShortCodeController
 
         try {
             $template = $this->templateFromAttributes($attributes, 'views/bidder/profile');
-            $profile  = $this->handbid->store('Bidder')->myProfile();
+            $profile = $this->handbid->store('Bidder')->myProfile();
 
             if ($profile) {
                 $img = wp_get_image_editor($profile->photo);
                 if (!is_wp_error($img)) {
 
-                    $thumbWidth  = isset($attributes['thumb_width'])  ? $attributes['thumb_width']  : 250;
+                    $thumbWidth = isset($attributes['thumb_width']) ? $attributes['thumb_width'] : 250;
                     $thumbHeight = isset($attributes['thumb_height']) ? $attributes['thumb_height'] : false;
-                    $thumbCrop   = isset($attributes['thumb_crop'])   ? $attributes['thumb_crop']   : true;
+                    $thumbCrop = isset($attributes['thumb_crop']) ? $attributes['thumb_crop'] : true;
 
                     $img->resize($thumbWidth, $thumbHeight, $thumbCrop);
                     $img->save(ABSPATH . 'wp-content/uploads/user-photos/' . $profile->pin . '.jpg');
@@ -557,7 +563,7 @@ class HandbidShortCodeController
             $auction = $this->state->currentAuction();
 
             $winning = null;
-            $losing  = null;
+            $losing = null;
 
             if ($auction && $profile) {
                 $winning = $this->handbid->store('Bid')->myBids($profile->pin, $auction->_id);
@@ -584,14 +590,14 @@ class HandbidShortCodeController
         try {
 
             $template = $this->templateFromAttributes($attributes, 'views/bidder/bids');
-            $profile  = $this->handbid->store('Bidder')->myProfile();
-            $auction  = $this->state->currentAuction();
+            $profile = $this->handbid->store('Bidder')->myProfile();
+            $auction = $this->state->currentAuction();
 
             return $this->viewRenderer->render(
                 $template,
                 [
                     'winning' => $this->handbid->store('Bid')->myBids($profile->pin, $auction->_id),
-                    'losing'  => $this->handbid->store('Bid')->myLosing($profile->pin, $auction->_id),
+                    'losing' => $this->handbid->store('Bid')->myLosing($profile->pin, $auction->_id),
                     'auction' => $auction
                 ]
             );
@@ -606,13 +612,13 @@ class HandbidShortCodeController
     {
         try {
             $template = $this->templateFromAttributes($attributes, 'views/bidder/proxybids');
-            $profile  = $this->handbid->store('Bidder')->myProfile();
-            $auction  = $this->state->currentAuction();
+            $profile = $this->handbid->store('Bidder')->myProfile();
+            $auction = $this->state->currentAuction();
 
             return $this->viewRenderer->render(
                 $template,
                 [
-                    'bids'    => $this->handbid->store('Bid')->myProxyBids($profile->pin, $auction->_id),
+                    'bids' => $this->handbid->store('Bid')->myProxyBids($profile->pin, $auction->_id),
                     'auction' => $auction
                 ]
             );
@@ -628,14 +634,14 @@ class HandbidShortCodeController
         try {
 
             $template = $this->templateFromAttributes($attributes, 'views/bidder/purchases');
-            $profile  = $this->handbid->store('Bidder')->myProfile();
-            $auction  = $this->state->currentAuction();
+            $profile = $this->handbid->store('Bidder')->myProfile();
+            $auction = $this->state->currentAuction();
 
             return $this->viewRenderer->render(
                 $template,
                 [
                     'purchases' => $this->handbid->store('Bid')->myPurchases($profile->pin, $auction->_id),
-                    'auction'   => $auction
+                    'auction' => $auction
                 ]
             );
 
@@ -651,7 +657,7 @@ class HandbidShortCodeController
         try {
 
             $template = $this->templateFromAttributes($attributes, 'views/bidder/profile-form');
-            $profile  = $this->handbid->store('Bidder')->myProfile();
+            $profile = $this->handbid->store('Bidder')->myProfile();
 
             return $this->viewRenderer->render(
                 $template,
@@ -673,7 +679,7 @@ class HandbidShortCodeController
     {
         try {
             $template = $this->templateFromAttributes($attributes, 'views/bidder/credit-cards');
-            $profile  = $this->handbid->store('Bidder')->myProfile();
+            $profile = $this->handbid->store('Bidder')->myProfile();
 
             return $this->viewRenderer->render(
                 $template,
@@ -710,7 +716,7 @@ class HandbidShortCodeController
 
         try {
             $template = $this->templateFromAttributes($attributes, 'views/navigation/breadcrumb');
-            $auction  = $this->state->currentAuction(
+            $auction = $this->state->currentAuction(
                 [
                     'breadcrumb' => true
                 ]
@@ -720,7 +726,7 @@ class HandbidShortCodeController
                 $template,
                 [
                     'auction' => $auction,
-                    'item'    => $this->state->currentItem()
+                    'item' => $this->state->currentItem()
                 ]
             );
         } catch (Exception $e) {
@@ -740,19 +746,19 @@ class HandbidShortCodeController
 
             $template = $this->templateFromAttributes($attributes, 'views/navigation/pager');
 
-            $page     = $attributes['page'];
+            $page = $attributes['page'];
             $pageSize = $attributes['page_size'];
-            $total    = $attributes['total'];
-            $id       = $attributes['id'];
+            $total = $attributes['total'];
+            $id = $attributes['id'];
 
 
             return $this->viewRenderer->render(
                 $template,
                 [
-                    'page'      => $page,
+                    'page' => $page,
                     'page_size' => $pageSize,
-                    'total'     => $total,
-                    'id'        => $id
+                    'total' => $total,
+                    'id' => $id
                 ]
             );
         } catch (Exception $e) {
