@@ -557,7 +557,7 @@ class HandbidShortCodeController
             $auction = $this->state->currentAuction();
 
             $winning = null;
-            $losing = null;
+            $losing  = null;
 
             if ($auction && $profile) {
                 $winning = $this->handbid->store('Bid')->myBids($profile->pin, $auction->_id);
