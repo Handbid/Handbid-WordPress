@@ -44,4 +44,17 @@ class HandbidView {
         return $this->$name;
     }
 
+    public function partial($filePath, $context = null) {
+
+        $parts = explode(DIRECTORY_SEPARATOR, $this->fullPath);
+        array_pop($parts);
+        $path =  implode(DIRECTORY_SEPARATOR, $parts) . DIRECTORY_SEPARATOR . $filePath;
+
+        $view = new HandbidView($path, $context);
+
+        return $view->render();
+
+
+    }
+
 }
