@@ -436,7 +436,12 @@ class HandbidShortCodeController
             $related    = null;
 
             if ($item && in_array( 'include_related', $attributes)) {
-                $related = $this->handbid->store('Item')->related($item->_id);
+                $related = $this->handbid->store('Item')->related($item->_id, [
+                    'config' => [
+                        'skip'  => isset($attributes['related_skip']) ? $attributes['related_skip'] : 0,
+                        'limit'  => isset($attributes['related_limit']) ? $attributes['related_limit'] : 3,
+                    ]
+                ]);
             }
 
             return $this->viewRenderer->render(
