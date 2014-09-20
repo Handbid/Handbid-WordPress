@@ -569,20 +569,28 @@ class HandbidShortCodeController
 
             $auction = $this->state->currentAuction();
 
-            $winning = null;
-            $losing = null;
+            $winning    = null;
+            $losing     = null;
+            $purchases  = null;
+            $proxyBids  = null;
+            $myAuctions = $this->handbid->store('Auction')->myRecent();
 
             if ($auction && $profile) {
-                $winning = $this->handbid->store('Bid')->myBids($profile->pin, $auction->_id);
-                $losing  = $this->handbid->store('Bid')->myLosing($profile->pin, $auction->_id);
+                $winning    = $this->handbid->store('Bid')->myBids($profile->pin, $auction->_id);
+                $losing     = $this->handbid->store('Bid')->myLosing($profile->pin, $auction->_id);
+                $purchases  = $this->handbid->store('Bid')->myPurchases($profile->pin, $auction->_id);
+                $proxyBids  = $this->handbid->store('Bid')->myProxyBids($profile->pin, $auction->_id);
             }
 
             return $this->viewRenderer->render(
                 $template,
                 [
-                    'profile' => $profile,
-                    'winning' => $winning,
-                    'losing'  => $losing
+                    'profile'   => $profile,
+                    'winning'   => $winning,
+                    'losing'    => $losing,
+                    'purchases' => $purchases,
+                    'maxBids'   => $proxyBids,
+                    'myAuctions'   => $myAuctions
                 ]
             );
         } catch (Exception $e) {
@@ -666,11 +674,13 @@ class HandbidShortCodeController
             $template = $this->templateFromAttributes($attributes, 'views/bidder/profile-form');
             $profile = $this->handbid->store('Bidder')->myProfile();
 
+            $redirect = isset($attributes['redirect']) ? $attributes['redirect'] : null;
+
             return $this->viewRenderer->render(
                 $template,
                 [
-                    'profile' => $profile
-
+                    'profile'  => $profile,
+                    'redirect' => $redirect
                 ]
             );
         } catch (Exception $e) {

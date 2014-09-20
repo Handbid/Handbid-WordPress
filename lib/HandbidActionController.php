@@ -103,7 +103,8 @@ class HandbidActionController
     function _handle_form_action()
     {
 
-        $redirect = '/bidder';
+
+        $redirect = isset($_POST['redirect']) ? $_POST['redirect'] :  '/bidder';
 
         if ($_POST['form-id'] == "handbid-update-bidder") {
             $values = [
@@ -138,11 +139,18 @@ class HandbidActionController
 
                 $bidder = $this->handbid->store('Bidder')->myProfile();
 
+                if (strpos($redirect,'?') !== false) {
+                    $questionMarkOrAmpersand = '?';
+                }
+                else {
+                    $questionMarkOrAmpersand = '&';
+                }
+
                 try {
                     $this->handbid->store('CreditCard')->add($bidder->_id, $values);
-                    $redirect .= '?handbid-notice=' . urlencode('Your card has been added. Thank you.');
+                    $redirect .= $questionMarkOrAmpersand . 'handbid-notice=' . urlencode('Your card has been added. Thank you.');
                 } catch (\Exception $e) {
-                    $redirect .= '?handbid-error=' . urlencode($e->getMessage());
+                    $redirect .= $questionMarkOrAmpersand . 'handbid-error=' . urlencode($e->getMessage());
                 }
             }
         }
