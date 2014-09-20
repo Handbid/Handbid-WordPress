@@ -106,6 +106,13 @@ class HandbidActionController
 
         $redirect = isset($_POST['redirect']) ? $_POST['redirect'] :  '/bidder';
 
+        if (preg_match('/\?/', $redirect)) {
+            $questionMarkOrAmpersand = '&';
+        }
+        else {
+            $questionMarkOrAmpersand = '?';
+        }
+
         if ($_POST['form-id'] == "handbid-update-bidder") {
             $values = [
                 'firstName' => $_POST['firstName'],
@@ -122,7 +129,7 @@ class HandbidActionController
                 $values['password2'] = $_POST['password2'];
             }
 
-            $redirect .= '?handbid-notice=' . urlencode('Your profile has been updated.');
+            $redirect .= $questionMarkOrAmpersand . 'handbid-notice=' . urlencode('Your profile has been updated.');
             $this->handbid->store('Bidder')->updateProfile($values);
         } else {
             if ($_POST['form-id'] == "handbid-add-creditcard") {
@@ -138,13 +145,6 @@ class HandbidActionController
                 //handbid-edit-creditcard-x
 
                 $bidder = $this->handbid->store('Bidder')->myProfile();
-
-                if (strpos($redirect,'?') !== false) {
-                    $questionMarkOrAmpersand = '?';
-                }
-                else {
-                    $questionMarkOrAmpersand = '&';
-                }
 
                 try {
                     $this->handbid->store('CreditCard')->add($bidder->_id, $values);
