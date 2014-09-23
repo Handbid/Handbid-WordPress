@@ -573,24 +573,36 @@ class HandbidShortCodeController
             $losing     = null;
             $purchases  = null;
             $proxyBids  = null;
+            $totalSpent = 0;
             $myAuctions = $this->handbid->store('Auction')->myRecent();
 
             if ($auction && $profile) {
+                
                 $winning    = $this->handbid->store('Bid')->myBids($profile->pin, $auction->_id);
                 $losing     = $this->handbid->store('Bid')->myLosing($profile->pin, $auction->_id);
                 $purchases  = $this->handbid->store('Bid')->myPurchases($profile->pin, $auction->_id);
                 $proxyBids  = $this->handbid->store('Bid')->myProxyBids($profile->pin, $auction->_id);
+
+                foreach($winning as $w) {
+                    $totalSpent += $w->amount;
+                }
+
+                foreach($purchases as $p) {
+                    $totalSpent += $p->grandTotal;
+                }
+
             }
 
             return $this->viewRenderer->render(
                 $template,
                 [
-                    'profile'   => $profile,
-                    'winning'   => $winning,
-                    'losing'    => $losing,
-                    'purchases' => $purchases,
-                    'maxBids'   => $proxyBids,
-                    'myAuctions'   => $myAuctions
+                    'profile'       => $profile,
+                    'winning'       => $winning,
+                    'losing'        => $losing,
+                    'purchases'     => $purchases,
+                    'maxBids'       => $proxyBids,
+                    'myAuctions'    => $myAuctions,
+                    'totalSpent'    => $totalSpent
                 ]
             );
         } catch (Exception $e) {
