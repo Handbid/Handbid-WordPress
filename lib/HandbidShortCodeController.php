@@ -596,6 +596,7 @@ class HandbidShortCodeController
             return $this->viewRenderer->render(
                 $template,
                 [
+                    'auction'       => $auction,
                     'profile'       => $profile,
                     'winning'       => $winning,
                     'losing'        => $losing,
