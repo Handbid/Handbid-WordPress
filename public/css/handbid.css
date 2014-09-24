@@ -1,4 +1,8 @@
 .handbid-fatal-error {
+    display: none;
+}
+
+.has-handbid-shortcode .handbid-fatal-error {
     position: fixed;
     bottom: 0;
     left: 0;
