@@ -733,11 +733,14 @@ class HandbidShortCodeController
         try {
             $template = $this->templateFromAttributes($attributes, 'views/bidder/receipt');
             $auction = $this->state->currentAuction();
-
+            $receipt = null;
+            if($auction) {
+                $receipt = $this->handbid->store('Receipt')->byAuction($auction->_id);
+            }
             return $this->viewRenderer->render(
                 $template,
                 [
-                    'receipt' => $this->handbid->store('Receipt')->byAuction($auction->_id)
+                    'receipt' => $receipt
                 ]
             );
         } catch (Exception $e) {
