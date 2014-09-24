@@ -5,6 +5,10 @@ $page = $this->get('page');
 $pageSize = $this->get('page_size');
 $pages = ceil($total / $pageSize);
 
+if($pages < 2) {
+    return;
+}
+
 ?>
 <ul class="page">
     <li><a href="#">First</a></li>

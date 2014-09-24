@@ -160,10 +160,16 @@ class HandbidShortCodeController
         try {
 
             $template = $this->templateFromAttributes($attributes, 'views/auction/list');
+            $query = [];
+
+            //let you change how you search
+            if(isset($_GET['auction_list'])) {
+                $attributes['type'] = $_GET['auction_list'];
+            }
 
             if (!isset($attributes['type']) || !is_array($attributes) || !in_array(
                     $attributes['type'],
-                    ['upcoming', 'all', 'past']
+                    ['current', 'upcoming', 'all', 'past', 'closed', 'open', 'preview', 'presale']
                 )
             ) {
                 $attributes['type'] = 'upcoming';
@@ -176,17 +182,14 @@ class HandbidShortCodeController
             $sortDirection = isset($attributes['sort_direction']) ? $attributes['sort_direction'] : "asc";
             $id = isset($attributes['id']) ? $attributes['id'] : 'auctions';
 
-            $query = [];
-
             $auctions = $this->handbid->store('Auction')->{$attributes['type']}(
                 $page,
                 $pageSize,
                 $sortField,
-                $sortDirection,
-                $query
+                $sortDirection
             );
 
-            $total = $this->handbid->store('Auction')->count($query);
+            $total = $this->handbid->store('Auction')->count($attributes['type']);
 
             $markup = $this->viewRenderer->render(
                 $template,
