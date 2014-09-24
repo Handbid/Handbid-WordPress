@@ -113,6 +113,7 @@ class Handbid
             'handbid-isotope'       => 'public/js/isotope.pkgd.min.js',
             'handbid-unslider'      => 'public/js/unslider.min.js',
             'handbid-photo-gallery' => 'public/js/photoGallery.js',
+            'handbid-plugin-js'     => 'public/js/handbid.js',
         );
 
         //make this a settings
