@@ -63,7 +63,8 @@ class HandbidShortCodeController
             'handbid_is_logged_in'          => 'isLoggedIn',
             'handbid_is_logged_out'         => 'isLoggedOut',
             'handbid_breadcrumb'            => 'breadcrumbs',
-            'handbid_bidder_credit_cards'   => 'myCreditCards'
+            'handbid_bidder_credit_cards'   => 'myCreditCards',
+            'handbid_bidder_receipt'        => 'bidderReceipt'
         ];
 
         forEach ($shortCodes as $shortCode => $callback) {
@@ -719,6 +720,25 @@ class HandbidShortCodeController
             );
         } catch (Exception $e) {
             echo "You credit cards could not be loaded. Please try again later.";
+            $this->logException($e);
+            return;
+        }
+    }
+
+    public function bidderReceipt($attributes)
+    {
+        try {
+            $template = $this->templateFromAttributes($attributes, 'views/bidder/receipt');
+            $auction = $this->state->currentAuction();
+
+            return $this->viewRenderer->render(
+                $template,
+                [
+                    'receipt' => $this->handbid->store('Receipt')->byAuction($auction->_id)
+                ]
+            );
+        } catch (Exception $e) {
+            echo "Your receipt could not be loaded. Please try again later.";
             $this->logException($e);
             return;
         }

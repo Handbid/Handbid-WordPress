@@ -1,0 +1,12 @@
+<?php
+if (!is_null($this->get('receipt'))) {
+    $receipt = $this->get('receipt');
+} else {
+    echo "No invoices found.";
+    return;
+}
+
+?>
+
+<iframe class="receipt-iframe" src="<?php echo $receipt->url; ?>"></iframe>
+
