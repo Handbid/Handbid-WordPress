@@ -54,6 +54,10 @@ class HandbidRouter
 
         global $post;
 
+        if(!$post) {
+            return;
+        }
+
         if($post->post_name == 'auction' && !$this->state->currentAuction()) {
             $this->throw404();
         }
