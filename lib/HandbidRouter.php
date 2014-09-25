@@ -67,9 +67,6 @@ class HandbidRouter
         else if($post->post_name == 'auction-item' && !$this->state->currentItem()) {
             $this->throw404();
         }
-        else if($post->post_name == 'bidder' && !$this->state->currentBidder()) {
-            $this->throw404();
-        }
 
     }
 
