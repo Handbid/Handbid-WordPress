@@ -114,7 +114,12 @@ class HandbidState
                     }
 
                     if(isset($attributes['thumb_height'])) {
-                        $query['options']['images'] = ['h' => $attributes['thumb_height']];
+
+                        if(!isset($query['options']['images'])) {
+                            $query['options']['images'] = [];
+                        }
+
+                        $query['options']['images']['h'] =  $attributes['thumb_height'];
                     }
 
                     $this->item = $this->handbid->store('Item')->byKey($itemKey, $query);
