@@ -48,6 +48,7 @@ class HandbidShortCodeController
             'handbid_organization_auctions' => 'organizationAuctions',
             'handbid_connect'               => 'connect',
             'handbid_auction_list'          => 'auctionList',
+            'handbid_auction_timer'         => 'auctionTimer',
             'handbid_auction_banner'        => 'auctionBanner',
             'handbid_auction_details'       => 'auctionDetails',
             'handbid_auction_item_list'     => 'auctionItemList',
@@ -391,6 +392,27 @@ class HandbidShortCodeController
             echo "Auction details could not be loaded, Please try again later.";
             $this->logException($e);
 
+            return;
+        }
+    }
+
+    public function auctionTimer($attributes)
+    {
+
+        try {
+
+            $template = $this->templateFromAttributes($attributes, 'views/auction/timer');
+            $auction = $this->state->currentAuction($attributes);
+
+            return $this->viewRenderer->render(
+                $template,
+                [
+                    'auction' => $auction,
+                ]
+            );
+
+        } catch (Exception $e) {
+            $this->logException($e);
             return;
         }
     }
