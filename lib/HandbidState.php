@@ -99,7 +99,7 @@ class HandbidState
     {
         try {
 
-            if (!$this->item && !$attributes) {
+            if (!$this->item || $attributes) {
 
                 $itemKey = (isset($attributes['key']) && $attributes['key']) ? $attributes['key'] : get_query_var(
                     'item'
