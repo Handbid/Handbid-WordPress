@@ -56,6 +56,7 @@ class HandbidShortCodeController
             'handbid_item_bids'             => 'itemBids',
             'handbid_bid'                   => 'bidNow',
             'handbid_facebook_comments'     => 'facebookComments',
+            'handbid_social_share'          => 'socialShare',
             'handbid_bidder_profile'        => 'myProfile',
             'handbid_bidder_bids'           => 'myBids',
             'handbid_bidder_proxy_bids'     => 'myProxyBids',
@@ -562,6 +563,23 @@ class HandbidShortCodeController
                 );
             } catch (Exception $e) {
                 echo "Facebook Comments could not be loaded, Please try again later.";
+                $this->logException($e);
+                return;
+            }
+        }
+
+    }
+    public function socialShare($attributes)
+    {
+        {
+            try {
+                $template = $this->templateFromAttributes($attributes, 'views/social/share');
+
+                return $this->viewRenderer->render(
+                    $template, []
+                );
+            } catch (Exception $e) {
+                echo "Social Share could not be loaded, Please try again later.";
                 $this->logException($e);
                 return;
             }
