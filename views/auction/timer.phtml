@@ -2,14 +2,14 @@
 
 $auction = $this->get('auction');
 
-if (!$auction || !$auction->closingTime) {
+if (!$auction) {
     return;
 }
 
 ?>
 <div class="auction-timer row" data-handbid-timer style="display: none;">
 
-    <div class="col-md-3">
+    <div class="col-md-3 indicator-wrapper">
         <canvas data-handbid-timer-indicator class="indicator" width="60" height="60"></canvas>
     </div>
 
@@ -17,6 +17,7 @@ if (!$auction || !$auction->closingTime) {
 
         <div class="amount" data-handbid-timer-label="hours">
             0
+
         </div>
         <div class="the-label">Hours</div>
 
