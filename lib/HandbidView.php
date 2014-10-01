@@ -36,6 +36,10 @@ class HandbidView {
         return $this->context[$name];
     }
 
+    function has($name) {
+        return array_key_exists($name, $this->context);
+    }
+
     public function set($name, $value) {
         $this->context[$name] = $value;
     }

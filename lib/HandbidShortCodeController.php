@@ -128,17 +128,26 @@ class HandbidShortCodeController
 
             $org = $this->state->currentOrg();
 
+            //let you change how you search
+            if(isset($_GET['auction_list'])) {
+                $attributes['type'] = $_GET['auction_list'];
+            }
 
-            if (isset($attributes['type'])) {
-                if (!in_array($attributes['type'], ['upcoming', 'all', 'past'])) {
-                    $attributes['type'] = 'upcoming';
-                }
-            } else {
-                $attributes['type'] = 'upcoming';
+
+            if (!isset($attributes['type']) || !is_array($attributes) || !in_array(
+                    $attributes['type'],
+                    ['current', 'upcoming', 'byOrg', 'past', 'closed', 'open', 'preview', 'presale']
+                )
+            ) {
+                $attributes['type'] = 'byOrg';
             }
 
             // Get orgs from handbid server
-            $auctions = $this->handbid->store('Auction')->{$attributes['type']}(($org->_id) ? $org->_id : null);
+            if($org) {
+                $auctions = $this->handbid->store('Auction')->{$attributes['type']}(0, 25, 'name', 'ASC', $org->_id);
+            } else {
+                $auctions = [];
+            }
 
             $markup = $this->viewRenderer->render(
                 $template,
@@ -175,7 +184,7 @@ class HandbidShortCodeController
                     ['current', 'upcoming', 'all', 'past', 'closed', 'open', 'preview', 'presale']
                 )
             ) {
-                $attributes['type'] = 'upcoming';
+                $attributes['type'] = 'current';
             }
 
             //paging and sort

@@ -52,6 +52,18 @@ class HandbidActionController
                     }
                 }
 
+            }else if($post && $post->post_name == 'organization') {
+
+                $org = $this->state->currentOrg();
+                if($org) {
+                    $post->post_title = $org->name;
+                    if($sep) {
+                        $title = $post->post_title . ' ' . $sep . ' ' . esc_attr(get_bloginfo('name'));
+                    } else {
+                        $title = $post->post_title;
+                    }
+                }
+
             }
 
             return $title;
