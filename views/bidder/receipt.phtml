@@ -6,7 +6,17 @@ if (!is_null($this->get('receipt'))) {
     return;
 }
 
-?>
+if (count($receipt) > 1) {
+    ?>
 
-<iframe class="receipt-iframe" src="<?php echo $receipt->url; ?>"></iframe>
+    <iframe class="receipt-iframe" src="[]"></iframe>
+<?php
+}
+else
+{
+    ?>
+    <p>No Receipts/Invoices found.</p>
+    <?php
+}
+?>
 
