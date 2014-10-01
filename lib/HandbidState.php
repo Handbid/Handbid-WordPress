@@ -22,7 +22,7 @@ class HandbidState
         $this->handbid         = $handbid;
     }
 
-    public function currentOrg()
+    public function currentOrg($attributes = null)
     {
 
         try {
@@ -84,17 +84,6 @@ class HandbidState
         }
     }
 
-    public function currentBidder()
-    {
-        try {
-            return $this->handbid->store('Bidder')->myProfile();
-        } catch (Exception $e) {
-
-            return null;
-        }
-
-    }
-
     public function currentItem($attributes = null)
     {
         try {
@@ -128,6 +117,17 @@ class HandbidState
 
             return $this->item;
 
+        } catch (Exception $e) {
+
+            return null;
+        }
+
+    }
+
+    public function currentBidder()
+    {
+        try {
+            return $this->handbid->store('Bidder')->myProfile();
         } catch (Exception $e) {
 
             return null;

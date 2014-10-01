@@ -42,9 +42,9 @@ class HandbidShortCodeController
         // Loop through and add in shortcodes, it goes:
         // [wordpress_shortcode]              => 'mappedFunctions'
         $shortCodes = [
-            'handbid_pager' => 'pager',
-            'handbid_organization_list' => 'organizationList',
-            'handbid_organization_details' => 'organizationDetails',
+            'handbid_pager'                 => 'pager',
+            'handbid_organization_list'     => 'organizationList',
+            'handbid_organization_details'  => 'organizationDetails',
             'handbid_organization_auctions' => 'organizationAuctions',
             'handbid_connect'               => 'connect',
             'handbid_auction_list'          => 'auctionList',
@@ -822,17 +822,15 @@ class HandbidShortCodeController
 
         try {
             $template = $this->templateFromAttributes($attributes, 'views/navigation/breadcrumb');
-            $auction = $this->state->currentAuction(
-                [
-                    'breadcrumb' => true
-                ]
-            );
+            $org = $this->state->currentOrg();
+            $auction = $this->state->currentAuction();
 
             return $this->viewRenderer->render(
                 $template,
                 [
+                    'org'     => $org,
                     'auction' => $auction,
-                    'item' => $this->state->currentItem()
+                    'item'    => $this->state->currentItem()
                 ]
             );
         } catch (Exception $e) {
