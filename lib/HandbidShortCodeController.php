@@ -608,12 +608,14 @@ class HandbidShortCodeController
                 $img = wp_get_image_editor($profile->photo);
                 if (!is_wp_error($img)) {
 
+
                     $thumbWidth  = isset($attributes['thumb_width']) ? $attributes['thumb_width'] : 250;
                     $thumbHeight = isset($attributes['thumb_height']) ? $attributes['thumb_height'] : false;
                     $thumbCrop   = isset($attributes['thumb_crop']) ? $attributes['thumb_crop'] : true;
+
                     $img->resize($thumbWidth, $thumbHeight, $thumbCrop);
-                    $img->save(ABSPATH . 'wp-content/uploads/user-photos/' . $profile->pin . '.jpg');
-                    $newPhoto = get_site_url() . '/wp-content/uploads/user-photos/' . $profile->pin . '.jpg';
+                    $img->save(ABSPATH . 'wp-content/uploads/user-photos/' . $profile->pin . '.png');
+                    $newPhoto = get_site_url() . '/wp-content/uploads/user-photos/' . $profile->pin . '.png';
                 }
 
                 if (isset($newPhoto)) {
