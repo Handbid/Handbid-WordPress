@@ -471,7 +471,7 @@ class HandbidShortCodeController
             $auction    = $this->state->currentAuction();
             $related    = null;
 
-            if ($item && in_array( 'include_related', $attributes)) {
+            if ($attributes !== '' && $item && in_array( 'include_related', $attributes)) {
 
                 $related = $this->handbid->store('Item')->related($item->_id, [
                     'config' => [

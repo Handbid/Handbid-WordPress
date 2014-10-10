@@ -44,10 +44,12 @@ class HandbidRouter
     function throw404() {
 
 //        ob_clean();
-        header("HTTP/1.0 404 Not Found - Archive Empty");
-        require TEMPLATEPATH.'/404.php';
+	    if(!is_admin()) {
+	        header("HTTP/1.0 404 Not Found - Archive Empty");
+	        require TEMPLATEPATH.'/404.php';
 
-        exit;
+	        exit;
+	    }
     }
 
     function checkPageState() {
