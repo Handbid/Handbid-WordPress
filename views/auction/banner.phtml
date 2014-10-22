@@ -46,17 +46,17 @@ $url    = get_permalink() . '?auction=' . get_query_var('auction');
 
                     <div class="stat-box winning">
                         <label><?php echo __('Winning'); ?></label>
-                        <span><?php echo $winningBids; ?></span>
+                        <span data-handbid-stats-num-winning><?php echo $winningBids; ?></span>
                     </div>
 
                     <div class="stat-box losing">
                         <label><?php echo __('Losing'); ?></label>
-                        <span><?php echo $losingBids; ?></span>
+                        <span data-handbid-stats-num-losing><?php echo $losingBids; ?></span>
                     </div>
 
                     <div class="stat-box proxy">
                         <label><?php echo __('Max Bid'); ?></label>
-                        <span><?php echo $this->get('proxies'); ?></span>
+                        <span data-handbid-stats-num-proxies><?php echo $this->get('proxies'); ?></span>
                     </div>
 
                 <?php } ?>
