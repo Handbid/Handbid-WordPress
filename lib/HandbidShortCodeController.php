@@ -745,12 +745,14 @@ class HandbidShortCodeController
             $profile = $this->handbid->store('Bidder')->myProfile();
 
             $redirect = isset($attributes['redirect']) ? $attributes['redirect'] : null;
+            $showCreditCardRequiredMessage = isset($attributes['show_credit_card_required_message']) ? $attributes['show_credit_card_required_message'] == 'true' : false;
 
             return $this->viewRenderer->render(
                 $template,
                 [
                     'profile'  => $profile,
-                    'redirect' => $redirect
+                    'redirect' => $redirect,
+                    'showCreditCardRequiredMessage' => $showCreditCardRequiredMessage
                 ]
             );
         } catch (Exception $e) {

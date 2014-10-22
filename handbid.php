@@ -245,10 +245,19 @@ class Handbid
 
     function onRenderFooter()
     {
-        if ($this->state()->currentAuction()) {
 
-            echo '<script type="text/javascript">handbid.connectToAuction("' . $this->state()->currentAuction(
-                )->key . '");</script>';
+        if ($auction = $this->state()->currentAuction()) {
+
+            echo '<script type="text/javascript">handbid.connectToAuction("' . $auction->key . '");</script>';
+
+            //do we need to prompt for credit card?
+            $bidder = $this->state()->currentBidder();
+
+            if($auction->requireCreditCard && ($auction->spendingThreshold == 0 || $auction->spendingThreshold <= $bidder->totalSpent)) {
+
+                echo do_shortcode('[handbid_bidder_profile_form template="views/bidder/credit-card-form" show_credit_card_required_message=true]');
+
+            }
 
         }
     }

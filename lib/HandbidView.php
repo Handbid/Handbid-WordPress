@@ -44,8 +44,8 @@ class HandbidView {
         $this->context[$name] = $value;
     }
 
-    public function get($name) {
-        return $this->$name;
+    public function get($name, $default = null) {
+        return isset($this->context[$name]) ? $this->$name : $default;
     }
 
     public function partial($filePath, $context = null) {
