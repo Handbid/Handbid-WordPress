@@ -1,0 +1,25 @@
+<?php
+if ($this->get('tickets')) {
+    $auction    = $this->get('auction');
+    $tickets    = $this->get('tickets');
+
+} else {
+    echo "No Tickets Found";
+    return;
+}
+
+?>
+
+<div class="auction-ticket-list-widget">
+
+    <!-- Ticket List -->
+    <div class="ticket-list">
+        <ul id="container" class="tickets js-isotope">
+            <?php forEach ($tickets as $ticket) { ?>
+
+                <li class="ticket ticket-tile"><?=$ticket->name?></li>
+
+            <?php } ?>
+        </ul>
+    </div>
+</div>

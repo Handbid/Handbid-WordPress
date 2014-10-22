@@ -52,6 +52,7 @@ class HandbidShortCodeController
             'handbid_auction_banner'        => 'auctionBanner',
             'handbid_auction_details'       => 'auctionDetails',
             'handbid_auction_item_list'     => 'auctionItemList',
+            'handbid_auction_ticket_list'   => 'ticketList',
             'handbid_item_details'          => 'itemDetails',
             'handbid_item_bids'             => 'itemBids',
             'handbid_bid'                   => 'bidNow',
@@ -800,6 +801,41 @@ class HandbidShortCodeController
             $this->logException($e);
             return;
         }
+    }
+
+    //tickets
+    public function ticketList($attributes) {
+
+        try {
+            $auction = $this->state->currentAuction($attributes);
+
+            $query = [];//@todo: find out hwo to pass query through attributes. then merge it with our defaults. array_merge([], $query)
+
+            $tickets = $this->handbid->store('Ticket')->byAuction($auction->key, $query);
+
+            if ($tickets) {
+                $template = $this->templateFromAttributes($attributes, 'views/ticket/list');
+
+                return $this->viewRenderer->render(
+                    $template,
+                    [
+                        'tickets' => $tickets,
+                        'auction' => $auction
+                    ]
+                );
+            }
+        } catch (Exception $e) {
+            echo "Auction Ticket List could not be found, please try again later.";
+            $this->logException($e);
+            return null;
+        }
+
+
+        //@todo: try/catch
+        //do_shortcode({{shortcode id}}) (no echo needed)
+        //handbid->state->currentAuction()  //use this to get the auction id for the shortcode attribute auctionKey
+        //hb->store('Ticket')->byAuction( handbid->state->cuttentAuction() )
+
     }
 
     // Control flow
