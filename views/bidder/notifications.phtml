@@ -1,0 +1,10 @@
+<?php
+
+$notifications = $this->get('notifications');
+
+foreach ($notifications as $notification) {
+    echo '<pre>';
+    print_r($notification);
+    echo '</pre>';
+    echo '<br />';
+}

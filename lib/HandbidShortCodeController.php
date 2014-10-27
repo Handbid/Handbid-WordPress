@@ -59,6 +59,7 @@ class HandbidShortCodeController
             'handbid_facebook_comments'     => 'facebookComments',
             'handbid_social_share'          => 'socialShare',
             'handbid_bidder_profile'        => 'myProfile',
+            'handbid_bidder_notifications'  => 'myNotifications',
             'handbid_bidder_bids'           => 'myBids',
             'handbid_bidder_proxy_bids'     => 'myProxyBids',
             'handbid_bidder_purchases'      => 'myPurchases',
@@ -688,6 +689,27 @@ class HandbidShortCodeController
             );
         } catch (Exception $e) {
             echo "bids could not be loaded, Please try again later.";
+            $this->logException($e);
+            return;
+        }
+    }
+
+    public function myNotifications($attributes)
+    {
+        try {
+
+            $template       = $this->templateFromAttributes($attributes, 'views/bidder/notifications');
+            $notifications  = $this->handbid->store('Notification')->all();
+
+            return $this->viewRenderer->render(
+                $template,
+                [
+                    'notifications' => $notifications
+                ]
+            );
+
+        } catch (Exception $e) {
+            echo "notifications could not be loaded, Please try again later.";
             $this->logException($e);
             return;
         }
