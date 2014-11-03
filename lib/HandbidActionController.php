@@ -17,8 +17,8 @@ class HandbidActionController
     public function __construct(HandbidViewRenderer $viewRenderer, $handbid, $state)
     {
         $this->viewRenderer = $viewRenderer;
-        $this->handbid      = $handbid;
-        $this->state        = $state;
+        $this->handbid = $handbid;
+        $this->state = $state;
     }
 
     function init()
@@ -30,9 +30,9 @@ class HandbidActionController
             if ($post && $post->post_name == 'auction-item') {
 
                 $item = $this->state->currentItem();
-                if($item) {
+                if ($item) {
                     $post->post_title = $item->name;
-                    if($sep) {
+                    if ($sep) {
                         $title = ' ' . $sep . ' ' . $post->post_title;
                     } else {
                         $title = $post->post_title;
@@ -40,24 +40,24 @@ class HandbidActionController
 
                 }
 
-            } else if($post && $post->post_name == 'auction') {
+            } else if ($post && $post->post_name == 'auction') {
 
                 $auction = $this->state->currentAuction();
-                if($auction) {
+                if ($auction) {
                     $post->post_title = $auction->name;
-                    if($sep) {
+                    if ($sep) {
                         $title = $post->post_title . ' ' . $sep . ' ' . esc_attr(get_bloginfo('name'));
                     } else {
                         $title = $post->post_title;
                     }
                 }
 
-            }else if($post && $post->post_name == 'organization') {
+            } else if ($post && $post->post_name == 'organization') {
 
                 $org = $this->state->currentOrg();
-                if($org) {
+                if ($org) {
                     $post->post_title = $org->name;
-                    if($sep) {
+                    if ($sep) {
                         $title = $post->post_title . ' ' . $sep . ' ' . esc_attr(get_bloginfo('name'));
                     } else {
                         $title = $post->post_title;
@@ -71,11 +71,11 @@ class HandbidActionController
 
         add_filter('wp_title', function ($title, $sep, $seplocation) use ($titleForPost) {
 
-                global $post;
+            global $post;
 
-                return $titleForPost($title, $post, $sep);
+            return $titleForPost($title, $post, $sep);
 
-                return $title;
+            return $title;
 
         }, 10, 3);
 
@@ -86,29 +86,28 @@ class HandbidActionController
 
                 global $post;
 
-                if(isset($post) && $post->ID != $id) {
+                if (isset($post) && $post->ID != $id) {
                     return $pageTitle;
                 }
 
                 return $titleForPost($pageTitle, $post);
 
 
-
             }, 10, 2
         );
 
-        add_action('wp_head', function() {
+        add_action('wp_head', function () {
 
-                global $post;
+            global $post;
 
-                if ($post && $post->post_name == 'auction-item') {
+            if ($post && $post->post_name == 'auction-item') {
 
-                    $item = $this->state->currentItem();
-                    if($item) {
-                        echo '<meta property="og:image" content="' . $item->images[0] . '" />';
-                        echo '<link rel=”image_src” href=”' . $item->images[0] . '” />';
-                    }
+                $item = $this->state->currentItem();
+                if ($item) {
+                    echo '<meta property="og:image" content="' . $item->images[0] . '" />';
+                    echo '<link rel=”image_src” href=”' . $item->images[0] . '” />';
                 }
+            }
         });
     }
 
@@ -116,27 +115,31 @@ class HandbidActionController
     {
 
 
-        $redirect = isset($_POST['redirect']) ? $_POST['redirect'] :  '/bidder';
+        $redirect = isset($_POST['redirect']) ? $_POST['redirect'] : '/bidder';
 
         if (preg_match('/\?/', $redirect)) {
             $questionMarkOrAmpersand = '&';
-        }
-        else {
+            list($url, $query) = explode('?', $redirect);
+            parse_str($query, $query);
+            unset($query['handbid-error'], $query['handbid-notice']);
+            $redirect = $url . '?' . http_build_query($query);
+
+        } else {
             $questionMarkOrAmpersand = '?';
         }
 
         if ($_POST['form-id'] == "handbid-update-bidder") {
             $address = $_POST['shippingAddress'];
             $values = [
-                'firstName'                   => $_POST['firstName'],
-                'lastName'                    => $_POST['lastName'],
-                'email'                       => $_POST['email'],
-                'shippingAddress][city'       => $address['city'],
-                'shippingAddress][country'    => $address['country'],
+                'firstName' => $_POST['firstName'],
+                'lastName' => $_POST['lastName'],
+                'email' => $_POST['email'],
+                'shippingAddress][city' => $address['city'],
+                'shippingAddress][country' => $address['country'],
                 'shippingAddress][postalCode' => $address['postalCode'],
-                'shippingAddress][province'   => $address['province'],
-                'shippingAddress][street1'    => $address['street1'],
-                'shippingAddress][street2'    => $address['street2'],
+                'shippingAddress][province' => $address['province'],
+                'shippingAddress][street1' => $address['street1'],
+                'shippingAddress][street2' => $address['street2'],
             ];
 
             if (isset($_FILES['photo'])) {
@@ -144,7 +147,7 @@ class HandbidActionController
             }
 
             if (isset($_POST['password']) && isset($_POST['password2'])) {
-                $values['password']  = $_POST['password'];
+                $values['password'] = $_POST['password'];
                 $values['password2'] = $_POST['password2'];
             }
 
@@ -155,10 +158,10 @@ class HandbidActionController
 
                 $values = [
                     'nameOnCard' => $_POST['nameOnCard'],
-                    'cardNum'    => $_POST['cardNum'],
-                    'cvc'        => $_POST['cvc'],
-                    'expMonth'   => $_POST['expMonth'],
-                    'expYear'    => $_POST['expYear'],
+                    'cardNum' => $_POST['cardNum'],
+                    'cvc' => $_POST['cvc'],
+                    'expMonth' => $_POST['expMonth'],
+                    'expYear' => $_POST['expYear']
                 ];
                 // handbid-add-creditcard
                 //handbid-edit-creditcard-x
@@ -169,7 +172,11 @@ class HandbidActionController
                     $this->handbid->store('CreditCard')->add($bidder->_id, $values);
                     $redirect .= $questionMarkOrAmpersand . 'handbid-notice=' . urlencode('Your card has been added. Thank you.');
                 } catch (\Exception $e) {
-                    $redirect .= $questionMarkOrAmpersand . 'handbid-error=' . urlencode($e->getMessage());
+                    $redirect .= $questionMarkOrAmpersand . 'handbid-error=' . urlencode($e->getMessage()) . '&auto-open-cc=true&' . http_build_query([
+                            'nameOnCard' => $_POST['nameOnCard'],
+                            'expMonth' => $_POST['expMonth'],
+                            'expYear' => $_POST['expYear']
+                        ]);
                 }
             }
         }
