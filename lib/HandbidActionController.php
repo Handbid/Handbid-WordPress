@@ -182,7 +182,9 @@ class HandbidActionController
     function handbid_logout_callback()
     {
         $this->handbid->logout();
-        wp_redirect('/');
+
+        $redirect = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/';
+        wp_redirect($redirect);
     }
 
 }
