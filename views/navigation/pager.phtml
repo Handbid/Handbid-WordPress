@@ -1,26 +1,54 @@
 <?php
 
-$total = $this->get('total');
-$page = $this->get('page');
-$pageSize = $this->get('page_size');
-$pages = ceil($total / $pageSize);
+$total    = $this->get( 'total' );
+$page     = $this->get( 'page' );
+$pageSize = $this->get( 'page_size' );
+$pages    = ceil( $total / $pageSize );
+$id       = $this->get( 'id' );
 
-if($pages < 2) {
-    return;
+if ( $pages < 2 ) {
+	return;
 }
 
 ?>
 <ul class="page pagination">
-    <li class="first"><a href="?page-number=1"><< First</a></li>
-    <li class="previous"><a href="?page-number=<?php echo $page-1; ?>">< Previous</a></li>
+	<?php if ( $page > 0 ) {
+		?>
+		<li class="first"><a href="<?php echo $this->url( null, [
+				$id => [
+					'page' => 0
+				]
+			] ); ?>"><< First</a></li>
+		<li class="previous"><a href="<?php echo $this->url( null, [
+				$id => [
+					'page' => ( $page - 1 )
+				]
+			] ); ?>">< Previous</a></li>
+	<?php
+	}
 
-    <?php for ($p = 1; $p <= $pages; $p++) { ?>
+	for ( $p = 0; $p < $pages; $p ++ ) {
+		?>
 
-        <li><a href="?page-number=<?php echo $p; ?>"><?php echo $p; ?></a></li>
+		<li><a href="<?php echo $this->url( null, [
+				$id => [
+					'page' => $p
+				]
+			] ); ?>" class="<?php echo ( $page == $p ) ? 'selected' : ''; ?>"><?php echo( $p + 1 ); ?></a></li>
 
-    <?php } ?>
+	<?php } ?>
 
-
-    <li class="next"><a href="?page-number=<?php echo $page+1; ?>">Next ></a></li>
-    <li class="last"><a href="?page-number=<?php echo $pages; ?>">Last >></a></li>
+	<?php if ( $page < ( $pages - 1 ) ) {
+		?>
+		<li class="next"><a href="<?php echo $this->url( null, [
+				$id => [
+					'page' => ( $page + 1 )
+				]
+			] ); ?>">Next ></a></li>
+		<li class="last"><a href="<?php echo $this->url( null, [
+				$id => [
+					'page' => ( $pages - 1 )
+				]
+			] ); ?>">Last >></a></li>
+	<?php } ?>
 </ul>
