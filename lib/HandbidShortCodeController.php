@@ -624,6 +624,7 @@ class HandbidShortCodeController
     {
 
         try {
+
             $template = $this->templateFromAttributes($attributes, 'views/bidder/profile');
             $profile = $this->handbid->store('Bidder')->myProfile();
 
