@@ -58,7 +58,26 @@ class HandbidView {
 
         return $view->render();
 
+    }
 
+    public function url($href, $query = [], $options = []) {
+
+        $url = (isset($href)) ? $href : $_SERVER['REQUEST_URI'];
+
+        @list($url, $_query) = explode('?', $url);
+
+        if($_query != null) {
+            parse_str($_query, $_query);
+        }
+        else {
+            $_query = [];
+        }
+
+        $query = array_merge($_query, $query);
+
+        $url .= '?' . http_build_query($query);
+
+        return $url;
     }
 
 }

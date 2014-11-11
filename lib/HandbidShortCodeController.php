@@ -189,8 +189,19 @@ class HandbidShortCodeController
                 $attributes['type'] = 'current';
             }
 
+            $id = isset($attributes['id']) ? $attributes['id'] : 'auctions';
+
+            $auctionParams = isset($_GET[$id]) ? $_GET[$id] : [];
+
+            $page = 0;
+
+            if(isset($auctionParams['page'])) {
+                $page = $auctionParams['page'];
+            } else if(isset($attributes['page'])) {
+                $page = $attributes['page'];
+            }
+
             //paging and sort
-            $page = isset($attributes['page']) ? $attributes['page'] : 0;
             $pageSize = isset($attributes['page_size']) ? $attributes['page_size'] : 25;
             $sortField = isset($attributes['sort_field']) ? $attributes['sort_field'] : "name";
             $sortDirection = isset($attributes['sort_direction']) ? $attributes['sort_direction'] : "asc";
@@ -234,14 +245,24 @@ class HandbidShortCodeController
 
             $template = $this->templateFromAttributes($attributes, 'views/organization/list');
 
+            $id = isset($attributes['id']) ? $attributes['id'] : 'orgs';
+
+            $organizationParams = isset($_GET[$id]) ? $_GET[$id] : [];
+
+            $page = 0;
+
+            if(isset($organizationParams['page'])) {
+                $page = $organizationParams['page'];
+            } else if(isset($attributes['page'])) {
+                $page = $attributes['page'];
+            }
+
             //paging and sort
-            $page = isset($attributes['page']) ? $attributes['page'] : 0;
             $pageSize = isset($attributes['page_size']) ? $attributes['page_size'] : 25;
             $sortField = isset($attributes['sort_field']) ? $attributes['sort_field'] : "name";
             $sortDirection = isset($attributes['sort_direction']) ? $attributes['sort_direction'] : "asc";
             $logoWidth = isset($attributes['logo_width']) ? $attributes['logo_width'] : 200;
             $logoHeight = isset($attributes['logo_height']) ? $attributes['logo_height'] : false;
-            $id = isset($attributes['id']) ? $attributes['id'] : 'orgs';
 
             $query = [];
 
@@ -265,11 +286,11 @@ class HandbidShortCodeController
                 $template,
                 [
                     'organizations' => $organizations,
-                    'total' => $total,
-                    'id' => $id,
-                    'total' => $total,
-                    'page_size' => $pageSize,
-                    'page' => $page
+                    'total'         => $total,
+                    'id'            => $id,
+                    'total'         => $total,
+                    'page_size'     => $pageSize,
+                    'page'          => $page
                 ]
             );
 
@@ -443,9 +464,9 @@ class HandbidShortCodeController
                 ]
             ];
 
-            $items = $this->handbid->store('Item')->byAuction($auction->_id, $query);
-            $auction = $this->state->currentAuction();
-            $template = $this->templateFromAttributes($attributes, 'views/item/list');
+            $items      = $this->handbid->store('Item')->byAuction($auction->_id, $query);
+            $auction    = $this->state->currentAuction();
+            $template   = $this->templateFromAttributes($attributes, 'views/item/list');
 
             return $this->viewRenderer->render(
                 $template,
@@ -694,17 +715,20 @@ class HandbidShortCodeController
         }
     }
 
-    public function myNotifications($attributes)
+        public function myNotifications($attributes)
     {
         try {
 
             $template       = $this->templateFromAttributes($attributes, 'views/bidder/notifications');
-            $notifications  = $this->handbid->store('Notification')->all();
+
+            $limit = (isset($attributes['limit'])) ? $attributes['limit'] : '15';
+            $notifications  = $this->handbid->store('Notification')->all(0, $limit);
 
             return $this->viewRenderer->render(
                 $template,
                 [
-                    'notifications' => $notifications
+                    'notifications' => $notifications,
+                    'limit'         => $limit
                 ]
             );
 
@@ -912,19 +936,18 @@ class HandbidShortCodeController
 
             $template = $this->templateFromAttributes($attributes, 'views/navigation/pager');
 
-            $page = $attributes['page'];
-            $pageSize = $attributes['page_size'];
-            $total = $attributes['total'];
-            $id = $attributes['id'];
-
+            $page     = isset($attributes['page']) ? $attributes['page'] : 0;
+            $pageSize = isset($attributes['page_size']) ? $attributes['page_size'] : 25;
+            $total    = isset($attributes['total']) ? $attributes['total'] : 0;
+            $id       = isset($attributes['id']) ? $attributes['id'] : 0;
 
             return $this->viewRenderer->render(
                 $template,
                 [
-                    'page' => $page,
+                    'page'      => $page,
                     'page_size' => $pageSize,
-                    'total' => $total,
-                    'id' => $id
+                    'total'     => $total,
+                    'id'        => $id
                 ]
             );
         } catch (Exception $e) {
@@ -933,7 +956,6 @@ class HandbidShortCodeController
             return;
 
         }
-
 
     }
 
