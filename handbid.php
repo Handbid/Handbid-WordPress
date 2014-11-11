@@ -253,7 +253,7 @@ class Handbid
             //do we need to prompt for credit card?
             $bidder = $this->state()->currentBidder();
 
-            if($auction->requireCreditCard && !$bidder->hasCreditCardOnFile && ($auction->spendingThreshold == 0 || $auction->spendingThreshold <= $bidder->totalSpent)) {
+            if($bidder && $auction->requireCreditCard && !$bidder->hasCreditCardOnFile && ($auction->spendingThreshold == 0 || $auction->spendingThreshold <= $bidder->totalSpent)) {
 
                 echo do_shortcode('[handbid_bidder_profile_form template="views/bidder/credit-card-form" show_credit_card_required_message=true]');
 
