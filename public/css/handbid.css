@@ -1,4 +1,4 @@
-.handbid-fatal-error {
+.handbid-fatal-error * {
     display: none;
 }
 
@@ -12,6 +12,10 @@
     color: #fff;
     text-align: center;
     font-size: 2em;
+}
+
+.enable-handbid-fatal-error .handbid-fatal-error * {
+    display: block;
 }
 
 .powered-by-handbid {

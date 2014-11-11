@@ -35,7 +35,10 @@ class HandbidState
                     $orgKey = get_option('handbidDefaultOrganizationKey');
                 }
 
-                $this->org = $this->handbid->store('Organization')->byKey($orgKey);
+                if($orgKey) {
+                    $this->org = $this->handbid->store('Organization')->byKey($orgKey);
+                }
+
             }
 
             return $this->org;
