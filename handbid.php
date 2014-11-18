@@ -146,7 +146,10 @@ class Handbid
 
         return new \Handbid\Handbid(
             get_option('handbidConsumerKey'), get_option('handbidConsumerSecret'), [
-                'endpoint' => ($endpoint) ? $endpoint : null
+                'endpoint' => ($endpoint) ? $endpoint : null,
+                'cache'    => [
+                    'dir' => ABSPATH . 'wp-content/cache'
+                ]
             ]
         );
     }
