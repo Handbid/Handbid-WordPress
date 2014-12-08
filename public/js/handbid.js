@@ -6,7 +6,6 @@
 
         $(window).on('beforeunload', function () {
 
-            console.log('refreshing');
             $('body').addClass('handbid-refreshing-page');
 
         });
