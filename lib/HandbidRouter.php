@@ -36,7 +36,7 @@ class HandbidRouter
             'top'
         );
         add_rewrite_rule(
-            'auction/([^/]+)/?/item/([^/]+)/?',
+            'auction/([^/]+)/?/items/([^/]+)/?',
             'index.php?pagename=auction-item&auction=$matches[1]&item=$matches[2]',
             'top'
         );
