@@ -6,10 +6,10 @@ if (!is_null($this->get('receipt'))) {
     return;
 }
 
-if (count($receipt) > 1) {
+if (count($receipt) > 0) {
     ?>
 
-    <iframe class="receipt-iframe" src="[]"></iframe>
+    <iframe class="receipt-iframe" src="<?php echo $receipt->url; ?>"></iframe>
 <?php
 }
 else
