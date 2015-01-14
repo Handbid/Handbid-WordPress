@@ -76,7 +76,7 @@ class HandbidState
                     $query['options']['images'] = ['h' => $attributes['thumb_height']];
                 }
 
-                $this->auction = $this->handbid->store('Auction')->byKey($auctionKey, $query);
+                $this->auction = $this->handbid->store('Auction')->byKey($auctionKey, $query, false);
             }
 
             return $this->auction;
