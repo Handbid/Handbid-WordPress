@@ -134,6 +134,7 @@ class HandbidActionController
                 'firstName' => $_POST['firstName'],
                 'lastName' => $_POST['lastName'],
                 'email' => $_POST['email'],
+                'cellPhone' => $_POST['cellPhone']['value'],
                 'shippingAddress][city' => $address['city'],
                 'shippingAddress][country' => $address['country'],
                 'shippingAddress][postalCode' => $address['postalCode'],
