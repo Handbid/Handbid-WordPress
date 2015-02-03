@@ -852,6 +852,8 @@ class HandbidShortCodeController {
 		try {
 			$auction = $this->state->currentAuction( $attributes );
 
+            $profile  = $this->handbid->store( 'Bidder' )->myProfile();
+
 			$query = [ ];//@todo: find out hwo to pass query through attributes. then merge it with our defaults. array_merge([], $query)
 
 			$tickets = $this->handbid->store( 'Ticket' )->byAuction( $auction->key, $query );
@@ -863,7 +865,8 @@ class HandbidShortCodeController {
 					$template,
 					[
 						'tickets' => $tickets,
-						'auction' => $auction
+						'auction' => $auction,
+                        'cards' => $this->handbid->store( 'CreditCard' )->byOwner( $profile->_id )
 					]
 				);
 			}
