@@ -858,6 +858,12 @@ class HandbidShortCodeController {
 
 			$tickets = $this->handbid->store( 'Ticket' )->byAuction( $auction->key, $query );
 
+            $cards = [];
+
+            if(isset($profile) && $profile) {
+                $cards = $this->handbid->store( 'CreditCard' )->byOwner( $profile->_id );
+            }
+
 			if ( $tickets ) {
 				$template = $this->templateFromAttributes( $attributes, 'views/ticket/list' );
 
@@ -866,7 +872,7 @@ class HandbidShortCodeController {
 					[
 						'tickets' => $tickets,
 						'auction' => $auction,
-                        'cards' => $this->handbid->store( 'CreditCard' )->byOwner( $profile->_id )
+                        'cards'   => $cards
 					]
 				);
 			}
