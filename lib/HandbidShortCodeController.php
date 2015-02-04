@@ -872,7 +872,8 @@ class HandbidShortCodeController {
 					[
 						'tickets' => $tickets,
 						'auction' => $auction,
-                        'cards'   => $cards
+                        'cards'   => $cards,
+                        'profile' => $profile
 					]
 				);
 			}
