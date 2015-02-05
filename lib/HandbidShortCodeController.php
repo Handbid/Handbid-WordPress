@@ -390,27 +390,10 @@ class HandbidShortCodeController {
 			$template = $this->templateFromAttributes( $attributes, 'views/auction/details' );
 			$auction  = $this->state->currentAuction( $attributes );
 
-			$categoryStore = $this->handbid->store( 'ItemCategory' );
-			$categories    = $categoryStore->byAuction( $auction->_id );
-			$itemQuery     = [
-				'options' => [
-					'images' => [
-						'w' => 225,
-						'h' => false
-					]
-				]
-			];
-
-			$items = $this->handbid->store( 'Item' )->byAuction( $auction->_id, $itemQuery );
-
-			$categoryStore->populateNumItems( $categories, $items );
-
 			return $this->viewRenderer->render(
 				$template,
 				[
 					'auction'    => $auction,
-					'categories' => $categories,
-					'items'      => $items
 				]
 			);
 
@@ -447,25 +430,21 @@ class HandbidShortCodeController {
 	public function auctionItemList( $attributes ) {
 
 		try {
-			$auction = $this->state->currentAuction( $attributes );
-			$query   = [
-				'options' => [
-					'images' => [
-						'w' => 225,
-						'h' => false
-					]
-				]
-			];
-
-			$items    = $this->handbid->store( 'Item' )->byAuction( $auction->_id, $query );
 			$auction  = $this->state->currentAuction();
+
+			forEach($auction->categories as $category) {
+				forEach($category->items as $item) {
+					$items[] = $item;
+				}
+			}
+
 			$template = $this->templateFromAttributes( $attributes, 'views/item/list' );
 
 			return $this->viewRenderer->render(
 				$template,
 				[
-					'items'   => $items,
-					'auction' => $auction
+					'auction' => $auction,
+					'items'   => $items
 				]
 			);
 		} catch ( Exception $e ) {
