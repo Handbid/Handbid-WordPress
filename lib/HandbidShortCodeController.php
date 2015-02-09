@@ -528,7 +528,7 @@ class HandbidShortCodeController {
 			$item    = $this->state->currentItem();
 			$auction = $this->state->currentAuction();
 
-			$bids    = $this->handbid->store( 'Bid' )->itemBids( $item->_id );
+			$bids    = $this->handbid->store( 'Bid' )->itemBids( $item->id );
 			$profile = $this->handbid->store( 'Bidder' )->myProfile();
 
 			return $this->viewRenderer->render(
@@ -601,7 +601,7 @@ class HandbidShortCodeController {
 			$profile  = $this->handbid->store( 'Bidder' )->myProfile();
 
 			if ( $profile ) {
-				$img = wp_get_image_editor( $profile->photo );
+				$img = wp_get_image_editor( $profile->imageUrl );
 				if ( ! is_wp_error( $img ) ) {
 
 
@@ -630,10 +630,10 @@ class HandbidShortCodeController {
 
 			if ( $auction && $profile ) {
 
-				$winning   = $this->handbid->store( 'Bid' )->myBids( $profile->pin, $auction->_id );
-				$losing    = $this->handbid->store( 'Bid' )->myLosing( $profile->pin, $auction->_id );
-				$purchases = $this->handbid->store( 'Bid' )->myPurchases( $profile->pin, $auction->_id );
-				$proxyBids = $this->handbid->store( 'Bid' )->myProxyBids( $profile->pin, $auction->_id );
+				$winning   = $this->handbid->store( 'Bid' )->myBids( $profile->pin, $auction->id );
+				$losing    = $this->handbid->store( 'Bid' )->myLosing( $profile->pin, $auction->id );
+				$purchases = $this->handbid->store( 'Bid' )->myPurchases( $profile->pin, $auction->id );
+				$proxyBids = $this->handbid->store( 'Bid' )->myProxyBids( $profile->pin, $auction->id );
 
 				foreach ( $winning as $w ) {
 					$totalSpent += $w->amount;
@@ -676,8 +676,8 @@ class HandbidShortCodeController {
 			return $this->viewRenderer->render(
 				$template,
 				[
-					'winning' => $this->handbid->store( 'Bid' )->myBids( $profile->pin, $auction->_id ),
-					'losing'  => $this->handbid->store( 'Bid' )->myLosing( $profile->pin, $auction->_id ),
+					'winning' => $this->handbid->store( 'Bid' )->myBids( $profile->pin, $auction->id ),
+					'losing'  => $this->handbid->store( 'Bid' )->myLosing( $profile->pin, $auction->id ),
 					'auction' => $auction
 				]
 			);
@@ -722,7 +722,7 @@ class HandbidShortCodeController {
 			return $this->viewRenderer->render(
 				$template,
 				[
-					'bids'    => $this->handbid->store( 'Bid' )->myProxyBids( $profile->pin, $auction->_id ),
+					'bids'    => $this->handbid->store( 'Bid' )->myProxyBids( $profile->pin, $auction->id ),
 					'auction' => $auction
 				]
 			);
@@ -744,7 +744,7 @@ class HandbidShortCodeController {
 			return $this->viewRenderer->render(
 				$template,
 				[
-					'purchases' => $this->handbid->store( 'Bid' )->myPurchases( $profile->pin, $auction->_id ),
+					'purchases' => $this->handbid->store( 'Bid' )->myPurchases( $profile->pin, $auction->id ),
 					'auction'   => $auction
 				]
 			);
@@ -791,7 +791,7 @@ class HandbidShortCodeController {
 			return $this->viewRenderer->render(
 				$template,
 				[
-					'cards' => $this->handbid->store( 'CreditCard' )->byOwner( $profile->_id )
+					'cards' => $this->handbid->store( 'CreditCard' )->byOwner( $profile->id )
 				]
 			);
 		} catch ( Exception $e ) {
@@ -808,7 +808,7 @@ class HandbidShortCodeController {
 			$auction  = $this->state->currentAuction();
 			$receipt  = null;
 			if ( $auction ) {
-				$receipt = $this->handbid->store( 'Receipt' )->byAuction( $auction->_id );
+				$receipt = $this->handbid->store( 'Receipt' )->byAuction( $auction->id );
 			}
 
 			return $this->viewRenderer->render(
