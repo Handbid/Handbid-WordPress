@@ -314,13 +314,13 @@ class HandbidShortCodeController {
 
 			try {
 
-				$profile = $this->handbid->store( 'Bidder' )->myProfile( $auction->_id );
+				$profile = $this->handbid->store( 'Bidder' )->myProfile( $auction->id );
 				if ( $profile ) {
 
-					$totalWinning   = count( $this->handbid->store( 'Bid' )->myBids( $profile->pin, $auction->_id ) );
-					$totalLosing    = count( $this->handbid->store( 'Bid' )->myLosing( $profile->pin, $auction->_id ) );
-					$totalProxies   = count( $this->handbid->store( 'Bid' )->myProxyBids( $profile->pin, $auction->_id ) );
-					$totalPurchases = count( $this->handbid->store( 'Bid' )->myPurchases( $profile->pin, $auction->_id ) );
+					$totalWinning   = count( $this->handbid->store( 'Bid' )->myBids( $auction->id ) );
+					$totalLosing    = count( $this->handbid->store( 'Bid' )->myLosing( $auction->id ) );
+					$totalProxies   = count( $this->handbid->store( 'Bid' )->myProxyBids( $auction->id ) );
+					$totalPurchases = count( $this->handbid->store( 'Bid' )->myPurchases( $auction->id ) );
 
 				}
 
@@ -468,7 +468,7 @@ class HandbidShortCodeController {
 
 			if ( $attributes !== '' && $item && in_array( 'include_related', $attributes ) ) {
 
-				$related = $this->handbid->store( 'Item' )->related( $item->_id, [
+				$related = $this->handbid->store( 'Item' )->related( $item->id, [
 					'config' => [
 						'skip'  => isset( $attributes['related_skip'] ) ? $attributes['related_skip'] : 0,
 						'limit' => isset( $attributes['related_limit'] ) ? $attributes['related_limit'] : 3,
@@ -502,7 +502,7 @@ class HandbidShortCodeController {
 			$bids    = null;
 
 			if ( $item ) {
-				$bids = $this->handbid->store( 'Bid' )->itemBids( $item->_id );
+				$bids = $this->handbid->store( 'Bid' )->itemBids( $item->id );
 			}
 
 			return $this->viewRenderer->render(
@@ -630,10 +630,10 @@ class HandbidShortCodeController {
 
 			if ( $auction && $profile ) {
 
-				$winning   = $this->handbid->store( 'Bid' )->myBids( $profile->pin, $auction->id );
-				$losing    = $this->handbid->store( 'Bid' )->myLosing( $profile->pin, $auction->id );
-				$purchases = $this->handbid->store( 'Bid' )->myPurchases( $profile->pin, $auction->id );
-				$proxyBids = $this->handbid->store( 'Bid' )->myProxyBids( $profile->pin, $auction->id );
+				$winning   = $this->handbid->store( 'Bid' )->myBids($auction->id );
+				$losing    = $this->handbid->store( 'Bid' )->myLosing( $auction->id );
+				$purchases = $this->handbid->store( 'Bid' )->myPurchases( $auction->id );
+				$proxyBids = $this->handbid->store( 'Bid' )->myProxyBids( $auction->id );
 
 				foreach ( $winning as $w ) {
 					$totalSpent += $w->amount;
@@ -676,8 +676,8 @@ class HandbidShortCodeController {
 			return $this->viewRenderer->render(
 				$template,
 				[
-					'winning' => $this->handbid->store( 'Bid' )->myBids( $profile->pin, $auction->id ),
-					'losing'  => $this->handbid->store( 'Bid' )->myLosing( $profile->pin, $auction->id ),
+					'winning' => $this->handbid->store( 'Bid' )->myBids( $auction->id ),
+					'losing'  => $this->handbid->store( 'Bid' )->myLosing( $auction->id ),
 					'auction' => $auction
 				]
 			);
@@ -722,7 +722,7 @@ class HandbidShortCodeController {
 			return $this->viewRenderer->render(
 				$template,
 				[
-					'bids'    => $this->handbid->store( 'Bid' )->myProxyBids( $profile->pin, $auction->id ),
+					'bids'    => $this->handbid->store( 'Bid' )->myProxyBids( $auction->id ),
 					'auction' => $auction
 				]
 			);
@@ -744,7 +744,7 @@ class HandbidShortCodeController {
 			return $this->viewRenderer->render(
 				$template,
 				[
-					'purchases' => $this->handbid->store( 'Bid' )->myPurchases( $profile->pin, $auction->id ),
+					'purchases' => $this->handbid->store( 'Bid' )->myPurchases( $auction->id ),
 					'auction'   => $auction
 				]
 			);

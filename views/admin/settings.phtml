@@ -36,6 +36,12 @@
                 <td><input type="checkbox" checked name="handbidShowAllAuctions"
                            value="<?php echo get_option('handbidShowAllAuctions'); ?>"/></td>
             </tr>
+            <tr valign="top">
+                <th scope="row"><?php echo('CDN Endpoint'); ?></th>
+                <td><input type="text" name="handbidCdnEndpoint"
+                           value="<?php echo get_option('handbidCdnEndpoint'); ?>"/></td>
+            </tr>
+
         </table>
         <?php submit_button(); ?>
 

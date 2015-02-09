@@ -51,7 +51,8 @@ class HandbidAdminActionController
             'handbidDefaultAuctionKey',
             'handbidDefaultOrganizationKey',
             'handbidJs',
-            'handbidShowAllAuctions'
+            'handbidShowAllAuctions',
+            'handbidCdnEndpoint'
         ];
 
         forEach ($settings as $setting) {
