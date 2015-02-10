@@ -464,7 +464,7 @@ class HandbidShortCodeController {
 
 			$item    = $this->state->currentItem( $attributes );
 			$auction = $this->state->currentAuction();
-			$related = null;
+            $related = false;
 
 			if ( $attributes !== '' && $item && in_array( 'include_related', $attributes ) ) {
 
@@ -635,13 +635,17 @@ class HandbidShortCodeController {
 				$purchases = $this->handbid->store( 'Bid' )->myPurchases( $auction->id );
 				$proxyBids = $this->handbid->store( 'Bid' )->myProxyBids( $auction->id );
 
-				foreach ( $winning as $w ) {
-					$totalSpent += $w->amount;
-				}
+                if($winning) {
+                    foreach ( $winning as $w ) {
+                        $totalSpent += $w->amount;
+                    }
+                }
 
-				foreach ( $purchases as $p ) {
-					$totalSpent += $p->grandTotal;
-				}
+                if($purchases) {
+                    foreach ($purchases as $p) {
+                        $totalSpent += $p->grandTotal;
+                    }
+                }
 
 			}
 
