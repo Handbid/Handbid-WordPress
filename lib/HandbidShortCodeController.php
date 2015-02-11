@@ -141,7 +141,7 @@ class HandbidShortCodeController {
 
 			// Get orgs from handbid server
 			if ( $org ) {
-				$auctions = $this->handbid->store( 'Auction' )->{$attributes['type']}( 0, 25, 'name', 'ASC', $org->_id );
+				$auctions = $this->handbid->store( 'Auction' )->{$attributes['type']}( 0, 25, 'name', 'ASC', $org->id );
 			} else {
 				$auctions = [ ];
 			}
