@@ -202,14 +202,9 @@ class HandbidShortCodeController {
 			$sortDirection = isset( $attributes['sort_direction'] ) ? $attributes['sort_direction'] : "asc";
 			$id            = isset( $attributes['id'] ) ? $attributes['id'] : 'auctions';
 
-			$auctions = $this->handbid->store( 'Auction' )->{$attributes['type']}(
-				$page,
-				$pageSize,
-				$sortField,
-				$sortDirection
-			);
+			$auctions = $this->handbid->store( 'Auction' )->publicAuctions();
 
-			$total = $this->handbid->store( 'Auction' )->count( $attributes['type'] );
+			$total = $this->handbid->store( 'Auction' )->publicAuctionCount();
 
 			$markup = $this->viewRenderer->render(
 				$template,
@@ -317,7 +312,7 @@ class HandbidShortCodeController {
 				$profile = $this->handbid->store( 'Bidder' )->myProfile( $auction->id );
 				if ( $profile ) {
 
-					$totalWinning   = count( $this->handbid->store( 'Bid' )->myBids( $auction->id ) );
+					$totalWinning   = count( $this->handbid->store( 'Bid' )->myWinning( $auction->id ) );
 					$totalLosing    = count( $this->handbid->store( 'Bid' )->myLosing( $auction->id ) );
 					$totalProxies   = count( $this->handbid->store( 'Bid' )->myProxyBids( $auction->id ) );
 					$totalPurchases = count( $this->handbid->store( 'Bid' )->myPurchases( $auction->id ) );
@@ -630,7 +625,7 @@ class HandbidShortCodeController {
 
 			if ( $auction && $profile ) {
 
-				$winning   = $this->handbid->store( 'Bid' )->myBids($auction->id );
+				$winning   = $this->handbid->store( 'Bid' )->myWinning($auction->id );
 				$losing    = $this->handbid->store( 'Bid' )->myLosing( $auction->id );
 				$purchases = $this->handbid->store( 'Bid' )->myPurchases( $auction->id );
 				$proxyBids = $this->handbid->store( 'Bid' )->myProxyBids( $auction->id );
@@ -680,7 +675,7 @@ class HandbidShortCodeController {
 			return $this->viewRenderer->render(
 				$template,
 				[
-					'winning' => $this->handbid->store( 'Bid' )->myBids( $auction->id ),
+					'winning' => $this->handbid->store( 'Bid' )->myWinning( $auction->id ),
 					'losing'  => $this->handbid->store( 'Bid' )->myLosing( $auction->id ),
 					'auction' => $auction
 				]

@@ -129,17 +129,17 @@ class HandbidActionController
         }
 
         if ($_POST['form-id'] == "handbid-update-bidder") {
-            $address = $_POST['shippingAddress'];
+
             $values = [
                 'firstName' => $_POST['firstName'],
                 'lastName' => $_POST['lastName'],
                 'email' => $_POST['email'],
-                'shippingAddress][city' => $address['city'],
-                'shippingAddress][country' => $address['country'],
-                'shippingAddress][postalCode' => $address['postalCode'],
-                'shippingAddress][province' => $address['province'],
-                'shippingAddress][street1' => $address['street1'],
-                'shippingAddress][street2' => $address['street2'],
+                'userAddressCity' => $_POST['userAddressCity'],
+                'userAddressCountryId' => $_POST['userAddressCountryId'],
+                'userAddressPostalCode' => $_POST['userAddressPostalCode'],
+                'userAddressProvinceId' => $_POST['userAddressProvinceId'],
+                'userAddressStreet1' => $_POST['userAddressStreet1'],
+                'userAddressStreet2' => $_POST['userAddressStreet2'],
             ];
 
             if (isset($_FILES['photo'])) {
@@ -169,7 +169,7 @@ class HandbidActionController
                 $bidder = $this->handbid->store('Bidder')->myProfile();
 
                 try {
-                    $this->handbid->store('CreditCard')->add($bidder->_id, $values);
+                    $this->handbid->store('CreditCard')->add($bidder->id, $values);
                     $redirect .= $questionMarkOrAmpersand . 'handbid-notice=' . urlencode('Your card has been added. Thank you.');
                 } catch (\Exception $e) {
                     $redirect .= $questionMarkOrAmpersand . 'handbid-error=' . urlencode($e->getMessage()) . '&auto-open-cc=true&' . http_build_query([
