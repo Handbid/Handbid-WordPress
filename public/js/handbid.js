@@ -1,6 +1,7 @@
 (function ($) {
 
-    var handbid = {
+    var restEndpoint = 'https://rest.handbid.lan/',
+        handbid = {
 
         // Setup bidding
         setupBidding : function(container) {
@@ -58,8 +59,29 @@
         setupCreditCard : function() {
 
             $('[data-handbid-delete-credit-card]').on('click', function(e) {
+
                 e.preventDefault();
-                alert('Delete Credit Card : ' + $(this).attr('data-handbid-delete-credit-card'));
+
+                alert('clicked delete credit card');
+
+                var data = {
+                    'id' : $(this).attr('data-handbid-delete-credit-card')
+                };
+
+                $.ajax({
+                    type: "POST",
+                    url: '/wp-admin/admin-post.php',
+                    data: data,
+                    success: function() {
+                        alert('success!');
+                        location.location(window.location.href + 'handbid-notice=' + encodeURIComponent('Your credit card has been deleted.'));
+                    }
+                });
+
+                //$.post('wp-admin/admin-post.php' + $(this).attr('data-handbid-delete-credit-card'), function(data) {
+                //    location.location(window.location.href + 'handbid-notice=' + encodeURIComponent('Your credit card has been deleted.'));
+                //});
+
             })
 
         },
