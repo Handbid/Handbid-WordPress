@@ -587,6 +587,7 @@ class HandbidShortCodeController {
 
 	}
 
+
 	// Bidder
 	public function myProfile( $attributes ) {
 
@@ -595,7 +596,16 @@ class HandbidShortCodeController {
 			$template = $this->templateFromAttributes( $attributes, 'views/bidder/profile' );
 			$profile  = $this->handbid->store( 'Bidder' )->myProfile();
 
-			if ( $profile ) {
+            $auction = $this->state->currentAuction();
+
+            $winning    = null;
+            $losing     = null;
+            $purchases  = null;
+            $proxyBids  = null;
+            $totalSpent = 0;
+            $myAuctions = null;
+
+            if ( $profile ) {
 				$img = wp_get_image_editor( $profile->imageUrl );
 				if ( ! is_wp_error( $img ) ) {
 
@@ -612,34 +622,28 @@ class HandbidShortCodeController {
 				if ( isset( $newPhoto ) ) {
 					$profile->photo = $newPhoto;
 				}
-			}
 
-			$auction = $this->state->currentAuction();
+                $myAuctions = $this->handbid->store( 'Auction' )->myRecent();
 
-			$winning    = null;
-			$losing     = null;
-			$purchases  = null;
-			$proxyBids  = null;
-			$totalSpent = 0;
-			$myAuctions = $this->handbid->store( 'Auction' )->myRecent();
+                if ( $auction && $profile ) {
 
-			if ( $auction && $profile ) {
+                    $winning   = $this->handbid->store( 'Bid' )->myWinning($auction->id );
+                    $losing    = $this->handbid->store( 'Bid' )->myLosing( $auction->id );
+                    $purchases = $this->handbid->store( 'Bid' )->myPurchases( $auction->id );
+                    $proxyBids = $this->handbid->store( 'Bid' )->myProxyBids( $auction->id );
 
-				$winning   = $this->handbid->store( 'Bid' )->myWinning($auction->id );
-				$losing    = $this->handbid->store( 'Bid' )->myLosing( $auction->id );
-				$purchases = $this->handbid->store( 'Bid' )->myPurchases( $auction->id );
-				$proxyBids = $this->handbid->store( 'Bid' )->myProxyBids( $auction->id );
-
-                if($winning) {
-                    foreach ( $winning as $w ) {
-                        $totalSpent += $w->amount;
+                    if($winning) {
+                        foreach ( $winning as $w ) {
+                            $totalSpent += $w->amount;
+                        }
                     }
-                }
 
-                if($purchases) {
-                    foreach ($purchases as $p) {
-                        $totalSpent += $p->grandTotal;
+                    if($purchases) {
+                        foreach ($purchases as $p) {
+                            $totalSpent += $p->grandTotal;
+                        }
                     }
+
                 }
 
 			}

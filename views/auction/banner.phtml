@@ -8,10 +8,6 @@ $losingBids     = $this->get('losingBids');
 
 $profile        = $this->get('profile');
 
-if (isset($auction->meta)) {
-    $org = $auction->meta->organization;
-}
-
 
 if (!$auction) {
     echo "No Auction Set";

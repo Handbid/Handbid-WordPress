@@ -5,18 +5,38 @@
         // Setup bidding
         setupBidding : function(container) {
 
-            var quantity = $('[data-handbid-quantity]', container)[0];
+            var amount = $('[data-handbid-quantity], [data-handbid-bid-amount]', container),
+                increment = $('.increment span')[0].innerHTML || 1;
 
-            var value = quantity.value;
+            console.log(increment);
 
-            $('[data-handbid-bid-button="up"]').on('click', function() {
-                quantity.innerHTML++;
+            $('[data-handbid-bid-button="up"]').on('click', function(e) {
+
+                e.preventDefault();
+
+                console.log('amount : ' + amount[0].innerHTML);
+                console.log('increment : ' + increment);
+
+                var value = parseInt(amount[0].innerHTML) + increment;
+
+                amount.each(function() {
+
+                    this.innerHTML = value;
+                });
+
             });
 
-            $('[data-handbid-bid-button="down"]').on('click', function() {
-                if(quantity.innerHTML > 0) {
-                    quantity.innerHTML--;
-                }
+            $('[data-handbid-bid-button="down"]').on('click', function(e) {
+
+                e.preventDefault();
+
+                amount.each(function() {
+                    if(this.innerHTML > 0 && (this.innerHTML - increment > 0)) {
+                        this.innerHTML -= increment;
+                    }
+                });
+
+
             });
 
             $('[data-handbid-bid-button="bid"]', container).click(this.bid);
@@ -42,6 +62,15 @@
                 alert('Delete Credit Card : ' + $(this).attr('data-handbid-delete-credit-card'));
             })
 
+        },
+        setupConnect : function() {
+            $('[data-handbid-connect]').on('click', function(e) {
+
+                e.preventDefault();
+
+                alert('connect clicked');
+
+            })
         }
     };
 
@@ -58,6 +87,7 @@
 
         ($('[data-handbid-bid]').length > 0) ? handbid.setupBidding($('[data-handbid-bid][data-handbid-item-key]')) : '';
         ($('[data-handbid-delete-credit-card]').length > 0) ? handbid.setupCreditCard() : '';
+        ($('[data-handbid-connect]').length > 0) ? handbid.setupConnect() : '';
 
         // On bids
     });

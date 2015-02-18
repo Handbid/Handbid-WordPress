@@ -251,7 +251,7 @@ class Handbid
 
         if ($auction = $this->state()->currentAuction()) {
 
-            echo '<script type="text/javascript">handbid.connectToAuction("' . $auction->key . '");</script>';
+//            echo '<script type="text/javascript">handbid.connectToAuction("' . $auction->key . '");</script>';
 
             //do we need to prompt for credit card?
             $bidder = $this->state()->currentBidder();
