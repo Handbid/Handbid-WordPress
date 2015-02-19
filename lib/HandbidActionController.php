@@ -168,8 +168,9 @@ class HandbidActionController
 
                 $bidder = $this->handbid->store('Bidder')->myProfile();
 
+
                 try {
-                    $this->handbid->store('CreditCard')->add($bidder->id, $values);
+                    $this->handbid->store('CreditCard')->add($values);
                     $redirect .= $questionMarkOrAmpersand . 'handbid-notice=' . urlencode('Your card has been added. Thank you.');
                 } catch (\Exception $e) {
                     $redirect .= $questionMarkOrAmpersand . 'handbid-error=' . urlencode($e->getMessage()) . '&auto-open-cc=true&' . http_build_query([
@@ -178,6 +179,12 @@ class HandbidActionController
                             'expYear' => $_POST['expYear']
                         ]);
                 }
+            }
+            else if ($_POST['form-id'] == 'handbid-delete-creditcard') {
+
+                $this->handbid->store('CreditCard')->delete($_POST['card-id']);
+
+                $redirect .= $questionMarkOrAmpersand . 'handbid-notice=' . urlencode('Your card has been deleted.');
             }
         }
 
