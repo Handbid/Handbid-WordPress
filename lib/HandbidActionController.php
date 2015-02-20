@@ -104,8 +104,8 @@ class HandbidActionController
 
                 $item = $this->state->currentItem();
                 if ($item) {
-                    echo '<meta property="og:image" content="//' . $item->imageUrl . '" />';
-                    echo '<link rel=”image_src” href=”//' . $item->imageUrl . '” />';
+                    echo '<meta property="og:image" content="' . get_option('handbidCdnEndpoint') . $item->imageUrl . '" />';
+                    echo '<link rel=”image_src” href=”' . get_option('handbidCdnEndpoint') . $item->imageUrl . '” />';
                 }
             }
         });
@@ -153,39 +153,52 @@ class HandbidActionController
 
             $redirect .= $questionMarkOrAmpersand . 'handbid-notice=' . urlencode('Your profile has been updated.');
             $this->handbid->store('Bidder')->updateProfile($values);
-        } else {
-            if ($_POST['form-id'] == "handbid-add-creditcard") {
+        } else if ($_POST['form-id'] == "handbid-add-creditcard"){
+            $values = [
+                'nameOnCard' => $_POST['nameOnCard'],
+                'cardNum' => $_POST['cardNum'],
+                'cvc' => $_POST['cvc'],
+                'expMonth' => $_POST['expMonth'],
+                'expYear' => $_POST['expYear']
+            ];
+            // handbid-add-creditcard
+            //handbid-edit-creditcard-x
 
-                $values = [
-                    'nameOnCard' => $_POST['nameOnCard'],
-                    'cardNum' => $_POST['cardNum'],
-                    'cvc' => $_POST['cvc'],
-                    'expMonth' => $_POST['expMonth'],
-                    'expYear' => $_POST['expYear']
-                ];
-                // handbid-add-creditcard
-                //handbid-edit-creditcard-x
-
-                $bidder = $this->handbid->store('Bidder')->myProfile();
-
-
-                try {
-                    $this->handbid->store('CreditCard')->add($values);
-                    $redirect .= $questionMarkOrAmpersand . 'handbid-notice=' . urlencode('Your card has been added. Thank you.');
-                } catch (\Exception $e) {
-                    $redirect .= $questionMarkOrAmpersand . 'handbid-error=' . urlencode($e->getMessage()) . '&auto-open-cc=true&' . http_build_query([
-                            'nameOnCard' => $_POST['nameOnCard'],
-                            'expMonth' => $_POST['expMonth'],
-                            'expYear' => $_POST['expYear']
-                        ]);
-                }
+            try {
+                $this->handbid->store('CreditCard')->add($values);
+                $redirect .= $questionMarkOrAmpersand . 'handbid-notice=' . urlencode('Your card has been added. Thank you.');
+            } catch (\Exception $e) {
+                $redirect .= $questionMarkOrAmpersand . 'handbid-error=' . urlencode($e->getMessage()) . '&auto-open-cc=true&' . http_build_query([
+                        'nameOnCard' => $_POST['nameOnCard'],
+                        'expMonth' => $_POST['expMonth'],
+                        'expYear' => $_POST['expYear']
+                    ]);
             }
-            else if ($_POST['form-id'] == 'handbid-delete-creditcard') {
 
-                $this->handbid->store('CreditCard')->delete($_POST['card-id']);
+        } else if ($_POST['form-id'] == 'handbid-delete-creditcard') {
 
-                $redirect .= $questionMarkOrAmpersand . 'handbid-notice=' . urlencode('Your card has been deleted.');
-            }
+            $this->handbid->store('CreditCard')->delete($_POST['card-id']);
+
+            $redirect .= $questionMarkOrAmpersand . 'handbid-notice=' . urlencode('Your card has been deleted.');
+        } else if($_POST['form-id'] == 'handbid-login') {
+
+            $values = [
+              'username' => $_POST['username'],
+              'password' => $_POST['pin']
+            ];
+
+            $this->handbid->store('Bidder')->login($values);
+
+        } else if($_POST['form-id'] == 'handbid-register') {
+
+            $values = [
+                'firstname' => $_POST['firstname'],
+                'lastname'  => $_POST['lastname'],
+                'mobile'    => $_POST['mobile']
+            ];
+
+            $this->handbid->store('Bidder')->register($values);
+
         }
 
         //send them on their way

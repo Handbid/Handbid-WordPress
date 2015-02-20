@@ -65,7 +65,8 @@ class HandbidShortCodeController {
 			'handbid_is_logged_out'         => 'isLoggedOut',
 			'handbid_breadcrumb'            => 'breadcrumbs',
 			'handbid_bidder_credit_cards'   => 'myCreditCards',
-			'handbid_bidder_receipt'        => 'bidderReceipt'
+			'handbid_bidder_receipt'        => 'bidderReceipt',
+			'handbid_bidder_login_form'     => 'loginRegisterForm'
 		];
 
 		forEach ( $shortCodes as $shortCode => $callback ) {
@@ -827,6 +828,13 @@ class HandbidShortCodeController {
 			return;
 		}
 	}
+
+    public function loginRegisterForm() {
+        return $this->viewRenderer->render('views/bidder/login-form',
+            [
+            ]
+        );
+    }
 
 	//tickets
 	public function ticketList( $attributes ) {

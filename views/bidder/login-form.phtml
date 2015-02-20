@@ -1,0 +1,36 @@
+<div class="handbid-modal" data-handbid-modal-key="login-modal">
+    <h3>Login / Register</h3>
+    <a href="#" class="modal-close">X</a>
+
+    <div class="row">
+        <div class="col-md-6 login-wrapper">
+            <form action="<?php echo get_admin_url() . 'admin-post.php'; ?>" method="post"
+                  enctype="multipart/form-data">
+
+                <input type="text" name="username" placeholder="Username">
+                <input type="text" name="pin" placeholder="Pin">
+
+                <input type="submit" class="green-solid-button" value="Login"/>
+                <input type='hidden' name='form-id' value='handbid-login'/>
+                <input type='hidden' name='action' value='submit-form' />
+                <input type='hidden' name='redirect' value='<?php echo $_SERVER["REQUEST_URI"] ?>'/>
+
+            </form>
+        </div>
+        <div class="col-md-6 register-wrapper">
+            <form action="<?php echo get_admin_url() . 'admin-post.php'; ?>" method="post"
+                  enctype="multipart/form-data">
+
+                <input class="col-md-6 col-xs-12 half-input" type="text" name="firstname" placeholder="First Name">
+                <input class="col-md-6 col-xs-12 half-input" type="text" name="lastname" placeholder="Last Name">
+
+                <input type="text" name="mobile" placeholder="Mobile">
+
+                <input type="submit" class="green-solid-button" value="Register"/>
+                <input type='hidden' name='form-id' value='handbid-register'/>
+                <input type='hidden' name='action' value='submit-form' />
+                <input type='hidden' name='redirect' value='<?php echo $_SERVER["REQUEST_URI"] ?>'/>
+            </form>
+        </div>
+    </div>
+</div>

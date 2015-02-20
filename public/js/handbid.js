@@ -7,7 +7,7 @@
         setupBidding : function(container) {
 
             var amount = $('[data-handbid-quantity], [data-handbid-bid-amount]', container),
-                increment = $('.increment span')[0].innerHTML || 1;
+                increment = ($('.increment span').length > 0 ) ? $('.increment span')[0].innerHTML : 1;
 
             console.log(increment);
 
@@ -37,7 +37,6 @@
                     }
                 });
 
-
             });
 
             $('[data-handbid-bid-button="bid"]', container).click(this.bid);
@@ -55,48 +54,62 @@
             alert('buy it now');
         },
 
-        // Setup credit cards
-        setupCreditCard : function() {
+        setupConnect : function() {
 
-            $('[data-handbid-delete-credit-card]').on('click', function(e) {
+            var body = $('body'),
+                underlayContainer = '<div id="handbid-confirmation-underlay" ' +
+                'style="position: fixed; top:0px; bottom:0px; left: 0px; right: 0px; z-index: 1; display: none;"> ';
 
-                e.preventDefault();
 
-                alert('clicked delete credit card');
+            body.append(underlayContainer);
 
-                var data = {
-                    'id' : $(this).attr('data-handbid-delete-credit-card')
-                };
+            if(body.hasClass('handbid-logged-out')) {
 
-                $.ajax({
-                    type: "POST",
-                    url: '/wp-admin/admin-post.php',
-                    data: data,
-                    success: function() {
-                        alert('success!');
-                        location.location(window.location.href + 'handbid-notice=' + encodeURIComponent('Your credit card has been deleted.'));
-                    }
+                var loginModal = $('[data-handbid-modal-key="login-modal"]');
+
+
+                var underlay = $('#handbid-confirmation-underlay');
+
+                $('[data-handbid-connect]').on('click', function (e) {
+
+                    e.preventDefault();
+
+                    loginModal.css('display', 'block');
+                    underlay.css('display', 'block');
+                    console.log(underlay);
                 });
 
-                //$.post('wp-admin/admin-post.php' + $(this).attr('data-handbid-delete-credit-card'), function(data) {
-                //    location.location(window.location.href + 'handbid-notice=' + encodeURIComponent('Your credit card has been deleted.'));
-                //});
+                $('.modal-close', loginModal).on('click', function() {
 
-            })
-
+                    underlay.css('display', 'none');
+                    console.log(underlay);
+                });
+            }
+            else {
+                $('[data-handbid-connect]').css('display', 'none');
+            }
         },
-        setupConnect : function() {
-            $('[data-handbid-connect]').on('click', function(e) {
+        checkAuthorizationStatus: function() {
 
-                e.preventDefault();
+            var authorized = $.cookie('handbid-auth') ? true : false;
 
-                alert('connect clicked');
+            if(authorized) {
+                $('.handbid-logout').css('display', 'inline-block');
+                $('body').addClass('handbid-logged-in');
+            }
+            else
+            {
+                $('.handbid-login').css('display', 'inline-block');
+                $('body').addClass('handbid-logged-out');
+            }
 
-            })
         }
     };
 
     $(document).ready(function () {
+
+        handbid.checkAuthorizationStatus();
+
         if ($('[data-handbid-item-key], [data-no-bids], [data-tags]').length > 0) {
             $('body').addClass('enable-handbid-fatal-error');
         }
@@ -108,10 +121,8 @@
         });
 
         ($('[data-handbid-bid]').length > 0) ? handbid.setupBidding($('[data-handbid-bid][data-handbid-item-key]')) : '';
-        ($('[data-handbid-delete-credit-card]').length > 0) ? handbid.setupCreditCard() : '';
         ($('[data-handbid-connect]').length > 0) ? handbid.setupConnect() : '';
 
-        // On bids
     });
 
 
