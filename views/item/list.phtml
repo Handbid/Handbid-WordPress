@@ -29,7 +29,7 @@ if ($this->get('items')) {
                                 <div class="topBox">
                                     <img src="<?php echo $item->images[0]; ?>"/>
                                 </div>
-                                <?php if ($item->status == "sold") {
+                                <?php if ($item->status == "sold" || $item->status == "paid") {
                                     ?>
                                     <div class="item-banner sold"><?php echo __('Sold'); ?></div>
                                 <?php
