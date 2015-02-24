@@ -21,8 +21,12 @@
             <form action="<?php echo get_admin_url() . 'admin-post.php'; ?>" method="post"
                   enctype="multipart/form-data">
 
-                <input class="col-md-6 col-xs-12 half-input" type="text" name="firstname" placeholder="First Name">
-                <input class="col-md-6 col-xs-12 half-input" type="text" name="lastname" placeholder="Last Name">
+                <div class="col-md-6 col-xs-12 no-padding">
+                    <input class="half-input" type="text" name="firstname" placeholder="First Name">
+                </div>
+                <div class="col-md-6 col-xs-12 no-padding">
+                    <input class="half-input" type="text" name="lastname" placeholder="Last Name">
+                </div>
 
                 <input type="text" name="mobile" placeholder="Mobile">
 

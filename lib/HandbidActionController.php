@@ -168,11 +168,14 @@ class HandbidActionController
                 $this->handbid->store('CreditCard')->add($values);
                 $redirect .= $questionMarkOrAmpersand . 'handbid-notice=' . urlencode('Your card has been added. Thank you.');
             } catch (\Exception $e) {
-                $redirect .= $questionMarkOrAmpersand . 'handbid-error=' . urlencode($e->getMessage()) . '&auto-open-cc=true&' . http_build_query([
-                        'nameOnCard' => $_POST['nameOnCard'],
-                        'expMonth' => $_POST['expMonth'],
-                        'expYear' => $_POST['expYear']
-                    ]);
+
+                $redirect .= $questionMarkOrAmpersand . 'handbid-error=' . urlencode($e->getMessage());
+
+//                $redirect .= $questionMarkOrAmpersand . 'handbid-error=' . urlencode($e->getMessage()) . '&auto-open-cc=true&' . http_build_query([
+//                        'nameOnCard' => $_POST['nameOnCard'],
+//                        'expMonth' => $_POST['expMonth'],
+//                        'expYear' => $_POST['expYear']
+//                    ]);
             }
 
         } else if ($_POST['form-id'] == 'handbid-delete-creditcard') {
@@ -197,7 +200,11 @@ class HandbidActionController
                 'mobile'    => $_POST['mobile']
             ];
 
-            $this->handbid->store('Bidder')->register($values);
+            $profile = $this->handbid->store('Bidder')->register($values);
+
+            if($profile->success == false) {
+                $redirect .= $questionMarkOrAmpersand . 'handbid-notice=' . urlencode('Your phone number is already in use.');
+            }
 
         }
 

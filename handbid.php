@@ -110,18 +110,19 @@ class Handbid
     {
 
         $scripts = array(
+            'cookie-plugin'         => 'public/js/jquery.cookie.js',
+            'handbid-plugin-js'     => 'public/js/handbid.js',
             'handbid-isotope'       => 'public/js/isotope.pkgd.min.js',
             'handbid-unslider'      => 'public/js/unslider.min.js',
-            'handbid-photo-gallery' => 'public/js/photoGallery.js',
-            'handbid-plugin-js'     => 'public/js/handbid.js',
+            'handbid-photo-gallery' => 'public/js/photoGallery.js'
         );
 
-        //make this a settings
-        wp_register_script(
-            'handbidCore',
-            get_option('handbidJs', 'https://handbid-js-handbid.netdna-ssl.com/handbid.js?cachebuster=234234')
-        );
-        wp_enqueue_script('handbidCore');
+//        //make this a settings
+//        wp_register_script(
+//            'handbidCore',
+//            get_option('handbidJs', 'https://handbid-js-handbid.netdna-ssl.com/handbid.js?cachebuster=234234')
+//        );
+//        wp_enqueue_script('handbidCore');
 
         foreach ($scripts as $key => $sc) {
             wp_register_script($key, plugins_url($sc, __FILE__));
@@ -249,12 +250,14 @@ class Handbid
     function onRenderFooter()
     {
 
+        //do we need to prompt for credit card?
+        $bidder = $this->state()->currentBidder();
+
+        if(!$bidder) {
+            echo do_shortcode('[handbid_bidder_login_form]');
+        }
+
         if ($auction = $this->state()->currentAuction()) {
-
-//            echo '<script type="text/javascript">handbid.connectToAuction("' . $auction->key . '");</script>';
-
-            //do we need to prompt for credit card?
-            $bidder = $this->state()->currentBidder();
 
             if($bidder && !!$auction->requireCreditCard && count($bidder->creditCards) > 0 && ($auction->spendingThreshold == 0 || $auction->spendingThreshold <= $bidder->totalSpent)) {
 
@@ -265,6 +268,11 @@ class Handbid
             }
 
         }
+
+        echo '<script type="text/javascript">if(jQuery("[data-handbid-auction-guid]").length > 0) { var auctionChannelId = jQuery("[data-handbid-auction-guid]").attr("data-handbid-auction-guid"); } if(jQuery.cookie("handbid-auth")) { var userChannelId = jQuery.cookie("handbid-auth").split(": ")[1]; }</script>';
+        echo '<script src="http://yii.handbid.lan:3002/socket.io/socket.io.js"></script>';
+        echo '<script type="text/javascript" src="' . plugins_url("handbid/public/js/yii-node-socket.js") .  '"></script>';
+        echo '<script type="text/javascript" src="' . plugins_url("handbid/public/js/node-socket-manager.js") .  '"></script>';
     }
 
     function logout()
