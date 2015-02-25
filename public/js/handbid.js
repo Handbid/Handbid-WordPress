@@ -1,6 +1,7 @@
 (function ($) {
 
     var restEndpoint = 'https://rest.handbid.lan/',
+        currencySymbol = '$',
         handbid = {
 
             // Setup bidding
@@ -55,10 +56,19 @@
                         },
                         success: function (data) {
 
-                            handbid.notice('bid placed');
-                            return data;
+                            $('[data-handbid-item-attribute="bidCount"]').html(data.item.bidCount);
+                            $('[data-handbid-item-attribute="minimumBidAmount"]').html(currencySymbol + data.item.minimumBidAmount);
+
+                            $('[data-handbid-item-banner="' + data.status + '"]').show();
+
+                            handbid.notice('Bid placed for ' + currencySymbol + data.amount + '. You are now ' + data.status + ' this item');
+
+
+                            return false;
                         }
                     });
+
+                    return false;
 
 
                 });
@@ -112,6 +122,27 @@
                     $('[data-handbid-connect]').css('display', 'none');
                 }
             },
+            setupDeleteCreditCard : function() {
+                var form = $('.delete-creditcard');
+                $('input[type="submit"]', form).on('click', function(e) {
+                    e.preventDefault;
+                    var cardId = $('input[name="card-id"]', form).val();
+
+                    $.ajax({
+                        url:     restEndpoint + 'creditcard/delete/' + cardId,
+                        type:    'DELETE',
+                        success: function () {
+
+                            $('[data-handbid-card-row="' + cardId + '"]').remove();
+                            handbid.notice('Your card has been deleted');
+
+                            return false;
+                        }
+                    });
+
+                    return false;
+                });
+            },
             setupAuthorizationStatus: function () {
 
                 var authorized = $.cookie('handbid-auth') ? true : false;
@@ -154,7 +185,6 @@
 
                 }, 5000);
             }
-
         };
 
     $(document).ready(function () {
@@ -171,14 +201,9 @@
             handbid.notice(window.location.href.split('handbid-notice=')[1]);
         }
 
-        $(window).on('beforeunload', function () {
-
-            $('body').addClass('handbid-refreshing-page');
-
-        });
-
         ($('[data-handbid-bid]').length > 0) ? handbid.setupBidding() : '';
         ($('[data-handbid-connect]').length > 0) ? handbid.setupConnect() : '';
+        ($('.delete-creditcard').length > 0) ? handbid.setupDeleteCreditCard() : '';
 
     });
 

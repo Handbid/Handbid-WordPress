@@ -171,18 +171,8 @@ class HandbidActionController
 
                 $redirect .= $questionMarkOrAmpersand . 'handbid-error=' . urlencode($e->getMessage());
 
-//                $redirect .= $questionMarkOrAmpersand . 'handbid-error=' . urlencode($e->getMessage()) . '&auto-open-cc=true&' . http_build_query([
-//                        'nameOnCard' => $_POST['nameOnCard'],
-//                        'expMonth' => $_POST['expMonth'],
-//                        'expYear' => $_POST['expYear']
-//                    ]);
             }
 
-        } else if ($_POST['form-id'] == 'handbid-delete-creditcard') {
-
-            $this->handbid->store('CreditCard')->delete($_POST['card-id']);
-
-            $redirect .= $questionMarkOrAmpersand . 'handbid-notice=' . urlencode('Your card has been deleted.');
         } else if($_POST['form-id'] == 'handbid-login') {
 
             $values = [
