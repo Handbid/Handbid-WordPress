@@ -4,6 +4,8 @@
         currencySymbol = '$',
         handbid = {
 
+            loggedIn : null,
+
             // Setup bidding
             setupBidding:             function (container) {
 
@@ -100,8 +102,9 @@
 
                 if (body.hasClass('handbid-logged-out')) {
 
-                    var loginModal = $('[data-handbid-modal-key="login-modal"]');
+                    this.loggedIn = false;
 
+                    var loginModal = $('[data-handbid-modal-key="login-modal"]');
 
                     var underlay = $('#handbid-confirmation-underlay');
 
@@ -119,14 +122,19 @@
                     });
                 }
                 else {
+                    this.loggedIn = true;
                     $('[data-handbid-connect]').css('display', 'none');
+
                 }
             },
             setupDeleteCreditCard : function() {
                 var form = $('.delete-creditcard');
-                $('input[type="submit"]', form).on('click', function(e) {
+
+                form.on('submit', function(e) {
+
                     e.preventDefault;
-                    var cardId = $('input[name="card-id"]', form).val();
+
+                    var cardId = $('input[name="card-id"]', this).val();
 
                     $.ajax({
                         url:     restEndpoint + 'creditcard/delete/' + cardId,
@@ -142,6 +150,91 @@
 
                     return false;
                 });
+            },
+            setupAddCreditCard : function() {
+                var form = $('.creditcard-template'),
+                    container = $('.bidder-info-container.credit-card ul'),
+                    modalClose = $('[data-handbid-modal-key="credit-card-form"] .modal-close');
+
+                form.on('submit', function(e) {
+
+                    var _data = form.serialize();
+
+                    modalClose.click();
+
+                    handbid.notice('Adding your card');
+
+                    $.ajax({
+                        url: restEndpoint + 'creditcard/create',
+                        type: 'POST',
+                        data : _data,
+                        success : function(data) {
+
+                            handbid.notice('Your card has been added');
+
+                            var template = $(' <li class="row" data-handbid-card-row="' + data.id + '"> <div class="col-md-3 col-xs-3"> <h4>Name</h4>' + data.nameOnCard + '</div> <div class="col-md-3 col-xs-3"> <h4>Card Number</h4> xxxx xxxx xxxx ' + data.lastFour + '</div> <div class="col-md-3 col-xs-3"> <h4>Exp. Date</h4>' + data.expMonth + '/' + data.expYear + '</div> <div class="col-md-3 col-xs-3"> <form class="delete-creditcard" action="http://handbid.lan/wp-admin/admin-post.php" method="post" enctype="multipart/form-data"> <input class="button pink-solid-button" type="submit" value="Delete"> <input type="hidden" name="card-id" value="' + data.id + '"></form></div></li>'),
+                                hasCards = $('.credit-card .no-results').length > 0;
+
+                            if(!hasCards) {
+                                template.appendTo(container);
+                            }
+                            else
+                            {
+                                $('.credit-card .no-results').remove();
+
+                                var list = null;
+
+                                if($('.credit-card .simple-list')) {
+                                    list = $('.credit-card .simple-list');
+                                }
+                                else {
+                                    list = $('<ul class="simple-list"></ul>');
+                                }
+
+                                template.appendTo(list);
+                                list.prependTo($('.credit-card'));
+
+                            }
+
+                            // Re-setup delete card handlers
+                            handbid.setupDeleteCreditCard();
+
+                            return false;
+
+                        },
+                        fail: function(e) {
+                            handbid.notice('Failed adding your card');
+                        }
+                    });
+
+
+                    return false;
+                });
+            },
+            setupEditProfile: function () {
+                var form = $('.edit-profile');
+
+                form.on('submit', function(e) {
+
+                    e.preventDefault;
+
+                    var _data = $(this).serialize();
+
+                    $.ajax({
+                        url:     restEndpoint + 'bidder/update',
+                        method: 'PUT',
+                        data: _data,
+                        success: function(data) {
+                            handbid.notice('Your profile has been updated');
+
+                            return false;
+                        }
+                    });
+
+                    return false;
+
+                });
+
             },
             setupAuthorizationStatus: function () {
 
@@ -201,9 +294,19 @@
             handbid.notice(window.location.href.split('handbid-notice=')[1]);
         }
 
+
+        //console.log(this.loggedIn);
+
+        //if(this.loggedIn) {
+            ($('.delete-creditcard').length > 0) ? handbid.setupDeleteCreditCard() : '';
+            ($('.creditcard-template').length > 0) ? handbid.setupAddCreditCard() : '';
+            ($('.edit-profile').length > 0) ? handbid.setupEditProfile() : '';
+        //}
+        //else {
+            ($('[data-handbid-connect]').length > 0) ? handbid.setupConnect() : '';
+        //}
+
         ($('[data-handbid-bid]').length > 0) ? handbid.setupBidding() : '';
-        ($('[data-handbid-connect]').length > 0) ? handbid.setupConnect() : '';
-        ($('.delete-creditcard').length > 0) ? handbid.setupDeleteCreditCard() : '';
 
     });
 
