@@ -128,52 +128,7 @@ class HandbidActionController
             $questionMarkOrAmpersand = '?';
         }
 
-        if ($_POST['form-id'] == "handbid-update-bidder") {
-
-            $values = [
-                'firstName' => $_POST['firstName'],
-                'lastName' => $_POST['lastName'],
-                'email' => $_POST['email'],
-                'userAddressCity' => $_POST['userAddressCity'],
-                'userAddressCountryId' => $_POST['userAddressCountryId'],
-                'userAddressPostalCode' => $_POST['userAddressPostalCode'],
-                'userAddressProvinceId' => $_POST['userAddressProvinceId'],
-                'userAddressStreet1' => $_POST['userAddressStreet1'],
-                'userAddressStreet2' => $_POST['userAddressStreet2'],
-            ];
-
-            if (isset($_FILES['photo'])) {
-                $values['photo'] = $_FILES['photo'];
-            }
-
-            if (isset($_POST['password']) && isset($_POST['password2'])) {
-                $values['password'] = $_POST['password'];
-                $values['password2'] = $_POST['password2'];
-            }
-
-            $redirect .= $questionMarkOrAmpersand . 'handbid-notice=' . urlencode('Your profile has been updated.');
-            $this->handbid->store('Bidder')->updateProfile($values);
-        } else if ($_POST['form-id'] == "handbid-add-creditcard"){
-            $values = [
-                'nameOnCard' => $_POST['nameOnCard'],
-                'cardNum' => $_POST['cardNum'],
-                'cvc' => $_POST['cvc'],
-                'expMonth' => $_POST['expMonth'],
-                'expYear' => $_POST['expYear']
-            ];
-            // handbid-add-creditcard
-            //handbid-edit-creditcard-x
-
-            try {
-                $this->handbid->store('CreditCard')->add($values);
-                $redirect .= $questionMarkOrAmpersand . 'handbid-notice=' . urlencode('Your card has been added. Thank you.');
-            } catch (\Exception $e) {
-
-                $redirect .= $questionMarkOrAmpersand . 'handbid-error=' . urlencode($e->getMessage());
-
-            }
-
-        } else if($_POST['form-id'] == 'handbid-login') {
+        if($_POST['form-id'] == 'handbid-login') {
 
             $values = [
               'username' => $_POST['username'],

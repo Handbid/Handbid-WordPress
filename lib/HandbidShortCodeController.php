@@ -56,7 +56,8 @@ class HandbidShortCodeController {
 			'handbid_facebook_comments'     => 'facebookComments',
 			'handbid_social_share'          => 'socialShare',
 			'handbid_bidder_profile'        => 'myProfile',
-			'handbid_bidder_notifications'  => 'myNotifications',
+            'handbid_bidder_profile_inner'  => 'bidderProfileInner',
+            'handbid_bidder_notifications'  => 'myNotifications',
 			'handbid_bidder_bids'           => 'myBids',
 			'handbid_bidder_proxy_bids'     => 'myProxyBids',
 			'handbid_bidder_purchases'      => 'myPurchases',
@@ -588,14 +589,17 @@ class HandbidShortCodeController {
 
 	}
 
-
 	// Bidder
+    public function bidderStatBar($attributes) {
+
+    }
+
 	public function myProfile( $attributes ) {
 
 		try {
+            $template = $this->templateFromAttributes( $attributes, 'views/bidder/profile' );
 
-			$template = $this->templateFromAttributes( $attributes, 'views/bidder/profile' );
-			$profile  = $this->handbid->store( 'Bidder' )->myProfile();
+            $profile  = $this->handbid->store( 'Bidder' )->myProfile();
 
             $auction = $this->state->currentAuction();
 
@@ -607,24 +611,6 @@ class HandbidShortCodeController {
             $myAuctions = null;
 
             if ( $profile ) {
-				$img = wp_get_image_editor( $profile->imageUrl );
-				if ( ! is_wp_error( $img ) ) {
-
-
-					$thumbWidth  = isset( $attributes['thumb_width'] ) ? $attributes['thumb_width'] : 250;
-					$thumbHeight = isset( $attributes['thumb_height'] ) ? $attributes['thumb_height'] : false;
-					$thumbCrop   = isset( $attributes['thumb_crop'] ) ? $attributes['thumb_crop'] : true;
-
-					$img->resize( $thumbWidth, $thumbHeight, $thumbCrop );
-					$img->save( ABSPATH . 'wp-content/uploads/user-photos/' . $profile->pin . '.png' );
-					$newPhoto = get_site_url() . '/wp-content/uploads/user-photos/' . $profile->pin . '.png';
-				}
-
-				if ( isset( $newPhoto ) ) {
-					$profile->photo = $newPhoto;
-				}
-
-                $myAuctions = $this->handbid->store( 'Auction' )->myRecent();
 
                 if ( $auction && $profile ) {
 
@@ -658,7 +644,6 @@ class HandbidShortCodeController {
 					'losing'     => $losing,
 					'purchases'  => $purchases,
 					'maxBids'    => $proxyBids,
-					'myAuctions' => $myAuctions,
 					'totalSpent' => $totalSpent
 				]
 			);
@@ -669,6 +654,86 @@ class HandbidShortCodeController {
 			return;
 		}
 	}
+
+    public function bidderProfileInner( $attributes ) {
+
+        try {
+
+            $template = $this->templateFromAttributes( $attributes, 'views/bidder/dashboard-inner' );
+            $profile  = $this->handbid->store( 'Bidder' )->myProfile();
+
+            $auction = $this->state->currentAuction();
+
+            $winning    = null;
+            $losing     = null;
+            $purchases  = null;
+            $proxyBids  = null;
+            $totalSpent = 0;
+            $myAuctions = null;
+
+            if ( $profile ) {
+                $img = wp_get_image_editor( $profile->imageUrl );
+                if ( ! is_wp_error( $img ) ) {
+
+
+                    $thumbWidth  = isset( $attributes['thumb_width'] ) ? $attributes['thumb_width'] : 250;
+                    $thumbHeight = isset( $attributes['thumb_height'] ) ? $attributes['thumb_height'] : false;
+                    $thumbCrop   = isset( $attributes['thumb_crop'] ) ? $attributes['thumb_crop'] : true;
+
+                    $img->resize( $thumbWidth, $thumbHeight, $thumbCrop );
+                    $img->save( ABSPATH . 'wp-content/uploads/user-photos/' . $profile->pin . '.png' );
+                    $newPhoto = get_site_url() . '/wp-content/uploads/user-photos/' . $profile->pin . '.png';
+                }
+
+                if ( isset( $newPhoto ) ) {
+                    $profile->photo = $newPhoto;
+                }
+
+                $myAuctions = $this->handbid->store( 'Auction' )->myRecent();
+
+                if ( $auction && $profile ) {
+
+                    $winning   = $this->handbid->store( 'Bid' )->myWinning($auction->id );
+                    $losing    = $this->handbid->store( 'Bid' )->myLosing( $auction->id );
+                    $purchases = $this->handbid->store( 'Bid' )->myPurchases( $auction->id );
+                    $proxyBids = $this->handbid->store( 'Bid' )->myProxyBids( $auction->id );
+
+                    if($winning) {
+                        foreach ( $winning as $w ) {
+                            $totalSpent += $w->amount;
+                        }
+                    }
+
+                    if($purchases) {
+                        foreach ($purchases as $p) {
+                            $totalSpent += $p->grandTotal;
+                        }
+                    }
+
+                }
+
+            }
+
+            return $this->viewRenderer->render(
+                $template,
+                [
+                    'auction'    => $auction,
+                    'profile'    => $profile,
+                    'winning'    => $winning,
+                    'losing'     => $losing,
+                    'purchases'  => $purchases,
+                    'maxBids'    => $proxyBids,
+                    'myAuctions' => $myAuctions,
+                    'totalSpent' => $totalSpent
+                ]
+            );
+        } catch ( Exception $e ) {
+            echo "Profile could not be loaded. Please try again later.";
+            $this->logException( $e );
+
+            return;
+        }
+    }
 
 	public function myBids( $attributes ) {
 		try {

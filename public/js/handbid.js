@@ -58,12 +58,13 @@
                         },
                         success: function (data) {
 
-                            $('[data-handbid-item-attribute="bidCount"]').html(data.item.bidCount);
-                            $('[data-handbid-item-attribute="minimumBidAmount"]').html(currencySymbol + data.item.minimumBidAmount);
+                            alert('bidding clicked');
+                            //$('[data-handbid-item-attribute="bidCount"]').html(data.item.bidCount);
+                            //$('[data-handbid-item-attribute="minimumBidAmount"]').html(currencySymbol + data.item.minimumBidAmount);
 
-                            $('[data-handbid-item-banner="' + data.status + '"]').show();
+                            //$('[data-handbid-item-banner="' + data.status + '"]').show();
 
-                            handbid.notice('Bid placed for ' + currencySymbol + data.amount + '. You are now ' + data.status + ' this item');
+                            //handbid.notice('Bid placed for ' + currencySymbol + data.amount + '. You are now ' + data.status + ' this item');
 
 
                             return false;
@@ -76,21 +77,44 @@
                 });
 
                 $('[data-handbid-bid-button="proxy"]').on('click', function (e) {
-                    e.preventDefault;
-                    alert('proxy clicked');
+
+                    var total = amount[0].innerHTML;
+
+                    $.ajax({
+                        url:     restEndpoint + 'bid/create',
+                        type:    'POST',
+                        data:    {
+                            'userId':    userId,
+                            'auctionId': auctionId,
+                            'itemId':    itemId,
+                            'maxAmount': total
+                        },
+                        success: function (data) {
+
+                            alert('max bid clicked');
+
+                            return false;
+                        }
+                    });
+
+                    return false;
 
                 });
 
                 $('[data-handbid-bid-button="purchase"]').on('click', function (e) {
                     e.preventDefault;
                     alert('purchase clicked');
+                    return false;
                 });
 
                 $('[data-handbid-bid-button="buyItNow"]').on('click', function (e) {
                     e.preventDefault;
                     alert('buy clicked');
+                    return false;
+
                 });
             },
+            submitBid : function(data) {}
             setupConnect:             function () {
 
                 var body = $('body'),
@@ -126,6 +150,29 @@
                     $('[data-handbid-connect]').css('display', 'none');
 
                 }
+            },
+            setupBidderDashboard: function() {
+                $('.bidder-info-container .stats-bar').on('click.ajax-load', function() {
+
+                    $.ajax({
+                        url : '/wp-admin/admin-ajax.php',
+                        type : 'POST',
+                        data : {
+                            action : 'load_bidder_dashboard'
+                        },
+                        dataType: 'html',
+                        success: function(response) {
+                            $(response).appendTo($('.bidder-dashboard-inner'));
+
+                            // Open bider profile by default
+                            //$('[data-slider-nav-key="profile-user-info"]').addClass('active-slide');
+                            //$('[data-slider-nav-key="user-profile"]').addClass('active-slide');
+
+                        }
+                    });
+
+                    $(this).off('.ajax-load');
+                })
             },
             setupDeleteCreditCard : function() {
                 var form = $('.delete-creditcard');
@@ -298,6 +345,7 @@
         //console.log(this.loggedIn);
 
         //if(this.loggedIn) {
+            ($('.bidder-info-container').length > 0) ? handbid.setupBidderDashboard() : '';
             ($('.delete-creditcard').length > 0) ? handbid.setupDeleteCreditCard() : '';
             ($('.creditcard-template').length > 0) ? handbid.setupAddCreditCard() : '';
             ($('.edit-profile').length > 0) ? handbid.setupEditProfile() : '';
