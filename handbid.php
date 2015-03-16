@@ -270,7 +270,7 @@ class Handbid
         }
 
         echo '<script type="text/javascript">if(jQuery("[data-handbid-auction-guid]").length > 0) { var auctionChannelId = jQuery("[data-handbid-auction-guid]").attr("data-handbid-auction-guid"); } if(jQuery.cookie("handbid-auth")) { var userChannelId = jQuery.cookie("handbid-auth").split(": ")[1]; }</script>';
-        echo '<script src="http://yii.handbid.lan:3002/socket.io/socket.io.js"></script>';
+        echo '<script src="http://beta-yii.hand.bid:3002/socket.io/socket.io.js"></script>';
         echo '<script type="text/javascript" src="' . plugins_url("handbid/public/js/yii-node-socket.js") .  '"></script>';
         echo '<script type="text/javascript" src="' . plugins_url("handbid/public/js/node-socket-manager.js") .  '"></script>';
     }

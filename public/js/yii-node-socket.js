@@ -1,4 +1,4 @@
-var url = 'http://yii.handbid.lan:3002/client';
+var url = 'http://beta-yii.hand.bid:3002/client';
 var params = {"secure":false};
 
 function callOtherDomain(){
