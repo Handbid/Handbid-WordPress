@@ -114,7 +114,7 @@
 
                 });
             },
-            submitBid : function(data) {}
+            submitBid : function(data) {},
             setupConnect:             function () {
 
                 var body = $('body'),
