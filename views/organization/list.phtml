@@ -1,21 +1,107 @@
 <?php
-    $organizations = $this->get('organizations');
+
+
+$organizations = $this->get('organizations');
+$cols = 4;
+$col = 1;
+$newRow = false;
+$total = count($organizations);
+
+
+$mdClass = sprintf('col-md-%d',  12 / $cols); //12 total cols in bootstrap
+$mdClass .= ' ' . sprintf('col-sm-%d',  12 / $cols * 2); //12 total cols in bootstrap
+$mdClass .= ' ' . sprintf('col-xs-%d',  12); //12 total cols in bootstrap
+
+$selected = isset($_GET['auction_list']) ? $_GET['auction_list'] : 'current';
+
 ?>
 
-<div class="organization-list">
-    <div class="image-grid isotope">
-        <?php
-
-        forEach ($organizations as $org) {
-            ?>
-
-            <a href="/organizations/<?php echo $org->key; ?>">
-                <?php echo $org->name; ?>
-            </a>
-
-        <?php
-        }
-        ?>
-    </div>
+<div class="section-nav">
+    <a href="/auctions">Auctions |</a> Organizations
 </div>
-<?php echo do_shortcode('[handbid_pager page_size=' . $this->get('page_size') . ' page=' . $this->get('page') . ' total=' . $this->get('total') . ' id=' . $this->get('id') . ' ]'); ?>
+
+<div class="row simple-box-row organizations">
+
+    <?php foreach ($organizations as $organization) {
+
+    $url = '/organizations/' . $organization->key . '/';
+
+    ?>
+
+    <?php // ended up having to give the bootsrap column its own div, was not meant to be flexible ?>
+    <div class="<?php echo $mdClass; ?>">
+
+        <div onclick="if(event.metaKey) { return; } window.location.href='<?php echo $url; ?>'" class="simple-box">
+
+            <div class="header">
+            </div>
+
+            <div class="body">
+
+                <div class="highlight">
+                    <!-- the diagonal highlight -->
+                </div>
+
+                <div class="contents">
+
+                    <a href="<?php echo $url; ?>" class="image-wrapper">
+                        <img class="logo" src="<?php
+                        $image = $organization->logo;
+                        $image = ($image) ? $image : $organization->organizationImages[0]->organizationImageUrl;
+                        $imageUrlPath = parse_url($image);
+                        $image = ($imageUrlPath["scheme"]) ? $image : "http://" . $image;
+                        echo $image;
+                        ?>">
+                    </a>
+
+                    <h3><a href="<?php echo $url; ?>"><?php echo strip_tags($organization->name); ?></a></h3>
+
+                    <ul class="details">
+
+                        <li class="total-auctions"><span class="icon"></span><?php
+                            $totalAuctions = (int) $organization->totalAuctions;
+                            $totalAuctions = rand(0,4);
+
+                            echo $totalAuctions . ' Auction';
+                            if($totalAuctions > 1 or $totalAuctions == 0) {
+                                echo 's';
+                            }
+
+
+                            ?></li>
+
+                        <?php
+                        $city = $organization->organizationAddressCity;
+                        $prov = $organization->organizationAddressProvince;
+                        if($city) { ?>
+                            <li class="addy"><span class="icon"></span><?php echo $city . (($prov) ? ', ' . $prov : ""); ?></li>
+                        <?php } ?>
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <?php
+    $newRow = ($col % $cols === 0 && $col != $total);
+    $col++;
+    ?>
+
+
+    <?php if ($newRow) { ?></div><div class="row simple-box-row organizations"><?php } ?>
+
+
+    <?php } ?>
+
+</div>
+
+<?php if(count($organizations) > 0 && $this->has('page_size')) {
+    echo do_shortcode('[handbid_pager page_size=' . $this->get('page_size') . ' page=' . $this->get('page') . ' total=' . $this->get('total') . ' id=' . $this->get('id') . ' ]');
+}
+echo "<pre>".print_r($organizations, true)."</pre>";
+?>

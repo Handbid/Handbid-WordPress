@@ -1,23 +1,152 @@
-<div class="auction-list">
-    <?php
+<?php
 
-    $auctions = $this->get('auctions');
 
-    forEach ($auctions as $auction) {
-        ?>
-        <a href="/auctions/<?php echo $auction->key; ?>" class="fancy-link auction-list">
-            <img src="<?php echo $auction->logo->medium; ?>"/>
+$auctions = $this->get('auctions');
+$cols = 4;
+$col = 1;
+$newRow = false;
+$total = count($auctions);
 
-            <div class="mask"></div>
-            <div class="content">
-                <div class="info" title="Full Image">
-                    <div><?php echo date('m/d/Y', $auction->startTime); ?></div>
-                    <div><?php echo date('h:i a', $auction->startTime); ?></div>
-                </div>
-            </div>
-        </a>
+$mdClass = sprintf('col-md-%d',  12 / $cols); //12 total cols in bootstrap
+$mdClass .= ' ' . sprintf('col-sm-%d',  12 / $cols * 2); //12 total cols in bootstrap
+$mdClass .= ' ' . sprintf('col-xs-%d',  12); //12 total cols in bootstrap
 
-    <?php
-    }
+$filters = [
+    'current'   => 'current',
+    'open'      => 'Open',
+    'presale'   => 'Presale',
+    'preview'   => 'Preview',
+    'closed'    => 'Closed'
+];
+
+
+$selected = isset($_GET['auction_list']) ? $_GET['auction_list'] : 'current';
+
+?>
+
+    <div class="section-nav auction-list">
+        Auctions <a href="/organizations">| Organizations</a>
+    </div>
+
+    <div class="sort-bar auction-list">
+
+        <div class="col-md-3">
+
+        </div>
+
+        <div class="col-md-6 legend">
+            <?php foreach($filters as $k => $v) {
+                if($k == $selected) {
+                    $class = ' selected';
+                } else {
+                    $class = '';
+                }
+                ?>
+                <a href="<?php echo explode('?', $_SERVER['REQUEST_URI'])[0]; ?>?auction_list=<?php echo $k; ?>" class="<?php echo $k . $class; ?>"><span class="box"></span><?php echo $v; ?></a>
+            <?php } ?>
+        </div>
+
+        <div class="col-md-3 select-wrapper">
+
+        </div>
+    </div>
+
+<div class="row simple-box-row auctions">
+
+<?php if(count($auctions) == 0) { ?>
+    <h3 class="no-results">No Auctions Found</h3>
+<?php } ?>
+
+<?php foreach ($auctions as $auction) {
+
+    $url = '/auctions/' . $auction->key . '/';
     ?>
+
+    <?php // ended up having to give the boostrap column its own div, was not meant to be flexible ?>
+    <div class="<?php echo $mdClass; ?>">
+
+        <div onclick="if(event.metaKey) { return; } window.location.href='<?php echo $url; ?>'" class="simple-box status-<?php echo $auction->status; ?>">
+
+            <div class="header">
+                <?php echo sprintf('%d items', $auction->meta->totalItems); ?>
+            </div>
+
+            <div class="body">
+
+                <div class="highlight">
+                    <!-- the diagonal highlight -->
+                </div>
+
+                <div class="contents">
+
+                    <div class="image-wrapper">
+                        <img class="logo" src="<?php
+                        $image = $auction->logo->medium;
+                        $image = ($image) ? $image : $auction->imageUrl;
+                        $imageUrlPath = parse_url($image);
+                        $image = ($imageUrlPath["scheme"]) ? $image : "http://" . $image;
+                        echo $image; ?>">
+                    </div>
+
+                    <h3><a href="/auctions/<?php echo $auction->key; ?>/"><?php echo $auction->name; ?></a></h3>
+
+                    <ul class="details">
+
+                        <li class="org"><span class="icon"></span><a href="/organizations/<?php echo $auction->organization->key; ?>/"><?php echo $auction->organization->name; ?></a></li>
+                        <?php if ($auction->vanityAddress) { ?>
+                            <li class="addy"><span class="icon"></span><?php echo $auction->vanityAddress; ?></li>
+                        <?php } ?>
+                        <li class="timer">
+                            <span class="icon"></span>
+                            <?php
+
+                            $format = 'n.j.Y ga';
+                            switch($auction->status) {
+
+                                case 'open':
+                                    echo 'Closes: ' . date($format, $auction->endTime);
+                                    break;
+                                case 'closed':
+                                    echo 'Closed: ' . date($format, $auction->endTime);
+                                    break;
+                                default:
+                                    echo 'Opens: ' . date($format, $auction->startTime);
+
+                            }
+                            ?>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <?php
+    $newRow = ($col % $cols === 0 && $col != $total);
+    $col++;
+    ?>
+
+
+    <?php if ($newRow) { ?></div><div class="row simple-box-row auctions"><?php } ?>
+
+
+<?php } ?>
+
 </div>
+<?php if(count($auctions) > 0 && $this->has('page_size')) {
+
+    $total = $this->get('total');
+
+    if(isset($total->errmsg)) {
+        return;
+    }
+
+    echo do_shortcode('[handbid_pager page_size=' . $this->get('page_size') . ' page=' . $this->get('page') . ' total=' . $this->get('total') . ' id=' . $this->get('id') . ' ]');
+
+}
+?>

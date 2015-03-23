@@ -20,8 +20,7 @@ class HandbidViewRenderer
     public function render($templatePath, $vars = [])
     {
         $templates = is_array($templatePath) ? $templatePath : [$templatePath];
-        $templates = array_reverse($templates);
-
+        // $templates = array_reverse($templates);
         foreach ($templates as $template) {
 
             $path = '';

@@ -1,34 +1,110 @@
 <?php
 if ($this->organization) {
+
     $org = $this->get('organization');
-    $address = $org->address;
+    $address = null;
+    $hasLocation = !!($org->organizationAddressStreet1);
+
+    if ($hasLocation) {
+        $street1 = $org->organizationAddressStreet1;
+        $street2 = $org->organizationAddressStreet2;
+        $city = $org->organizationAddressCity;
+        $province = $org->organizationAddressProvince;
+        $postalCode = $org->organizationAddressPostalCode;
+        $address = $street1 . ' ' . $street2 . ' ' . $city . ' ' . $prov . ' ' . $postalCode;
+    }
+
+
 } else {
     echo "No Organization Set";
     return;
 }
+//echo "<pre>".print_r($org,true)."</pre>";
+
 ?>
-<header id="title-area" class="clearfix header-cover">
-    <div class="inner" style="opacity: 1;"><h1 class="page-title entry-title"><?php echo $org->name; ?></h1></div>
-</header>
 
-<div class="organization-details-container">
-    <img src="<?php echo $org->logo; ?>"/>
+<div class="org-details">
 
-    <div class="org-details">
-        <address class="vcard">
-            <div class="street-address"><?php echo $address->street1; ?></div>
-            <div class="street-address"><?php echo $address->street2; ?></div>
-            <div class="city"><?php echo $address->city; ?></div>
-            <div class="province"><?php echo $address->province; ?></div>
-            <div class="postal-code"><?php echo $address->postalCode; ?></div >
-            <div class="country-name"><?php echo $address->country; ?></div >
-        </address>
-
-        <div class="website">
-            <a href="<?php echo $org->website; ?>" target="_blank"><?php echo $org->website; ?></a>
+    <div class="container container-fluid detail-banner-wrapper">
+        <div class="detail-banner" style="background-image: url('<?php echo $org->banner; ?>')">
+            <div class="logo">
+                <img src="<?php echo $org->logo; ?>"/>
+            </div>
         </div>
-        <div class="description">
-            <?php echo $org->description; ?>
+        <div class="controls">
+
+             <span class="status">
+                <a href="<?php if (strpos($org->website, 'http') === false)  {
+                    echo "http://";
+                } echo $org->website; ?>" target="_blank"><?php echo $org->website; ?></a>
+            </span>
+
+            <?php echo do_shortcode('[handbid_social_share]'); ?>
+
         </div>
     </div>
+
+    <ul class="slider-nav col-md-12 auto-open" data-slider-nav-id="org-details">
+        <?php if ($org->description) { ?>
+            <li>
+                <a data-slider-nav-key="description">Description</a>
+            </li>
+        <?php } ?>
+        <?php if ($hasLocation) { ?>
+            <li>
+                <a data-slider-nav-key="map">Address &amp; Map</a>
+            </li>
+        <?php } ?>
+    </ul>
+
+    <div class="slider-content" data-slider-nav-id="org-details">
+
+        <?php if ($org->description) { ?>
+            <div class="container container-fluid" data-slider-nav-key="description">
+                <?php echo $org->description; ?>
+            </div>
+        <?php } ?>
+
+        <?php if ($hasLocation) { ?>
+            <div class="details-map" data-slider-nav-key="map" data-address="<?php echo $address; ?>">
+
+                <div id="large-map"></div>
+                <div id="small-map"></div>
+
+            </div>
+            <div style="display: none" id="map-marker-content">
+                <div class="overflow">
+                    <div class="row">
+                        <div class="col-md-6 iw-label">Location</div>
+                        <div class="col-md-6"><?php echo $org->name; ?></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 iw-label">Address</div>
+                        <div
+                            class="col-md-6"><?php
+                            $street1 = $org->organizationAddressStreet1;
+                            $street2 = $org->organizationAddressStreet2;
+                            $city = $org->organizationAddressCity;
+                            $province = $org->organizationAddressProvince;
+                            $postalCode = $org->organizationAddressPostalCode;
+                            echo $street1 . ' ' . $street2 . '<br />' . $city . ', ' . strtoupper($province) . ' ' . $postalCode; ?></div>
+                    </div>
+                    <div class="row submit">
+                        <a class="pink-button get-directions" onclick="getDirections()" href="#">Get Directions</a>
+                    </div>
+                </div>
+            </div>
+        <?php } ?>
+
+    </div>
+
+
+    <div class="container container-fluid">
+        <h3 class="auction-title">Auctions</h3>
+        <?php echo do_shortcode('[handbid_organization_auctions]'); ?>
+    </div>
+
+
 </div>
+
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
