@@ -68,7 +68,7 @@ $selected = isset($_GET['auction_list']) ? $_GET['auction_list'] : 'current';
         <div onclick="if(event.metaKey) { return; } window.location.href='<?php echo $url; ?>'" class="simple-box status-<?php echo $auction->status; ?>">
 
             <div class="header">
-                <?php echo sprintf('%d items', $auction->meta->totalItems); ?>
+                <?php echo sprintf('%d items', $auction->totalItems); ?>
             </div>
 
             <div class="body">
