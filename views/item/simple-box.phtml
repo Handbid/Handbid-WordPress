@@ -1,0 +1,84 @@
+<?php
+$item = $this->get('item');
+$auction = $this->get('auction');
+$url = '/auctions/' . $auction->key . '/item/' . $item->key . '/';
+
+if ($item->isDirectPurchaseItem) {
+    $item->currentPrice = $item->buyNowPrice;
+}
+
+if (!$item->hasInventory) {
+    $item->inventoryRemaining = '∞';
+}
+
+if ($auction->status == 'presale' && !$item->isDirectPurchaseItem) {
+    return;
+}
+?>
+
+<div onclick="if(event.metaKey) { return; } window.location.href='<?php echo $url; ?>'"
+     data-handbid-item-key="<?php echo $item->key; ?>"
+     class="simple-box status-<?php echo $item->status; ?>"
+     <?php if ($item->isDirectPurchaseItem) { ?>data-for-sale<?php } ?>
+     <?php if ($item->disableMobileBidding) { ?>data-live<?php } ?>
+     <?php if (!$item->isDirectPurchaseItem && $item->bidCount === 0) { ?>data-no-bids<?php } ?>
+     data-tags="|<?php echo implode('|', array_map(function ($term) {
+         return esc_html(sanitize_key($term));
+     }, array($item->categoryName))); ?>|">
+
+    <div class="header">
+        <div class="col-md-4 col-xs-4 price">$<span
+                data-handbid-item-attribute="currentPrice"><?php echo $item->currentPrice; ?></span></div>
+        <?php if (trim($item->itemCode)) { ?>
+            <div class="col-md-8 col-xs-8 code">#<span
+                    data-handbid-item-attribute="itemCode"><?php echo $item->itemCode; ?></span></div>
+        <?php } ?>
+        <div class="clear"></div>
+    </div>
+
+    <div class="body">
+        <?php
+        $image = $item->images[0]->itemImageUrl;
+        $imageUrlPath = parse_url($image);
+        $image = ($imageUrlPath["scheme"]) ? $image : ((trim($image)) ? "http://" . $image : "");
+        $backImageStyle = trim($image) ? "background-image: url(" . $image . ")" : "";
+        ?>
+        <div class="full-image-wrapper" style="<?php echo $backImageStyle; ?>">
+            <div class="dim-overlay"></div>
+            <div class="box-flag">
+                <?php echo ($item->status == "sold") ? '<h3>Sold Out</h3>' : ''; ?>
+                <?php echo ($item->disableMobileBidding) ? '<h3>Live Auction Only</h3>' : ''; ?>
+            </div>
+        </div>
+
+        <div class="contents">
+
+            <h3><a href="<?php echo $url; ?>" data-handbid-item-attribute="name"><?php echo $item->name; ?></a></h3>
+
+            <?php if (trim($item->categoryName)) { ?>
+                <h4 data-handbid-item-attribute="meta.categoryName"><?php echo $item->categoryName ?></h4>
+            <?php } ?>
+
+            <ul class="horizontal-details">
+
+                <?php if ($item->isDirectPurchaseItem) { ?>
+
+                    <li class="bids col-md-6 col-xs-6">Sold <em
+                            data-handbid-item-attribute="meta.totalSold"><?php echo $item->meta->totalSold; ?></em></li>
+                    <li class="remaining col-md-6 col-xs-6"><em
+                            data-handbid-item-attribute="inventoryRemaining"><?php echo $item->inventoryRemaining; ?></em>
+                        Left
+                    </li>
+                <?php } else { ?>
+                    <li class="bids col-md-6 col-xs-6">Bids <em
+                            data-handbid-item-attribute="bidCount"><?php echo $item->bidCount; ?></em></li>
+                    <li class="bid-now col-md-6 col-xs-6">Bid Now</li>
+                <?php } ?>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+</div>

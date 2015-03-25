@@ -489,6 +489,13 @@ class HandbidShortCodeController {
 		}
 	}
 
+    public function sortBidsByTime($a, $b){
+        if ((int) $a->microtime == (int) $b->microtime) {
+            return 0;
+        }
+        return ((int) $a->microtime > (int) $b->microtime) ? -1 : 1;
+    }
+
 	public function itemBids( $attributes ) {
 		try {
 
@@ -500,6 +507,8 @@ class HandbidShortCodeController {
 
 			if ( $item ) {
 				$bids = $this->handbid->store( 'Bid' )->itemBids( $item->id );
+
+                usort($bids, [$this, "sortBidsByTime"]);
 			}
 
 			return $this->viewRenderer->render(

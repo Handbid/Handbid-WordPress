@@ -1,31 +1,37 @@
 <?php
 
 $auction     = $this->get('auction');
-$location    = $auction->location;
-$hasLocation = !!($location->street1);
+$location    = $auction->locations[0];
+$hasLocation = !!($location->auctionLocationStreet1);
 $address     = null;
 $mapsUrl     = null;
 $categories  = $this->get('categories');
 $categories  = $auction->categories;
 
 
+$locationStreet1 = $location->auctionLocationStreet1;
+$locationStreet2 = $location->auctionLocationStreet2;
+$locationPCode = $location->auctionLocationPostalCode;
+$locationCity = $location->auctionLocationCity;
+$locationProvince = $location->province->countriesRegionsName;
+$locationProvinceShort = $location->province->countriesRegionsShortName;
+
 if ($hasLocation) {
-    $loc     = $auction->location;
-    $address = $loc->street1 . ' ' . $loc->street2 . ' ' . $loc->city . ' ' . $loc->province . ' ' . $loc->postalCode;
+
+    $address = $locationStreet1 . ', ' . $locationStreet2 . ', ' . $locationCity . ', ' . $locationProvince . ', ' . $locationPCode;
 }
 
 if (!$auction) {
     return '';
 }
-echo "<pre>".print_r($categories,true)."</pre>";
 ?>
 
 <div class="auction-details <?php echo $auction->status; ?>">
 
 <div class="container container-fluid detail-banner-wrapper">
-    <div class="detail-banner" style="background-image: url('<?php echo $auction->banner; ?>')">
+    <div class="detail-banner" style="background-image: url('<?php echo "http://" . $auction->banner; ?>')">
         <div class="logo">
-            <img src="<?php echo $auction->image; ?>"/>
+            <img src="<?php echo "http://" . $auction->imageUrl; ?>"/>
         </div>
     </div>
     <div class="controls">
@@ -217,9 +223,11 @@ echo "<pre>".print_r($categories,true)."</pre>";
                     <div class="row">
                         <div class="col-md-4 col-xs-4 iw-label">Address</div>
                         <div
-                            class="col-md-8 col-xs-8"><?php echo $auction->location->street1 . ' ' . $auction->location->street2 . '<br />' . $auction->location->city . ', ' . strtoupper(
-                                    $auction->location->province
-                                ) . ' ' . $auction->location->postalCode; ?></div>
+                            class="col-md-8 col-xs-8"><?php
+
+                            echo $locationStreet1 . ' ' . $locationStreet2 . '<br />' . $locationCity . ', ' . strtoupper(
+                                    $locationProvinceShort
+                                ) . ' ' . $locationPCode; ?></div>
                     </div>
                     <div class="row submit">
                         <a class="pink-button get-directions" onclick="getDirections()" href="#">Get Directions</a>

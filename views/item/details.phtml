@@ -1,9 +1,218 @@
 <?php
+$item       = $this->get('item');
+$related    = $this->get('related');
+$auction    = $this->get('auction');
+$handbid    = Handbid::instance()->handbid;
+$profile    = $handbid->store('Bidder')->myProfile();
+$winning    = ($profile) ? $handbid->store('Bid')->myBids($profile->pin, $auction->_id) : [];
+$losing     = ($profile) ? $handbid->store('Bid')->myLosing($profile->pin, $auction->_id) : [];
+$isWinning  = array_filter($winning, function ($bid) use ($item) {
+    return $bid->item == $item->_id;
+});
 
-// Generic item template
-if ($this->item) {
-    $item = $this->get('item');
-} else {
-    echo "No Item Set";
+$isLosing = array_filter($losing, function ($bid) use ($item) {
+    return $bid->item == $item->_id;
+});
+
+if (!$item) {
     return;
 }
+
+$category       = $item->meta->categoryName;
+$description    = $item->description;
+$isBiddable     = !$item->isDirectPurchaseItem;
+$isLiveItem     = $item->disableMobileBidding;
+
+if(trim($item->notables)) {
+
+    if($description) {
+        $description .= "\n\n";
+    }
+
+    $description .= '<h5>Fine Print</h5>';
+    $description .= $item->notables;
+
+}
+
+if(!$item->hasInventory) {
+    $item->inventoryRemaining = '∞';
+}
+
+$hasManyImages = (count($item->images) > 1);
+echo "<pre>".print_r($item,true)."</pre>";
+?>
+
+<div class="item-details item-<?php echo $item->status; ?>" data-handbid-item-key="<?php echo $item->key; ?>">
+
+    <div class="back-to-previous-container">
+        <a class="back-to-previous" href="/auctions/<?php echo $auction->key; ?>/">View All Items</a>
+    </div>
+
+    <div class="row detail-bar">
+
+        <div class="col-md-7">
+            <div class="images">
+                <?php if($hasManyImages) { ?>
+                    <ul class="slider-nav" data-slider-nav-id="item-image-slider">
+                        <a class="slider-arrow prev" href="#" data-slider-nav-direction="prev">Previous</a>
+                        <a class="slider-arrow next" href="#" data-slider-nav-direction="next">Next</a>
+                    </ul>
+
+                    <div class="slider-content" data-slider-nav-id="item-image-slider" data-slider-progress>
+                        <?php foreach ($item->images as $k => $v) { ?>
+                            <div class="image" data-slider-nav-key="<?php echo 'item-image-' . $k; ?>">
+                                <div style="background-image: url('<?php echo "http://" . $v->itemImageUrl; ?>');" class="image-holder"></div>
+                            </div>
+                        <?php } ?>
+                    </div>
+
+                <?php
+                }
+                else
+                {
+                    ?>
+                    <div style="background-image: url('<?php echo "http://" . $item->images[0]->itemImageUrl; ?>');" class="image-holder"></div>
+                <?php
+                }
+                ?>
+
+                <div style="<?php if(!$isLiveItem) { ?>display:none;<?php } ?>" data-handbid-item-banner="live" class="item-banner live-item">This item is only available in the live auction.</div>
+                <div style="<?php if(!$isLosing) { ?>display:none;<?php } ?>" data-handbid-item-banner="losing" class="item-banner losing">You are losing this item.</div>
+                <div style="<?php if(!$isWinning) { ?>display:none;<?php } ?>" data-handbid-item-banner="winning" class="item-banner winning">You are winning this item.</div>
+                <div style="<?php if(!($item->status == "sold" || $item->status == "paid")) { ?>display:none;<?php } ?>" data-handbid-item-banner="sold" class="item-banner winning">This item has already been SOLD!</div>
+            </div>
+
+            <?php if($hasManyImages) { ?>
+                <ul class="slider-nav auto-open" data-slider-nav-id="item-image-slider">
+                    <?php foreach ($item->images as $k => $v) { ?>
+                        <a class="circle" data-slider-nav-key="<?php echo 'item-image-' . $k; ?>"  data-slider-nav-item
+                           data-slider-nav-item>Circle</a>
+                    <?php } ?>
+                </ul>
+            <?php } ?>
+        </div>
+
+        <div class="col-md-5">
+            <h2 class="name" data-handbid-item-attribute="name"><?php echo $item->name; ?></h2>
+            <?php if ($category) { ?>
+                <h3 class="category" data-handbid-item-attribute="meta.categoryName"><?php echo $category; ?></h3>
+            <?php } ?>
+            <ul class="horizontal-details row">
+
+                <?php if($isBiddable) { ?>
+                    <li class="bids col-md-4 col-xs-3"><em data-handbid-item-attribute="meta.totalBids"><?php echo $item->meta->totalBids; ?></em>Bids</li>
+                    <li class="increment col-md-4 col-xs-5"><em>$<?php echo $item->bidIncrement; ?></em>Increment</li>
+                    <li class="min col-md-4 col-xs-4"><em>$<?php echo $item->minimumBidAmount; ?></em>Min Bid</li>
+                <?php } else { ?>
+                    <li class="purchases col-md-4 col-xs-4" data-handbid-item-attribute="meta.totalSold"><em><?php echo $item->meta->totalSold; ?></em>Sold</li>
+                    <li class="increment col-md-4 col-xs-4" data-handbid-item-attribute="buyNowPrice"><em>$<?php echo $item->buyNowPrice; ?></em>Price</li>
+                    <li class="remaining col-md-4 col-xs-4" data-handbid-item-attribute="inventoryRemaining"><em><?php echo $item->inventoryRemaining; ?></em>Remaining</li>
+                <?php } ?>
+            </ul>
+
+            <?php echo do_shortcode('[handbid_bid key="' . $item->key . '"]'); ?>
+
+            <?php echo do_shortcode('[handbid_social_share]'); ?>
+        </div>
+
+    </div>
+    <div class="row additional">
+
+        <?php if (wp_is_mobile() && $item->donor) { ?>
+
+            <ul class="slider-nav col-md-12 auto-open" data-slider-nav-id="item-donor">
+
+                <li>
+                    <a data-slider-nav-key="donor">Donor</a>
+                </li>
+            </ul>
+            <div class="slider-content" data-slider-nav-id="item-donor">
+
+                <div class="additional big-content" data-slider-nav-key="donor"  data-handbid-item-attribute="donor">
+                    <?php echo $item->donor; ?>
+                </div>
+            </div>
+
+        <?php } ?>
+        <ul class="slider-nav col-md-12 auto-open" data-slider-nav-id="item-details">
+
+            <?php if($description) { ?>
+                <li>
+                    <a data-slider-nav-key="description">Description</a>
+                </li>
+            <?php } ?>
+
+            <?php if (!wp_is_mobile() && $item->donor) { ?>
+                <li>
+                    <a data-slider-nav-key="donor">Donor</a>
+                </li>
+            <?php } ?>
+
+            <?php if($isBiddable) { ?>
+                <li>
+                    <a data-slider-nav-key="bids">Bid History</a>
+                </li>
+            <?php } ?>
+            <li>
+                <a data-slider-nav-key="comments">Comments</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="slider-content" data-slider-nav-id="item-details">
+
+        <?php if (!wp_is_mobile() && $item->donor) { ?>
+            <div class="additional big-content" data-slider-nav-key="donor"  data-handbid-item-attribute="donor">
+                <?php echo $item->donor; ?>
+            </div>
+        <?php } ?>
+
+
+        <?php if($description || !!$item->showValue) { ?>
+            <div class="additional big-content" data-slider-nav-key="description" data-handbid-item-attribute="description">
+
+                <?php if(isset($item->showValue) && !!$item->showValue) {
+                    echo 'Fair Market Value : ' . $item->value;
+                    echo ($description) ? '<br/><br/>' : '';
+                } ?>
+                <?php if($description) { ?>
+                    <?php echo nl2br($description); ?>
+                <?php } ?>
+
+            </div>
+        <?php } ?>
+
+        <?php if($isBiddable) { ?>
+            <div class="additional big-content" data-slider-nav-key="bids">
+                <?php echo do_shortcode('[handbid_item_bids key="' . $item->key . '"]'); ?>
+            </div>
+        <?php } ?>
+
+        <div class="additional comments" data-slider-nav-key="comments">
+            <?php echo do_shortcode('[handbid_facebook_comments]') ?>
+        </div>
+
+    </div>
+
+
+</div>
+
+<?php if ($related) { ?>
+    <div class="related-items">
+
+        <div class="row">
+            <h3 class="title">You might also like</h3>
+        </div>
+
+        <?php
+        echo $this->partial('related.phtml', [
+            'auction'   => $auction,
+            'items'     => $related
+        ]);
+        ?>
+
+        <a class="back-to-previous" href="/auctions/<?php echo $auction->key; ?>/">View All Items</a>
+
+    </div>
+
+<?php } ?>

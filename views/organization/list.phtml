@@ -103,5 +103,4 @@ $selected = isset($_GET['auction_list']) ? $_GET['auction_list'] : 'current';
 <?php if(count($organizations) > 0 && $this->has('page_size')) {
     echo do_shortcode('[handbid_pager page_size=' . $this->get('page_size') . ' page=' . $this->get('page') . ' total=' . $this->get('total') . ' id=' . $this->get('id') . ' ]');
 }
-echo "<pre>".print_r($organizations, true)."</pre>";
 ?>

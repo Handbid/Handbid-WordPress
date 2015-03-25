@@ -1,15 +1,18 @@
 <?php
-$url = 'http://' . $_SERVER['SERVER_NAME'] . '/' . $_SERVER['REQUEST_URI']
-
+$url = 'http://' . $_SERVER['SERVER_NAME'] . '/' . $_SERVER['REQUEST_URI'];
+$openInJavascript = "javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;";
 ?>
 
-<div class="handbid-share-bar">
-    <a class="icon facebook" href="http://www.facebook.com/sharer.php?u=<?php echo $url; ?>" target="_blank"></a>
+<div class="handbid-share-bar row">
+    <div class="col-md-1 col-xs-1">&nbsp;</div>
+    <a class="icon facebook col-md-2 col-xs-2" href="http://www.facebook.com/sharer.php?u=<?php echo $url; ?>" onclick="<?php echo $openInJavascript; ?>"></a>
 
-    <a class="icon google-plus" href="https://plus.google.com/share?url=<?php echo $url; ?>" onclick="javascript:window.open(this.href,
-      '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">g+</a>
+    <a class="icon google-plus col-md-2 col-xs-2" href="https://plus.google.com/share?url=<?php echo $url; ?>" onclick="<?php echo $openInJavascript; ?>">g+</a>
 
-    <a class="icon twitter" href="http://www.twitter.com/share?url=<?php echo $url; ?>">Tweet</a>
+    <a class="icon twitter col-md-2 col-xs-2" href="http://www.twitter.com/share?url=<?php echo $url; ?>" onclick="<?php echo $openInJavascript; ?>">Tweet</a>
 
-    <a href="http://pinterest.com/pin/create/button/?url=<?php echo $url; ?>&description=Handbid+Auction" class="icon pinterest">Share on Pinterest</a>
+    <a class="icon pinterest col-md-2 col-xs-2" href="http://pinterest.com/pin/create/button/?url=<?php echo $url; ?>&description=Handbid+Auction" onclick="<?php echo $openInJavascript; ?>">Share on Pinterest</a>
+    <a class="icon email col-md-2 col-xs-2" href="mailto:?subject=Handbid+Auction&body=<?php echo $url; ?>" title="Share by Email">Email</a>
+
+    <div class="col-md-1 col-xs-1">&nbsp;</div>
 </div>

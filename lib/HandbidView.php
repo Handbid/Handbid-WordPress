@@ -50,7 +50,8 @@ class HandbidView {
 
     public function partial($filePath, $context = null) {
 
-        $parts = explode(DIRECTORY_SEPARATOR, $this->fullPath);
+        $path = str_replace("/", DIRECTORY_SEPARATOR, $this->fullPath);
+        $parts = explode(DIRECTORY_SEPARATOR, $path);
         array_pop($parts);
         $path =  implode(DIRECTORY_SEPARATOR, $parts) . DIRECTORY_SEPARATOR . $filePath;
 

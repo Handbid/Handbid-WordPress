@@ -1,54 +1,44 @@
 <?php
-if ($this->get('items')) {
-    $auction    = $this->get('auction');
-    $items      = $this->get('items');
 
-} else {
-    echo "No Categories / Items Found";
-    return;
-}
+
+$items      = $this->get('items');
+$cols       = 3;
+$col        = 1;
+$newRow     = false;
+$total      = count($items);
+
+
+$mdClass = sprintf('col-md-%d', 12 / $cols); //12 total cols in bootstrap
+$mdClass .= ' ' . sprintf('col-sm-%d', 6); //12 total cols in bootstrap
+$mdClass .= ' ' . sprintf('col-xs-%d', 12); //12 total cols in bootstrap
+
+$auction = $this->get('auction');
+
 
 ?>
 
-<div class="auction-item-list-widget">
+<div class="row simple-box-row item-list isotope">
 
-    <!-- Item List -->
-    <div class="item-list">
-        <ul id="container" class="items js-isotope">
-            <?php forEach ($items as $item) {
 
-                $currentPrice = $item->currentPrice;
+    <?php
 
-                ?>
+    foreach ($items as $item) {
 
-                <li class="item item-tile">
+        echo $this->partial('simple-box.phtml', [
+            'item'      => $item,
+            'auction'   => $auction
+        ]);
 
-                    <div class="itemBox" data-handbid-item-key="<?php echo $item->key; ?>">
-                        <a title="<?php echo $item->name; ?>" href="/auctions/<?php echo $auction->key; ?>/item/<?php echo $item->key; ?>">
-                            <div class="inner">
-                                <div class="topBox">
-                                    <img src="<?php echo $item->images[0]; ?>"/>
-                                </div>
-                                <?php if ($item->status == "sold") {
-                                    ?>
-                                    <div class="item-banner sold"><?php echo __('Sold'); ?></div>
-                                <?php
-                                }
-                                ?>
-                                <div class="details">
-                                    <ul class="item-stats">
-                                        <li><?php echo __('Current'); ?><span> $<span
-                                                    data-handbid-item-attribute="currentPrice"><?php echo $currentPrice; ?></span></span>
-                                        </li>
-                                        <li><?php echo __('Increment'); ?>
-                                            <span> <?php echo '$' . $item->bidIncrement; ?></span></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                </li>
-            <?php } ?>
-        </ul>
-    </div>
+        $newRow = ($col % $cols === 0 && $col != $total);
+        $col++;
+        ?>
+
+    <?php }
+    ?>
+
+    <?php // ended up having to give the boostrap column its own div, was not meant to be flexible ?>
+
+
+
+    <div class="sizer <?php echo $mdClass; ?>"></div>
 </div>
