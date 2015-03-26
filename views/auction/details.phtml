@@ -166,10 +166,12 @@ if (!$auction) {
                     <div class="section" data-section="category">
                         <h4>Categories</h4>
                         <ul class="by-category">
-
-                            <li data-selector="*" class="selected"><a href="#">All (<?php echo count(
-                                        $this->get('items')
-                                    ) ?>)</a></li>
+                            <?php
+                            $allCount = 0;
+                            foreach ($categories as $category) {
+                                $allCount += count($category->items);
+                            } ?>
+                            <li data-selector="*" class="selected"><a href="#">All (<?php echo $allCount; ?>)</a></li>
 
                             <?php foreach ($categories as $category) {
 

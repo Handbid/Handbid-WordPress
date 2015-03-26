@@ -39,6 +39,7 @@ class HandbidShortCodeController {
 		// Loop through and add in shortcodes, it goes:
 		// [wordpress_shortcode]              => 'mappedFunctions'
 		$shortCodes = [
+			'handbid_header_title'          => 'headerTitle',
 			'handbid_pager'                 => 'pager',
 			'handbid_organization_list'     => 'organizationList',
 			'handbid_organization_details'  => 'organizationDetails',
@@ -458,9 +459,10 @@ class HandbidShortCodeController {
 		try {
 
 			$template = $this->templateFromAttributes( $attributes, 'views/item/details' );
-
-			$item    = $this->state->currentItem( $attributes );
+			//$item    = $this->state->currentItem( $attributes );
+			$item    = $this->state->currentItem();
 			$auction = $this->state->currentAuction();
+            $bids = $this->handbid->store( 'Bid' )->itemBids( $item->id );
             $related = false;
 
 			if ( $attributes !== '' && $item && in_array( 'include_related', $attributes ) ) {
@@ -477,6 +479,7 @@ class HandbidShortCodeController {
 				$template,
 				[
 					'item'    => $item,
+					'bids' => $bids,
 					'related' => $related,
 					'auction' => $auction
 				]
@@ -1013,6 +1016,70 @@ class HandbidShortCodeController {
 			return;
 
 		}
+
+	}
+
+	public function headerTitle( $attributes ) {
+
+        global $post;
+
+        if(!$post) {
+            return;
+        }
+
+        if(is_single())
+            return "Blog";
+        if(is_search())
+            return "Search";
+        if(is_page('Get Started Confirmation'))
+            return "Get Started";
+
+        if(in_array($post->post_name, ['auction', 'auction-item'])) {
+
+            $hb = Handbid::instance();
+
+            $auctionStartTime = "";
+            $auctionEndTime = "";
+            $auctionTitle = "";
+
+            if($post->post_name == 'auction-item'){
+
+                $item       = $hb->state()->currentItem();
+                $auctionStartTime = $item->auctionStartTime;
+                $auctionEndTime = $item->auctionEndTime;
+                $auctionTitle = $item->auctionTitle;
+
+            }
+            if($post->post_name == 'auction' or trim($auctionTitle) == ""){
+
+                $auction    = $hb->state()->currentAuction();
+                $auctionStartTime = $auction->startTime;
+                $auctionEndTime = $auction->endTime;
+                $auctionTitle = $auction->name;
+
+            }
+            if(trim($auctionTitle)){
+
+                $startMins = date(':m', $auctionStartTime);
+                $endMins = date(':m', $auctionStartTime);
+                $startMins = ($startMins == ':00') ? $startMins : "";
+                $endMins = ($endMins == ':00') ? $endMins : "";
+
+                date_default_timezone_set('America/Denver');
+
+                $title = $auctionTitle . '<span class="under">' . date('M jS g' . $startMins . 'a', $auctionStartTime) . ' - ';
+
+                $title .= (date('mdY', $auctionStartTime) == date('mdY', $auctionEndTime))?
+                    date('g' . $endMins . 'a', $auctionEndTime):
+                    date('M jS g' . $endMins . 'a | Y', $auctionEndTime);
+
+                $title .= '</span>';
+
+                return $title;
+            }
+        }
+
+		return get_the_title();
 
 	}
 

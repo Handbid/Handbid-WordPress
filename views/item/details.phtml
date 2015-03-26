@@ -1,5 +1,6 @@
 <?php
 $item       = $this->get('item');
+$bids       = $this->get('bids');
 $related    = $this->get('related');
 $auction    = $this->get('auction');
 $handbid    = Handbid::instance()->handbid;
@@ -17,8 +18,7 @@ $isLosing = array_filter($losing, function ($bid) use ($item) {
 if (!$item) {
     return;
 }
-
-$category       = $item->meta->categoryName;
+$category       = $item->categoryName;
 $description    = $item->description;
 $isBiddable     = !$item->isDirectPurchaseItem;
 $isLiveItem     = $item->disableMobileBidding;
@@ -39,7 +39,7 @@ if(!$item->hasInventory) {
 }
 
 $hasManyImages = (count($item->images) > 1);
-echo "<pre>".print_r($item,true)."</pre>";
+
 ?>
 
 <div class="item-details item-<?php echo $item->status; ?>" data-handbid-item-key="<?php echo $item->key; ?>">
@@ -100,7 +100,7 @@ echo "<pre>".print_r($item,true)."</pre>";
             <ul class="horizontal-details row">
 
                 <?php if($isBiddable) { ?>
-                    <li class="bids col-md-4 col-xs-3"><em data-handbid-item-attribute="meta.totalBids"><?php echo $item->meta->totalBids; ?></em>Bids</li>
+                    <li class="bids col-md-4 col-xs-3"><em data-handbid-item-attribute="meta.totalBids"><?php echo $item->bidCount; ?></em>Bids</li>
                     <li class="increment col-md-4 col-xs-5"><em>$<?php echo $item->bidIncrement; ?></em>Increment</li>
                     <li class="min col-md-4 col-xs-4"><em>$<?php echo $item->minimumBidAmount; ?></em>Min Bid</li>
                 <?php } else { ?>
@@ -110,7 +110,15 @@ echo "<pre>".print_r($item,true)."</pre>";
                 <?php } ?>
             </ul>
 
-            <?php echo do_shortcode('[handbid_bid key="' . $item->key . '"]'); ?>
+            <?php
+            // echo do_shortcode('[handbid_bid key="' . $item->key . '"]');
+            echo $this->partial('bid.phtml', [
+                'item'    => $item,
+                'bids'    => $bids,
+                'profile' => $profile,
+                'auction' => $auction
+            ]);
+            ?>
 
             <?php echo do_shortcode('[handbid_social_share]'); ?>
         </div>
@@ -184,7 +192,14 @@ echo "<pre>".print_r($item,true)."</pre>";
 
         <?php if($isBiddable) { ?>
             <div class="additional big-content" data-slider-nav-key="bids">
-                <?php echo do_shortcode('[handbid_item_bids key="' . $item->key . '"]'); ?>
+                <?php
+                // echo do_shortcode('[handbid_item_bids key="' . $item->key . '"]');
+                echo $this->partial('bids.phtml', [
+                    'item'    => $item,
+                    'profile' => $profile,
+                    'bids'    => $bids
+                ]);
+                ?>
             </div>
         <?php } ?>
 
