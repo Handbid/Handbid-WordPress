@@ -63,6 +63,7 @@ class HandbidShortCodeController {
 			'handbid_bidder_proxy_bids'     => 'myProxyBids',
 			'handbid_bidder_purchases'      => 'myPurchases',
 			'handbid_bidder_profile_form'   => 'bidderProfileForm',
+			'handbid_bidder_cc_form'        => 'bidderCreditCardForm',
 			'handbid_is_logged_in'          => 'isLoggedIn',
 			'handbid_is_logged_out'         => 'isLoggedOut',
 			'handbid_breadcrumb'            => 'breadcrumbs',
@@ -207,7 +208,8 @@ class HandbidShortCodeController {
 
 			$auctions = $this->handbid->store( 'Auction' )->publicAuctions();
 
-			$total = $this->handbid->store( 'Auction' )->publicAuctionCount();
+			//$total = $this->handbid->store( 'Auction' )->publicAuctionCount();
+			$total = count($auctions);
 
 			$markup = $this->viewRenderer->render(
 				$template,
@@ -273,7 +275,8 @@ class HandbidShortCodeController {
 				]
 			);
 
-			$total = $this->handbid->store( 'Organization' )->count( $query );
+			//$total = $this->handbid->store( 'Organization' )->count( $query );
+			$total = count($organizations);
 
 			$markup = $this->viewRenderer->render(
 				$template,
@@ -864,6 +867,10 @@ class HandbidShortCodeController {
 		}
 	}
 
+	public function bidderCreditCardForm( $attributes ) {
+        return do_shortcode('[handbid_bidder_profile_form template="views/bidder/credit-card-form"]');
+    }
+
 	public function myCreditCards( $attributes ) {
 		try {
 			$template = $this->templateFromAttributes( $attributes, 'views/bidder/credit-cards' );
@@ -921,7 +928,7 @@ class HandbidShortCodeController {
 
 			$query = [ ];//@todo: find out hwo to pass query through attributes. then merge it with our defaults. array_merge([], $query)
 
-			$tickets = $this->handbid->store( 'Ticket' )->byAuction( $auction->key, $query );
+//			$tickets = $this->handbid->store( 'Ticket' )->byAuction( $auction->key, $query );
 
 			if ( $tickets ) {
 				$template = $this->templateFromAttributes( $attributes, 'views/ticket/list' );

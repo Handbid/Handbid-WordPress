@@ -1,44 +1,92 @@
-<a class="button greenButton" href="#handbid-add-card-dialog">Add Credit Card</a>
-<div data-handbid-credit-card-form class="modal edit-creditcard-modal handbid-modal" id="handbid-add-card-dialog" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-header">
-            <h2>Add Card</h2>
-            <a href="#close" class="btn-close" aria-hidden="true">×</a> <!--CHANGED TO "#close"-->
-        </div>
-        <div class="modal-body">
-            <div class="creditcard-wrapper">
-                <form class="creditcard-template" action="<?php echo get_admin_url() . 'admin-post.php'; ?>" method="post" enctype="multipart/form-data">
-                    <div class="creditcard">
-                        <p>
-                            <div class="cc-section">
-                                <label>Name on Card</label>
-                                <input type="text" name="nameOnCard" class="checkout-input checkout-name"
-                                       placeholder="Name on Card">
-                            </div>
-                            <div class="cc-section">
-                                <label>Expiration</label>
-                                <input type="text" name="expMonth" class="checkout-input checkout-exp" placeholder="MM">
-                                <input type="text" name="expYear" class="checkout-input checkout-exp" placeholder="YYYY">
-                            </div>
-                        </p>
-                        <p>
-                            <div class="cc-section bottom-row">
-                                <label>Card Number</label>
-                                <input type="text" name="cardNum" class="checkout-input checkout-card"
-                                       placeholder="Credit Card Number">
-                            </div>
-                            <div class="cc-section bottom-row">
-                                <label>CVC</label>
-                                <input type="text" name="cvc" class="checkout-input checkout-cvc" placeholder="CVC">
-                                <a class="cvc-info" title="On most cards, the 3-digit security code is on the back, to the right of the signature. On American Express cards, the 4-digit security code is on the front, to the top-right of the card number.">?</a>
-                            </div>
-                        </p>
+<?php
+
+//so ghetto
+if(isset($_GET['nameOnCard'])) {
+    $this->set('nameOnCard', $_GET['nameOnCard']);
+}
+
+if(isset($_GET['expMonth'])) {
+    $this->set('expMonth', $_GET['expMonth']);
+}
+
+if(isset($_GET['expYear'])) {
+    $this->set('expYear', $_GET['expYear']);
+}
+
+?>
+
+<?php if ($this->get('showCreditCardRequiredMessage')) { ?>
+<div id="credit-card-required-banner">
+    <?php } ?>
+
+    <div class="row">
+
+        <?php if ($this->get('showCreditCardRequiredMessage')) { ?>
+            <div class="col-md-12">You must supply a credit card to bid in this auction.</div>
+        <?php } ?>
+
+
+        <a class="button green-solid-button handbid-modal-link" data-handbid-modal-key="credit-card-form">Add Credit
+            Card</a>
+
+        <?php if(isset($_GET['auto-open-cc'])) { ?>
+
+            <script type="text/javascript">
+                jQuery(document).on('ready', function () {
+                    if(!handbid.__opened_cc) {
+                        handbid.__opened_cc = true;
+                        jQuery('[data-handbid-modal-key="credit-card-form"]').click();
+                    }
+                });
+            </script>
+
+        <?php } ?>
+
+    </div>
+    <div class="handbid-modal" data-handbid-modal-key="credit-card-form">
+        <h3>Add Credit Card</h3>
+        <a href="#" class="modal-close">X</a>
+
+        <div class="creditcard-wrapper">
+            <form class="creditcard-template" action="<?php echo get_admin_url() . 'admin-post.php'; ?>" method="post"
+                  enctype="multipart/form-data">
+                <div class="creditcard">
+                    <div class="cc-section">
+                        <label>Name on Card</label>
+                        <input type="text" name="nameOnCard" value="<?php echo $this->get('nameOnCard'); ?>" class="checkout-input checkout-name"
+                               placeholder="Name on Card">
                     </div>
-                    <input type="submit" class="button green-button" value="submit"/>
-                    <input type='hidden' name='form-id' value='handbid-add-creditcard'/>
-                    <input type='hidden' name='action' value='submit-form'/>
-                </form>
-            </div>
+                    <div class="cc-section">
+                        <label>Expiration</label>
+                        <input type="text" name="expMonth" class="checkout-input checkout-exp" value="<?php echo $this->get('expMonth'); ?>" placeholder="MM">
+                        <input type="text" name="expYear" class="checkout-input checkout-exp" value="<?php echo $this->get('expYear'); ?>" placeholder="YYYY">
+                    </div>
+                    <br/>
+
+                    <div class="cc-section bottom-row">
+                        <label>Card Number</label>
+                        <input type="text" name="cardNum" class="checkout-input checkout-card"
+                               placeholder="Credit Card Number">
+                    </div>
+                    <div class="cc-section bottom-row">
+                        <label>CVC</label>
+
+                        <input type="text" name="cvc" class="checkout-input checkout-cvc" placeholder="CVC">
+
+                        <span data-tooltip-wrapper>
+                            <a class="cvc-info" data-tooltip-activate title="cvc">?</a>
+                            <div class="simple-tooltip-content" data-tooltip-content>On most cards, the 3-digit security code is on the back, to the right of the signature. On American Express cards, the 4-digit security code is on the front, to the top-right of the card number.</div>
+                        </span>
+
+                    </div>
+                </div>
+                <input type="submit" class="green-solid-button" value="submit"/>
+                <input type='hidden' name='form-id' value='handbid-add-creditcard'/>
+                <input type='hidden' name='action' value='submit-form'/>
+                <input type='hidden' name='redirect' value='<?php echo $_SERVER["REQUEST_URI"] ?>'/>
+            </form>
         </div>
     </div>
+    <?php if ($this->get('showCreditCardRequiredMessage')) { ?>
 </div>
+<?php } ?>

@@ -1,27 +1,81 @@
 <?php
 if ($this->get('tickets')) {
-    $auction    = $this->get('auction');
-    $tickets    = $this->get('tickets');
+    $auction = $this->get('auction');
+    $tickets = $this->get('tickets');
+    $cards   = $this->get('cards');
+    $profile = $this->get('profile');
 
 } else {
     echo "No Tickets Found";
     return;
 }
 
+if (!$auction->enableTicketSales) {
+    return;
+}
+
 ?>
 
-<a href="#" class="tickets">Buy Tickets</a>
+<a class="button pink-button handbid-modal-link purchase-tickets" data-handbid-modal-key="tickets-form">Buy Tickets</a>
 
-<div class="auction-ticket-list-widget">
+<div class="handbid-modal tickets-modal" data-handbid-modal-key="tickets-form" data-handbid-tickets>
+    <h3>Event Tickets / Registration</h3>
+    <a href="#" class="modal-close">X</a>
 
-    <!-- Ticket List -->
-    <div class="ticket-list">
-        <ul id="container" class="tickets js-isotope">
-            <?php forEach ($tickets as $ticket) { ?>
 
-                <li class="ticket ticket-tile"><?=$ticket->name?></li>
+    <?php
 
-            <?php } ?>
-        </ul>
-    </div>
+    if($profile) {
+        if ($auction->requireCreditCard && !count($cards) > 0) {
+            echo "You need to add a credit card to buy tickets";
+        } else {
+            ?>
+            <div class="tickets-container">
+
+                <div class="row ticket-row">
+
+                    <?php forEach ($tickets as $k => $ticket) { ?>
+                        <div class="col-md-6 col-xs-12 ticket" data-handbid-ticket-id="<?php echo $ticket->_id; ?>"
+                             data-handbid-ticket-price="<?php echo $ticket->buyNowPrice; ?>">
+                            <div class="ticket-container">
+                                <h4 class="ticket-title"><?php echo $ticket->name; ?>
+                                    <strong>$<span><?php echo $ticket->buyNowPrice; ?></span></strong></h4>
+
+                                <div class="col-md-4 col-xs-4">
+                                    <a href="" class="bid-price-toggle bid-down green-button button"
+                                       data-handbid-ticket-button="down">-</a>
+                                </div>
+
+                                <div class="buy-quantity col-md-4 col-xs-4"><span data-handbid-ticket-quantity>0</span>
+                                </div>
+
+                                <div class="col-md-4 col-xs-4 ticket-quantity-up">
+                                    <a href="" class="bid-price-toggle bid-up green-button button"
+                                       data-handbid-ticket-button="up">+</a>
+                                </div>
+                            </div>
+
+                        </div>
+                        <?php
+                        echo ($k % 2 > 0) ? '</div><div class="row ticket-row">' : '';
+
+                    } ?>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 col-xs-12">
+                    <h5>Grand Total</h5>
+
+                    <h3 class="total">$<span data-handbid-tickets-total>0</span></h3>
+                    <a href="#" class="button green-solid-button" data-handbid-tickets-button="purchase">Buy Now</a>
+                </div>
+            </div>
+        <?php
+        } // End credit card check
+    } else {
+
+        echo '<a href="#" data-handbid-connect>To purchase tickets, we first need to get you to login or setup an account.  Please <strong>click here</strong> to do that. After you are logged in, we can get your payment info and get you going.</a>';
+    }
+
+    ?>
 </div>

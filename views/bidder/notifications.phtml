@@ -1,10 +1,27 @@
 <?php
 
-$notifications = $this->get('notifications');
+$notifications = $this->get( 'notifications' );
 
-foreach ($notifications as $notification) {
-    echo '<pre>';
-    print_r($notification);
-    echo '</pre>';
-    echo '<br />';
-}
+?>
+    <ul class="simple-list">
+        <?php if ( count( $notifications ) > 0 ) {
+            forEach ( $notifications as $notification ) {
+
+                ?>
+                <li class="row preview">
+                    <div class="col-md-4"><?php echo date( 'm/d/Y - g:ia', $notification->dateUpdated ); ?></div>
+                    <div class="col-md-8">
+                        <?php echo $notification->body; ?>
+                    </div>
+                </li>
+            <?php
+            }
+        } else {
+            ?>
+            <p>You do not have any notifications.</p>
+        <?php
+        }
+        ?>
+    </ul>
+
+<?php
