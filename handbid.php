@@ -111,10 +111,12 @@ class Handbid
 
         $scripts = array(
             'cookie-plugin'         => 'public/js/jquery.cookie.js',
-            'handbid-plugin-js'     => 'public/js/handbid.js',
             'handbid-isotope'       => 'public/js/isotope.pkgd.min.js',
             'handbid-unslider'      => 'public/js/unslider.min.js',
-            'handbid-photo-gallery' => 'public/js/photoGallery.js'
+            'handbid-photo-gallery' => 'public/js/photoGallery.js',
+            'handbid-tab-slider'  => 'public/js/slider.js',
+            'handbid-auction-page'  => 'public/js/auction-details.js',
+            'handbid-plugin-js'     => 'public/js/handbid.js',
         );
 
 //        //make this a settings
@@ -130,8 +132,11 @@ class Handbid
         }
 
         $styles = array(
+            'handid-bootstrap'           => 'public/css/bootstrap.min.css',
             'handid-modal'           => 'public/css/modal.css',
-            'handbid-generic-styles' => 'public/css/handbid.css'
+            'handbid-generic-styles' => 'public/css/handbid.css',
+            'handbid-less-buttons'    => 'public/less/buttons.less',
+            'handbid-less-styles'    => 'public/less/handbid.less',
         );
 
         foreach ($styles as $key => $sc) {

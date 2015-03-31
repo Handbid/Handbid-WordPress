@@ -150,10 +150,13 @@ class HandbidShortCodeController {
 				$auctions = [ ];
 			}
 
+            $colsCount = $this->state->getGridColsCount();
+
 			$markup = $this->viewRenderer->render(
 				$template,
 				[
-					'auctions' => $auctions
+					'auctions' => $auctions,
+                    'cols_count' => $colsCount,
 				]
 			);
 
@@ -206,10 +209,16 @@ class HandbidShortCodeController {
 			$sortDirection = isset( $attributes['sort_direction'] ) ? $attributes['sort_direction'] : "asc";
 			$id            = isset( $attributes['id'] ) ? $attributes['id'] : 'auctions';
 
-			$auctions = $this->handbid->store( 'Auction' )->publicAuctions();
+            if($this->state->currentBidder()) {
+                $auctions = $this->handbid->store('Auction')->allAuctions();
+                $total = $this->handbid->store('Auction')->count();
+            }
+            else{
+                $auctions = $this->handbid->store('Auction')->publicAuctions();
+                $total = $this->handbid->store('Auction')->publicAuctionCount();
+            }
 
-			//$total = $this->handbid->store( 'Auction' )->publicAuctionCount();
-			$total = count($auctions);
+            $colsCount = $this->state->getGridColsCount();
 
 			$markup = $this->viewRenderer->render(
 				$template,
@@ -217,9 +226,9 @@ class HandbidShortCodeController {
 					'auctions'  => $auctions,
 					'total'     => $total,
 					'id'        => $id,
-					'total'     => $total,
 					'page_size' => $pageSize,
-					'page'      => $page
+					'page'      => $page,
+                    'cols_count' => $colsCount,
 				]
 			);
 
@@ -278,15 +287,17 @@ class HandbidShortCodeController {
 			//$total = $this->handbid->store( 'Organization' )->count( $query );
 			$total = count($organizations);
 
+            $colsCount = $this->state->getGridColsCount();
+
 			$markup = $this->viewRenderer->render(
 				$template,
 				[
 					'organizations' => $organizations,
 					'total'         => $total,
 					'id'            => $id,
-					'total'         => $total,
 					'page_size'     => $pageSize,
-					'page'          => $page
+					'page'          => $page,
+                    'cols_count' => $colsCount,
 				]
 			);
 
@@ -441,11 +452,14 @@ class HandbidShortCodeController {
 
 			$template = $this->templateFromAttributes( $attributes, 'views/item/list' );
 
+            $colsCount = $this->state->getGridColsCount(3, "Item");
+
 			return $this->viewRenderer->render(
 				$template,
 				[
 					'auction' => $auction,
-					'items'   => $items
+					'items'   => $items,
+                    'cols_count' => $colsCount,
 				]
 			);
 		} catch ( Exception $e ) {

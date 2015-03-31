@@ -1,0 +1,31 @@
+@import "variables.less";
+
+.handbid-modal {
+    display: none;
+    position: fixed;
+    z-index:10;
+    top: 50%;
+    left: 50%;
+    background: #fff;
+    padding: 25px;
+
+    .modal-close {
+        // Sorry for the hardcoded color, less is being a pain
+        color: rgba(233, 77, 112, 1);
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        font-size: 2em;
+    }
+}
+
+.handbid-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(0,0,0,0.8);
+    z-index: 9;
+}

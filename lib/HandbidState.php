@@ -138,4 +138,13 @@ class HandbidState
 
     }
 
+    public function getGridColsCount($default = 0, $type = "")
+    {
+        $colCount = (int) get_option('handbidDefaultColCount'.$type);
+        if(! $colCount) {
+            $colCount = ($default) ? $default : 4;
+        }
+        return $colCount;
+    }
+
 }
