@@ -210,11 +210,11 @@ class HandbidShortCodeController {
 			$id            = isset( $attributes['id'] ) ? $attributes['id'] : 'auctions';
 
             if($this->state->currentBidder()) {
-                $auctions = $this->handbid->store('Auction')->allAuctions();
+                $auctions = $this->handbid->store('Auction')->byStatus($attributes['type'], (int) $page + 1, $pageSize);
                 $total = $this->handbid->store('Auction')->count();
             }
             else{
-                $auctions = $this->handbid->store('Auction')->publicAuctions();
+                $auctions = $this->handbid->store('Auction')->byStatus($attributes['type'], (int) $page + 1, $pageSize);
                 $total = $this->handbid->store('Auction')->publicAuctionCount();
             }
 
