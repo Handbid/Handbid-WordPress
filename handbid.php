@@ -114,8 +114,11 @@ class Handbid
             'handbid-isotope'       => 'public/js/isotope.pkgd.min.js',
             'handbid-unslider'      => 'public/js/unslider.min.js',
             'handbid-photo-gallery' => 'public/js/photoGallery.js',
-            'handbid-tab-slider'  => 'public/js/slider.js',
+            'handbid-tab-slider'    => 'public/js/slider.js',
             'handbid-auction-page'  => 'public/js/auction-details.js',
+            'handbid-details-map'   => 'public/js/details-map.js',
+            'handbid-tooltip'       => 'public/js/tooltip.js',
+            'handbid-modal'         => 'public/js/modal.js',
             'handbid-plugin-js'     => 'public/js/handbid.js',
         );
 
@@ -132,10 +135,11 @@ class Handbid
         }
 
         $styles = array(
-            'handid-bootstrap'           => 'public/css/bootstrap.min.css',
+            'handid-bootstrap'       => 'public/css/bootstrap.min.css',
             'handid-modal'           => 'public/css/modal.css',
             'handbid-generic-styles' => 'public/css/handbid.css',
-            'handbid-less-buttons'    => 'public/less/buttons.less',
+            'handbid-less-buttons'   => 'public/less/buttons.less',
+            'handbid-less-modal'     => 'public/less/modal.less',
             'handbid-less-styles'    => 'public/less/handbid.less',
         );
 

@@ -52,7 +52,9 @@ class HandbidAdminActionController
             'handbidDefaultOrganizationKey',
             'handbidJs',
             'handbidShowAllAuctions',
-            'handbidCdnEndpoint'
+            'handbidCdnEndpoint',
+            'handbidDefaultColCount',
+            'handbidDefaultColCountItem',
         ];
 
         forEach ($settings as $setting) {

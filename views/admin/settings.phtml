@@ -41,6 +41,28 @@
                 <td><input type="text" name="handbidCdnEndpoint"
                            value="<?php echo get_option('handbidCdnEndpoint'); ?>"/></td>
             </tr>
+            <tr valign="top">
+                <th scope="row"><?php echo('Columns count on auctions and organizations pages'); ?></th>
+                <td><select type="text" name="handbidDefaultColCount">
+                        <?php
+                        $count = (int) get_option('handbidDefaultColCount');
+                        $count = ($count) ? $count : 4;
+                        for($i = 1; $i < 5; ++$i){
+                            echo "<option value='".$i."' ".selected($count, $i, false).">".$i."</option>";
+                        }?>
+                        </select></td>
+            </tr>
+            <tr valign="top">
+                <th scope="row"><?php echo('Columns count on auction details page'); ?></th>
+                <td><select type="text" name="handbidDefaultColCountItem">
+                        <?php
+                        $count = (int) get_option('handbidDefaultColCountItem');
+                        $count = ($count) ? $count : 3;
+                        for($i = 1; $i < 5; ++$i){
+                            echo "<option value='".$i."' ".selected($count, $i, false).">".$i."</option>";
+                        }?>
+                        </select></td>
+            </tr>
 
         </table>
         <?php submit_button(); ?>

@@ -1,0 +1,75 @@
+<?php
+    $profile    = $this->get('profile');
+    $winning    = $this->get('winning');
+    $losing     = $this->get('losing');
+    $redirect   = $this->get('redirect');
+    $myAuctions = $this->get('myAuctions');
+?>
+
+<div class="col-md-2 bidder-image-wrapper">
+    <img src="<?php echo $profile->photo; ?>" class="bidder-image"/>
+    <div class="slider-nav" data-slider-nav-id="bidder-dashboard-inner">
+        <a data-slider-nav-key="user-profile" class="edit-picture">Edit Pic</a>
+    </div>
+</div>
+<div class="col-md-3">
+    <ul class="quick-links slider-nav auto-open" data-slider-nav-id="bidder-dashboard-inner">
+        <li><a data-slider-nav-key="user-profile">User Profile</a></li>
+        <li><a data-slider-nav-key="update-credit-card">Update Credit Card</a></li>
+        <li><a data-slider-nav-key="see-my-auctions">See My Auctions</a></li>
+<!--        <li><a data-slider-nav-key="bidder-notifications">Notifications</a></li>-->
+        <li><a data-slider-nav-key="see-my-receipt">View Receipts/Invoices</a></li>
+        <li><a href="/organizations">Find an Organization</a></li>
+        <li><a href="/auctions">Find an Auction</a></li>
+        <li><a href="/handbid-logout">Logout</a></li>
+    </ul>
+</div>
+
+<div class="col-md-7">
+    <div class="slider-content" data-slider-nav-id="bidder-dashboard-inner">
+
+        <div class="" data-slider-nav-key="user-profile" data-slider-href="">
+            <?php echo do_shortcode('[handbid_bidder_profile_form redirect="' . $redirect . '"]'); ?>
+        </div>
+
+        <div class="" data-slider-nav-key="update-credit-card">
+            <?php echo do_shortcode('[handbid_bidder_credit_cards]'); ?>
+        </div>
+
+        <div class="" data-slider-nav-key="see-my-auctions">
+            <ul class="simple-list">
+                <?php if (count($myAuctions) > 0) {
+                    forEach ($myAuctions as $auction) {
+
+                        ?>
+                        <li class="row preview">
+                            <div class="col-md-2"><img src="<?php echo $auction->logo->small; ?>"/></div>
+                            <div class="col-md-7">
+                                <h4><?php echo $auction->name; ?></h4>
+                                <a href="/organizations/<?php echo $auction->meta->organization->key; ?>"
+                                   class="org-link"><?php echo $auction->meta->organization->name; ?></a>
+                            </div>
+                            <div class="col-md-3">
+                                <a class="cta-link" href="/auctions/<?php echo $auction->key; ?>">See Auction</a>
+                            </div>
+                        </li>
+                    <?php
+                    }
+                } else {
+                    ?>
+                    <p>You are not registered for any upcoming auctions.</p>
+                <?php
+                }
+                ?>
+            </ul>
+        </div>
+<!--        <div class="" data-slider-nav-key="bidder-notifications">-->
+<!--            --><?php //echo do_shortcode('[handbid_bidder_notifications template="views/bidder/notifications"]'); ?>
+<!--        </div>-->
+        <div class="" data-slider-nav-key="see-my-receipt">
+            <ul class="simple-list">
+                <?php echo do_shortcode('[handbid_bidder_receipt]'); ?>
+            </ul>
+        </div>
+    </div>
+</div>
