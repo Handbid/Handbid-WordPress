@@ -79,6 +79,7 @@ class Handbid
 
         // Add javascript
         add_action('wp_enqueue_scripts', [$this, 'initScripts']);
+        add_action('wp_head', [$this, 'addAjaxUrl']);
         // init controllers
         $this->router->init();
         $this->shortCodeController->init();
@@ -104,6 +105,13 @@ class Handbid
         flush_rewrite_rules();
     }
 
+    function addAjaxUrl() {
+        ?>
+        <script type="text/javascript">
+            var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
+        </script>
+    <?php
+    }
 
     // Javascript
     function initScripts()

@@ -56,7 +56,8 @@ class HandbidShortCodeController {
 			'handbid_bid'                   => 'bidNow',
 			'handbid_facebook_comments'     => 'facebookComments',
 			'handbid_social_share'          => 'socialShare',
-			'handbid_bidder_profile'        => 'myProfile',
+			'handbid_bidder_profile'        => 'bidderStatBar',
+			'handbid_bidder_profile_bar'    => 'myProfile',
             'handbid_bidder_profile_inner'  => 'bidderProfileInner',
             'handbid_bidder_notifications'  => 'myNotifications',
 			'handbid_bidder_bids'           => 'myBids',
@@ -75,6 +76,8 @@ class HandbidShortCodeController {
 		forEach ( $shortCodes as $shortCode => $callback ) {
 			add_shortcode( $shortCode, [ $this, $callback ] );
 		}
+
+        $this->addAjaxProcess();
 	}
 
 	// Helpers
@@ -621,6 +624,18 @@ class HandbidShortCodeController {
 	// Bidder
     public function bidderStatBar($attributes) {
 
+        $template = $this->templateFromAttributes( $attributes, 'views/bidder/profile-load' );
+
+        $profile  = $this->handbid->store( 'Bidder' )->myProfile();
+
+        $auction = $this->state->currentAuction();
+
+        return $this->viewRenderer->render(
+            $template, [
+                'profile'    => $profile,
+                'auction'    => $auction,
+            ]
+        );
     }
 
 	public function myProfile( $attributes ) {
@@ -631,6 +646,10 @@ class HandbidShortCodeController {
             $profile  = $this->handbid->store( 'Bidder' )->myProfile();
 
             $auction = $this->state->currentAuction();
+
+            if(is_null($auction) and (int) $attributes["auction"] ){
+                $auction = $this->auction = $this->handbid->store('Auction')->byId($attributes["auction"], false);
+            }
 
             $winning    = null;
             $losing     = null;
@@ -1108,5 +1127,33 @@ class HandbidShortCodeController {
 
 		error_log( $e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine() );
 	}
+
+    public function myProfileAjax(){
+
+        $nonce = $_POST["nonce"];
+
+        if(wp_verify_nonce($nonce, "bidder-".date("Y.m.d.H"))){
+
+            $auction = (int) $_POST["auction"];
+//            echo "[handbid_bidder_profile_bar ". (($auction) ? " auction='".$auction."' " : "" ) ."]";
+            echo do_shortcode("[handbid_bidder_profile_bar ". (($auction) ? " auction='".$auction."' " : "" ) ."]");
+
+        }
+
+        exit;
+    }
+
+    public function addAjaxProcess(){
+
+        $actions = [
+            "handbid_profile_load" => "myProfileAjax"
+        ];
+
+        foreach($actions as $action => $handler){
+            add_action("wp_ajax_".$action, [$this, $handler]);
+            add_action("wp_ajax_nopriv_".$action, [$this, $handler]);
+        }
+
+    }
 
 }

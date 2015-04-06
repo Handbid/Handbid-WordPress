@@ -14,7 +14,7 @@ if (!is_null($this->get('profile'))) {
 } else {
     return;
 }
-
+echo "<pre>".print_r($auction,true)."</pre>";
 ?>
 <div class="bidder-info-container">
     <div class="container container-fluid underlined">
@@ -108,13 +108,13 @@ if (!is_null($this->get('profile'))) {
                                     ?>
                                     <li class="row">
                                         <div class="col-md-8 col-xs-8">
-                                            <a href="/auctions/<?php echo $auction->key; ?>/item/<?php echo $bid->meta['itemKey']; ?>"><h4><?php echo $bid->meta['itemName']; ?></h4></a>
+                                            <a href="/auctions/<?php echo $auction->key; ?>/item/<?php echo $bid->item->key; ?>"><h4><?php echo $bid->item->name; ?></h4></a>
                                         </div>
                                         <div class="col-md-2 col-xs-2">
-                                            <span class="bid-amount winning">$<span><?php echo $bid->maxAmount; ?></span></span>
+                                            <span class="bid-amount winning">$<span><?php echo (int) $bid->maxAmount; ?></span></span>
                                         </div>
                                         <div class="col-md-2 col-xs-2">
-                                            <a class="button pink-solid-button" href="#" data-handbid-delete-proxy="<?php echo $bid->_id; ?>"><?php echo __('Delete'); ?></a>
+                                            <a class="button pink-solid-button" href="#" data-handbid-delete-proxy="<?php echo $bid->id; ?>"><?php echo __('Delete'); ?></a>
                                         </div>
                                     </li>
                                 <?php
@@ -138,10 +138,10 @@ if (!is_null($this->get('profile'))) {
                                     ?>
                                     <li class="row">
                                         <div class="col-md-10 col-xs-10">
-                                            <a href="/auctions/<?php echo $auction->key; ?>/item/<?php echo $bid->meta['itemKey']; ?>"><h4><?php echo $bid->meta['itemName']; ?></h4></a>
+                                            <a href="/auctions/<?php echo $auction->key; ?>/item/<?php echo $bid->item->key; ?>"><h4><?php echo $bid->item->name; ?></h4></a>
                                         </div>
                                         <div class="col-md-2 col-xs-2">
-                                            <span class="bid-amount winning">$<span><?php echo $bid->amount; ?></span></span>
+                                            <span class="bid-amount winning">$<span><?php echo (int) $bid->amount; ?></span></span>
                                         </div>
                                     </li>
                                 <?php
@@ -165,10 +165,10 @@ if (!is_null($this->get('profile'))) {
                                     ?>
                                     <li class="row">
                                         <div class="col-md-8 col-xs-8">
-                                            <a href="/auctions/<?php echo $auction->key; ?>/item/<?php echo $bid->meta['itemKey']; ?>"><h4><?php echo $bid->meta['itemName']; ?></h4></a>
+                                            <a href="/auctions/<?php echo $auction->key; ?>/item/<?php echo $bid->item->key; ?>"><h4><?php echo $bid->item->name; ?></h4></a>
                                         </div>
                                         <div class="col-md-4 col-xs-4">
-                                            <span class="bid-amount losing">$<span><?php echo $bid->amount; ?></span></span>
+                                            <span class="bid-amount losing">$<span><?php echo (int) $bid->amount; ?></span></span>
                                         </div>
                                     </li>
                                 <?php
