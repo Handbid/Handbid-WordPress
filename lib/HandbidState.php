@@ -147,4 +147,24 @@ class HandbidState
         return $colCount;
     }
 
+    public function getPageSize($default = 0, $type = "")
+    {
+        $colCount = (int) get_option('handbidDefaultPageSize');
+        if(! $colCount) {
+            $colCount = ($default) ? $default : 25;
+        }
+        return $colCount;
+    }
+
+    public function getLocalOrganizationSlug()
+    {
+        $slug = get_option('handbidShowOnlyMyOrganization');
+        return trim($slug) ? trim($slug) : false;
+    }
+
+    public function isLocalOrganizationPlugin()
+    {
+        return true;
+    }
+
 }

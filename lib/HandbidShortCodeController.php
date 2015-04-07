@@ -148,6 +148,8 @@ class HandbidShortCodeController {
 
 			// Get orgs from handbid server
 			if ( $org ) {
+                $profile = $this->handbid->store( 'Bidder' )->myProfile();
+                $this->handbid->store('Auction')->setBasePublicity(! $profile);
 				$auctions = $this->handbid->store( 'Auction' )->{$attributes['type']}( 0, 25, 'name', 'ASC', $org->id );
 			} else {
 				$auctions = [ ];
@@ -207,19 +209,15 @@ class HandbidShortCodeController {
 			}
 
 			//paging and sort
-			$pageSize      = isset( $attributes['page_size'] ) ? $attributes['page_size'] : 25;
+            $pageSize = $this->state->getPageSize((int) $attributes['page_size']);
 			$sortField     = isset( $attributes['sort_field'] ) ? $attributes['sort_field'] : "name";
 			$sortDirection = isset( $attributes['sort_direction'] ) ? $attributes['sort_direction'] : "asc";
 			$id            = isset( $attributes['id'] ) ? $attributes['id'] : 'auctions';
 
-            if($this->state->currentBidder()) {
-                $auctions = $this->handbid->store('Auction')->byStatus($attributes['type'], (int) $page + 1, $pageSize);
-                $total = $this->handbid->store('Auction')->count();
-            }
-            else{
-                $auctions = $this->handbid->store('Auction')->byStatus($attributes['type'], (int) $page + 1, $pageSize);
-                $total = $this->handbid->store('Auction')->publicAuctionCount();
-            }
+            $profile = $this->handbid->store( 'Bidder' )->myProfile();
+            $this->handbid->store('Auction')->setBasePublicity(! $profile);
+            $auctions = $this->handbid->store('Auction')->byStatus($attributes['type'], (int) $page + 1, $pageSize);
+            $total = $this->handbid->store('Auction')->count($attributes['type']);
 
             $colsCount = $this->state->getGridColsCount();
 
@@ -265,7 +263,7 @@ class HandbidShortCodeController {
 			}
 
 			//paging and sort
-			$pageSize      = isset( $attributes['page_size'] ) ? $attributes['page_size'] : 25;
+			$pageSize = $this->state->getPageSize((int) $attributes['page_size']);
 			$sortField     = isset( $attributes['sort_field'] ) ? $attributes['sort_field'] : "name";
 			$sortDirection = isset( $attributes['sort_direction'] ) ? $attributes['sort_direction'] : "asc";
 			$logoWidth     = isset( $attributes['logo_width'] ) ? $attributes['logo_width'] : 200;
@@ -273,6 +271,8 @@ class HandbidShortCodeController {
 
 			$query = [ ];
 
+            $profile = $this->handbid->store( 'Bidder' )->myProfile();
+            $this->handbid->store('Organization')->setBasePublicity(! $profile);
 			$organizations = $this->handbid->store( 'Organization' )->all(
 				$page,
 				$pageSize,
@@ -287,8 +287,8 @@ class HandbidShortCodeController {
 				]
 			);
 
-			//$total = $this->handbid->store( 'Organization' )->count( $query );
-			$total = count($organizations);
+			$total = $this->handbid->store( 'Organization' )->count( $query );
+//			$total = count($organizations);
 
             $colsCount = $this->state->getGridColsCount();
 
@@ -626,13 +626,10 @@ class HandbidShortCodeController {
 
         $template = $this->templateFromAttributes( $attributes, 'views/bidder/profile-load' );
 
-        $profile  = $this->handbid->store( 'Bidder' )->myProfile();
-
         $auction = $this->state->currentAuction();
 
         return $this->viewRenderer->render(
             $template, [
-                'profile'    => $profile,
                 'auction'    => $auction,
             ]
         );
@@ -647,7 +644,7 @@ class HandbidShortCodeController {
 
             $auction = $this->state->currentAuction();
 
-            if(is_null($auction) and (int) $attributes["auction"] ){
+            if(is_null($auction) and isset($attributes["auction"]) and (int) $attributes["auction"] ){
                 $auction = $this->auction = $this->handbid->store('Auction')->byId($attributes["auction"], false);
             }
 
@@ -1087,7 +1084,7 @@ class HandbidShortCodeController {
                 $item       = $hb->state()->currentItem();
                 $auctionStartTime = $item->auctionStartTime;
                 $auctionEndTime = $item->auctionEndTime;
-                $auctionTitle = $item->auctionTitle;
+                $auctionTitle = $item->auctionName;
 
             }
             if($post->post_name == 'auction' or trim($auctionTitle) == ""){
@@ -1135,7 +1132,6 @@ class HandbidShortCodeController {
         if(wp_verify_nonce($nonce, "bidder-".date("Y.m.d.H"))){
 
             $auction = (int) $_POST["auction"];
-//            echo "[handbid_bidder_profile_bar ". (($auction) ? " auction='".$auction."' " : "" ) ."]";
             echo do_shortcode("[handbid_bidder_profile_bar ". (($auction) ? " auction='".$auction."' " : "" ) ."]");
 
         }

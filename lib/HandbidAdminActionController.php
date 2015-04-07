@@ -11,10 +11,12 @@ class HandbidAdminActionController
 {
 
     public $viewRenderer;
+    public $isLocalCopy;
 
-    public function __construct(HandbidViewRenderer $viewRenderer)
+    public function __construct(HandbidViewRenderer $viewRenderer, $isLocalCopy = false)
     {
         $this->viewRenderer = $viewRenderer;
+        $this->isLocalCopy = $isLocalCopy;
     }
 
     function init()
@@ -51,10 +53,11 @@ class HandbidAdminActionController
             'handbidDefaultAuctionKey',
             'handbidDefaultOrganizationKey',
             'handbidJs',
-            'handbidShowAllAuctions',
+            'handbidShowOnlyMyOrganization',
             'handbidCdnEndpoint',
             'handbidDefaultColCount',
             'handbidDefaultColCountItem',
+            'handbidDefaultPageSize',
         ];
 
         forEach ($settings as $setting) {
@@ -64,7 +67,11 @@ class HandbidAdminActionController
 
     function adminSettingsAction()
     {
-        echo $this->viewRenderer->render('views/admin/settings');
+        echo $this->viewRenderer->render('views/admin/settings',
+            [
+                "is_local" => $this->isLocalCopy
+            ]
+        );
     }
 
 }

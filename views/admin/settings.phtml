@@ -1,3 +1,6 @@
+<?php
+$is_local = $this->get("is_local");
+?>
 <div class="wrap">
     <h2>Handbid</h2>
     <form method="post" action="options.php">
@@ -31,11 +34,13 @@
                 <td><input type="text" name="handbidJs"
                            value="<?php echo get_option('handbidJs', 'https://handbid-js-handbid.netdna-ssl.com/handbid.js?cachebuster=234234'); ?>"/></td>
             </tr>
+            <?php if($is_local){ ?>
             <tr valign="top">
-                <th scope="row"><?php echo('Show Only My Auctions'); ?><br/> ( Not Implemented )</span></th>
-                <td><input type="checkbox" checked name="handbidShowAllAuctions"
-                           value="<?php echo get_option('handbidShowAllAuctions'); ?>"/></td>
+                <th scope="row"><?php echo('My Organization'); ?><br/></span></th>
+                <td><input type="text"  name="handbidShowOnlyMyOrganization"
+                           value="<?php echo get_option('handbidShowOnlyMyOrganization'); ?>"/></td>
             </tr>
+            <?php } ?>
             <tr valign="top">
                 <th scope="row"><?php echo('CDN Endpoint'); ?></th>
                 <td><input type="text" name="handbidCdnEndpoint"
@@ -62,6 +67,11 @@
                             echo "<option value='".$i."' ".selected($count, $i, false).">".$i."</option>";
                         }?>
                         </select></td>
+            </tr>
+            <tr valign="top">
+                <th scope="row"><?php echo('Auctions and Organizations per page'); ?></th>
+                <td><input type="number" name="handbidDefaultPageSize"
+                           value="<?php $count = (int) get_option('handbidDefaultPageSize') ; echo ($count) ? $count : 25 ; ?>"/></td>
             </tr>
 
         </table>

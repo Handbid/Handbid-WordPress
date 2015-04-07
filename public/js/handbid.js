@@ -356,6 +356,19 @@
 
         ($('[data-handbid-bid]').length > 0) ? handbid.setupBidding() : '';
 
+
+        var bidderInfo = jQuery("#bidder-info-load");
+        bidderInfo.hide();
+        jQuery.post(ajaxurl, {
+                action: "handbid_profile_load",
+                auction: bidderInfo.data("auction"),
+                nonce: bidderInfo.data("load")
+            },
+            function (resp) {
+                bidderInfo.html(resp);
+                bidderInfo.slideDown("normal");
+            });
+
     });
 
 })(jQuery);

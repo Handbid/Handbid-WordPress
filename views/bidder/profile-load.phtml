@@ -1,26 +1,8 @@
 <?php
-if (is_null($this->get('profile'))) {
-    return;
-}
-else{
-    $auction = $this->get('auction');
-}
+
+$auction = $this->get('auction');
+
 ?>
 <div id="bidder-info-load" class="bidder-info-load" data-auction="<?php echo (int) $auction->id; ?>"  data-load="<?php echo wp_create_nonce("bidder-".date("Y.m.d.H"));?>">
 
 </div>
-<script type="text/javascript">
-    jQuery(document).ready(function(){
-        var bidderInfo = jQuery("#bidder-info-load");
-        bidderInfo.hide();
-        jQuery.post(ajaxurl, {
-                action: "handbid_profile_load",
-                auction: bidderInfo.data("auction"),
-                nonce: bidderInfo.data("load")
-            },
-            function (resp) {
-                bidderInfo.html(resp);
-                bidderInfo.slideDown("normal");
-            });
-    });
-</script>

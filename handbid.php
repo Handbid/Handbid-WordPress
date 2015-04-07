@@ -62,6 +62,8 @@ class Handbid
         $this->actionController      = isset($options['actionController']) ? $options['actionController'] : $this->createActionController(
         );
         $this->adminActionController = isset($options['adminActionController']) ? $options['adminActionController'] : $this->createAdminActionController(
+            false,
+            $this->state->isLocalOrganizationPlugin()
         );
 
         register_activation_hook(__FILE__, [$this, 'install']);
@@ -80,6 +82,7 @@ class Handbid
         // Add javascript
         add_action('wp_enqueue_scripts', [$this, 'initScripts']);
         add_action('wp_head', [$this, 'addAjaxUrl']);
+        add_action( 'template_redirect', [$this, 'redirectIfSingleOrganization'] );
         // init controllers
         $this->router->init();
         $this->shortCodeController->init();
@@ -112,6 +115,21 @@ class Handbid
         </script>
     <?php
     }
+
+    function redirectIfSingleOrganization()
+    {
+
+        $neededSlug = $this->state->getLocalOrganizationSlug();
+        $isLocalCopy = $this->state->isLocalOrganizationPlugin();
+        if($neededSlug and $isLocalCopy) {
+            $currentOrg = get_query_var("organization");
+            if (is_page('organizations') or (is_page('organization') and $currentOrg != $neededSlug)) {
+                wp_redirect(home_url('/organizations/' . $neededSlug));
+                exit();
+            }
+        }
+    }
+
 
     // Javascript
     function initScripts()
@@ -193,13 +211,13 @@ class Handbid
         return new HandbidActionController($viewRenderer, $this->handbid, $this->state);
     }
 
-    function createAdminActionController($viewRenderer = false)
+    function createAdminActionController($viewRenderer = false, $isLocalCopy = false)
     {
         if (!$viewRenderer) {
             $viewRenderer = $this->viewRender;
         }
 
-        return new HandbidAdminActionController($viewRenderer);
+        return new HandbidAdminActionController($viewRenderer, $isLocalCopy);
     }
 
     function createRouteController($state = null)

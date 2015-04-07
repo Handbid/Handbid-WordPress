@@ -64,7 +64,7 @@ if ($auction->status == 'presale' && !$item->isDirectPurchaseItem) {
                 <?php if ($item->isDirectPurchaseItem) { ?>
 
                     <li class="bids col-md-6 col-xs-6">Sold <em
-                            data-handbid-item-attribute="meta.totalSold"><?php echo $item->meta->totalSold; ?></em></li>
+                            data-handbid-item-attribute="meta.totalSold"><?php echo $item->quantitySold; ?></em></li>
                     <li class="remaining col-md-6 col-xs-6"><em
                             data-handbid-item-attribute="inventoryRemaining"><?php echo $item->inventoryRemaining; ?></em>
                         Left
