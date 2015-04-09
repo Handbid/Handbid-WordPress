@@ -144,15 +144,15 @@ $hasManyImages = (count($item->images) > 1);
         <?php } ?>
         <ul class="slider-nav col-md-12 auto-open" data-slider-nav-id="item-details">
 
-            <?php if($description) { ?>
-                <li>
-                    <a data-slider-nav-key="description">Description</a>
-                </li>
-            <?php } ?>
-
             <?php if (!wp_is_mobile() && $item->donor) { ?>
                 <li>
                     <a data-slider-nav-key="donor">Donor</a>
+                </li>
+            <?php } ?>
+
+            <?php if($description) { ?>
+                <li>
+                    <a data-slider-nav-key="description">Description</a>
                 </li>
             <?php } ?>
 

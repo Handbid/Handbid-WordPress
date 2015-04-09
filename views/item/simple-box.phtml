@@ -28,7 +28,7 @@ if ($auction->status == 'presale' && !$item->isDirectPurchaseItem) {
 
     <div class="header">
         <div class="col-md-4 col-xs-4 price">$<span
-                data-handbid-item-attribute="currentPrice"><?php echo $item->currentPrice; ?></span></div>
+                class="currentItemPrice" data-handbid-item-attribute="currentPrice"><?php echo $item->currentPrice; ?></span></div>
         <?php if (trim($item->itemCode)) { ?>
             <div class="col-md-8 col-xs-8 code">#<span
                     data-handbid-item-attribute="itemCode"><?php echo $item->itemCode; ?></span></div>
@@ -53,7 +53,10 @@ if ($auction->status == 'presale' && !$item->isDirectPurchaseItem) {
 
         <div class="contents">
 
-            <h3><a href="<?php echo $url; ?>" data-handbid-item-attribute="name"><?php echo $item->name; ?></a></h3>
+            <h3>
+                <a href="<?php echo $url; ?>" data-handbid-item-attribute="name"><?php echo $item->name; ?></a>
+                <span style="display: none;" class="nameLowerCase"><?php echo esc_html(strtolower($item->name));?></span>
+            </h3>
 
             <?php if (trim($item->categoryName)) { ?>
                 <h4 data-handbid-item-attribute="meta.categoryName"><?php echo $item->categoryName ?></h4>

@@ -54,19 +54,24 @@ if (!$auction) {
     </div>
 </div>
 
-
+<?php $informationFirst = (in_array($auction->status, ["preview", "presale", "closed"]));?>
 <ul class="slider-nav col-md-12 auto-open" data-slider-nav-id="auction-details">
+    <?php if ($auction->description and $informationFirst) { ?>
+        <li>
+            <a data-slider-nav-key="description">Auction Information</a>
+        </li>
+    <?php } ?>
     <li>
         <a data-slider-nav-key="items">Items</a>
     </li>
-    <?php if ($auction->description) { ?>
+    <?php if ($auction->description and !$informationFirst) { ?>
         <li>
             <a data-slider-nav-key="description">Auction Information</a>
         </li>
     <?php } ?>
     <?php if ($hasLocation) { ?>
         <li>
-            <a data-slider-nav-key="map">Address &amp; Map</a>
+            <a data-slider-nav-key="map">Event Details</a>
         </li>
     <?php } ?>
 </ul>

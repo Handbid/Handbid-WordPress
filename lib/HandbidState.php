@@ -164,7 +164,7 @@ class HandbidState
 
     public function isLocalOrganizationPlugin()
     {
-        return true;
+        return false;
     }
 
 }

@@ -112,7 +112,7 @@
 
 
         // selects all nav items, and groups them to their respective content
-        $('.slider-nav [data-slider-nav-key]').on('click', function () {
+        $('.slider-nav [data-slider-nav-key]').live('click', function () {
 
             var key        = $(this).attr('data-slider-nav-key'),
                 parent     = $(this).closest('.slider-nav'),

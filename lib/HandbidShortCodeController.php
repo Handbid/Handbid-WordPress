@@ -288,7 +288,6 @@ class HandbidShortCodeController {
 			);
 
 			$total = $this->handbid->store( 'Organization' )->count( $query );
-//			$total = count($organizations);
 
             $colsCount = $this->state->getGridColsCount();
 

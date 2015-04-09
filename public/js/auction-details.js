@@ -163,9 +163,9 @@
         sortAscending,
         sortBy,
         sortData = {
-            name: 'h3 a',
+            name: 'h3 .nameLowerCase',
             price: function (elem) {
-                var price = parseInt($('.price', elem).html().replace('$', ''));
+                var price = parseInt($('.currentItemPrice', elem).html().replace('$', ''));
                 return price;
             },
             bids: function (elem) {
