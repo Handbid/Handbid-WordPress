@@ -625,10 +625,13 @@ class HandbidShortCodeController {
 
         $template = $this->templateFromAttributes( $attributes, 'views/bidder/profile-load' );
 
+        $profile  = $this->handbid->store( 'Bidder' )->myProfile();
+
         $auction = $this->state->currentAuction();
 
         return $this->viewRenderer->render(
             $template, [
+                'profile'    => $profile,
                 'auction'    => $auction,
             ]
         );
@@ -905,10 +908,14 @@ class HandbidShortCodeController {
 			$template = $this->templateFromAttributes( $attributes, 'views/bidder/credit-cards' );
 			$profile  = $this->handbid->store( 'Bidder' )->myProfile();
 
+			$cards = (isset($profile->creditCards)) ?
+				$profile->creditCards :
+				$this->handbid->store( 'CreditCard' )->byOwner( $profile->id );
+
 			return $this->viewRenderer->render(
 				$template,
 				[
-					'cards' => $this->handbid->store( 'CreditCard' )->byOwner( $profile->id )
+					'cards' => $cards
 				]
 			);
 		} catch ( Exception $e ) {
@@ -1077,6 +1084,7 @@ class HandbidShortCodeController {
             $auctionStartTime = "";
             $auctionEndTime = "";
             $auctionTitle = "";
+	        $auctionTimeZone = "";
 
             if($post->post_name == 'auction-item'){
 
@@ -1084,6 +1092,7 @@ class HandbidShortCodeController {
                 $auctionStartTime = $item->auctionStartTime;
                 $auctionEndTime = $item->auctionEndTime;
                 $auctionTitle = $item->auctionName;
+                $auctionTimeZone = $item->auctionTimeZone;
 
             }
             if($post->post_name == 'auction' or trim($auctionTitle) == ""){
@@ -1092,8 +1101,10 @@ class HandbidShortCodeController {
                 $auctionStartTime = $auction->startTime;
                 $auctionEndTime = $auction->endTime;
                 $auctionTitle = $auction->name;
+	            $auctionTimeZone = $auction->timeZone;
 
             }
+	        $timeZone = (trim($auctionTimeZone)) ? $auctionTimeZone : 'America/Denver' ;
             if(trim($auctionTitle)){
 
                 $startMins = date(':m', $auctionStartTime);
@@ -1101,7 +1112,7 @@ class HandbidShortCodeController {
                 $startMins = ($startMins == ':00') ? $startMins : "";
                 $endMins = ($endMins == ':00') ? $endMins : "";
 
-                date_default_timezone_set('America/Denver');
+                date_default_timezone_set($timeZone);
 
                 $title = $auctionTitle . '<span class="under">' . date('M jS g' . $startMins . 'a', $auctionStartTime) . ' - ';
 
@@ -1109,6 +1120,7 @@ class HandbidShortCodeController {
                     date('g' . $endMins . 'a', $auctionEndTime):
                     date('M jS g' . $endMins . 'a | Y', $auctionEndTime);
 
+                $title .= ' ' . $auctionTimeZone;
                 $title .= '</span>';
 
                 return $title;
