@@ -1,40 +1,147 @@
-<div class="handbid-modal" data-handbid-modal-key="login-modal">
-    <h3>Login / Register</h3>
+<div class="handbid-modal contact-body" data-handbid-modal-key="login-modal">
     <a href="#" class="modal-close">X</a>
 
-    <div class="row">
-        <div class="col-md-6 login-wrapper">
-            <form action="<?php echo get_admin_url() . 'admin-post.php'; ?>" method="post"
-                  enctype="multipart/form-data">
+    <div class="page-body connect-page">
 
-                <input type="text" name="username" placeholder="Username">
-                <input type="text" name="pin" placeholder="Pin">
+        <a href="http://handbid.com">
+            <div class="animated fadeInDown logo"></div>
+        </a>
 
-                <input type="submit" class="green-solid-button" value="Login"/>
-                <input type='hidden' name='form-id' value='handbid-login'/>
-                <input type='hidden' name='action' value='submit-form' />
-                <input type='hidden' name='redirect' value='<?php echo $_SERVER["REQUEST_URI"] ?>'/>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xs-12 col-sm-6 animated fadeInLeft signup-form">
+                    <div class="handbid-form signup-form">
+                        <h2>Sign Up</h2>
 
-            </form>
-        </div>
-        <div class="col-md-6 register-wrapper">
-            <form action="<?php echo get_admin_url() . 'admin-post.php'; ?>" method="post"
-                  enctype="multipart/form-data">
+                        <form class="form" method="POST" action="<?php echo get_admin_url() . 'admin-post.php'; ?>"
+                              enctype="multipart/form-data">
 
-                <div class="col-md-6 col-xs-12 no-padding">
-                    <input class="half-input" type="text" name="firstname" placeholder="First Name">
+                            <div class="row">
+                                <div class="form-group col-md-12">
+                                    <input placeholder="First Name" type="text" name="firstname" value=""
+                                           class="form-control">
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+                                <div class="form-group col-md-12">
+                                    <input placeholder="Last Name" type="text" name="lastname" value=""
+                                           class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group col-md-12">
+                                    <input placeholder="Email" autocomplete="off" type="text" name="email" value=""
+                                           class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group col-md-12">
+                                    <input placeholder="Password" type="password" name="password" value=""
+                                           class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group col-md-12">
+                                    <input placeholder="Confirm Password" type="password" name="password2" value=""
+                                           class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group col-md-12">
+                                    <input placeholder="Cell Phone" type="text" name="mobile" value=""
+                                           class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group col-md-12">
+                                    <select name="phoneType" class="form-control">
+                                        <option value="iphone">iPhone</option>
+                                        <option value="android">Android</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group col-md-12">
+                                    <a href="https://handbid.com/terms-of-service/" class="terms link"
+                                       target="_blank"><label for="agreeToTerms" class="property-label">Agree to <span
+                                                class="underline">Terms and Services</span></label></a>
+                                    <input type="checkbox" class="form-control" name="agreeToTerms" value="">
+                                </div>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-info signup">Sign Up</button>
+                            </div>
+
+                            <input type="hidden" name="altair-form-id" value="signup">
+
+                            <input type='hidden' name='form-id' value='handbid-register'/>
+                            <input type='hidden' name='action' value='submit-form'/>
+                            <input type='hidden' name='redirect' value='<?php echo $_SERVER["REQUEST_URI"] ?>'/>
+                        </form>
+
+                    </div>
                 </div>
-                <div class="col-md-6 col-xs-12 no-padding">
-                    <input class="half-input" type="text" name="lastname" placeholder="Last Name">
+                <div class="col-xs-12 col-sm-6 animated fadeInRight login-form">
+                    <div class="handbid-form login-form">
+                        <h2>Login</h2>
+
+                        <form class="form" method="POST" action="<?php echo get_admin_url() . 'admin-post.php'; ?>"
+                              enctype="multipart/form-data">
+
+                            <div class="row">
+                                <div class="form-group col-md-12">
+                                    <input placeholder="Email / Phone Number" type="text" name="username" value=""
+                                           class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group col-md-12">
+                                    <input placeholder="Password (Pin)" type="text" name="pin" value=""
+                                           class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-info login">Login</button>
+                            </div>
+
+                            <input type="hidden" name="altair-form-id" value="login">
+                            <input type='hidden' name='redirect' value='<?php echo $_SERVER["REQUEST_URI"] ?>'/>
+                            <input type='hidden' name='form-id' value='handbid-login'/>
+                            <input type='hidden' name='action' value='submit-form'/>
+                        </form>
+
+                        <hr>
+                        <h2>Other Links</h2>
+
+                        <div class="button-wrapper">
+                            <a class="btn btn-info btn-forgot-password"
+                               href="http://manager.handbid.com/user/forgot-password" target="_blank">Forgot
+                                Password</a>
+                            <a class="btn btn-info btn-manager" href="http://handbid.com/manager/dashboard">Manager
+                                Login</a>
+                        </div>
+
+                    </div>
+
+
                 </div>
-
-                <input type="text" name="mobile" placeholder="Mobile">
-
-                <input type="submit" class="green-solid-button" value="Register"/>
-                <input type='hidden' name='form-id' value='handbid-register'/>
-                <input type='hidden' name='action' value='submit-form' />
-                <input type='hidden' name='redirect' value='<?php echo $_SERVER["REQUEST_URI"] ?>'/>
-            </form>
+            </div>
         </div>
+
+
     </div>
+
+
 </div>

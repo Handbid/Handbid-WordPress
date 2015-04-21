@@ -145,6 +145,8 @@ class Handbid
             'handbid-details-map'   => 'public/js/details-map.js',
             'handbid-tooltip'       => 'public/js/tooltip.js',
             'handbid-modal'         => 'public/js/modal.js',
+            'handbid-bootstrap-js'  => 'public/js/bootstrap.js',
+            'handbid-login-js'      => 'public/js/login.js',
             'handbid-plugin-js'     => 'public/js/handbid.js',
         );
 
@@ -163,6 +165,7 @@ class Handbid
         $styles = array(
             'handid-bootstrap'       => 'public/css/bootstrap.min.css',
             'handid-modal'           => 'public/css/modal.css',
+            'handid-modal'           => 'public/css/modal-connect.css',
             'handbid-generic-styles' => 'public/css/handbid.css',
             'handbid-less-buttons'   => 'public/less/buttons.less',
             'handbid-less-modal'     => 'public/less/modal.less',

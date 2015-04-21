@@ -1,0 +1,380 @@
+@import url(https://fonts.googleapis.com/css?family=Lato:300,400);
+
+.handbid-modal.contact-body {
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    font-family: 'Lato', sans-serif;
+    color: #fff;
+    background: #1672b3;
+    font-weight: lighter;
+    background: url('../images/bg.jpg') no-repeat center center scroll;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    text-shadow: 1px 1px rgba(0, 0, 0, 0.5);
+}
+.handbid-modal .logo {
+    background-image: url('../images/logo.svg');
+    width: 200px;
+    height: 85px;
+    margin: 15px auto 0 auto;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.handbid-modal .container-fluid {
+    padding: 0 25px;
+}
+.handbid-form {
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+}
+.handbid-form ::-webkit-input-placeholder {
+    color: #000000;
+}
+.handbid-form :-moz-placeholder {
+    /* Firefox 18- */
+    color: #000000;
+}
+.handbid-form ::-moz-placeholder {
+    /* Firefox 19+ */
+    color: #000000;
+}
+.handbid-form :-ms-input-placeholder {
+    color: #000000;
+}
+.handbid-form input:-webkit-autofill,
+.handbid-form input:focus:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 50px #4cb0ce inset;
+    -webkit-text-fill-color: #fff;
+}
+.handbid-form input:focus::-webkit-input-placeholder,
+.handbid-form input:hover::-webkit-input-placeholder {
+    color: #000000;
+}
+.handbid-form input:focus:-moz-placeholder,
+.handbid-form input:hover:-moz-placeholder {
+    /* Firefox 18- */
+    color: #000000;
+}
+.handbid-form input:focus::-moz-placeholder,
+.handbid-form input:hover::-moz-placeholder {
+    /* Firefox 19+ */
+    color: #000000;
+}
+.handbid-form input:focus:-ms-input-placeholder,
+.handbid-form input:hover:-ms-input-placeholder {
+    color: #000000;
+}
+.handbid-form h2 {
+    text-align: center;
+    padding: 10px 0 0;
+    margin: 0;
+    font-weight: 200;
+    font-size: 1.5em;
+    text-transform: none;
+    color: #fff;
+}
+.handbid-modal .container-tab h2,
+.handbid-modal .container-tab h5{
+    text-align: left;
+}
+
+.handbid-form p {
+    font-size: 13px;
+    padding: 20px 0 0;
+    text-align: center;
+    margin: 0;
+}
+.handbid-form label {
+    color: #6e828a;
+}
+.handbid-form form {
+    padding: 25px;
+}
+.handbid-form input,
+.handbid-form select {
+    color: #000;
+    border: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+    -webkit-border-radius: 0px;
+    border-radius: 0px;
+    height: 40px;
+    box-shadow: none;
+    padding: 0 15px 0;
+    font-size: 14px;
+}
+.handbid-form input:hover,
+.handbid-form input:focus,
+.handbid-form select:hover,
+.handbid-form select:focus {
+    opacity: 1;
+    border-bottom: 1px solid #4cb0ce;
+}
+.handbid-form .form-control:focus {
+    box-shadow: none;
+    -moz-box-shadow: none;
+}
+.handbid-form .btn,
+.handbid-form .btn:hover {
+    background: #9fb94a;
+    padding-left: 50px;
+    padding-right: 50px;
+    text-transform: uppercase;
+    border-radius: 0px;
+    background-image: none;
+    box-shadow: none;
+    font-weight: 400;
+    border: 1px solid #9fb94a;
+    color: #fff;
+    margin-top: 10px;
+}
+.handbid-form .btn-connect,
+.handbid-form .btn-connect:hover {
+    border-color: #3b5998;
+    background: #3b5998 url('../images/fb-logo.svg') 10px center;
+    line-height: 2px;
+    background-size: 10px;
+    background-repeat: no-repeat;
+    padding: 15px 15px 15px 35px;
+    width: auto;
+}
+.handbid-form .login {
+    width: 241px;
+}
+.handbid-form .signup {
+    width: 206px;
+}
+.handbid-form .btn.btn-forgot-password,
+.handbid-form .btn.btn-forgot-password:hover {
+    float: left;
+    margin-right: 25px;
+    background: #e94d70;
+    padding-left: 50px;
+    padding-right: 50px;
+    text-transform: uppercase;
+    border-radius: 0;
+    background-image: none;
+    box-shadow: none;
+    font-weight: 400;
+    border: 1px solid #e94d70;
+    color: #fff;
+}
+.handbid-form .btn.btn-forgot-password {
+    margin-top: 25px;
+    margin-left: 5px;
+}
+.btn-manager,
+.btn-manager:hover {
+    float: right;
+    margin-right: 6px;
+    background: #9fb94a;
+    padding-left: 50px;
+    padding-right: 50px;
+    text-transform: uppercase;
+    border-radius: 0px;
+    background-image: none;
+    box-shadow: none;
+    font-weight: 400;
+    border: 1px solid #9fb94a;
+    color: #fff;
+}
+.handbid-form .btn.btn-manager {
+    margin-top: 25px;
+}
+.handbid-form .property-label {
+    color: #fff;
+}
+.terms.link:hover {
+    cursor: pointer;
+}
+input[type="checkbox"] {
+    width: 50px;
+    display: inline-block;
+    height: 14px;
+    margin: 15px 0 0 15px;
+}
+.fb-connect {
+    height: 22px;
+    margin-top: 16px;
+    display: block;
+    float: right;
+}
+hr {
+    margin: 20px 25px;
+}
+.button-wrapper {
+    margin: 0 20px;
+}
+span.underline {
+    text-decoration: underline;
+}
+.col-xs-12 {
+    margin-bottom: 25px;
+}
+.no-back {
+    position: absolute;
+    background-image: url('../images/logo.svg');
+    width: 300px;
+    height: 200px;
+    background-repeat: no-repeat;
+    background-position: top center;
+    top: 50%;
+    margin-top: -100px;
+    left: 50%;
+    margin-left: -150px;
+}
+.invalid-request {
+    color: #fff;
+    margin-top: 100px;
+    width: 100%;
+    text-align: center;
+    line-height: 1.5em;
+}
+.alert {
+    padding: 15px;
+    text-align: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    opacity: 1;
+    color: #000;
+    -moz-animation: hideElement 1s ease-in-out 5s forwards;
+    -webkit-animation: hideElement 1s ease-in-out 5s forwards;
+    -o-animation: hideElement 1s ease-in-out 5s forwards;
+    animation: hideElement 1s ease-in-out 5s forwards;
+    -webkit-animation-fill-mode: forwards;
+    animation-fill-mode: forwards;
+}
+
+.login-popup-link{
+    cursor: pointer;
+    color: #fff;
+    font-weight: bold;
+}
+
+.center-aligned-text{
+    text-align: center !important;
+}
+
+.container-tab .popover{
+    top: 0 !important;
+    width: 50% !important;
+    max-width: 50%;
+
+    background: none;
+    box-shadow: none;
+    border: none;
+}
+
+.container-tab .popover .arrow{
+    top: 20px !important;
+    left: -10px;
+}
+.container-tab .popover .arrow:after{
+    border-right-color: #2d84bc;
+}
+
+.container-tab .popover .popover-title{
+    background: #2d84bc;
+    border: none;
+    border-radius: 0;
+    text-align: left;
+}
+
+.container-tab .popover .popover-content{
+
+}
+
+.has-question-icon{
+    position: relative;
+}
+
+.has-question-icon:after{
+    content: "?";
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+
+}
+
+.handbid-form label.radio-label{
+    color: #fff;
+}
+
+.handbid-form label.radio-label input{
+    height: auto;
+}
+
+@keyframes hideElement {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+        top: -50px;
+    }
+}
+@-webkit-keyframes hideElement {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+        top: -50px;
+    }
+}
+/**
+ * Errors
+ */
+body.site-down {
+    overflow: hidden;
+}
+.firebird-error {
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+    background: white url('../images/error.png') center bottom no-repeat;
+}
+@media (max-width: 1151px) {
+    .btn-forgot-password {
+        margin-right: 0;
+    }
+}
+@media (max-width: 1100px) {
+    .handbid-form .btn-connect:hover {
+        width: 100%;
+    }
+    .button-wrapper .btn,
+    .modal-footer .btn {
+        width: 100%;
+        display: block;
+    }
+    .modal-footer .btn:last-of-type {
+        margin-bottom: 15px;
+    }
+    .btn-forgot-password {
+        margin-left: 0;
+    }
+    .btn.btn-manager {
+        margin-right: 0;
+    }
+}
+@media (max-width: 900px) {
+    .fb-connect {
+        clear: both;
+        display: block;
+        float: left;
+        margin-top: 15px;
+    }
+}
+@media (max-width: 600px) {
+    .btn {
+        display: block;
+        clear: both;
+    }
+}

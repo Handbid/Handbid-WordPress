@@ -950,7 +950,8 @@ class HandbidShortCodeController {
 	}
 
     public function loginRegisterForm() {
-        return $this->viewRenderer->render('views/bidder/login-form',
+        // return $this->viewRenderer->render('views/bidder/login-form',
+        return $this->viewRenderer->render('views/bidder/login-form-new',
             [
             ]
         );
