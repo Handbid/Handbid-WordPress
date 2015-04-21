@@ -136,15 +136,15 @@ class Handbid
     {
 
         $scripts = array(
-            'cookie-plugin'         => 'public/js/jquery.cookie.js',
-            'handbid-isotope'       => 'public/js/isotope.pkgd.min.js',
-            'handbid-unslider'      => 'public/js/unslider.min.js',
-            'handbid-photo-gallery' => 'public/js/photoGallery.js',
-            'handbid-tab-slider'    => 'public/js/slider.js',
-            'handbid-auction-page'  => 'public/js/auction-details.js',
-            'handbid-details-map'   => 'public/js/details-map.js',
-            'handbid-tooltip'       => 'public/js/tooltip.js',
-            'handbid-modal'         => 'public/js/modal.js',
+            'cookie-plugin-js'         => 'public/js/jquery.cookie.js',
+            'handbid-isotope-js'       => 'public/js/isotope.pkgd.min.js',
+            'handbid-unslider-js'      => 'public/js/unslider.min.js',
+            'handbid-photo-gallery-js' => 'public/js/photoGallery.js',
+            'handbid-tab-slider-js'    => 'public/js/slider.js',
+            'handbid-auction-page-js'  => 'public/js/auction-details.js',
+            'handbid-details-map-js'   => 'public/js/details-map.js',
+            'handbid-tooltip-js'       => 'public/js/tooltip.js',
+            'handbid-modal-js'         => 'public/js/modal.js',
             'handbid-bootstrap-js'  => 'public/js/bootstrap.js',
             'handbid-login-js'      => 'public/js/login.js',
             'handbid-plugin-js'     => 'public/js/handbid.js',
@@ -163,13 +163,13 @@ class Handbid
         }
 
         $styles = array(
-            'handid-bootstrap'       => 'public/css/bootstrap.min.css',
-            'handid-modal'           => 'public/css/modal.css',
-            'handid-modal-connect'   => 'public/css/modal-connect.css',
-            'handbid-generic-styles' => 'public/css/handbid.css',
-            'handbid-less-buttons'   => 'public/less/buttons.less',
-            'handbid-less-modal'     => 'public/less/modal.less',
-            'handbid-less-styles'    => 'public/less/handbid.less',
+            'handid-bootstrap-css'       => 'public/css/bootstrap.min.css',
+            'handid-modal-css'           => 'public/css/modal.css',
+            'handid-modal-connect-css'   => 'public/css/modal-connect.css',
+            'handbid-generic-styles-css' => 'public/css/handbid.css',
+            'handbid-less-buttons-css'   => 'public/less/buttons.less',
+            'handbid-less-modal-css'     => 'public/less/modal.less',
+            'handbid-less-css'    => 'public/less/handbid.less',
         );
 
         foreach ($styles as $key => $sc) {
