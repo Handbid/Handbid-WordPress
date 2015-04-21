@@ -165,7 +165,7 @@ class Handbid
         $styles = array(
             'handid-bootstrap'       => 'public/css/bootstrap.min.css',
             'handid-modal'           => 'public/css/modal.css',
-            'handid-modal'           => 'public/css/modal-connect.css',
+            'handid-modal-connect'   => 'public/css/modal-connect.css',
             'handbid-generic-styles' => 'public/css/handbid.css',
             'handbid-less-buttons'   => 'public/less/buttons.less',
             'handbid-less-modal'     => 'public/less/modal.less',
