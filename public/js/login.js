@@ -28,6 +28,13 @@
             handbidLogin.displaySpecifiedTabOfLoginPopup(tabName);
         });
 
+        $('.tutorialTabs').click(function (e) {
+            e.preventDefault();
+            $(this).tab('show');
+            $(".tutorialTabsContainer").removeClass("active");
+            $(this).parent().addClass("active");
+        })
+
     });
 
 })(jQuery);
