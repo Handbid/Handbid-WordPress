@@ -1,3 +1,10 @@
+<?php
+
+$countries = $this->get("countries");
+
+?>
+
+
 <div class="handbid-modal contact-body" data-handbid-modal-key="login-modal">
 <a href="#" class="modal-close">X</a>
 
@@ -10,7 +17,7 @@
                     <h3>LOGIN</h3>
                     <h4>to your Handbid account</h4>
 
-                    <form class="form" method="POST" action="<?php echo get_admin_url() . 'admin-post.php'; ?>"
+                    <form id="hb-login-form" class="form" method="POST" action="<?php echo get_admin_url() . 'admin-post.php'; ?>"
                           enctype="multipart/form-data">
 
 
@@ -21,15 +28,15 @@
                                     <a class="login-popup-link" data-target-tab="get-started">Click here</a> to get
                                     started.</h5>
                                 <input placeholder="Email or Phone Number" type="text" name="username" value=""
-                                       class="form-control">
+                                       class="form-control cleanable-input" id="hb-login-form-username">
                             </div>
                         </div>
 
 
                         <div class="row">
                             <div class="form-group col-md-12">
-                                <input placeholder="Password (Pin)" type="text" name="pin" value=""
-                                       class="form-control">
+                                <input placeholder="Password" type="text" name="pin" value=""
+                                       class="form-control cleanable-input"  id="hb-login-form-password">
                                 <h5>Having trouble logging in? <a class="login-popup-link"
                                                                   data-target-tab="forgot-pass">Click here</a> for help.
                                 </h5>
@@ -38,7 +45,7 @@
                         </div>
 
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-info signup">Sign Up</button>
+                            <button type="submit" class="btn btn-info signup" id="hb-login-form-submit"><span>Sign Up</span></button>
 
                             <a class="btn btn-info signup login-popup-link" data-target-tab="tutorial-info-1">Tutorial</a>
                         </div>
@@ -52,10 +59,10 @@
                             </div>
                         </div>
 
-                        <input type="hidden" name="altair-form-id" value="login">
-                        <input type='hidden' name='redirect' value='<?php echo $_SERVER["REQUEST_URI"] ?>'/>
+                        <input type='hidden' name='redirect' value='<?php echo $_SERVER["REQUEST_URI"] ?>' id="hb-login-form-redirect"/>
                         <input type='hidden' name='form-id' value='handbid-login'/>
-                        <input type='hidden' name='action' value='submit-form'/>
+                        <input type='hidden' name='nonce' value='<?php echo apply_filters("handbid_create_nonce", date("d.m.Y") . "login");?>' id="hb-login-form-nonce"/>
+                        <input type='hidden' name='action' value='handbid_ajax_login' id="hb-login-form-action"/>
                     </form>
 
                 </div>
@@ -90,7 +97,7 @@
                                     logged in.</h5>
 
                                 <input placeholder="Email or Phone Number" type="text" name="username" value=""
-                                       class="form-control">
+                                       class="form-control cleanable-input">
 
                             </div>
                         </div>
@@ -241,7 +248,7 @@
                 <div class="row">
                     <div class="form-group col-md-12">
                         <input placeholder="Enter code" type="text" name="code" value=""
-                               class="form-control">
+                               class="form-control cleanable-input">
                     </div>
                 </div>
 
@@ -263,7 +270,7 @@
     </div>
 </div>
 
-<div class="container-fluid container-tab" style="display: none" data-tab-name="register-form">
+<div class="container-fluid container-tab register-tab" style="display: none" data-tab-name="register-form">
     <div class="row">
         <div class="col-xs-12 signup-form">
             <div class="handbid-form signup-form">
@@ -271,59 +278,78 @@
                 <h4>with Handbid</h4>
                 <h4>CREATING YOUR BIDDER ACCOUNT<br></h4>
 
+                <div class="row errorsRow" style="display: none;">
+                    <div class="form-group col-md-12 errorsContainer">
+
+                    </div>
+                </div>
+
                 <div class="row">
                     <div class="form-group col-md-12">
-                        <input id="reg-firstname" placeholder="First Name" type="text" name="firstname" value=""
-                               class="col-md-6 has-question-icon has-popover" data-toggle="popover" data-trigger="focus"
+                        <input id="reg-firstname" placeholder="First Name *" type="text" name="firstname" value=""
+                               class="col-md-6 has-question-icon has-popover cleanable-input copyable-field" data-copy-to="confirm-firstname" data-toggle="popover" data-trigger="focus"
                                title="ENTER IN YOUR FIRST AND LAST NAME"
-                               data-content="We need your name so we know what to call you and for your receipt at the end. Your identity (by default) will be concealed using a Paddle Number or Alias.">
+                               data-content="We need your name so we know what to call you and for your receipt at the end. Your identity (by default) will be concealed using a Paddle Number or Alias."
+                            required
+                            data-required-message="First Name field is required">
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-md-12">
-                        <input id="reg-lastname" placeholder="Last Name" type="text" name="lastname" value=""
-                               class="col-md-6 has-question-icon has-popover" data-toggle="popover" data-trigger="focus"
+                        <input id="reg-lastname" placeholder="Last Name *" type="text" name="lastname" value=""
+                               class="col-md-6 has-question-icon has-popover cleanable-input copyable-field" data-copy-to="confirm-lastname" data-toggle="popover" data-trigger="focus"
                                title="ENTER IN YOUR FIRST AND LAST NAME"
-                               data-content="We need your name so we know what to call you and for your receipt at the end. Your identity (by default) will be concealed using a Paddle Number or Alias.">
+                               data-content="We need your name so we know what to call you and for your receipt at the end. Your identity (by default) will be concealed using a Paddle Number or Alias."
+                               required
+                               data-required-message="Last Name field is required">
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-md-12">
                         <input id="reg-email" placeholder="eMail" type="text" name="email" value=""
-                               class="col-md-6 has-question-icon has-popover" data-toggle="popover" data-trigger="focus"
+                               class="col-md-6 has-question-icon has-popover cleanable-input copyable-field is-email" data-copy-to="confirm-email" data-toggle="popover" data-trigger="focus"
                                title="ENTER IN YOUR EMAIL ADDRESS"
-                               data-content="We will use your eMail to identify you and also to send you a receipt at the end of the auction. Don't worry, you won't end up on any list because of us. You can review our privacy policy for more details.">
+                               data-content="We will use your eMail to identify you and also to send you a receipt at the end of the auction. Don't worry, you won't end up on any list because of us. You can review our privacy policy for more details."
+                               data-not-email-message="Please, provide valid email address" >
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-md-12">
                         <input id="reg-password" placeholder="Password (for use only on the webSite)" type="text"
                                name="password" value=""
-                               class="col-md-6 has-question-icon has-popover" data-toggle="popover" data-trigger="focus"
+                               class="col-md-6 has-question-icon has-popover cleanable-input copyable-field" data-copy-to="confirm-password" data-toggle="popover" data-trigger="focus"
                                title="CREATE A PASSWORD"
-                               data-content="You will need a password to login on from Handbid.com. You will not need to use this password to login from the mobile apps or from the iPads. Please, ceep this password secure.">
+                               data-content="You will need a password to login on from Handbid.com. You will not need to use this password to login from the mobile apps or from the iPads. Please, ceep this password secure."
+                               required
+                               data-required-message="Password field is required">
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-md-12">
                         <input id="reg-password-confirm" placeholder="Confirm your Password" type="text"
                                name="password-confirm" value=""
-                               class="col-md-6 has-question-icon has-popover" data-toggle="popover" data-trigger="focus"
+                               class="col-md-6 has-question-icon has-popover cleanable-input" data-toggle="popover" data-trigger="focus"
                                title="CREATE A PASSWORD"
-                               data-content="You will need a password to login on from Handbid.com. You will not need to use this password to login from the mobile apps or from the iPads. Please, ceep this password secure.">
+                               data-content="You will need a password to login on from Handbid.com. You will not need to use this password to login from the mobile apps or from the iPads. Please, ceep this password secure."
+                               data-mismatch-message="Password mismatch">
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-md-12">
                         <select id="reg-phone-code" name="phone-code"
-                                class="col-md-2">
-                            <option value="+1">United States</option>
-                            <option value="+332">Other Country</option>
+                                class="col-md-2 copyable-field"  data-copy-to="confirm-phone-code">
+                            <?php
+                            foreach($countries as $country){
+                                echo "<option value='" . $country["d_code"] . "' " . selected("US", $country["code"], false) . ">" . $country["name"] . "</option>";
+                            }
+                            ?>
                         </select>
-                        <input id="reg-phone-number" placeholder="Cell Phone" type="text" name="phone-number" value=""
-                               class="col-md-4 has-question-icon has-popover" data-toggle="popover" data-trigger="focus"
+                        <input id="reg-phone-number" placeholder="Cell Phone *" type="text" name="phone-number" value=""
+                               class="col-md-4 has-question-icon has-popover cleanable-input copyable-field" data-copy-to="confirm-phone-number" data-toggle="popover" data-trigger="focus"
                                title="PROVIDE YOUR CELL PHONE"
-                               data-content="If you intend to bid from your smartphone using the Handbid App, please provide number for that here and tell us what type of phone you have. We will send instructions to that phone on how to get setup.">
+                               data-content="If you intend to bid from your smartphone using the Handbid App, please provide number for that here and tell us what type of phone you have. We will send instructions to that phone on how to get setup."
+                               required
+                               data-required-message="Phone field is required">
                     </div>
                 </div>
                 <div class="row">
@@ -332,13 +358,13 @@
 
                         <div class="col-md-6">
                             <label for="reg-phone-type-1" class="col-xs-4 radio-label">
-                                <input type="radio" id="reg-phone-type-1" name="phone-type" value="iphone" checked>
+                                <input type="radio" id="reg-phone-type-1" name="phone-type" value="iphone" class="copyable-field" data-copy-to="confirm-phone-type" checked>
                                 iPhone</label>
                             <label for="reg-phone-type-2" class="col-xs-4 radio-label">
-                                <input type="radio" id="reg-phone-type-2" name="phone-type" value="android">
+                                <input type="radio" id="reg-phone-type-2" name="phone-type" value="android" class="copyable-field" data-copy-to="confirm-phone-type">
                                 Android</label>
                             <label for="reg-phone-type-3" class="col-xs-4 radio-label">
-                                <input type="radio" id="reg-phone-type-3" name="phone-type" value="other">
+                                <input type="radio" id="reg-phone-type-3" name="phone-type" value="other" class="copyable-field" data-copy-to="confirm-phone-type">
                                 Other</label>
                         </div>
                     </div>
@@ -348,7 +374,7 @@
                     <div class="form-group col-md-12">
                         <h5>Add me as a bidder to this Auction</h5>
                         <input id="reg-add-to-auction" placeholder="" type="text" name="add-to-auction" value=""
-                               class="col-md-6">
+                               class="col-md-6 cleanable-input copyable-field"  data-copy-to="confirm-add-to-auction" >
                     </div>
                 </div>
 
@@ -359,11 +385,13 @@
                     </div>
                     <div class="col-md-4">
                         <label for="reg-agree-terms" class="radio-label agree-terms-label">
-                            <input type="checkbox" id="reg-agree-terms" name="agree-terms" value="other">
-                            You aggree to the <a target="_blank" href="#">bidder terms and conditions</a></label>
+                            <input type="checkbox" id="reg-agree-terms" name="agree-terms" value="agree"
+                                   required
+                                   data-required-message="You must agree to the bidder terms and conditions">
+                            You agree to the <a target="_blank" href="#">bidder terms and conditions</a></label>
                     </div>
                     <div class="col-md-4">
-                        <a class="btn btn-info signup login-popup-link" data-target-tab="register-form-confirm">NEXT</a>
+                        <a class="btn btn-info signup login-popup-link register-next" data-target-tab="register-form-confirm">NEXT</a>
                     </div>
                 </div>
 
@@ -373,13 +401,19 @@
 </div>
 
 
-<div class="container-fluid container-tab" style="display: none" data-tab-name="register-form-confirm">
+<div class="container-fluid container-tab register-confirm-tab" style="display: none" data-tab-name="register-form-confirm">
     <div class="row">
         <div class="col-xs-12 col-md-6 col-md-offset-3 signup-form">
             <div class="handbid-form signup-form">
                 <h3>GETTING STARTED</h3>
                 <h4>with Handbid</h4>
                 <h4>YOUR HANDBID ACCOUNT IS SETUP<br></h4>
+
+                <div class="row errorsRow" style="display: none;">
+                    <div class="form-group col-md-12 errorsContainer">
+
+                    </div>
+                </div>
 
                 <div class="row">
                     <div class="form-group col-md-12">
@@ -390,29 +424,37 @@
                 <div class="row">
                     <div class="form-group col-md-12">
                         <input id="confirm-firstname" placeholder="First Name" type="text" name="firstname" value=""
-                               class="col-xs-12">
+                               class="col-xs-12  cleanable-input"
+                               required
+                               data-required-message="First Name field is required">
                     </div>
                     <div class="form-group col-md-12">
                         <input id="confirm-lastname" placeholder="Last Name" type="text" name="lastname" value=""
-                               class="col-xs-12">
+                               class="col-xs-12 cleanable-input"
+                               required
+                               data-required-message="Last Name field is required">
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-md-12">
                         <input id="confirm-email" placeholder="eMail" type="text" name="email" value=""
-                               class="col-md-12 has-question-icon has-popover">
+                               class="col-md-12 cleanable-input is-email"
+                               data-not-email-message="Please, provide valid email address" >
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-md-12">
                         <select id="confirm-phone-code" name="phone-code"
                                 class="col-md-4">
-                            <option value="+1">United States</option>
-                            <option value="+332">Other Country</option>
+                            <?php
+                            foreach($countries as $country){
+                                echo "<option value='" . $country["d_code"] . "' " . selected("US", $country["code"], false) . ">" . $country["name"] . "</option>";
+                            }
+                            ?>
                         </select>
                         <input id="confirm-phone-number" placeholder="Cell Phone" type="text" name="phone-number"
                                value=""
-                               class="col-md-4 has-question-icon has-popover">
+                               class="col-md-4 has-question-icon has-popover cleanable-input">
                         <select class="col-md-4" id="confirm-phone-type">
                             <option name="phone-type" value="iphone" selected>iPhone</option>
                             <option name="phone-type" value="android">Android</option>
@@ -425,13 +467,18 @@
                     <div class="form-group col-md-12">
                         <h5>Add me as a bidder to this Auction</h5>
                         <input id="confirm-add-to-auction" placeholder="" type="text" name="add-to-auction" value=""
-                               class="col-md-12">
+                               class="col-md-12 cleanable-input">
                     </div>
                 </div>
                 <input type="hidden" id="confirm-password" name="password">
 
                 <div class="modal-footer center-aligned-text">
-                    <a class="btn btn-info signup login-popup-link" data-target-tab="register-complete">COMPLETE</a>
+                    <a class="btn btn-info signup login-popup-link register-confirm" data-target-tab="register-complete"><span>COMPLETE</span></a>
+
+<!--                    <input type='hidden' name='redirect' value='--><?php //echo $_SERVER["REQUEST_URI"] ?><!--' id="hb-reg-form-redirect"/>-->
+                    <input type='hidden' name='form-id' value='handbid-register'/>
+                    <input type='hidden' name='nonce' value='<?php echo apply_filters("handbid_create_nonce", date("d.m.Y") . "register");?>' id="hb-reg-form-nonce"/>
+                    <input type='hidden' name='action' value='handbid_ajax_registration' id="hb-reg-form-action"/>
                 </div>
 
             </div>
@@ -522,7 +569,7 @@
                         <div class="row">
                             <h4>TEXT INSTRUCTIONS TO MY PHONE</h4>
                         <input id="reg-phone-number" placeholder="Cell Phone" type="text" name="phone-number" value=""
-                               class="col-xs-12 col-md-6 col-md-offset-3"
+                               class="col-xs-12 col-md-6 col-md-offset-3  cleanable-input"
                                >
                         <button class="btn btn-info signup">SEND TEXT</button>
                         </div>

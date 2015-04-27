@@ -950,9 +950,11 @@ class HandbidShortCodeController {
 	}
 
     public function loginRegisterForm() {
-        // return $this->viewRenderer->render('views/bidder/login-form',
+        // return $this->viewRenderer->render('views/bidder/login-form' []);
+        $countries  = $this->state->getCountriesWithCodes();
         return $this->viewRenderer->render('views/bidder/login-form-new',
             [
+                "countries" => $countries
             ]
         );
     }

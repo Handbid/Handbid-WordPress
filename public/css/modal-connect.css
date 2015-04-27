@@ -354,6 +354,29 @@ span.underline {
     text-align: left;
 }
 
+.btn.btn-info.active{
+    background-image: url("../images/ajax-loader.gif");
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.btn.btn-info.active span{
+    opacity: 0;
+}
+
+.validation-error,
+.validation-email-error,
+.validation-mismatch-error{
+    border: 2px solid #b23532 !important;
+    color: #b23532 !important;
+}
+
+.errorsContainer{
+    font-size: 20px;
+    background: rgba(255, 0, 0, 0.5);
+    padding: 15px 20px;
+    border-radius: 5px;
+}
+
 @keyframes hideElement {
     from {
         opacity: 1;

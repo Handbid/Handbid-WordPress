@@ -109,6 +109,13 @@ class HandbidActionController
                 }
             }
         });
+
+        add_action("handbid_create_nonce", [$this, "handbid_create_nonce"]);
+        add_action("handbid_verify_nonce", [$this, "handbid_verify_nonce"], 10, 2);
+        add_action("wp_ajax_handbid_ajax_login", [$this, "handbid_ajax_login_callback"]);
+        add_action("wp_ajax_nopriv_handbid_ajax_login", [$this, "handbid_ajax_login_callback"]);
+        add_action("wp_ajax_handbid_ajax_registration", [$this, "handbid_ajax_registration_callback"]);
+        add_action("wp_ajax_nopriv_handbid_ajax_registration", [$this, "handbid_ajax_registration_callback"]);
     }
 
     function _handle_form_action()
@@ -164,6 +171,65 @@ class HandbidActionController
 
         $redirect = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/';
         wp_redirect($redirect);
+    }
+
+    function handbid_create_nonce($action = -1){
+        return wp_create_nonce($_SERVER["SERVER_SIGNATURE"]." ". $action);
+    }
+
+    function handbid_verify_nonce($nonce, $action = -1){
+        return wp_verify_nonce($nonce, $_SERVER["SERVER_SIGNATURE"]." ". $action);
+    }
+
+    function handbid_ajax_login_callback(){
+        $nonce = $_POST["nonce"];
+        $result = [
+            "success" => 0,
+            "error" => "no",
+        ];
+        if($this->handbid_verify_nonce($nonce, date("d.m.Y") . "login")){
+
+            $values = [
+                'username' => $_POST['username'],
+                'password' => $_POST['password']
+            ];
+
+            $resp = $this->handbid->store('Bidder')->login($values);
+
+            $result["success"] = (isset($resp->success) and $resp->success) ? $resp->success : 0;
+
+        }
+        echo json_encode($result);
+        exit;
+    }
+
+    function handbid_ajax_registration_callback(){
+        $nonce = $_POST["nonce"];
+        $result = [
+            "success" => 0,
+            "error" => "no",
+        ];
+
+        if($this->handbid_verify_nonce($nonce, date("d.m.Y") . "register")){
+
+            $values = [
+                'firstname' => $_POST['firstname'],
+                'lastname'  => $_POST['lastname'],
+                'mobile'    => $_POST['mobile'],
+                'password'  => $_POST['password'],
+                'email'     => $_POST['email'],
+                'deviceType'=> $_POST['deviceType'],
+                'countryCode' => $_POST['countryCode'],
+            ];
+
+            $profile = $this->handbid->store('Bidder')->register($values);
+
+            $result["success"] = (isset($profile->success) and $profile->success) ? $profile->success : 0;
+
+        }
+//        echo "<pre>".print_r($profile,true)."</pre>";
+        echo json_encode($result);
+        exit;
     }
 
 }
