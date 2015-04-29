@@ -1,6 +1,8 @@
 <?php
 
 $item       = $this->get('item');
+$profile    = $this->get('profile');
+$auction    = $this->get('auction');
 $isBiddable = !$item->isDirectPurchaseItem;
 $buyItNow   = $isBiddable && $item->buyNowPrice > 0 && $item->buyNowPrice > $item->minimumBidAmount;
 
@@ -49,7 +51,7 @@ $buyItNow   = $isBiddable && $item->buyNowPrice > 0 && $item->buyNowPrice > $ite
         <div class="col-md-12">
             <a class="buy-now pink-solid-button"
                href=""
-               data-handbid-bid-button="buyItNow"><?php echo __('Buy Now For $')  . $item->buyNowPrice; ?></a>
+               data-handbid-bid-button="buyItNow" data-handbid-buynow-price="<?php echo $item->buyNowPrice?>"><?php echo __('Buy Now For $')  . $item->buyNowPrice; ?></a>
         </div>
 
         <?php } ?>
@@ -77,8 +79,8 @@ $buyItNow   = $isBiddable && $item->buyNowPrice > 0 && $item->buyNowPrice > $ite
 
                 <?php if($isBiddable) { ?>
                     <li class="bids col-md-4 col-xs-3"><em><?php echo $item->bidCount; ?></em>Bids</li>
-                    <li class="increment col-md-4 col-xs-5"><em>$<?php echo $item->bidIncrement; ?></em>Increment</li>
-                    <li class="min col-md-4 col-xs-4"><em>$<?php echo $item->minimumBidAmount; ?></em>Min Bid</li>
+                    <li class="increment col-md-4 col-xs-5"><em>$<span id="bidIncrement"><?php echo $item->bidIncrement; ?></span></em>Increment</li>
+                    <li class="min minimalBidAmount col-md-4 col-xs-4"><em>$<span id="minimalBidAmount"><?php echo $item->minimumBidAmount; ?></span></em>Min Bid</li>
                 <?php } else { ?>
                     <li class="purchases col-md-4 col-xs-3"><em><?php echo $item->meta->totalSold; ?></em>Sold</li>
                     <li class="increment col-md-4 col-xs-3"><em>$<?php echo $item->buyNowPrice; ?></em>Price</li>
@@ -91,7 +93,7 @@ $buyItNow   = $isBiddable && $item->buyNowPrice > 0 && $item->buyNowPrice > $ite
         </div>
 
         <?php if ($isBiddable) { ?>
-            <div class="bid-amount col-md-8 col-xs-6">$<span
+            <div class="bid-amount minimalBidAmount col-md-8 col-xs-6">$<span
                     data-handbid-bid-amount><?php echo $item->minimumBidAmount; ?></span></div>
         <?php } else { ?>
             <div class="buy-quantity col-md-8 col-xs-7"><span data-handbid-quantity>1</span></div>
@@ -111,6 +113,11 @@ $buyItNow   = $isBiddable && $item->buyNowPrice > 0 && $item->buyNowPrice > $ite
                data-handbid-bid-button="proxy"><?php echo __('Set Max Bid'); ?></a>
         </div>
 
-
     </div>
 </div>
+
+<input type="hidden" id="bidItemId" value="<?php echo $item->id; ?>">
+<input type="hidden" id="bidAuctionId" value="<?php echo $auction->id; ?>">
+<input type="hidden" id="bidUserId" value="<?php echo $profile->id; ?>">
+<input type="hidden" id="apiEndpointsAddress" value="<?php echo get_option('handbidRestEndpoint', 'https://handbid.com'); ?>">
+<input type='hidden' id="bidNonce"  name='nonce' value='<?php echo apply_filters("handbid_create_nonce", date("d.m.Y") . "bid");?>'/>

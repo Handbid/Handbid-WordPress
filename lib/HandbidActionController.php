@@ -112,10 +112,16 @@ class HandbidActionController
 
         add_action("handbid_create_nonce", [$this, "handbid_create_nonce"]);
         add_action("handbid_verify_nonce", [$this, "handbid_verify_nonce"], 10, 2);
-        add_action("wp_ajax_handbid_ajax_login", [$this, "handbid_ajax_login_callback"]);
-        add_action("wp_ajax_nopriv_handbid_ajax_login", [$this, "handbid_ajax_login_callback"]);
-        add_action("wp_ajax_handbid_ajax_registration", [$this, "handbid_ajax_registration_callback"]);
-        add_action("wp_ajax_nopriv_handbid_ajax_registration", [$this, "handbid_ajax_registration_callback"]);
+
+        $ajaxActions = [
+            "handbid_ajax_login",
+            "handbid_ajax_registration",
+            "handbid_ajax_createbid",
+        ];
+        foreach($ajaxActions as $ajaxAction){
+            add_action("wp_ajax_".$ajaxAction, [$this, $ajaxAction."_callback"]);
+            add_action("wp_ajax_nopriv_".$ajaxAction, [$this, $ajaxAction."_callback"]);
+        }
     }
 
     function _handle_form_action()
@@ -227,7 +233,34 @@ class HandbidActionController
             $result["success"] = (isset($profile->success) and $profile->success) ? $profile->success : 0;
 
         }
-//        echo "<pre>".print_r($profile,true)."</pre>";
+        echo json_encode($result);
+        exit;
+    }
+
+    function handbid_ajax_createbid_callback(){
+        $nonce = $_POST["nonce"];
+        $result = [
+            "success" => 0,
+            "error" => "no",
+        ];
+
+        if($this->handbid_verify_nonce($nonce, date("d.m.Y") . "bid")){
+
+            $values = [
+                'userId' => (int) $_POST['userId'],
+                'auctionId'  => (int) $_POST['auctionId'],
+                'itemId'    => (int) $_POST['itemId']
+            ];
+            if(isset($_POST["amount"])){
+                $values["amount"] = (int) $_POST["amount"];
+            }
+            if(isset($_POST["maxAmount"])){
+                $values["maxAmount"] = (int) $_POST["maxAmount"];
+            }
+
+            $resp    = $this->handbid->store( 'Bid' )->createBid( $values );
+            $result["resp"] = $resp;
+        }
         echo json_encode($result);
         exit;
     }
