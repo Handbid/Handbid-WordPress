@@ -26,3 +26,15 @@
     text-indent: -999em;
     overflow: hidden;
 }
+
+.loading-span-button{}
+.loading-span-button.active{
+    background-image: url("../images/ajax-loader.gif") !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    transition: none  !important;
+}
+.loading-span-button.active em,
+.loading-span-button.active span{
+    visibility: hidden !important;
+}

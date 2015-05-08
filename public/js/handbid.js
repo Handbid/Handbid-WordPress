@@ -1,75 +1,161 @@
+var handbidMain;
 (function ($) {
 
-    var restEndpoint = 'https://rest.handbid.lan/',
+    var restEndpoint = $("#apiEndpointsAddress").val(),
         currencySymbol = '$',
+        statusReasons = {
+            no_response : "Sorry, try again later",
+            current_winner : "You are current winner of this item"
+        },
         handbid = {
 
             loggedIn : null,
 
-            // Setup bidding
-            setupBidding:             function (container) {
+            disableAllBiddingButtonsIfSold: function(){
 
-                var userId = ($('[data-handbid-user-id]').length > 0) ? $('[data-handbid-user-id]').attr('data-handbid-user-id') : null,
-                    auctionId = ($('[data-handbid-auction-id]').length > 0) ? $('[data-handbid-auction-id]').attr('data-handbid-auction-id') : null,
-                    itemId = ($('[data-handbid-item-id]').length > 0) ? $('[data-handbid-item-id]').attr('data-handbid-item-id') : null,
+                $('[data-handbid-bid-button="up"]').addClass("disabled-button");
+                $('[data-handbid-bid-button="down"]').addClass("disabled-button");
+                $('[data-handbid-bid-button="bid"]').addClass("disabled-button");
+                $('[data-handbid-bid-button="proxy"]').addClass("disabled-button");
+                $('[data-handbid-bid-button="purchase"]').addClass("disabled-button");
+                $('[data-handbid-bid-button="buyItNow"]').addClass("disabled-button");
+
+            },
+
+            isButtonDisabledOrAlreadyActive: function(button){
+
+                return button.hasClass("disabled-button") || button.hasClass("active");
+
+            },
+
+            getStatusReasonByCode: function(code){
+
+                return (statusReasons[code] != undefined) ? statusReasons[code] : code;
+
+            },
+
+            cannotDoIfUnauthorized: function(){
+                if(! this.loggedIn){
+                    this.notice("You should register or login to bid", "Unauthorized", "error");
+                }
+                return ! this.loggedIn;
+            },
+
+            // Setup bidding
+            setupBidding:             function (handbid) {
+
+                var userId = ($('[data-handbid-user-id]').length > 0) ? $('[data-handbid-user-id]').attr('data-handbid-user-id') : (parseInt($("#bidUserId").val()) ? parseInt($("#bidUserId").val()) : null),
+                    auctionId = ($('[data-handbid-auction-id]').length > 0) ? $('[data-handbid-auction-id]').attr('data-handbid-auction-id') : (parseInt($("#bidAuctionId").val()) ? parseInt($("#bidAuctionId").val()) : null),
+                    itemId = ($('[data-handbid-item-id]').length > 0) ? $('[data-handbid-item-id]').attr('data-handbid-item-id') : (parseInt($("#bidItemId").val()) ? parseInt($("#bidItemId").val()) : null),
                     amount = $('[data-handbid-quantity], [data-handbid-bid-amount]'),
-                    increment = ($('.increment span').length > 0 ) ? $('.increment span')[0].innerHTML : 1;
+                    increment = ($('.increment span').length > 0 ) ? parseInt($('.increment span')[0].innerHTML) : 1,
+                    minimalBidAmount = ($('.minimalBidAmount span').length > 0 ) ? parseInt($('.minimalBidAmount span')[0].innerHTML) : 1;
 
                 $('[data-handbid-bid-button="up"]').on('click', function (e) {
 
+                    if(handbid.isButtonDisabledOrAlreadyActive($(this)) || handbid.cannotDoIfUnauthorized()){
+                        return false;
+                    }
+
                     e.preventDefault();
 
-                    var value = parseInt(amount[0].innerHTML) + parseInt(increment);
+                    var value = parseInt(amount[0].innerHTML) + increment;
 
-                    amount.each(function () {
+                        amount.each(function () {
 
-                        this.innerHTML = value;
+                            this.innerHTML = value;
 
-                    });
+                        });
 
                 });
 
                 $('[data-handbid-bid-button="down"]').on('click', function (e) {
 
+                    if(handbid.isButtonDisabledOrAlreadyActive($(this)) || handbid.cannotDoIfUnauthorized()){
+                        return false;
+                    }
+
                     e.preventDefault();
 
-                    amount.each(function () {
-                        if (this.innerHTML > 0 && (this.innerHTML - increment > 0)) {
-                            this.innerHTML -= increment;
+                        var value = parseInt(amount[0].innerHTML) - increment;
+
+                        if(value >= minimalBidAmount) {
+
+                            amount.each(function () {
+                                    this.innerHTML -= increment;
+                            });
                         }
-                    });
 
                 });
 
-                $('[data-handbid-item-id] [data-handbid-bid-button="bid"]').on('click', function (e) {
+                $('[data-handbid-bid-button="bid"]').on('click', function (e) {
+
+                    if(handbid.isButtonDisabledOrAlreadyActive($(this)) || handbid.cannotDoIfUnauthorized()){
+                        return false;
+                    }
 
                     e.preventDefault;
 
                     var total = amount[0].innerHTML;
+                    var nonce = $("#bidNonce").val();
+                    var button = $(this);
+                    button.addClass("active");
+                    var data = {
+                        action:    "handbid_ajax_createbid",
+                        nonce:     nonce,
+                        userId:    userId,
+                        auctionId: auctionId,
+                        itemId:    itemId,
+                        amount:    total
+                    };
+                    $.post(
+                        ajaxurl,
+                        data,
+                        function (data) {
 
-                    $.ajax({
-                        url:     restEndpoint + 'bid/create',
-                        type:    'POST',
-                        data:    {
-                            'userId':    userId,
-                            'auctionId': auctionId,
-                            'itemId':    itemId,
-                            'amount':    total
-                        },
-                        success: function (data) {
+                            console.log("-----------------------");
+                            console.log("----Bid Now success----");
+                            data = JSON.parse(data);
+                            console.log(data);
+                            if(data.status == "failed"){
+                                handbid.notice(handbid.getStatusReasonByCode(data.statusReason), data.status.toUpperCase(), data.status);
+                            }
+                            else{
+                                $('[data-handbid-item-attribute="bidCount"]').html(data.item.bidCount);
+                                $('[data-handbid-item-attribute="minimumBidAmount"]').html(currencySymbol + data.item.minimumBidAmount);
+                                $('[data-handbid-item-banner="' + data.status + '"]').show();
+                                handbid.notice('Bid placed for ' + currencySymbol + data.amount + '. You are now ' + data.status + ' this item');
 
-                            alert('bidding clicked');
-                            //$('[data-handbid-item-attribute="bidCount"]').html(data.item.bidCount);
-                            //$('[data-handbid-item-attribute="minimumBidAmount"]').html(currencySymbol + data.item.minimumBidAmount);
-
-                            //$('[data-handbid-item-banner="' + data.status + '"]').show();
-
-                            //handbid.notice('Bid placed for ' + currencySymbol + data.amount + '. You are now ' + data.status + ' this item');
-
-
+                            }
+                            button.removeClass("active");
                             return false;
                         }
-                    });
+                    );
+
+
+                    //$.ajax({
+                    //    url:     restEndpoint + 'bid/create',
+                    //    type:    'POST',
+                    //    data:    {
+                    //        'userId':    userId,
+                    //        'auctionId': auctionId,
+                    //        'itemId':    itemId,
+                    //        'amount':    total
+                    //    },
+                    //    success: function (data) {
+                    //
+                    //        alert('bidding clicked');
+                    //        //$('[data-handbid-item-attribute="bidCount"]').html(data.item.bidCount);
+                    //        //$('[data-handbid-item-attribute="minimumBidAmount"]').html(currencySymbol + data.item.minimumBidAmount);
+                    //
+                    //        //$('[data-handbid-item-banner="' + data.status + '"]').show();
+                    //
+                    //        //handbid.notice('Bid placed for ' + currencySymbol + data.amount + '. You are now ' + data.status + ' this item');
+                    //
+                    //
+                    //        return false;
+                    //    }
+                    //});
 
                     return false;
 
@@ -78,38 +164,132 @@
 
                 $('[data-handbid-bid-button="proxy"]').on('click', function (e) {
 
+                    if(handbid.isButtonDisabledOrAlreadyActive($(this)) || handbid.cannotDoIfUnauthorized()){
+                        return false;
+                    }
+
                     var total = amount[0].innerHTML;
+                    var nonce = $("#bidNonce").val();
+                    var button = $(this);
+                    button.addClass("active");
+                    $(".proxy-bid-dialog-close").hide();
+                    var data = {
+                        action:    "handbid_ajax_createbid",
+                        nonce:     nonce,
+                        userId:    userId,
+                        auctionId: auctionId,
+                        itemId:    itemId,
+                        maxAmount: total
+                    };
+                    $.post(
+                        ajaxurl,
+                        data,
+                        function (data) {
 
-                    $.ajax({
-                        url:     restEndpoint + 'bid/create',
-                        type:    'POST',
-                        data:    {
-                            'userId':    userId,
-                            'auctionId': auctionId,
-                            'itemId':    itemId,
-                            'maxAmount': total
-                        },
-                        success: function (data) {
-
-                            alert('max bid clicked');
-
+                            console.log("-----------------------");
+                            console.log("----Max Bid success----");
+                            data = JSON.parse(data);
+                            console.log(data);
+                            button.removeClass("active");
+                            $(".proxy-bid-dialog-close").show();
+                            $(".proxy-bid-dialog-close").click();
                             return false;
                         }
-                    });
+                    );
 
                     return false;
 
                 });
 
                 $('[data-handbid-bid-button="purchase"]').on('click', function (e) {
+
+                    if(handbid.isButtonDisabledOrAlreadyActive($(this)) || handbid.cannotDoIfUnauthorized()){
+                        return false;
+                    }
+
                     e.preventDefault;
                     alert('purchase clicked');
                     return false;
                 });
 
                 $('[data-handbid-bid-button="buyItNow"]').on('click', function (e) {
+
+                    if(handbid.isButtonDisabledOrAlreadyActive($(this)) || handbid.cannotDoIfUnauthorized()){
+                        return false;
+                    }
+
                     e.preventDefault;
-                    alert('buy clicked');
+
+                    var nonce = $("#bidNonce").val();
+                    var total = parseInt($(this).data("handbid-buynow-price"));
+                    var button = $(this);
+                    button.addClass("active");
+                    var data = {
+                        action:    "handbid_ajax_createbid",
+                        nonce:     nonce,
+                        userId:    userId,
+                        auctionId: auctionId,
+                        itemId:    itemId,
+                        amount:    total
+                    };
+                    $.post(
+                        ajaxurl,
+                        data,
+                        function (data) {
+
+                            console.log("-----------------------");
+                            console.log("----Buy Now success----");
+                            data = JSON.parse(data);
+                            console.log(data);
+
+                            $('[data-handbid-item-banner="sold"]').show();
+                            handbid.disableAllBiddingButtonsIfSold();
+                            button.removeClass("active");
+                            return false;
+                        }
+                    );
+
+
+                    return false;
+
+                });
+
+                $('[data-handbid-delete-proxy]').live('click', function (e) {
+                    if(handbid.isButtonDisabledOrAlreadyActive($(this)) || handbid.cannotDoIfUnauthorized()){
+                        return false;
+                    }
+                    e.preventDefault;
+
+                    var nonce = $("#bidNonce").val();
+                    var bidID = parseInt($(this).data("handbid-delete-proxy"));
+                    var button = $(this);
+                    button.addClass("active");
+                    var data = {
+                        action:    "handbid_ajax_removebid",
+                        nonce:     nonce,
+                        bidID:     bidID
+                    };
+                    $.post(
+                        ajaxurl,
+                        data,
+                        function (data) {
+
+                            console.log("-----------------------------");
+                            console.log("----Delete Maxbid success----");
+                            //data = JSON.parse(data);
+                            console.log(data);
+
+                            $(".bid-row-id-"+bidID).remove();
+                            var proxiesCountContainer = $("[data-handbid-stats-num-proxies]");
+                            var proxiesCount = parseInt(proxiesCountContainer.html());
+                            proxiesCountContainer.html(proxiesCount - 1);
+
+                            button.removeClass("active");
+                            return false;
+                        }
+                    );
+
+
                     return false;
 
                 });
@@ -303,7 +483,7 @@
                 }
 
             },
-            notice:                   function (msg) {
+            oldNotice:                   function (msg) {
 
                 handbid.noticeContainer = $('<div class="handbid-growl-container"></div>');
                 handbid.noticeContainer.appendTo('body');
@@ -324,11 +504,40 @@
                     growl.remove();
 
                 }, 5000);
+            },
+            notice:  function (msg, title, type, hide) {
+
+                title = (title != undefined) ? title : 'Notice Message';
+                hide = (hide != undefined) ? hide : true;
+                type = (type != undefined) ? type : 'info';
+                type = (type == "failed") ? "error" : type;
+
+                try {
+
+                    new PNotify({
+                        title: title,
+                        text: msg,
+                        type: type,
+                        hide: hide,
+                        buttons: {
+                            sticker: false
+                        }
+                    });
+
+                } catch (err) {
+
+                    this.oldNotice(msg)
+
+                }
+
             }
         };
 
     $(document).ready(function () {
 
+        handbidMain = handbid;
+
+        restEndpoint = $("#apiEndpointsAddress").val();
         handbid.setupAuthorizationStatus();
 
         if ($('[data-handbid-item-key], [data-no-bids], [data-tags]').length > 0) {
@@ -354,7 +563,7 @@
             ($('[data-handbid-connect]').length > 0) ? handbid.setupConnect() : '';
         //}
 
-        ($('[data-handbid-bid]').length > 0) ? handbid.setupBidding() : '';
+        ($('[data-handbid-bid]').length > 0) ? handbid.setupBidding(handbid) : '';
 
 
         var bidderInfo = jQuery("#bidder-info-load");

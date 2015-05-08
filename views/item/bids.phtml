@@ -17,6 +17,7 @@ if(count($bids) > 0) {
     <ul class="simple-list bid-history">
         <?php
         foreach ($bids as $bid) {
+            if($bid->amount){
             ?>
             <li class="row <?php echo ($bid->status == 'winning') ? 'open' : 'closed'; ?>">
                 <div class="col-md-6">
@@ -28,6 +29,7 @@ if(count($bids) > 0) {
                 </div>
             </li>
         <?php
+            }
         }
         ?>
     </ul>

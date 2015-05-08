@@ -17,11 +17,14 @@
             modal.css('display', 'block');
 
             // Get height / width after we show the element
-            var height = modal.outerHeight(),
-                width  = modal.outerWidth(),
-                styles = {
-                    'margin-top'  : -height / 2,
-                    'margin-left' : -width / 2
+            var windowWidth = window.outerWidth,
+                windowHeight = window.outerHeight,
+                height = modal.outerHeight(),
+                width  = modal.outerWidth();
+            var   styles = {
+                    //'margin-top'  : (windowHeight - height) / 2,
+                    'margin-top'  : 30,
+                    'margin-left' : (windowWidth - width) / 2
                 };
 
             modal.css(styles);

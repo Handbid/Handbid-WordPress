@@ -1168,3 +1168,4 @@ class HandbidShortCodeController {
     }
 
 }
+>>>>>>> c52656fc393a363680af1483bedbd032759c1364

@@ -27,6 +27,8 @@ if ($handle = opendir($libFolder)) {
 
     closedir($handle);
 }
+//define images host for now, while it changes
+define("HANDBID_IMAGES_HOST", "beta.yii.handbid.com");
 
 require_once($libFolder . '/Handbid-Php/src/Handbid.php');
 
@@ -147,6 +149,7 @@ class Handbid
             'handbid-modal-js'         => 'public/js/modal.js',
             'handbid-bootstrap-js'  => 'public/js/bootstrap.js',
             'handbid-login-js'      => 'public/js/login.js',
+            'handbid-notices-js'    => 'public/js/pnotify.custom.min.js',
             'handbid-plugin-js'     => 'public/js/handbid.js',
         );
 
@@ -166,6 +169,7 @@ class Handbid
             'handid-bootstrap-css'       => 'public/css/bootstrap.min.css',
             'handid-modal-css'           => 'public/css/modal.css',
             'handid-modal-connect-css'   => 'public/css/modal-connect.css',
+            'handid-notices-css'         => 'public/css/pnotify.custom.min.css',
             'handbid-generic-styles-css' => 'public/css/handbid.css',
             'handbid-less-buttons-css'   => 'public/less/buttons.less',
             'handbid-less-modal-css'     => 'public/less/modal.less',

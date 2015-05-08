@@ -232,20 +232,20 @@ span.underline {
     line-height: 1.5em;
 }
 .alert {
-    padding: 15px;
-    text-align: center;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    opacity: 1;
-    color: #000;
-    -moz-animation: hideElement 1s ease-in-out 5s forwards;
-    -webkit-animation: hideElement 1s ease-in-out 5s forwards;
-    -o-animation: hideElement 1s ease-in-out 5s forwards;
-    animation: hideElement 1s ease-in-out 5s forwards;
-    -webkit-animation-fill-mode: forwards;
-    animation-fill-mode: forwards;
+    /*padding: 15px;*/
+    /*text-align: center;*/
+    /*position: absolute;*/
+    /*top: 0;*/
+    /*left: 0;*/
+    /*right: 0;*/
+    /*opacity: 1;*/
+    /*color: #000;*/
+    /*-moz-animation: hideElement 1s ease-in-out 5s forwards;*/
+    /*-webkit-animation: hideElement 1s ease-in-out 5s forwards;*/
+    /*-o-animation: hideElement 1s ease-in-out 5s forwards;*/
+    /*animation: hideElement 1s ease-in-out 5s forwards;*/
+    /*-webkit-animation-fill-mode: forwards;*/
+    /*animation-fill-mode: forwards;*/
 }
 
 .login-popup-link{

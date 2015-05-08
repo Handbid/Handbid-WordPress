@@ -105,7 +105,7 @@ if (!is_null($this->get('profile'))) {
                             if(count($maxBids) > 0) {
                                 forEach($maxBids as $bid) {
                                     ?>
-                                    <li class="row">
+                                    <li class="row bid-row-id-<?php echo $bid->id; ?>">
                                         <div class="col-md-8 col-xs-8">
                                             <a href="/auctions/<?php echo $auction->key; ?>/item/<?php echo $bid->item->key; ?>"><h4><?php echo $bid->item->name; ?></h4></a>
                                         </div>
@@ -113,7 +113,7 @@ if (!is_null($this->get('profile'))) {
                                             <span class="bid-amount winning">$<span><?php echo (int) $bid->maxAmount; ?></span></span>
                                         </div>
                                         <div class="col-md-2 col-xs-2">
-                                            <a class="button pink-solid-button" href="#" data-handbid-delete-proxy="<?php echo $bid->id; ?>"><?php echo __('Delete'); ?></a>
+                                            <a class="button pink-solid-button loading-span-button" href="#" data-handbid-delete-proxy="<?php echo $bid->id; ?>"><em><?php echo __('Delete'); ?></em></a>
                                         </div>
                                     </li>
                                 <?php
