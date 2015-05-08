@@ -117,6 +117,7 @@ class HandbidActionController
             "handbid_ajax_login",
             "handbid_ajax_registration",
             "handbid_ajax_createbid",
+            "handbid_ajax_removebid",
         ];
         foreach($ajaxActions as $ajaxAction){
             add_action("wp_ajax_".$ajaxAction, [$this, $ajaxAction."_callback"]);
@@ -197,13 +198,17 @@ class HandbidActionController
 
             $values = [
                 'username' => $_POST['username'],
-                'password' => $_POST['password']
+                'password' => $_POST['password'],
+                'pin' => $_POST['password']
             ];
 
             $resp = $this->handbid->store('Bidder')->login($values);
 
             $result["success"] = (isset($resp->success) and $resp->success) ? $resp->success : 0;
-
+            $result["resp"] = $resp;
+            if($resp->data->token){
+                setcookie('PHPSESSID', $resp->data->token, time()+3600*24, "/", $_SERVER["HTTP_HOST"], false);
+            }
         }
         echo json_encode($result);
         exit;
@@ -231,6 +236,8 @@ class HandbidActionController
             $profile = $this->handbid->store('Bidder')->register($values);
 
             $result["success"] = (isset($profile->success) and $profile->success) ? $profile->success : 0;
+            $result["values"] = $values;
+            $result["profile"] = $profile;
 
         }
         echo json_encode($result);
@@ -240,8 +247,8 @@ class HandbidActionController
     function handbid_ajax_createbid_callback(){
         $nonce = $_POST["nonce"];
         $result = [
-            "success" => 0,
-            "error" => "no",
+            "status" => "failed",
+            "statusReason" => "no_response",
         ];
 
         if($this->handbid_verify_nonce($nonce, date("d.m.Y") . "bid")){
@@ -259,7 +266,30 @@ class HandbidActionController
             }
 
             $resp    = $this->handbid->store( 'Bid' )->createBid( $values );
-            $result["resp"] = $resp;
+            if(isset($resp->status)){
+                $result = $resp;
+            }
+        }
+        echo json_encode($result);
+        exit;
+    }
+
+
+    function handbid_ajax_removebid_callback(){
+        $nonce = $_POST["nonce"];
+        $result = [
+            "status" => "failed",
+            "statusReason" => "no_response",
+        ];
+
+        if($this->handbid_verify_nonce($nonce, date("d.m.Y") . "bid")){
+
+            $bidID = (int) $_POST["bidID"];
+
+            $resp    = $this->handbid->store( 'Bid' )->removeBid( $bidID );
+//            if(isset($resp->status)){
+                $result = $resp;
+//            }
         }
         echo json_encode($result);
         exit;

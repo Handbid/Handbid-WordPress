@@ -215,6 +215,23 @@
         return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
     }
 
+    function prepareIsotope(){
+        if (!iso) {
+
+            iso = $('.item-list').isotope({
+                itemSelector: '.simple-box',
+                layoutMode: 'masonry',
+                getSortData: sortData,
+                sortAscending: sortAscending,
+                sortBy: sortBy,
+                masonry: {
+                    columnWidth: '.sizer'
+                }
+            });
+
+        }
+    }
+
     function refreshSearchResults() {
 
         var selectors = [],
@@ -251,24 +268,13 @@
     $(document).ready(function () {
 
         var searchEnabled = true;
+        prepareIsotope();
+        refreshSearchResults();
 
         //show iso on first load of items tab
         $('.slider-nav [data-slider-nav-key="items"], [data-slider-nav-key="items"] .filter-wrapper').on('click', function () {
 
-            if (!iso) {
-
-                iso = $('.item-list').isotope({
-                    itemSelector: '.simple-box',
-                    layoutMode: 'masonry',
-                    getSortData: sortData,
-                    sortAscending: sortAscending,
-                    sortBy: sortBy,
-                    masonry: {
-                        columnWidth: '.sizer'
-                    }
-                });
-
-            }
+            prepareIsotope();
 
             var top = $(".sticky-for-sort-bar").offset().top;
 
@@ -410,7 +416,7 @@
             setTimeout(function() {
                 var categoryId = queryString.split('=')[1];
                 $('[data-legacy-category-id="' + categoryId + '"] a')[0].click();
-            }, 1500);
+            }, 3500);
         }
 
     });

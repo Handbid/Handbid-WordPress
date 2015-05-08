@@ -1,7 +1,12 @@
+var handbidMain;
 (function ($) {
 
     var restEndpoint = $("#apiEndpointsAddress").val(),
         currencySymbol = '$',
+        statusReasons = {
+            no_response : "Sorry, try again later",
+            current_winner : "You are current winner of this item"
+        },
         handbid = {
 
             loggedIn : null,
@@ -17,14 +22,27 @@
 
             },
 
-            isButtonDisabled: function(button){
+            isButtonDisabledOrAlreadyActive: function(button){
 
-                return button.hasClass("disabled-button");
+                return button.hasClass("disabled-button") || button.hasClass("active");
 
             },
 
+            getStatusReasonByCode: function(code){
+
+                return (statusReasons[code] != undefined) ? statusReasons[code] : code;
+
+            },
+
+            cannotDoIfUnauthorized: function(){
+                if(! this.loggedIn){
+                    this.notice("You should register or login to bid", "Unauthorized", "error");
+                }
+                return ! this.loggedIn;
+            },
+
             // Setup bidding
-            setupBidding:             function (container) {
+            setupBidding:             function (handbid) {
 
                 var userId = ($('[data-handbid-user-id]').length > 0) ? $('[data-handbid-user-id]').attr('data-handbid-user-id') : (parseInt($("#bidUserId").val()) ? parseInt($("#bidUserId").val()) : null),
                     auctionId = ($('[data-handbid-auction-id]').length > 0) ? $('[data-handbid-auction-id]').attr('data-handbid-auction-id') : (parseInt($("#bidAuctionId").val()) ? parseInt($("#bidAuctionId").val()) : null),
@@ -35,7 +53,7 @@
 
                 $('[data-handbid-bid-button="up"]').on('click', function (e) {
 
-                    if(this.isButtonDisabled($(this))){
+                    if(handbid.isButtonDisabledOrAlreadyActive($(this)) || handbid.cannotDoIfUnauthorized()){
                         return false;
                     }
 
@@ -53,7 +71,7 @@
 
                 $('[data-handbid-bid-button="down"]').on('click', function (e) {
 
-                    if(this.isButtonDisabled($(this))){
+                    if(handbid.isButtonDisabledOrAlreadyActive($(this)) || handbid.cannotDoIfUnauthorized()){
                         return false;
                     }
 
@@ -72,7 +90,7 @@
 
                 $('[data-handbid-bid-button="bid"]').on('click', function (e) {
 
-                    if(this.isButtonDisabled($(this))){
+                    if(handbid.isButtonDisabledOrAlreadyActive($(this)) || handbid.cannotDoIfUnauthorized()){
                         return false;
                     }
 
@@ -80,7 +98,8 @@
 
                     var total = amount[0].innerHTML;
                     var nonce = $("#bidNonce").val();
-
+                    var button = $(this);
+                    button.addClass("active");
                     var data = {
                         action:    "handbid_ajax_createbid",
                         nonce:     nonce,
@@ -98,7 +117,17 @@
                             console.log("----Bid Now success----");
                             data = JSON.parse(data);
                             console.log(data);
+                            if(data.status == "failed"){
+                                handbid.notice(handbid.getStatusReasonByCode(data.statusReason), data.status.toUpperCase(), data.status);
+                            }
+                            else{
+                                $('[data-handbid-item-attribute="bidCount"]').html(data.item.bidCount);
+                                $('[data-handbid-item-attribute="minimumBidAmount"]').html(currencySymbol + data.item.minimumBidAmount);
+                                $('[data-handbid-item-banner="' + data.status + '"]').show();
+                                handbid.notice('Bid placed for ' + currencySymbol + data.amount + '. You are now ' + data.status + ' this item');
 
+                            }
+                            button.removeClass("active");
                             return false;
                         }
                     );
@@ -135,13 +164,15 @@
 
                 $('[data-handbid-bid-button="proxy"]').on('click', function (e) {
 
-                    if(this.isButtonDisabled($(this))){
+                    if(handbid.isButtonDisabledOrAlreadyActive($(this)) || handbid.cannotDoIfUnauthorized()){
                         return false;
                     }
 
                     var total = amount[0].innerHTML;
                     var nonce = $("#bidNonce").val();
-
+                    var button = $(this);
+                    button.addClass("active");
+                    $(".proxy-bid-dialog-close").hide();
                     var data = {
                         action:    "handbid_ajax_createbid",
                         nonce:     nonce,
@@ -159,26 +190,12 @@
                             console.log("----Max Bid success----");
                             data = JSON.parse(data);
                             console.log(data);
-
+                            button.removeClass("active");
+                            $(".proxy-bid-dialog-close").show();
+                            $(".proxy-bid-dialog-close").click();
                             return false;
                         }
                     );
-                    //$.ajax({
-                    //    url:     restEndpoint + 'bid/create',
-                    //    type:    'POST',
-                    //    data:    {
-                    //        'userId':    userId,
-                    //        'auctionId': auctionId,
-                    //        'itemId':    itemId,
-                    //        'maxAmount': total
-                    //    },
-                    //    success: function (data) {
-                    //        console.log(data);
-                    //        alert('max bid clicked');
-                    //
-                    //        return false;
-                    //    }
-                    //});
 
                     return false;
 
@@ -186,7 +203,7 @@
 
                 $('[data-handbid-bid-button="purchase"]').on('click', function (e) {
 
-                    if(this.isButtonDisabled($(this))){
+                    if(handbid.isButtonDisabledOrAlreadyActive($(this)) || handbid.cannotDoIfUnauthorized()){
                         return false;
                     }
 
@@ -197,14 +214,16 @@
 
                 $('[data-handbid-bid-button="buyItNow"]').on('click', function (e) {
 
-                    if(this.isButtonDisabled($(this))){
+                    if(handbid.isButtonDisabledOrAlreadyActive($(this)) || handbid.cannotDoIfUnauthorized()){
                         return false;
                     }
 
                     e.preventDefault;
-                    alert('buy clicked');
+
                     var nonce = $("#bidNonce").val();
                     var total = parseInt($(this).data("handbid-buynow-price"));
+                    var button = $(this);
+                    button.addClass("active");
                     var data = {
                         action:    "handbid_ajax_createbid",
                         nonce:     nonce,
@@ -224,8 +243,48 @@
                             console.log(data);
 
                             $('[data-handbid-item-banner="sold"]').show();
-                            this.disableAllBiddingButtonsIfSold();
+                            handbid.disableAllBiddingButtonsIfSold();
+                            button.removeClass("active");
+                            return false;
+                        }
+                    );
 
+
+                    return false;
+
+                });
+
+                $('[data-handbid-delete-proxy]').live('click', function (e) {
+                    if(handbid.isButtonDisabledOrAlreadyActive($(this)) || handbid.cannotDoIfUnauthorized()){
+                        return false;
+                    }
+                    e.preventDefault;
+
+                    var nonce = $("#bidNonce").val();
+                    var bidID = parseInt($(this).data("handbid-delete-proxy"));
+                    var button = $(this);
+                    button.addClass("active");
+                    var data = {
+                        action:    "handbid_ajax_removebid",
+                        nonce:     nonce,
+                        bidID:     bidID
+                    };
+                    $.post(
+                        ajaxurl,
+                        data,
+                        function (data) {
+
+                            console.log("-----------------------------");
+                            console.log("----Delete Maxbid success----");
+                            //data = JSON.parse(data);
+                            console.log(data);
+
+                            $(".bid-row-id-"+bidID).remove();
+                            var proxiesCountContainer = $("[data-handbid-stats-num-proxies]");
+                            var proxiesCount = parseInt(proxiesCountContainer.html());
+                            proxiesCountContainer.html(proxiesCount - 1);
+
+                            button.removeClass("active");
                             return false;
                         }
                     );
@@ -424,7 +483,7 @@
                 }
 
             },
-            notice:                   function (msg) {
+            oldNotice:                   function (msg) {
 
                 handbid.noticeContainer = $('<div class="handbid-growl-container"></div>');
                 handbid.noticeContainer.appendTo('body');
@@ -445,10 +504,38 @@
                     growl.remove();
 
                 }, 5000);
+            },
+            notice:  function (msg, title, type, hide) {
+
+                title = (title != undefined) ? title : 'Notice Message';
+                hide = (hide != undefined) ? hide : true;
+                type = (type != undefined) ? type : 'info';
+                type = (type == "failed") ? "error" : type;
+
+                try {
+
+                    new PNotify({
+                        title: title,
+                        text: msg,
+                        type: type,
+                        hide: hide,
+                        buttons: {
+                            sticker: false
+                        }
+                    });
+
+                } catch (err) {
+
+                    this.oldNotice(msg)
+
+                }
+
             }
         };
 
     $(document).ready(function () {
+
+        handbidMain = handbid;
 
         restEndpoint = $("#apiEndpointsAddress").val();
         handbid.setupAuthorizationStatus();
@@ -476,7 +563,7 @@
             ($('[data-handbid-connect]').length > 0) ? handbid.setupConnect() : '';
         //}
 
-        ($('[data-handbid-bid]').length > 0) ? handbid.setupBidding() : '';
+        ($('[data-handbid-bid]').length > 0) ? handbid.setupBidding(handbid) : '';
 
 
         var bidderInfo = jQuery("#bidder-info-load");

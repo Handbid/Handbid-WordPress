@@ -10,27 +10,39 @@ var socket = new YiiNodeSocket();
  ********************** BOOTSTRAP / CONNECT **********************
  */
 
-socket.onConnect(function () {
+//var auctionChannelId = "auction";
 
+socket.onConnect(function () {
+console.log(auctionChannelId+"  ==");
     var $ = jQuery;
 
     var auctionChannel = socket.room(auctionChannelId).join(function (success) {
         // success - boolean
         if (success) {
 
+            console.log(" ===== SUCCESS ====="+ $.getCurrentDateAndTime());
+
             this.on('event.bid', function (data) {
+                console.log(" ===== event.bid ====="+ $.getCurrentDateAndTime());
+                console.log(data);
                 $.eventAuctionBid(data);
             });
 
             this.on('event.auction', function (data) {
+                console.log(" ===== event.auction ====="+ $.getCurrentDateAndTime());
+                console.log(data);
                 $.eventAuction(data);
             });
 
             this.on('event.broadcast', function (data) {
+                console.log(" ===== event.broadcast ====="+ $.getCurrentDateAndTime());
+                console.log(data);
                 $.eventAuctionBroadcast(data);
             });
 
             this.on('event.item', function (data) {
+                console.log(" ===== event.item ====="+ $.getCurrentDateAndTime());
+                console.log(data.values);
                 $.eventAuctionItem(data);
             });
 
@@ -39,7 +51,8 @@ socket.onConnect(function () {
             });
 
         } else {
-            console.log(this.getError());
+            console.log(" ===== ERROR ====="+ $.getCurrentDateAndTime());
+            this.log(this.getError());
         }
         return true;
     });
@@ -68,10 +81,19 @@ socket.onConnect(function () {
             });
 
         } else {
-            console.log(this.getError());
+            //console.log(this.getError());
         }
         return true;
     });
+
+    /*
+     ********************** TEMP CUSTOM FUNCTIONS **********************
+     */
+    $.getCurrentDateAndTime = function (){
+        var currentdate = new Date();
+        return  currentdate.getHours() + ":" + currentdate.getMinutes() + ":" + currentdate.getSeconds();
+    };
+
 
     /*
      ********************** AUCTION FUNCTIONS **********************
@@ -119,8 +141,6 @@ socket.onConnect(function () {
      * @returns boolean
      */
     $.eventAuctionItem = function (data) {
-        console.log(data.values);
-        $('[data-handbid-bid-amount]').html(data.values.currentPrice);
         return $.effectNodeItemUpdate(data);
     };
 
@@ -143,7 +163,9 @@ socket.onConnect(function () {
      * @returns boolean
      */
     $.eventAuctionTimer = function (data) {
-        alert(JSON.stringify(data, null, 2));
+        var message = JSON.stringify(data, null, 2);
+        console.log(message);
+        handbidMain.notice(message);
     };
 
     /*
@@ -158,7 +180,9 @@ socket.onConnect(function () {
      * @returns boolean
      */
     $.eventUserBid = function (data) {
-        alert(JSON.stringify(data, null, 2));
+        var message = JSON.stringify(data, null, 2);
+        console.log(message);
+        handbidMain.notice(message);
     };
 
     /**
@@ -169,7 +193,9 @@ socket.onConnect(function () {
      * @returns boolean
      */
     $.eventUserBroadcast = function (data) {
-        alert(JSON.stringify(data, null, 2));
+        var message = JSON.stringify(data, null, 2);
+        console.log(message);
+        handbidMain.notice(message);
     };
 
     /**
@@ -182,7 +208,9 @@ socket.onConnect(function () {
      * @returns boolean
      */
     $.eventUserPurchase = function (data) {
-        alert(JSON.stringify(data, null, 2));
+        var message = JSON.stringify(data, null, 2);
+        console.log(message);
+        handbidMain.notice(message);
     };
 
     /**
@@ -193,7 +221,9 @@ socket.onConnect(function () {
      * @returns boolean
      */
     $.eventUserReciept = function (data) {
-        alert(JSON.stringify(data, null, 2));
+        var message = JSON.stringify(data, null, 2);
+        console.log(message);
+        handbidMain.notice(message);
     };
 
     /**
@@ -204,7 +234,9 @@ socket.onConnect(function () {
      * @returns boolean
      */
     $.eventUser = function (data) {
-        alert(JSON.stringify(data, null, 2));
+        var message = JSON.stringify(data, null, 2);
+        console.log(message);
+        handbidMain.notice(message);
     };
 
     /*
@@ -226,7 +258,7 @@ socket.onConnect(function () {
             msg = data.values.name + " Broadcast Alert \r\n" + data.values.messageText;
         }
         alert( msg );
-
+        handbidMain.notice(msg);
         return true;
     };
 
@@ -257,36 +289,43 @@ socket.onConnect(function () {
      * @returns {Boolean}
      */
     $.effectNodeAuctionStatusUpdate = function (data) {
-        //$('.auction-status').html(" " + data.values.status + " ");
-        //$('#currentAuctionStatus').attr("class", "auction-status-header auction-status bg-" + data.values.status);
-        ////
-        //switch (data.values.status) {
-        //    case 'open':
-        //        $('.auction-not-open').hide();
-        //        $('.auction-open').show();
-        //        $('.auction-not-paused').show();
-        //        $('.auction-paused').hide();
-        //        $('.auction-not-closed').show();
-        //        $('.auction-closed').hide();
-        //        break;
-        //    case 'paused':
-        //        $('.auction-not-open').show();
-        //        $('.auction-open').hide();
-        //        $('.auction-not-paused').hide();
-        //        $('.auction-paused').show();
-        //        $('.auction-not-closed').show();
-        //        $('.auction-closed').hide();
-        //        break;
-        //    case 'closed':
-        //        $('.auction-not-open').show();
-        //        $('.auction-open').hide();
-        //        $('.auction-not-paused').show();
-        //        $('.auction-paused').hide();
-        //        $('.auction-not-closed').hide();
-        //        $('.auction-closed').show();
-        //        break;
-        //}
-        //alert(data.values.name + ' is now ' + data.values.status);
+        $('.auction-status').html(" " + data.values.status + " ");
+        $('#currentAuctionStatus').attr("class", "auction-status-header auction-status bg-" + data.values.status);
+        //
+        var statusNotOpen = $('.auction-not-open'),
+            statusOpen = $('.auction-open'),
+            statusNotPaused = $('.auction-not-paused'),
+            statusPaused = $('.auction-paused'),
+            statusNotClosed = $('.auction-not-closed'),
+            statusClosed = $('.auction-closed');
+        switch (data.values.status) {
+            case 'open':
+                statusNotOpen.hide();
+                statusOpen.show();
+                statusNotPaused.show();
+                statusPaused.hide();
+                statusNotClosed.show();
+                statusClosed.hide();
+                break;
+            case 'paused':
+                statusNotOpen.show();
+                statusOpen.hide();
+                statusNotPaused.hide();
+                statusPaused.show();
+                statusNotClosed.show();
+                statusClosed.hide();
+                break;
+            case 'closed':
+                statusNotOpen.show();
+                statusOpen.hide();
+                statusNotPaused.show();
+                statusPaused.hide();
+                statusNotClosed.hide();
+                statusClosed.show();
+                break;
+            default: break;
+        }
+        handbidMain.notice(data.values.name + ' is now ' + data.values.status.toUpperCase());
 
         return true;
     };
@@ -298,9 +337,10 @@ socket.onConnect(function () {
      * @returns {Boolean}
      */
     $.effectNodeBidUpdate = function (data) {
-
-        alert(data.values.item.name + ' - New Winner ' + data.values.winnerPin + ' - $' + data.values.amount);
-
+        var winnerName = (data.values.winnerPin != undefined) ? data.values.winnerPin : data.values.winnerName ;
+        var message = data.values.item.name + ' <br>New Winner <b>' + winnerName + '</b> <br>Amount $<b>' + data.values.amount + '</b>';
+        console.log(message);
+        handbidMain.notice(message, "Item winner");
         return true;
     };
 
@@ -311,6 +351,18 @@ socket.onConnect(function () {
      * @returns {Boolean}
      */
     $.effectNodeItemUpdate = function (data) {
+
+        var currentItemID = $("#bidItemId").val();
+        if(currentItemID != undefined && currentItemID == data.values.id){
+
+            var item = $('[data-guid=' + data.guid + ']');
+            $.map(data.attributes, function (attribute) {
+                var value = data.values[attribute];
+                $('[data-change-attribute=' + attribute + ']').html(value);
+                $('[data-handbid-item-attribute=' + attribute + ']').html(value);
+            });
+
+        }
 
         //var item = $('[data-guid=' + data.guid + ']');
         //var attribute = item.children('[data-attribute=' + data.attribute + ']');

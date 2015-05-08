@@ -98,6 +98,7 @@
                     nonce: nonce
                 },
                 function (data) {
+                    console.log(data);
                     data = JSON.parse(data);
                     button.removeClass("active");
                     if(data.success){

@@ -42,7 +42,7 @@ $hasManyImages = (count($item->images) > 1);
 
 ?>
 
-<div class="item-details item-<?php echo $item->status; ?>" data-handbid-item-key="<?php echo $item->key; ?>">
+<div class="item-details item-<?php echo $item->status; ?>" data-handbid-item-key="<?php echo $item->key; ?>" data-handbid-auction-guid="<?php echo $auction->auctionGuid; ?>">
 
     <div class="back-to-previous-container">
         <a class="back-to-previous" href="/auctions/<?php echo $auction->key; ?>/">View All Items</a>
@@ -93,7 +93,7 @@ $hasManyImages = (count($item->images) > 1);
         </div>
 
         <div class="col-md-5">
-            <h2 class="name" data-handbid-item-attribute="name"><?php echo $item->name; ?></h2>
+            <h2 class="name" data-handbid-item-attribute="name" data-change-attribute="name"><?php echo $item->name; ?></h2>
             <?php if ($category) { ?>
                 <h3 class="category" data-handbid-item-attribute="meta.categoryName"><?php echo $category; ?></h3>
             <?php } ?>
