@@ -17,6 +17,7 @@ $auction = $this->get('auction');
 
 ?>
 
+<<<<<<< HEAD
 <div class="row simple-box-row item-list isotope">
 
 
@@ -43,4 +44,47 @@ $auction = $this->get('auction');
 
 
     <div class="sizer <?php echo $mdClass; ?>"></div>
+=======
+<div class="auction-item-list-widget">
+
+    <!-- Item List -->
+    <div class="item-list">
+        <ul id="container" class="items js-isotope">
+            <?php forEach ($items as $item) {
+
+                $currentPrice = $item->currentPrice;
+
+                ?>
+
+                <li class="item item-tile">
+
+                    <div class="itemBox" data-handbid-item-key="<?php echo $item->key; ?>">
+                        <a title="<?php echo $item->name; ?>" href="/auctions/<?php echo $auction->key; ?>/item/<?php echo $item->key; ?>">
+                            <div class="inner">
+                                <div class="topBox">
+                                    <img src="<?php echo $item->images[0]; ?>"/>
+                                </div>
+                                <?php if ($item->status == "sold" || $item->status == "paid") {
+                                    ?>
+                                    <div class="item-banner sold"><?php echo __('Sold'); ?></div>
+                                <?php
+                                }
+                                ?>
+                                <div class="details">
+                                    <ul class="item-stats">
+                                        <li><?php echo __('Current'); ?><span> $<span
+                                                    data-handbid-item-attribute="currentPrice"><?php echo $currentPrice; ?></span></span>
+                                        </li>
+                                        <li><?php echo __('Increment'); ?>
+                                            <span> <?php echo '$' . $item->bidIncrement; ?></span></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </li>
+            <?php } ?>
+        </ul>
+    </div>
+>>>>>>> f7ba798f625ed1d478310e7a0249253ef6475f45
 </div>

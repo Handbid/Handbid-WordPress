@@ -666,6 +666,7 @@ class HandbidShortCodeController {
                     $purchases = $this->handbid->store( 'Bid' )->myPurchases( $auction->id );
                     $proxyBids = $this->handbid->store( 'Bid' )->myProxyBids( $auction->id );
 
+//                    $myInventory = $this->handbid->store( 'Bid' )->auctionMyInventory( $auction->id );
                     if($winning) {
                         foreach ( $winning as $w ) {
                             $totalSpent += $w->amount;
