@@ -13,7 +13,11 @@ $itemSold   = ($item->status == "sold" || $item->status == "paid");
     <div class="row bid-controls">
 
         <div class="col-md-3 col-xs-3 bid-down">
-            <a href="" class="green-button button" data-handbid-bid-button="down" style="display: none;">-</a>
+            <a href="" class="green-button button <?php
+            echo ($isBiddable) ? "isBiddable" : "isDirectPurchase" ;
+            ?>" data-handbid-bid-button="down" style="<?php
+            echo ($isBiddable) ? "display: none" : "" ;
+            ?>">-</a>
         </div>
 
         <?php if ($isBiddable) { ?>
@@ -24,7 +28,11 @@ $itemSold   = ($item->status == "sold" || $item->status == "paid");
 
         <?php } ?>
         <div class="col-md-3 col-xs-3 bid-up">
-            <a href="" class="green-button button" data-handbid-bid-button="up" style="display: none;">+</a>
+            <a href="" class="green-button button  <?php
+            echo ($isBiddable) ? "isBiddable" : "isDirectPurchase" ;
+            ?>" data-handbid-bid-button="up" style="<?php
+            echo ($isBiddable) ? "display: none" : "" ;
+            ?>">+</a>
         </div>
 
     </div>
@@ -63,9 +71,9 @@ $itemSold   = ($item->status == "sold" || $item->status == "paid");
 
         <?php } else { ?>
             <div class="col-md-12 col-xs-12">
-                <a class="buy-now green-solid-button"
+                <a class="buy-now green-solid-button  loading-span-button"
                    href=""
-                   data-handbid-bid-button="purchase"><?php echo __('Buy Now'); ?></a>
+                   data-handbid-bid-button="purchase" data-handbid-buynow-price="<?php echo (int) $item->buyNowPrice;?>"><span><?php echo __('Buy Now'); ?></span></a>
             </div>
         <?php } ?>
 

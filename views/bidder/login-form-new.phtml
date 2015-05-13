@@ -310,7 +310,9 @@ $countries = $this->get("countries");
                                class="col-md-6 has-question-icon has-popover cleanable-input copyable-field is-email" data-copy-to="confirm-email" data-toggle="popover" data-trigger="focus"
                                title="ENTER IN YOUR EMAIL ADDRESS"
                                data-content="We will use your eMail to identify you and also to send you a receipt at the end of the auction. Don't worry, you won't end up on any list because of us. You can review our privacy policy for more details."
-                               data-not-email-message="Please, provide valid email address" >
+                               data-not-email-message="Please, provide valid email address"
+                               required
+                               data-required-message="Email field is required">
                     </div>
                 </div>
                 <div class="row">

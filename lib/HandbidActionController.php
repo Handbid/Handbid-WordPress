@@ -264,6 +264,9 @@ class HandbidActionController
             if(isset($_POST["maxAmount"])){
                 $values["maxAmount"] = (int) $_POST["maxAmount"];
             }
+            if(isset($_POST["quantity"])){
+                $values["quantity"] = (int) $_POST["quantity"];
+            }
 
             $resp    = $this->handbid->store( 'Bid' )->createBid( $values );
             if(isset($resp->status)){

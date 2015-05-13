@@ -47,6 +47,7 @@ console.log(auctionChannelId+"  ==");
             });
 
             this.on('event.timer', function (data) {
+                console.log(data);
                 $.eventAuctionTimer(data);
             });
 
@@ -251,14 +252,8 @@ console.log(auctionChannelId+"  ==");
      * @returns {Boolean}
      */
     $.effectNodeAuctionBroadcast = function (data) {
-        var msg = '';
-        if (userChannelId == data.values.ownerGuid) {
-            msg = data.values.name + " Broadcast Sent \r\n" + data.values.messageText;
-        } else {
-            msg = data.values.name + " Broadcast Alert \r\n" + data.values.messageText;
-        }
-        alert( msg );
-        handbidMain.notice(msg);
+        var msg = "<b>"+data.values.name + "</b><br>" + data.values.messageText;
+        handbidMain.notice(msg, "Broadcast Message", "info", false);
         return true;
     };
 
@@ -340,7 +335,28 @@ console.log(auctionChannelId+"  ==");
         var winnerName = (data.values.winnerPin != undefined) ? data.values.winnerPin : data.values.winnerName ;
         var message = data.values.item.name + ' <br>New Winner <b>' + winnerName + '</b> <br>Amount $<b>' + data.values.amount + '</b>';
         console.log(message);
-        handbidMain.notice(message, "Item winner");
+        handbidMain.notice(message, "New Item Winner");
+        var itemBannerWinning = $(".item-banner.winning").eq(0);
+        var itemBannerLosing = $(".item-banner.losing").eq(0);
+        var currentItemID = parseInt($("#currentItemID").val());
+        var currentUserID = parseInt($("#currentUserID").val());
+
+
+        if(itemBannerWinning.is(":visible") && (data.values.itemId == currentItemID) && (data.values.bidderId != currentUserID))
+        {
+            message = 'You are <br>losing</b> the item <b>' + data.values.item.name + '</b> now!';
+            itemBannerWinning.hide();
+            itemBannerLosing.show();
+            handbidMain.notice(message, "Losing Item", "error");
+        }
+        if(itemBannerLosing.is(":visible") && (data.values.itemId == currentItemID) && (data.values.bidderId == currentUserID))
+        {
+            message = 'You are <br>winning</b> the item <b>' + data.values.item.name + '</b> now!';
+            itemBannerWinning.show();
+            itemBannerLosing.hide();
+            handbidMain.notice(message, "Winning Item", "success");
+        }
+
         return true;
     };
 
@@ -358,6 +374,7 @@ console.log(auctionChannelId+"  ==");
             var item = $('[data-guid=' + data.guid + ']');
             $.map(data.attributes, function (attribute) {
                 var value = data.values[attribute];
+                if(attribute == "inventoryRemaining" && value == -1) {value = "∞"}
                 $('[data-change-attribute=' + attribute + ']').html(value);
                 $('[data-handbid-item-attribute=' + attribute + ']').html(value);
             });

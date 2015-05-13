@@ -272,7 +272,7 @@ class HandbidShortCodeController {
 			$query = [ ];
 
             $profile = $this->handbid->store( 'Bidder' )->myProfile();
-            $this->handbid->store('Organization')->setBasePublicity(! $profile);
+            //$this->handbid->store('Organization')->setBasePublicity(! $profile);
 			$organizations = $this->handbid->store( 'Organization' )->all(
 				$page,
 				$pageSize,
@@ -331,10 +331,17 @@ class HandbidShortCodeController {
 				$profile = $this->handbid->store( 'Bidder' )->myProfile( $auction->id );
 				if ( $profile ) {
 
-					$totalWinning   = count( $this->handbid->store( 'Bid' )->myWinning( $auction->id ) );
-					$totalLosing    = count( $this->handbid->store( 'Bid' )->myLosing( $auction->id ) );
-					$totalProxies   = count( $this->handbid->store( 'Bid' )->myProxyBids( $auction->id ) );
-					$totalPurchases = count( $this->handbid->store( 'Bid' )->myPurchases( $auction->id ) );
+                    $myInventory = $this->state->currentInventory($auction->id);
+
+                    $totalWinning   = count($myInventory->winning);
+                    $totalLosing    = count($myInventory->losing);
+                    $totalPurchases = count($myInventory->purchases);
+                    $totalProxies   = count($myInventory->max_bids);
+
+					//$totalWinning   = count( $this->handbid->store( 'Bid' )->myWinning( $auction->id ) );
+					//$totalLosing    = count( $this->handbid->store( 'Bid' )->myLosing( $auction->id ) );
+					//$totalProxies   = count( $this->handbid->store( 'Bid' )->myProxyBids( $auction->id ) );
+					//$totalPurchases = count( $this->handbid->store( 'Bid' )->myPurchases( $auction->id ) );
 
 				}
 
@@ -494,13 +501,27 @@ class HandbidShortCodeController {
 				] );
 			}
 
+            $profile = $this->handbid->store( 'Bidder' )->myProfile();
+            if($profile){
+                $myInventory = $this->state->currentInventory($auction->id);
+                $winning   = $myInventory->winning;
+                $losing    = $myInventory->losing;
+            }
+            else{
+                $winning = [];
+                $losing = [];
+            }
+
 			return $this->viewRenderer->render(
 				$template,
 				[
 					'item'    => $item,
 					'bids' => $bids,
 					'related' => $related,
-					'auction' => $auction
+					'auction' => $auction,
+					'profile' => $profile,
+					'winning' => $winning,
+					'losing' => $losing,
 				]
 			);
 		} catch ( Exception $e ) {
@@ -661,12 +682,19 @@ class HandbidShortCodeController {
 
                 if ( $auction && $profile ) {
 
-                    $winning   = $this->handbid->store( 'Bid' )->myWinning($auction->id );
-                    $losing    = $this->handbid->store( 'Bid' )->myLosing( $auction->id );
-                    $purchases = $this->handbid->store( 'Bid' )->myPurchases( $auction->id );
-                    $proxyBids = $this->handbid->store( 'Bid' )->myProxyBids( $auction->id );
+                    $myInventory = $this->state->currentInventory($auction->id);
 
-//                    $myInventory = $this->handbid->store( 'Bid' )->auctionMyInventory( $auction->id );
+//                     $winning   = $this->handbid->store( 'Bid' )->myWinning($auction->id );
+                    // $losing    = $this->handbid->store( 'Bid' )->myLosing( $auction->id );
+                    // $purchases = $this->handbid->store( 'Bid' )->myPurchases( $auction->id );
+                    // $proxyBids = $this->handbid->store( 'Bid' )->myProxyBids( $auction->id );
+
+                    $winning   = $myInventory->winning;
+                    $losing    = $myInventory->losing;
+                    $purchases = $myInventory->purchases;
+                    $proxyBids = $myInventory->max_bids;
+
+                    // echo "<pre>".print_r($myInventory,true)."</pre>";
                     if($winning) {
                         foreach ( $winning as $w ) {
                             $totalSpent += $w->amount;
@@ -741,10 +769,17 @@ class HandbidShortCodeController {
 
                 if ( $auction && $profile ) {
 
-                    $winning   = $this->handbid->store( 'Bid' )->myWinning($auction->id );
-                    $losing    = $this->handbid->store( 'Bid' )->myLosing( $auction->id );
-                    $purchases = $this->handbid->store( 'Bid' )->myPurchases( $auction->id );
-                    $proxyBids = $this->handbid->store( 'Bid' )->myProxyBids( $auction->id );
+                    $myInventory = $this->state->currentInventory($auction->id);
+
+                    // $winning   = $this->handbid->store( 'Bid' )->myWinning($auction->id );
+                    // $losing    = $this->handbid->store( 'Bid' )->myLosing( $auction->id );
+                    // $purchases = $this->handbid->store( 'Bid' )->myPurchases( $auction->id );
+                    // $proxyBids = $this->handbid->store( 'Bid' )->myProxyBids( $auction->id );
+
+                    $winning   = $myInventory->winning;
+                    $losing    = $myInventory->losing;
+                    $purchases = $myInventory->purchases;
+                    $proxyBids = $myInventory->max_bids;
 
                     if($winning) {
                         foreach ( $winning as $w ) {
@@ -790,11 +825,19 @@ class HandbidShortCodeController {
 			$profile  = $this->handbid->store( 'Bidder' )->myProfile();
 			$auction  = $this->state->currentAuction();
 
+            $myInventory = $this->state->currentInventory($auction->id);
+
+            // $winning   = $this->handbid->store( 'Bid' )->myWinning($auction->id );
+            // $losing    = $this->handbid->store( 'Bid' )->myLosing( $auction->id );
+
+            $winning   = $myInventory->winning;
+            $losing    = $myInventory->losing;
+
 			return $this->viewRenderer->render(
 				$template,
 				[
-					'winning' => $this->handbid->store( 'Bid' )->myWinning( $auction->id ),
-					'losing'  => $this->handbid->store( 'Bid' )->myLosing( $auction->id ),
+					'winning' => $winning,
+					'losing'  => $losing,
 					'auction' => $auction
 				]
 			);
@@ -836,10 +879,16 @@ class HandbidShortCodeController {
 			$profile  = $this->handbid->store( 'Bidder' )->myProfile();
 			$auction  = $this->state->currentAuction();
 
+            $myInventory = $this->state->currentInventory($auction->id);
+
+            //$proxyBids = $this->handbid->store( 'Bid' )->myProxyBids( $auction->id );
+
+            $proxyBids = $myInventory->max_bids;
+
 			return $this->viewRenderer->render(
 				$template,
 				[
-					'bids'    => $this->handbid->store( 'Bid' )->myProxyBids( $auction->id ),
+					'bids'    => $proxyBids,
 					'auction' => $auction
 				]
 			);
@@ -858,10 +907,16 @@ class HandbidShortCodeController {
 			$profile  = $this->handbid->store( 'Bidder' )->myProfile();
 			$auction  = $this->state->currentAuction();
 
+            $myInventory = $this->state->currentInventory($auction->id);
+
+            // $purchases = $this->handbid->store( 'Bid' )->myPurchases( $auction->id );
+
+            $purchases = $myInventory->purchases;
+
 			return $this->viewRenderer->render(
 				$template,
 				[
-					'purchases' => $this->handbid->store( 'Bid' )->myPurchases( $auction->id ),
+					'purchases' => $purchases,
 					'auction'   => $auction
 				]
 			);

@@ -15,6 +15,7 @@ class HandbidState
     public $org;
     public $auction;
     public $item;
+    public $inventory;
 
     public function __construct($basePath, $handbid)
     {
@@ -131,6 +132,27 @@ class HandbidState
     {
         try {
             return $this->handbid->store('Bidder')->myProfile();
+        } catch (Exception $e) {
+
+            return null;
+        }
+
+    }
+
+    public function currentInventory($auctionID, $attributes = null)
+    {
+        try {
+
+            if ($this->inventory && !$attributes) {
+                return $this->inventory;
+            }
+
+            if ($auctionID) {
+                $this->inventory = $this->handbid->store( 'Bid' )->auctionMyInventory( $auctionID );
+            }
+
+            return $this->inventory;
+
         } catch (Exception $e) {
 
             return null;

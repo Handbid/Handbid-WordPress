@@ -3,18 +3,18 @@ $item       = $this->get('item');
 $bids       = $this->get('bids');
 $related    = $this->get('related');
 $auction    = $this->get('auction');
-$handbid    = Handbid::instance()->handbid;
-$profile    = $handbid->store('Bidder')->myProfile();
-$winning    = ($profile) ? $handbid->store('Bid')->myBids($profile->pin, $auction->_id) : [];
-$losing     = ($profile) ? $handbid->store('Bid')->myLosing($profile->pin, $auction->_id) : [];
-$isWinning  = array_filter($winning, function ($bid) use ($item) {
-    return $bid->item == $item->_id;
-});
+$profile    = $this->get('profile');
+$winning    = $this->get('winning');
+$losing     = $this->get('losing');
 
-$isLosing = array_filter($losing, function ($bid) use ($item) {
-    return $bid->item == $item->_id;
-});
 
+$isWinning  = count(array_filter($winning, function ($bid) use ($item) {
+    return $bid->itemId == $item->id;
+}));
+
+$isLosing = count(array_filter($losing, function ($bid) use ($item) {
+    return $bid->itemId == $item->id;
+}));
 if (!$item) {
     return;
 }
@@ -101,12 +101,12 @@ $hasManyImages = (count($item->images) > 1);
 
                 <?php if($isBiddable) { ?>
                     <li class="bids col-md-4 col-xs-3"><em data-handbid-item-attribute="meta.totalBids"><?php echo $item->bidCount; ?></em>Bids</li>
-                    <li class="increment col-md-4 col-xs-5"><em>$<?php echo $item->bidIncrement; ?></em>Increment</li>
-                    <li class="min col-md-4 col-xs-4"><em>$<?php echo $item->minimumBidAmount; ?></em>Min Bid</li>
+                    <li class="increment col-md-4 col-xs-5"><em>$<span class="incrementSpan"><?php echo $item->bidIncrement; ?></span></em>Increment</li>
+                    <li class="min col-md-4 col-xs-4"><em>$<?php echo $item->minimumBidAmount; ?></em>Value</li>
                 <?php } else { ?>
                     <li class="purchases col-md-4 col-xs-4" data-handbid-item-attribute="meta.totalSold"><em><?php echo $item->quantitySold; ?></em>Sold</li>
-                    <li class="increment col-md-4 col-xs-4" data-handbid-item-attribute="buyNowPrice"><em>$<?php echo $item->buyNowPrice; ?></em>Price</li>
-                    <li class="remaining col-md-4 col-xs-4" data-handbid-item-attribute="inventoryRemaining"><em><?php echo $item->inventoryRemaining; ?></em>Remaining</li>
+                    <li class="increment col-md-4 col-xs-4" data-handbid-item-attribute="buyNowPrice"><em>$<span id="singleItemPrice"><?php echo $item->buyNowPrice; ?></span></em>Price</li>
+                    <li class="remaining col-md-4 col-xs-4"><em data-handbid-item-attribute="inventoryRemaining"><?php echo $item->inventoryRemaining; ?></em>Remaining</li>
                 <?php } ?>
             </ul>
 
@@ -231,3 +231,5 @@ $hasManyImages = (count($item->images) > 1);
     </div>
 
 <?php } ?>
+<input type="hidden" id="currentItemID" value="<?php echo $item->id; ?>">
+<input type="hidden" id="currentUserID" value="<?php echo $profile->id; ?>">
