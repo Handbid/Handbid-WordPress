@@ -109,7 +109,8 @@ $itemSold   = ($item->status == "sold" || $item->status == "paid");
             <div class="bid-amount minimalBidAmount col-md-8 col-xs-6">$<span
                     data-handbid-bid-amount data-change-attribute="minimumBidAmount"><?php echo $item->minimumBidAmount; ?></span></div>
         <?php } else { ?>
-            <div class="buy-quantity col-md-8 col-xs-7"><span data-handbid-quantity>1</span></div>
+<!--            <div class="buy-quantity col-md-8 col-xs-7"><span data-handbid-quantity>--><?php //echo ($item->inventoryRemaining != 0) ? 1 : 0 ;?><!--</span></div>-->
+            <div class="buy-quantity col-md-8 col-xs-7"><span data-handbid-quantity><?php echo $item->inventoryRemaining;?></span></div>
 
         <?php } ?>
         <div class="col-md-2 col-xs-3 bid-up">

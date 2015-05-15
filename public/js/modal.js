@@ -3,7 +3,7 @@
 
         var overlay = $('.handbid-overlay');
 
-        $('.handbid-modal-link').on('click', function(e) {
+        $('.handbid-modal-link').live('click', function(e) {
 
             e.preventDefault();
 
@@ -31,7 +31,7 @@
 
         });
 
-        $('.modal-close').on('click', function(e) {
+        $('.modal-close').live('click', function(e) {
             e.preventDefault();
             $('.handbid-modal').css('display', 'none');
             overlay.css('display', 'none');

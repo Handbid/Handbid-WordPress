@@ -104,7 +104,7 @@ $hasManyImages = (count($item->images) > 1);
                     <li class="increment col-md-4 col-xs-5"><em>$<span class="incrementSpan"><?php echo $item->bidIncrement; ?></span></em>Increment</li>
                     <li class="min col-md-4 col-xs-4"><em>$<?php echo $item->minimumBidAmount; ?></em>Value</li>
                 <?php } else { ?>
-                    <li class="purchases col-md-4 col-xs-4" data-handbid-item-attribute="meta.totalSold"><em><?php echo $item->quantitySold; ?></em>Sold</li>
+                    <li class="purchases col-md-4 col-xs-4" data-handbid-item-attribute="meta.totalSold"><em  data-handbid-item-attribute="totalSoldItems"><?php echo $item->quantitySold; ?></em>Sold</li>
                     <li class="increment col-md-4 col-xs-4" data-handbid-item-attribute="buyNowPrice"><em>$<span id="singleItemPrice"><?php echo $item->buyNowPrice; ?></span></em>Price</li>
                     <li class="remaining col-md-4 col-xs-4"><em data-handbid-item-attribute="inventoryRemaining"><?php echo $item->inventoryRemaining; ?></em>Remaining</li>
                 <?php } ?>
@@ -233,3 +233,8 @@ $hasManyImages = (count($item->images) > 1);
 <?php } ?>
 <input type="hidden" id="currentItemID" value="<?php echo $item->id; ?>">
 <input type="hidden" id="currentUserID" value="<?php echo $profile->id; ?>">
+<?php if($auction->timerRemaining != -1) {
+    ?>
+    <input type="hidden" id="timerRemaining" data-auction-name="<?php echo $auction->name; ?>" value="<?php echo $auction->timerRemaining; ?>">
+<?php
+}?>

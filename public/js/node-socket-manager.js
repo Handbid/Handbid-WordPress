@@ -47,6 +47,7 @@ console.log(auctionChannelId+"  ==");
             });
 
             this.on('event.timer', function (data) {
+                console.log(" ===== event.timer ====="+ $.getCurrentDateAndTime());
                 console.log(data);
                 $.eventAuctionTimer(data);
             });
@@ -62,22 +63,27 @@ console.log(auctionChannelId+"  ==");
         if (success) {
 
             this.on('event.bid', function (data) {
+                console.log(" ===== user event.bid ====="+ $.getCurrentDateAndTime());
                 $.eventUserBid(data);
             });
 
             this.on('event.broadcast', function (data) {
+                console.log(" ===== user event.broadcast ====="+ $.getCurrentDateAndTime());
                 $.eventUserBroadcast(data);
             });
 
             this.on('event.purchase', function (data) {
+                console.log(" ===== user event.purchase ====="+ $.getCurrentDateAndTime());
                 $.eventUserPurchase(data);
             });
 
             this.on('event.receipt', function (data) {
+                console.log(" ===== user event.receipt ====="+ $.getCurrentDateAndTime());
                 $.eventUserReciept(data);
             });
 
             this.on('event.user', function (data) {
+                console.log(" ===== user event.user ====="+ $.getCurrentDateAndTime());
                 $.eventUser(data);
             });
 
@@ -165,8 +171,8 @@ console.log(auctionChannelId+"  ==");
      */
     $.eventAuctionTimer = function (data) {
         var message = JSON.stringify(data, null, 2);
-        console.log(message);
-        handbidMain.notice(message);
+        handbidMain.showTimerRemainingNotice(data.values.timerRemaining);
+        //handbidMain.notice(message);
     };
 
     /*
@@ -182,7 +188,6 @@ console.log(auctionChannelId+"  ==");
      */
     $.eventUserBid = function (data) {
         var message = JSON.stringify(data, null, 2);
-        console.log(message);
         handbidMain.notice(message);
     };
 
@@ -195,7 +200,6 @@ console.log(auctionChannelId+"  ==");
      */
     $.eventUserBroadcast = function (data) {
         var message = JSON.stringify(data, null, 2);
-        console.log(message);
         handbidMain.notice(message);
     };
 
@@ -210,7 +214,6 @@ console.log(auctionChannelId+"  ==");
      */
     $.eventUserPurchase = function (data) {
         var message = JSON.stringify(data, null, 2);
-        console.log(message);
         handbidMain.notice(message);
     };
 
@@ -223,7 +226,6 @@ console.log(auctionChannelId+"  ==");
      */
     $.eventUserReciept = function (data) {
         var message = JSON.stringify(data, null, 2);
-        console.log(message);
         handbidMain.notice(message);
     };
 
@@ -236,7 +238,6 @@ console.log(auctionChannelId+"  ==");
      */
     $.eventUser = function (data) {
         var message = JSON.stringify(data, null, 2);
-        console.log(message);
         handbidMain.notice(message);
     };
 
