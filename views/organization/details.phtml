@@ -1,4 +1,14 @@
 <?php
+/**
+ * @copyright Copyright (c) 2014-2015 Handbid Inc.
+ * @category handbid
+ * @package Handbid2-WordPress
+ * @license Proprietary
+ * @link http://www.handbid.com/
+ * @author Master of Code (worldclass@masterofcode.com)
+ */
+
+
 if ($this->organization) {
 
     $org = $this->get('organization');
@@ -19,6 +29,8 @@ if ($this->organization) {
     echo "No Organization Set";
     return;
 }
+//$orgLogo = json_decode($org->logo);
+//$org->logo = ($orgLogo) ? $orgLogo : $org->logo;
 //echo "<pre>".print_r($org,true)."</pre>";
 
 ?>
@@ -39,7 +51,44 @@ if ($this->organization) {
                 } echo $org->website; ?>" target="_blank"><?php echo $org->website; ?></a>
             </span>
 
-            <?php echo do_shortcode('[handbid_social_share]'); ?>
+            <?php
+            $socialLinks = [
+                [
+                    "class" => "facebook",
+                    "link" => $org->socialFacebook,
+                ],
+                [
+                    "class" => "google-plus",
+                    "link" => $org->socialFacebook,
+                ],
+                [
+                    "class" => "twitter",
+                    "link" => $org->socialFacebook,
+                ],
+                [
+                    "class" => "pinterest",
+                    "link" => $org->socialFacebook,
+                ],
+            ];
+            $socialsNotEmpty = false;
+            foreach($socialLinks as $socialLink){
+                if(trim($socialLink["link"])){
+                    $socialsNotEmpty = true;
+                }
+            }
+            if($socialsNotEmpty){
+                echo '<div class="handbid-share-bar row"><div class="col-md-1 col-xs-1">&nbsp;</div>';
+                foreach($socialLinks as $socialLink){
+                    if(trim($socialLink["link"])){
+                        echo '<a class="icon '.$socialLink["class"].' col-md-2 col-xs-2" href="'.$socialLink["link"].'"></a>';
+                    }
+                }
+                echo '<div class="col-md-1 col-xs-1">&nbsp;</div></div>';
+            }
+            else{
+                echo do_shortcode('[handbid_social_share]');
+            }
+            ?>
 
         </div>
     </div>

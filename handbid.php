@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Plugin Name: Handbid
  * Author: Handbid
@@ -11,6 +10,17 @@
  * locally, manage their bids with proxy bidding, and instantly view status of all bids.
  *
  */
+
+/**
+ * @copyright Copyright (c) 2014-2015 Handbid Inc.
+ * @category handbid
+ * @package Handbid2-WordPress
+ * @license Proprietary
+ * @link http://www.handbid.com/
+ * @author Master of Code (worldclass@masterofcode.com)
+ */
+
+
 
 // Handbid Class Autoloader
 $currentFile   = __FILE__;
