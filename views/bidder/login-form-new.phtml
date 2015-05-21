@@ -13,7 +13,7 @@ $countries = $this->get("countries");
 ?>
 
 
-<div class="handbid-modal user-modal contact-body" data-handbid-modal-key="login-modal">
+<div class="handbid-modal user-modal contact-body login-modal-tab" data-handbid-modal-key="login-modal">
 <a href="#" class="modal-close">X</a>
 
 <div class="page-body connect-page">
@@ -28,6 +28,12 @@ $countries = $this->get("countries");
                     <form id="hb-login-form" class="form" method="POST" action="<?php echo get_admin_url() . 'admin-post.php'; ?>"
                           enctype="multipart/form-data">
 
+
+                        <div class="row errorsRow to-hide-block" style="display: none;">
+                            <div class="form-group col-md-12 errorsContainer">
+                                Specified combination not found.
+                            </div>
+                        </div>
 
                         <div class="row">
                             <div class="form-group col-md-12">
@@ -78,7 +84,7 @@ $countries = $this->get("countries");
         </div>
     </div>
 
-    <div class="container-fluid container-tab" style="display: none" data-tab-name="forgot-pass">
+    <div class="container-fluid container-tab forgot-pass-tab" style="display: none" data-tab-name="forgot-pass">
         <div class="row">
             <div class="col-xs-12 signup-form">
                 <div class="handbid-form signup-form">
@@ -88,6 +94,11 @@ $countries = $this->get("countries");
                     <form class="form" method="POST" action="<?php echo get_admin_url() . 'admin-post.php'; ?>"
                           enctype="multipart/form-data">
 
+                        <div class="row errorsRow to-hide-block" style="display: none;">
+                            <div class="form-group col-md-12 errorsContainer">
+                                User with specified email or phone was not found.
+                            </div>
+                        </div>
 
                         <div class="row">
                             <div class="form-group col-md-12">
@@ -104,16 +115,17 @@ $countries = $this->get("countries");
                                 <h5>Enter your email or phone number and we will send you instructions on how to get
                                     logged in.</h5>
 
-                                <input placeholder="Email or Phone Number" type="text" name="username" value=""
+                                <input placeholder="Email or Phone Number" type="text" id="emailOrPhoneToResetPass"
+                                       name="username" value=""
                                        class="form-control cleanable-input">
 
                             </div>
                         </div>
 
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-info signup">Send Instructions</button>
-                            <a class="btn btn-info signup login-popup-link" data-target-tab="forgot-pass-sent">Send
-                                Instructions</a>
+                            <a class="btn btn-info signup login-popup-link reset-password-link loading-span-button"
+                               data-change-pass-nonce="<?php echo apply_filters("handbid_create_nonce", date("d.m.Y") . "reset_pass");?>"
+                                ><em>Send Instructions</em></a>
                         </div>
 
                     </form>
@@ -383,8 +395,16 @@ $countries = $this->get("countries");
                 <div class="row">
                     <div class="form-group col-md-12">
                         <h5>Add me as a bidder to this Auction</h5>
-                        <input id="reg-add-to-auction" placeholder="" type="text" name="add-to-auction" value=""
-                               class="col-md-6 cleanable-input copyable-field"  data-copy-to="confirm-add-to-auction" >
+<!--                        <input id="reg-add-to-auction" placeholder="" type="text" name="add-to-auction" value=""-->
+<!--                               class="col-md-6 cleanable-input copyable-field"  data-copy-to="confirm-add-to-auction" >-->
+                        <select class="col-md-6 js-data-example-ajax cleanable-input copyable-field loadAuctionsToAutoComplete loadAuctionsToAutoCompleteRegister"
+                                data-auto-complete-nonce="<?php echo apply_filters("handbid_create_nonce", date("d.m.Y") . "auto_complete");?>"
+                                data-auto-complete-input=".autoCompleteHiddenRegister, .autoCompleteHiddenConfirm"
+                                data-auto-complete-select=".loadAuctionsToAutoCompleteConfirm"
+                                name="add-to-auction" data-copy-to="confirm-add-to-auction">
+                            <option value="" selected="selected">----</option>
+                        </select>
+                        <input type="hidden" class="autoCompleteHiddenRegister cleanable-input" id="reg-add-to-auction" name="add-to-auction">
                     </div>
                 </div>
 
@@ -476,8 +496,26 @@ $countries = $this->get("countries");
                 <div class="row">
                     <div class="form-group col-md-12">
                         <h5>Add me as a bidder to this Auction</h5>
-                        <input id="confirm-add-to-auction" placeholder="" type="text" name="add-to-auction" value=""
-                               class="col-md-12 cleanable-input">
+<!--                        <input id="confirm-add-to-auction" placeholder="" type="text" name="add-to-auction" value=""-->
+<!--                               class="col-md-12 cleanable-input">-->
+                        <div class="loadAuctionsToAutoCompleteConfirmTextContainer col-md-12" style="display: none">
+                            <div class=" col-md-8">
+                                <h2 class="loadAuctionsToAutoCompleteConfirmText"></h2>
+                            </div>
+                            <div class=" col-md-4">
+                                <a class="btn btn-info signup login-popup-link change-auto-complete-auction" ><span>Change</span></a>
+                            </div>
+                        </div>
+                        <div class="loadAuctionsToAutoCompleteConfirmSelectContainer">
+                        <select class="col-md-6 js-data-example-ajax cleanable-input copyable-field loadAuctionsToAutoComplete loadAuctionsToAutoCompleteConfirm"
+                                data-auto-complete-nonce="<?php echo apply_filters("handbid_create_nonce", date("d.m.Y") . "auto_complete");?>"
+                                data-auto-complete-input=".autoCompleteHiddenRegister, .autoCompleteHiddenConfirm"
+                                data-auto-complete-select=".loadAuctionsToAutoCompleteRegister"
+                                name="add-to-auction" data-copy-to="confirm-add-to-auction">
+                            <option value="" selected="selected">----</option>
+                        </select>
+                        </div>
+                        <input type="hidden" class="autoCompleteHiddenConfirm cleanable-input" id="confirm-add-to-auction" name="add-to-auction">
                     </div>
                 </div>
                 <input type="hidden" id="confirm-password" name="password">

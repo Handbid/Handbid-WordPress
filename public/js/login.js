@@ -12,11 +12,11 @@
     var handbidLogin = {
 
         displaySpecifiedTabOfLoginPopup: function (tabName) {
-            var loginModalTabs = $("container-tab");
             var currentTab = $(".active-container").eq(0);
             var neededTab = $("[data-tab-name=" + tabName + "]");
 
             if (neededTab.length != 0) {
+                $(".errorsRow").hide();
                 currentTab.removeClass("active-container").slideUp("fast");
                 neededTab.addClass("active-container").slideDown("fast");
             }
@@ -25,51 +25,50 @@
         registerFieldsValidation: function (tabName) {
             var valid = true;
             var field, fieldType, passField, passConfirm;
-            var errorRow = $("."+tabName+" .errorsRow").eq(0);
-            var errorsContainer = $("."+tabName+" .errorsContainer").eq(0);
+            var errorRow = $("." + tabName + " .errorsRow").eq(0);
+            var errorsContainer = $("." + tabName + " .errorsContainer").eq(0);
             errorsContainer.html("");
 
 
-            $("."+tabName+" input[required]").each(function(){
+            $("." + tabName + " input[required]").each(function () {
                 field = $(this);
                 fieldType = field.attr("type");
-                if((field.val().trim() == "")
-                || (fieldType == "checkbox" && !field.is(":checked"))){
+                if ((field.val().trim() == "")
+                    || (fieldType == "checkbox" && !field.is(":checked"))) {
                     errorsContainer.append(field.data("required-message") + "<br>");
                     field.addClass("validation-error");
                     valid = false;
                 }
-                else{
+                else {
                     field.removeClass("validation-error");
                 }
             });
 
 
-            $("."+tabName+" input.is-email").each(function(){
+            $("." + tabName + " input.is-email").each(function () {
                 field = $(this);
                 var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
-                if(field.val().trim() != "" && ! re.test(field.val())){
+                if (field.val().trim() != "" && !re.test(field.val())) {
                     field.addClass("validation-email-error");
                     errorsContainer.append(field.data("not-email-message") + "<br>");
                     valid = false;
                 }
-                else{
+                else {
                     field.removeClass("validation-email-error");
                 }
             });
 
 
-
-            if(tabName == "register-tab"){
+            if (tabName == "register-tab") {
                 passField = $("#reg-password");
                 passConfirm = $("#reg-password-confirm");
-                if(passField.val() != passConfirm.val()){
+                if (passField.val() != passConfirm.val()) {
                     errorsContainer.append(passConfirm.data("mismatch-message") + "<br>");
                     passField.addClass("validation-mismatch-error");
                     passConfirm.addClass("validation-mismatch-error");
                     valid = false;
                 }
-                else{
+                else {
                     passField.removeClass("validation-mismatch-error");
                     passConfirm.removeClass("validation-mismatch-error");
                 }
@@ -84,11 +83,76 @@
         restoreInitialTabState: function () {
             this.displaySpecifiedTabOfLoginPopup("login-form");
             $(".cleanable-input").val("");
+            $(".to-hide-block").hide();
         },
 
-        copyToConfirmField : function (input) {
+        copyToConfirmField: function (input) {
             var selector = input.data("copy-to");
             $("#" + selector).val(input.val());
+        },
+
+        formatRepo: function (repo) {
+            return repo.name + " ("+repo.totalItems+" items, by "+repo.organization+")";
+        },
+
+        formatRepoSelection: function (repo) {
+            //console.log(repo);
+            (repo.auctionGuid != undefined) ? $(repo.inputIt).val(repo.auctionGuid) : "";
+            if(repo.text != "----") {
+                $(".loadAuctionsToAutoCompleteConfirmTextContainer").show();
+                $(".loadAuctionsToAutoCompleteConfirmText").html(repo.name);
+                $(".loadAuctionsToAutoCompleteConfirmSelectContainer").hide();
+            }
+            return repo.name;
+        },
+
+        loadAuctionsToAutoComplete: function (select) {
+            //console.log(select);
+            var nonce = select.data("auto-complete-nonce");
+            var selectIt = select.data("auto-complete-select");
+            var inputIt = select.data("auto-complete-input");
+
+            select.select2({
+                ajax: {
+                    url: ajaxurl,
+                    action: 'handbid_load_auto_complete_auctions',
+                    //dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            q: params.term, // search term
+                            page: params.page,
+                            nonce: nonce,
+                            selectIt: selectIt,
+                            inputIt: inputIt,
+                            action: 'handbid_load_auto_complete_auctions'
+                        };
+                    },
+                    processResults: function (data, page) {
+                        var items;
+                        try {
+                            data = JSON.parse(data);
+                            items = data.items;
+                        }
+                        catch (e) {
+                            items = [];
+                        }
+                        //console.log(items);
+
+                        return {
+                            results: items
+                        };
+                    },
+                    escapeMarkup: function (markup) {
+                        return markup;
+                    }, // let our custom formatter work
+                    cache: true
+                },
+                //escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
+                minimumInputLength: 1,
+                templateResult: handbidLogin.formatRepo, // omitted for brevity, see the source of this page
+                templateSelection: handbidLogin.formatRepoSelection // omitted for brevity, see the source of this page
+            });
         },
 
         tryToLogin: function (button) {
@@ -97,6 +161,8 @@
             var password = $("#hb-login-form-password").val();
             var nonce = $("#hb-login-form-nonce").val();
             var redirect = $("#hb-login-form-redirect").val();
+
+            var errorBlock = $(".login-modal-tab .errorsRow");
 
             button.addClass("active");
             $.post(ajaxurl,
@@ -110,8 +176,12 @@
                     console.log(data);
                     data = JSON.parse(data);
                     button.removeClass("active");
-                    if(data.success){
+                    if (data.success) {
+                        errorBlock.slideUp("normal");
                         window.location = redirect;
+                    }
+                    else{
+                        errorBlock.slideDown("normal");
                     }
                 }
             );
@@ -126,8 +196,12 @@
             var countryCode = $("#confirm-phone-code").val();
             var mobile = $("#confirm-phone-number").val();
             var deviceType = $("#confirm-phone-type").val();
-            var auction = $("#confirm-add-to-auction").val();
+            var auctionGuid = $("#confirm-add-to-auction").val();
             var nonce = $("#hb-reg-form-nonce").val();
+
+            var errorRow = $(".register-confirm-tab .errorsRow").eq(0);
+            var errorsContainer = $(".register-confirm-tab .errorsContainer").eq(0);
+
 
             button.addClass("active");
             $.post(ajaxurl,
@@ -140,14 +214,53 @@
                     countryCode: countryCode,
                     mobile: mobile,
                     deviceType: deviceType,
+                    auctionGuid: auctionGuid,
                     nonce: nonce
                 },
                 function (data) {
                     console.log(data);
                     data = JSON.parse(data);
                     button.removeClass("active");
+                    if(data.success){
+                        errorRow.hide();
+                        errorsContainer.html("");
+                    }
+                    else{
+                        errorRow.show();
+                        errorsContainer.html(data.error);
+                    }
                 }
             );
+        },
+
+        resendPasswordLink: function(button){
+
+            var emailOrPhone = $("#emailOrPhoneToResetPass").val();
+            var nonce = button.data("change-pass-nonce");
+            var errorBlock = $(".forgot-pass-tab .errorsRow");
+            //console.log(nonce);
+            button.addClass("active");
+            $.post(ajaxurl,
+                {
+                    action: "handbid_ajax_reset_password",
+                    emailOrPhone: emailOrPhone,
+                    nonce: nonce
+                },
+                function (data) {
+                    //console.log(data);
+                    data = JSON.parse(data);
+                    button.removeClass("active");
+                    if(data.success){
+                        errorBlock.slideUp("normal");
+                        handbidLogin.displaySpecifiedTabOfLoginPopup("forgot-pass-sent");
+                    }
+                    else{
+                        errorBlock.slideDown("normal");
+                    }
+
+                }
+            );
+
         }
     };
 
@@ -158,7 +271,7 @@
 
         $('.login-popup-link').on('click', function (e) {
             e.preventDefault();
-            if(! $(this).hasClass("register-next") && ! $(this).hasClass("register-confirm")) {
+            if (!$(this).hasClass("register-next") && !$(this).hasClass("register-confirm")) {
                 var tabName = $(this).data("target-tab");
                 handbidLogin.displaySpecifiedTabOfLoginPopup(tabName);
             }
@@ -188,7 +301,7 @@
 
         $('.login-popup-link.register-next').on('click', function (e) {
             e.preventDefault();
-            if(handbidLogin.registerFieldsValidation("register-tab")) {
+            if (handbidLogin.registerFieldsValidation("register-tab")) {
                 var tabName = $(this).data("target-tab");
                 handbidLogin.displaySpecifiedTabOfLoginPopup(tabName);
             }
@@ -196,11 +309,27 @@
 
         $('.login-popup-link.register-confirm').on('click', function (e) {
             e.preventDefault();
-            if(handbidLogin.registerFieldsValidation("register-confirm-tab")) {
+            if (handbidLogin.registerFieldsValidation("register-confirm-tab")) {
                 handbidLogin.tryToRegister($(this));
                 var tabName = $(this).data("target-tab");
                 //handbidLogin.displaySpecifiedTabOfLoginPopup(tabName);
             }
+        });
+
+        $('.loadAuctionsToAutoComplete').each(function (e) {
+            handbidLogin.loadAuctionsToAutoComplete($(this));
+        });
+
+        $('.reset-password-link').on('click', function (e) {
+            handbidLogin.resendPasswordLink($(this));
+        });
+
+        $('.change-auto-complete-auction').on('click', function (e) {
+            e.preventDefault();
+            $(".loadAuctionsToAutoCompleteConfirmTextContainer").hide();
+            $(".loadAuctionsToAutoCompleteConfirmText").html("");
+            $(".loadAuctionsToAutoCompleteConfirmSelectContainer").show();
+            $(".autoCompleteHiddenConfirm").val("");
         });
 
     });

@@ -41,6 +41,7 @@ if ($handle = opendir($libFolder)) {
 define("HANDBID_IMAGES_HOST", "beta.yii.handbid.com");
 
 require_once($libFolder . '/Handbid-Php/src/Handbid.php');
+require_once($libFolder . '/stripe-php/init.php');
 
 class Handbid
 {
@@ -157,7 +158,8 @@ class Handbid
             'handbid-details-map-js'   => 'public/js/details-map.js',
             'handbid-tooltip-js'       => 'public/js/tooltip.js',
             'handbid-modal-js'         => 'public/js/modal.js',
-            'handbid-bootstrap-js'  => 'public/js/bootstrap.js',
+            'handbid-bootstrap-js'     => 'public/js/bootstrap.js',
+            'handbid-select2-js'       => 'public/js/select2.full.js',
             'handbid-login-js'      => 'public/js/login.js',
             'handbid-notices-js'    => 'public/js/pnotify.custom.min.js',
             'handbid-plugin-js'     => 'public/js/handbid.js',
@@ -180,6 +182,7 @@ class Handbid
             'handid-modal-css'           => 'public/css/modal.css',
             'handid-modal-connect-css'   => 'public/css/modal-connect.css',
             'handid-notices-css'         => 'public/css/pnotify.custom.min.css',
+            'handbid-select2-css'        => 'public/css/select2.css',
             'handbid-generic-styles-css' => 'public/css/handbid.css',
             'handbid-less-buttons-css'   => 'public/less/buttons.less',
             'handbid-less-modal-css'     => 'public/less/modal.less',

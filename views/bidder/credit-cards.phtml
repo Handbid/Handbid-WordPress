@@ -24,7 +24,7 @@ if (!is_null($this->get('cards'))) {
             <?php
             forEach ($cards as $card) {
                 ?>
-                <li class="row">
+                <li class="row" data-handbid-card-row="<?php echo $card->id; ?>">
                     <div class="col-md-3">
                         <h4>Name</h4>
                         <?php echo $card->nameOnCard; ?>
@@ -38,7 +38,7 @@ if (!is_null($this->get('cards'))) {
                         <?php echo $card->expMonth . '/' . $card->expYear; ?>
                     </div>
                     <div class="col-md-3">
-                        <a class="button pink-solid-button" href="#" data-handbid-delete-credit-card="<?php echo $card->_id; ?>"><?php echo __('Delete'); ?></a>
+                        <a class="button pink-solid-button loading-span-button" data-handbid-delete-credit-card="<?php echo $card->id; ?>"><em><?php _e('Delete'); ?></em></a>
                     </div>
                 </li>
             <?php
@@ -48,7 +48,7 @@ if (!is_null($this->get('cards'))) {
 
     <?php
     } else { ?>
-        <div class="row">
+        <div class="row no-results-row">
 
             <p style="text-align: left;">Note: Not all auctions use credit cards</p>
 
@@ -57,6 +57,7 @@ if (!is_null($this->get('cards'))) {
             </label>
         </div>
     <?php } ?>
+    <input type="hidden" id="deleteCardNonce" value="<?php echo apply_filters("handbid_create_nonce", date("d.m.Y") . "delete_card");?>">
     <?php
     //was it too hard to create a [handbid_bidder_cc_form]? thanks
     //echo do_shortcode('[handbid_bidder_profile_form template="views/bidder/credit-card-form"]');

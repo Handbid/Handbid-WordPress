@@ -27,7 +27,7 @@ if ($hasLocation) {
 
     $address = $locationStreet1 . ', ' . $locationStreet2 . ', ' . $locationCity . ', ' . $locationProvince . ', ' . $locationPCode;
 }
-
+echo "<pre>".print_r($auction,true)."</pre>";
 if (!$auction) {
     return '';
 }

@@ -40,7 +40,12 @@ if ($this->organization) {
     <div class="container container-fluid detail-banner-wrapper">
         <div class="detail-banner" style="background-image: url('<?php echo $org->banner; ?>')">
             <div class="logo">
-                <img src="<?php echo $org->logo; ?>"/>
+                <img src="<?php
+                $image = $org->logo;
+                $image = ($image) ? $image : $org->organizationImages[0]->organizationImageUrl;
+                $imageUrlPath = parse_url($image);
+                $image = ($imageUrlPath["scheme"]) ? $image : "http://" . $image;
+                echo $image; ?>"/>
             </div>
         </div>
         <div class="controls">

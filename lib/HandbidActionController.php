@@ -124,13 +124,24 @@ class HandbidActionController
         $ajaxActions = [
             "handbid_ajax_login",
             "handbid_ajax_registration",
+            "handbid_ajax_reset_password",
             "handbid_ajax_createbid",
             "handbid_ajax_removebid",
+            "handbid_ajax_add_credit_card",
+            "handbid_ajax_remove_credit_card",
+            "handbid_load_auto_complete_auctions",
         ];
         foreach($ajaxActions as $ajaxAction){
             add_action("wp_ajax_".$ajaxAction, [$this, $ajaxAction."_callback"]);
             add_action("wp_ajax_nopriv_".$ajaxAction, [$this, $ajaxAction."_callback"]);
         }
+
+//        $postActions = [
+//        ];
+//        foreach($postActions as $postAction){
+//            add_action("admin_post_".$postAction, [$this, $postAction."_callback"]);
+//            add_action("admin_post_nopriv_".$postAction, [$this, $postAction."_callback"]);
+//        }
     }
 
     function _handle_form_action()
@@ -239,6 +250,7 @@ class HandbidActionController
                 'email'     => $_POST['email'],
                 'deviceType'=> $_POST['deviceType'],
                 'countryCode' => $_POST['countryCode'],
+                'auctionGuid' => $_POST['auctionGuid'],
             ];
 
             $profile = $this->handbid->store('Bidder')->register($values);
@@ -246,6 +258,26 @@ class HandbidActionController
             $result["success"] = (isset($profile->success) and $profile->success) ? $profile->success : 0;
             $result["values"] = $values;
             $result["profile"] = $profile;
+            if(! $result["success"]){
+                $result["error"] = str_replace("/auth/","",$profile->data->status);
+            }
+
+        }
+        echo json_encode($result);
+        exit;
+    }
+
+
+    function handbid_ajax_reset_password_callback(){
+        $nonce = $_POST["nonce"];
+        $emailOrPhone = $_POST["emailOrPhone"];
+        $result = [];
+
+        if($this->handbid_verify_nonce($nonce, date("d.m.Y") . "reset_pass")){
+
+            $profile = $this->handbid->store('Bidder')->resetPass($emailOrPhone);
+
+            $result = $profile;
 
         }
         echo json_encode($result);
@@ -301,6 +333,126 @@ class HandbidActionController
 //            if(isset($resp->status)){
                 $result = $resp;
 //            }
+        }
+        echo json_encode($result);
+        exit;
+    }
+
+
+
+    function handbid_ajax_add_credit_card_callback(){
+
+        $postData = urldecode($_POST["data"]);
+        parse_str($postData, $opts);
+        $nonce = $opts["nonce"];
+        $result = [
+            "opts" => $opts,
+        ];
+
+        if($this->handbid_verify_nonce($nonce, date("d.m.Y") . "credit_card")){
+
+            $cardNum = $opts["cardNum"];
+
+            \Stripe\Stripe::setApiKey($this->state->getStripeApiKey());
+
+            try {
+                $tok = \Stripe\Token::create(array(
+                    "card" => array(
+                        "number" => $cardNum,
+                        "exp_month" => (int)$opts["expMonth"],
+                        "exp_year" => (int)$opts["expYear"],
+                        "cvc" => $opts["cvc"],
+                        "name" => $opts["nameOnCard"]
+                    )
+                ));
+
+                $stripeId = $tok->id;
+                $creditCardHandle = $tok->card->id;
+
+                $params = [
+                    "stripeId" => $stripeId,
+                    "creditCardHandle" => $creditCardHandle,
+                    "nameOnCard" => $opts["nameOnCard"],
+                ];
+
+                try {
+                    $resp    = $this->handbid->store( 'CreditCard' )->add( $params );
+                    $result["resp"] = $resp;
+                }
+                catch(Exception $e){
+                    $result["error"] = $e;
+                }
+            }
+            catch(Exception $e){
+                if(isset($e->jsonBody["error"]["message"])){
+                    $result["error"]["message"] = $e->jsonBody["error"]["message"];
+                }
+                else{
+                    $result["error"] = $e;
+                }
+            }
+        }
+        echo json_encode($result);
+        exit;
+    }
+
+
+
+    function handbid_ajax_remove_credit_card_callback(){
+
+        $nonce = $_POST["nonce"];
+        $cardID = $_POST["cardID"];
+        $result = [
+            "id" => $cardID,
+        ];
+
+        if($this->handbid_verify_nonce($nonce, date("d.m.Y") . "delete_card")){
+
+                try {
+                    $resp = $this->handbid->store( 'CreditCard' )->delete( $cardID );
+                    $result["resp"] = $resp;
+                }
+                catch(Exception $e){
+                    $result["resp"] = $e;
+                }
+        }
+        echo json_encode($result);
+        exit;
+    }
+
+
+
+    function handbid_load_auto_complete_auctions_callback(){
+
+        $nonce = $_REQUEST["nonce"];
+        $inputIt = $_REQUEST["inputIt"];
+        $selectIt = $_REQUEST["selectIt"];
+        $search = $_REQUEST["q"];
+        $result = [];
+        if($this->handbid_verify_nonce($nonce, date("d.m.Y") . "auto_complete")){
+            $result["items"] = [];
+                try {
+                    $auctions = $this->handbid->store('Auction')->all($page = 0, $pageSize = 255, null, null, ["search" => urlencode($search)]);
+                    if(count($auctions)) {
+                    foreach($auctions as $auction) {
+                        $result["items"][] = [
+                            "id" => $auction->id,
+                            "key" => $auction->key,
+                            "name" => $auction->name,
+                            "auctionGuid" => $auction->auctionGuid,
+                            "status" => $auction->status,
+                            "totalItems" => $auction->totalItems,
+                            "totalBidders" => $auction->totalBidders,
+                            "organization" => $auction->organization->name,
+                            "inputIt" => $inputIt,
+                            "selectIt" => $selectIt,
+                        ];
+                    }
+                    }
+                }
+                catch(Exception $e){
+
+                }
         }
         echo json_encode($result);
         exit;

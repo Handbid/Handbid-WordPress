@@ -118,7 +118,7 @@ var handbidMain;
                         return false;
                     }
 
-                    e.preventDefault;
+                    e.preventDefault();
 
                     var total = amount[0].innerHTML;
                     var nonce = $("#bidNonce").val();
@@ -234,7 +234,7 @@ var handbidMain;
                         return false;
                     }
 
-                    e.preventDefault;
+                    e.preventDefault();
 
                     var nonce = $("#bidNonce").val();
                     var perItem = parseInt($(this).data("handbid-buynow-price"));
@@ -289,7 +289,7 @@ var handbidMain;
                         return false;
                     }
 
-                    e.preventDefault;
+                    e.preventDefault();
 
                     var nonce = $("#bidNonce").val();
                     var total = parseInt($(this).data("handbid-buynow-price"));
@@ -329,7 +329,7 @@ var handbidMain;
                     if(handbid.isButtonDisabledOrAlreadyActive($(this)) || handbid.cannotDoIfUnauthorized()){
                         return false;
                     }
-                    e.preventDefault;
+                    e.preventDefault();
 
                     var nonce = $("#bidNonce").val();
                     var bidID = parseInt($(this).data("handbid-delete-proxy"));
@@ -426,25 +426,57 @@ var handbidMain;
                 })
             },
             setupDeleteCreditCard : function() {
-                var form = $('.delete-creditcard');
 
-                form.on('submit', function(e) {
 
-                    e.preventDefault;
+                $("[data-handbid-delete-credit-card]").live('click', function(e) {
 
-                    var cardId = $('input[name="card-id"]', this).val();
+                    e.preventDefault();
+                    var button = $(this);
 
-                    $.ajax({
-                        url:     restEndpoint + 'creditcard/delete/' + cardId,
-                        type:    'DELETE',
-                        success: function () {
+                    var cardID = button.data("handbid-delete-credit-card");
+                    var nonce = $("#deleteCardNonce").val();
 
-                            $('[data-handbid-card-row="' + cardId + '"]').remove();
-                            handbid.notice('Your card has been deleted');
+                    button.addClass("active");
+                    var data = {
+                        action: "handbid_ajax_remove_credit_card",
+                        cardID: cardID,
+                        nonce: nonce
+                    };
 
-                            return false;
+                    $.post(
+                        ajaxurl,
+                        data,
+                        function (data) {
+
+                            console.log("-----------------------------");
+                            console.log("----Remove Credit Card Success----");
+                            console.log(data);
+                            try{
+                                data = JSON.parse(data);
+                                console.log(data);
+                            }
+                            catch(e){}
+
+                            button.removeClass("active");
+
+                            if(data.error == undefined){
+
+                                $('[data-handbid-card-row="' + cardID + '"]').remove();
+                                handbid.notice('Your card has been deleted', "Card Success", "success");
+
+                                if($(".credit-card ul.simple-list li").length == 0){
+                                    var list = $(".credit-card ul.simple-list");
+                                    list.after('<div class="row no-results-row"> <p style="text-align: left;">Note: Not all auctions use credit cards</p>  <label class="no-results"> You have no cards on file. </label> </div>');
+                                    list.remove();
+                                }
+                            }
+                            else{
+                                handbid.notice('Something wrong. Please, try again later', "Card Error", "error");
+                            }
+
+
                         }
-                    });
+                    );
 
                     return false;
                 });
@@ -454,56 +486,78 @@ var handbidMain;
                     container = $('.bidder-info-container.credit-card ul'),
                     modalClose = $('[data-handbid-modal-key="credit-card-form"] .modal-close');
 
-                form.on('submit', function(e) {
+                form.live('submit', function(e) {
+
 
                     var _data = form.serialize();
-
+                    var data = {
+                        action: "handbid_ajax_add_credit_card",
+                        data: _data
+                    };
                     modalClose.click();
 
                     handbid.notice('Adding your card');
 
-                    $.ajax({
-                        url: restEndpoint + 'creditcard/create',
-                        type: 'POST',
-                        data : _data,
-                        success : function(data) {
+                    $.post(
+                        ajaxurl,
+                        data,
+                        function (data) {
 
-                            handbid.notice('Your card has been added');
-
-                            var template = $(' <li class="row" data-handbid-card-row="' + data.id + '"> <div class="col-md-3 col-xs-3"> <h4>Name</h4>' + data.nameOnCard + '</div> <div class="col-md-3 col-xs-3"> <h4>Card Number</h4> xxxx xxxx xxxx ' + data.lastFour + '</div> <div class="col-md-3 col-xs-3"> <h4>Exp. Date</h4>' + data.expMonth + '/' + data.expYear + '</div> <div class="col-md-3 col-xs-3"> <form class="delete-creditcard" action="http://handbid.lan/wp-admin/admin-post.php" method="post" enctype="multipart/form-data"> <input class="button pink-solid-button" type="submit" value="Delete"> <input type="hidden" name="card-id" value="' + data.id + '"></form></div></li>'),
-                                hasCards = $('.credit-card .no-results').length > 0;
-
-                            if(!hasCards) {
-                                template.appendTo(container);
+                            console.log("-------------------------------");
+                            console.log("----Add Credit Card Success----");
+                            console.log(data);
+                            try{
+                                data = JSON.parse(data);
+                                console.log(data);
                             }
-                            else
-                            {
-                                $('.credit-card .no-results').remove();
+                            catch(e){}
 
-                                var list = null;
-
-                                if($('.credit-card .simple-list')) {
-                                    list = $('.credit-card .simple-list');
+                            if(data.error != undefined){
+                                if(data.error.message != undefined){
+                                    handbid.notice(data.error.message, "Card Error", "error");
                                 }
-                                else {
-                                    list = $('<ul class="simple-list"></ul>');
+                                else{
+                                    handbid.notice("Something wrong. Please, try again later", "Card Error", "error");
                                 }
+                            }
+                            else{
+                                if(data.resp == undefined){
+                                    handbid.notice("Something wrong. Please, try again later", "Card Error", "error");
+                                }
+                                else{
+                                    handbid.notice("Your card has been added successfully", "Card Success", "success");
+                                    var template = $(' <li class="row" data-handbid-card-row="' + data.resp.id + '"> <div class="col-md-3 col-xs-3"> <h4>Name</h4>' + data.resp.nameOnCard + '</div> <div class="col-md-3 col-xs-3"> <h4>Card Number</h4> xxxx xxxx xxxx ' + data.resp.lastFour + '</div> <div class="col-md-3 col-xs-3"> <h4>Exp. Date</h4>' + data.resp.expMonth + '/' + data.resp.expYear + '</div> <div class="col-md-3 col-xs-3"> <a class="button pink-solid-button  loading-span-button" data-handbid-delete-credit-card="' + data.resp.id + '"><em>Delete</em></a></div></li>'),
+                                        hasCards = $('.credit-card .no-results-row').length > 0;
 
-                                template.appendTo(list);
-                                list.prependTo($('.credit-card'));
+                                    if(!hasCards) {
+                                        template.appendTo(container);
+                                    }
+                                    else
+                                    {
+                                        $('.credit-card .no-results-row').remove();
 
+                                        var list = null;
+
+                                        if($('.credit-card .simple-list').length > 0) {
+                                            console.log("1");
+                                            list = $('.credit-card .simple-list');
+                                        }
+                                        else {
+                                            console.log("2");
+                                            list = $('<ul class="simple-list"></ul>');
+                                        }
+                                        console.log(list);
+                                        list.prependTo($('.credit-card'));
+                                        template.appendTo(list);
+
+                                    }
+                                }
                             }
 
-                            // Re-setup delete card handlers
-                            handbid.setupDeleteCreditCard();
 
-                            return false;
-
-                        },
-                        fail: function(e) {
-                            handbid.notice('Failed adding your card');
                         }
-                    });
+                    );
+
 
 
                     return false;
@@ -514,7 +568,7 @@ var handbidMain;
 
                 form.on('submit', function(e) {
 
-                    e.preventDefault;
+                    e.preventDefault();
 
                     var _data = $(this).serialize();
 
@@ -684,8 +738,8 @@ var handbidMain;
 
         //if(this.loggedIn) {
             ($('.bidder-info-container').length > 0) ? handbid.setupBidderDashboard() : '';
-            ($('.delete-creditcard').length > 0) ? handbid.setupDeleteCreditCard() : '';
-            ($('.creditcard-template').length > 0) ? handbid.setupAddCreditCard() : '';
+            handbid.setupDeleteCreditCard();
+            //handbid.setupAddCreditCard();
             ($('.edit-profile').length > 0) ? handbid.setupEditProfile() : '';
         //}
         //else {
@@ -709,6 +763,7 @@ var handbidMain;
             function (resp) {
                 bidderInfo.html(resp);
                 bidderInfo.slideDown("normal");
+                ($('.creditcard-template').length > 0) ? handbid.setupAddCreditCard() : '';
             });
 
         $(".handbid-logout a").live("click", function(e){
