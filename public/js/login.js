@@ -99,6 +99,9 @@
             //console.log(repo);
             (repo.auctionGuid != undefined) ? $(repo.inputIt).val(repo.auctionGuid) : "";
             if(repo.text != "----") {
+                $(".loadAuctionsToAutoCompleteRegisterTextContainer").show();
+                $(".loadAuctionsToAutoCompleteRegisterText").html(repo.name);
+                $(".loadAuctionsToAutoCompleteRegisterSelectContainer").hide();
                 $(".loadAuctionsToAutoCompleteConfirmTextContainer").show();
                 $(".loadAuctionsToAutoCompleteConfirmText").html(repo.name);
                 $(".loadAuctionsToAutoCompleteConfirmSelectContainer").hide();
@@ -153,6 +156,45 @@
                 templateResult: handbidLogin.formatRepo, // omitted for brevity, see the source of this page
                 templateSelection: handbidLogin.formatRepoSelection // omitted for brevity, see the source of this page
             });
+        },
+
+        loadAuctionsByShortCode: function (button) {
+            var inviteCode = $("#inviteShortCodeInput").val();
+            var nonce = button.data("check-invite-nonce");
+
+            var errorBlock = $(".invite-code-tab .errorsRow");
+
+            var inputsForValues = $(".autoCompleteHiddenRegister, .autoCompleteHiddenConfirm");
+            var textElem = $(".loadAuctionsToAutoCompleteRegisterText, .loadAuctionsToAutoCompleteConfirmText");
+            var textContainers = $(".loadAuctionsToAutoCompleteRegisterTextContainer, .loadAuctionsToAutoCompleteConfirmTextContainer");
+            var selectContainers = $(".loadAuctionsToAutoCompleteRegisterSelectContainer, .loadAuctionsToAutoCompleteConfirmSelectContainer");
+
+            button.addClass("active");
+            $.post(ajaxurl,
+                {
+                    action: "handbid_load_shortcode_auctions",
+                    inviteCode: inviteCode,
+                    nonce: nonce
+                },
+                function (data) {
+                    console.log(data);
+                    data = JSON.parse(data);
+                    button.removeClass("active");
+                    if (data.items != undefined && data.items.length > 0) {
+                        errorBlock.slideUp("normal");
+                        var repo = data.items[0];
+
+                        inputsForValues.val(repo.auctionGuid);
+                        textElem.html(repo.name);
+                        textContainers.show();
+                        selectContainers.hide();
+                        handbidLogin.displaySpecifiedTabOfLoginPopup("register-form");
+                    }
+                    else{
+                        errorBlock.slideDown("normal");
+                    }
+                }
+            );
         },
 
         tryToLogin: function (button) {
@@ -320,6 +362,11 @@
             handbidLogin.loadAuctionsToAutoComplete($(this));
         });
 
+        $('.inviteShortCodeButton').live("click", function (e) {
+            e.preventDefault();
+            handbidLogin.loadAuctionsByShortCode($(this));
+        });
+
         $('.reset-password-link').on('click', function (e) {
             handbidLogin.resendPasswordLink($(this));
         });
@@ -330,6 +377,10 @@
             $(".loadAuctionsToAutoCompleteConfirmText").html("");
             $(".loadAuctionsToAutoCompleteConfirmSelectContainer").show();
             $(".autoCompleteHiddenConfirm").val("");
+            $(".loadAuctionsToAutoCompleteRegisterTextContainer").hide();
+            $(".loadAuctionsToAutoCompleteRegisterText").html("");
+            $(".loadAuctionsToAutoCompleteRegisterSelectContainer").show();
+            $(".autoCompleteHiddenRegister").val("");
         });
 
     });

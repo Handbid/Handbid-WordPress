@@ -38,3 +38,12 @@
 .loading-span-button.active span{
     visibility: hidden !important;
 }
+
+.edit-profile select{
+    text-decoration: none !important;
+    border: none;
+}
+
+.full-width-image{
+    width: 100% !important;
+}

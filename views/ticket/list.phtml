@@ -26,7 +26,7 @@ if (!$auction->enableTicketSales) {
 
 ?>
 
-<a class="button pink-button handbid-modal-link purchase-tickets" data-handbid-modal-key="tickets-form">Buy Tickets</a>
+<a class="button pink-button handbid-modal-link purchase-tickets" data-handbid-modal-key="tickets-form" data-handbid-tickets >Buy Tickets</a>
 
 <div class="handbid-modal tickets-modal" data-handbid-modal-key="tickets-form" data-handbid-tickets>
     <h3>Event Tickets / Registration</h3>
@@ -45,7 +45,7 @@ if (!$auction->enableTicketSales) {
                 <div class="row ticket-row">
 
                     <?php forEach ($tickets as $k => $ticket) { ?>
-                        <div class="col-md-6 col-xs-12 ticket" data-handbid-ticket-id="<?php echo $ticket->_id; ?>"
+                        <div class="col-md-6 col-xs-12 ticket" data-handbid-ticket-id="<?php echo $ticket->id; ?> "
                              data-handbid-ticket-price="<?php echo $ticket->buyNowPrice; ?>">
                             <div class="ticket-container">
                                 <h4 class="ticket-title"><?php echo $ticket->name; ?>
@@ -57,6 +57,7 @@ if (!$auction->enableTicketSales) {
                                 </div>
 
                                 <div class="buy-quantity col-md-4 col-xs-4"><span data-handbid-ticket-quantity>0</span>
+                                    <input type="hidden" data-handbid-tickets-remaining value="<?php echo $ticket->ticketQuantity?>">
                                 </div>
 
                                 <div class="col-md-4 col-xs-4 ticket-quantity-up">

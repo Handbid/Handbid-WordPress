@@ -365,6 +365,112 @@ var handbidMain;
 
                 });
             },
+
+            recalculateTotalTicketsPrice: function(){
+                var totalPrice = 0;
+                var prices = $.map($("[data-handbid-ticket-id]"), function(val, i){
+                    var parentBlock = $(val),
+                        quantityBlock = $("[data-handbid-ticket-quantity]", parentBlock).eq(0),
+                        quantity = parseInt(quantityBlock.html()),
+                        itemID = parseInt(parentBlock.data("handbid-ticket-id")),
+                        itemPrice = parseInt(parentBlock.data("handbid-ticket-price"));
+                    totalPrice += quantity * itemPrice;
+                    return {id : itemID, price : itemPrice, quantity : quantity};
+                });
+                $("[data-handbid-tickets-total]").html(totalPrice);
+                return prices;
+            },
+
+            // Setup tickets
+            setupTicketsPurchasing:             function (handbid) {
+
+                $('[data-handbid-ticket-button="up"]').live('click', function (e) {
+
+                    e.preventDefault();
+
+                    var parentBlock = $(this).parents( "[data-handbid-ticket-id]").eq(0),
+                        quantityBlock = $("[data-handbid-ticket-quantity]", parentBlock).eq(0),
+                        remainingBlock = $("[data-handbid-tickets-remaining]", parentBlock).eq(0),
+                        quantity = parseInt(quantityBlock.html()),
+                        remaining = parseInt(remainingBlock.val()),
+                        itemID = parseInt(parentBlock.data("handbid-ticket-id")),
+                        itemPrice = parseInt(parentBlock.data("handbid-ticket-price"));
+
+                    var newValue = quantity + 1;
+                    if(newValue <= remaining){
+                        quantityBlock.html(newValue);
+                        handbid.recalculateTotalTicketsPrice();
+                    }
+
+
+                });
+
+                $('[data-handbid-ticket-button="down"]').live('click', function (e) {
+
+                    e.preventDefault();
+
+                    var parentBlock = $(this).parents( "[data-handbid-ticket-id]").eq(0),
+                        quantityBlock = $("[data-handbid-ticket-quantity]", parentBlock).eq(0),
+                        remainingBlock = $("[data-handbid-tickets-remaining]", parentBlock).eq(0),
+                        quantity = parseInt(quantityBlock.html()),
+                        remaining = parseInt(remainingBlock.val()),
+                        itemID = parseInt(parentBlock.data("handbid-ticket-id")),
+                        itemPrice = parseInt(parentBlock.data("handbid-ticket-price"));
+
+                    var newValue = quantity - 1;
+                    if(newValue >= 0){
+                        quantityBlock.html(newValue);
+                        handbid.recalculateTotalTicketsPrice();
+                    }
+
+
+                });
+
+                $('[data-handbid-tickets-button="purchase"]').live('click', function (e) {
+
+                    e.preventDefault();
+
+                    //if(handbid.isButtonDisabledOrAlreadyActive($(this)) || handbid.cannotDoIfUnauthorized()){
+                    //    return false;
+                    //}
+                    //
+                    //e.preventDefault();
+                    //
+                    //var nonce = $("#bidNonce").val();
+                    //var total = parseInt($(this).data("handbid-buynow-price"));
+                    //var button = $(this);
+                    //button.addClass("active");
+                    //var data = {
+                    //    action:    "handbid_ajax_createbid",
+                    //    nonce:     nonce,
+                    //    userId:    userId,
+                    //    auctionId: auctionId,
+                    //    itemId:    itemId,
+                    //    amount:    total
+                    //};
+                    //$.post(
+                    //    ajaxurl,
+                    //    data,
+                    //    function (data) {
+                    //
+                    //        console.log("-----------------------");
+                    //        console.log("----Buy Now success----");
+                    //        data = JSON.parse(data);
+                    //        console.log(data);
+                    //
+                    //        $('[data-handbid-item-banner="sold"]').show();
+                    //        handbid.disableAllBiddingButtonsIfSold();
+                    //        button.removeClass("active");
+                    //        return false;
+                    //    }
+                    //);
+                    //
+                    //
+                    //return false;
+
+                });
+
+            },
             submitBid : function(data) {},
             setupConnect:             function () {
 
@@ -563,6 +669,71 @@ var handbidMain;
                     return false;
                 });
             },
+            setupProvincesSelect : function() {
+
+                var countriesSelect = $("#userAddressCountryId");
+                var provincesSelect = $("#userAddressProvinceId");
+                var provincesSelectRow = $(".provincesRow");
+                var provincesByCountries = $("#provincesCountByCountry");
+
+                countriesSelect.live("change", function(e){
+                    var countryID = parseInt(countriesSelect.val());
+                    var countryPrevID = parseInt(provincesByCountries.data("current-country"));
+                    if(countryID != countryPrevID){
+                        var countryProvinces = provincesByCountries.data("provinces-"+countryID);
+                        console.log(countryID);
+                        console.log(countryProvinces);
+                        if(countryProvinces != undefined){
+
+                            var nonce = countriesSelect.data("provinces-nonce");
+
+                            var data = {
+                                action: "handbid_ajax_get_countries_provinces",
+                                nonce: nonce,
+                                countryID: countryID
+                            };
+                            $.post(
+                                ajaxurl,
+                                data,
+                                function (data) {
+                                    console.log(data);
+                                    data = JSON.parse(data);
+
+                                    provincesSelect.find('option')
+                                        .remove()
+                                        .end()
+                                        .val('');
+                                    $.each(data, function (i, item) {
+                                        provincesSelect.append($('<option>', {
+                                            value: item.value,
+                                            text : item.text
+                                        }));
+                                        if(i == 0){
+                                            provincesSelect.val(item.value);
+                                        }
+                                    });
+                                    provincesSelectRow.slideDown("fast");
+
+                                }
+                            );
+
+                        }
+                        else{
+                            provincesSelectRow.slideUp("fast");
+                            provincesSelect.find('option')
+                                .remove()
+                                .end()
+                                .append('<option value="">No Provinces</option>')
+                                .val('')
+
+                        }
+                        provincesByCountries.data("current-country", countryID);
+                    }
+                });
+
+
+
+            },
             setupEditProfile: function () {
                 var form = $('.edit-profile');
 
@@ -748,6 +919,7 @@ var handbidMain;
 
         ($('[data-handbid-bid]').length > 0) ? handbid.setupBidding(handbid) : '';
         ($('[data-handbid-timer]').length > 0) ? handbid.startTimer(handbid) : '';
+        ($('[data-handbid-tickets]').length > 0) ? handbid.setupTicketsPurchasing(handbid) : '';
         handbid.setTimerRemaining(handbid);
 
 
@@ -764,6 +936,7 @@ var handbidMain;
                 bidderInfo.html(resp);
                 bidderInfo.slideDown("normal");
                 ($('.creditcard-template').length > 0) ? handbid.setupAddCreditCard() : '';
+                handbid.setupProvincesSelect();
             });
 
         $(".handbid-logout a").live("click", function(e){

@@ -26,6 +26,7 @@ class HandbidState
     public $auction;
     public $item;
     public $inventory;
+    public $countriesAndProvinces;
 
     public function __construct($basePath, $handbid)
     {
@@ -100,6 +101,25 @@ class HandbidState
 
             return null;
         }
+    }
+
+    public function getCurrentAuctionTickets($attributes = null){
+        $auction = $this->currentAuction($attributes);
+        $auctionTicketItems = [];
+        if($auction->enableTicketSales) {
+            if (count($auction->categories)) {
+                foreach ($auction->categories as $category) {
+                    if (count($category->items)) {
+                        foreach ($category->items as $item) {
+                            if ($item->isTicket) {
+                                $auctionTicketItems[] = $item;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return $auctionTicketItems;
     }
 
     public function currentItem($attributes = null)
@@ -440,6 +460,32 @@ class HandbidState
             array("code" => "ZW", "name" => "Zimbabwe", "d_code" => "+263"),
         );
         return $countries;
+    }
+
+    function getCountriesAndProvinces(){
+        if($this->countriesAndProvinces){
+            return $this->countriesAndProvinces;
+        }
+        else{
+            $countryIDs   = $this->handbid->store( 'Bidder' )->getCountries();
+            $provinceIDs  = $this->handbid->store( 'Bidder' )->getProvinces();
+            $provincesByCountry = [];
+            if(count($countryIDs)) {
+                foreach ($provinceIDs as $provinceID) {
+                    $countriesId = $provinceID->countriesId;
+                    $provincesByCountry[$countriesId][] = $provinceID;
+                }
+                foreach ($countryIDs as $i => $countryID) {
+                    $countryId = $countryID->id;
+                    if (isset($provincesByCountry[$countryId])) {
+                        $countryIDs[$i]->provinces = $provincesByCountry[$countryId];
+                    }
+                }
+            }
+            $this->countriesAndProvinces = $countryIDs;
+            return $this->countriesAndProvinces;
+        }
+
     }
 
 }

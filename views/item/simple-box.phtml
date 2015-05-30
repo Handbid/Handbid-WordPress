@@ -31,6 +31,7 @@ if ($auction->status == 'presale' && !$item->isDirectPurchaseItem) {
      class="simple-box status-<?php echo $item->status; ?>"
      <?php if ($item->isDirectPurchaseItem) { ?>data-for-sale<?php } ?>
      <?php if ($item->disableMobileBidding) { ?>data-live<?php } ?>
+     <?php if ($item->isTicket and $item->ticketQuantity) { ?>data-is-ticket<?php } ?>
      <?php if (!$item->isDirectPurchaseItem && $item->bidCount === 0) { ?>data-no-bids<?php } ?>
      data-tags="|<?php echo implode('|', array_map(function ($term) {
          return esc_html(sanitize_key($term));

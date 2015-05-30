@@ -248,7 +248,7 @@ $countries = $this->get("countries");
 
 </div>
 
-<div class="container-fluid container-tab" style="display: none" data-tab-name="use-invite-code">
+<div class="container-fluid container-tab invite-code-tab" style="display: none" data-tab-name="use-invite-code">
     <div class="row">
         <div class="col-xs-12 signup-form">
             <div class="handbid-form signup-form">
@@ -264,11 +264,20 @@ $countries = $this->get("countries");
                     </div>
                 </div>
 
+                <div class="row errorsRow to-hide-block" style="display: none;">
+                    <div class="form-group col-md-12 errorsContainer  col-md-12">
+                        Cannot find auction by invite code.
+                    </div>
+                </div>
 
                 <div class="row">
                     <div class="form-group col-md-12">
+
                         <input placeholder="Enter code" type="text" name="code" value=""
+                               id="inviteShortCodeInput"
                                class="form-control cleanable-input">
+
+
                     </div>
                 </div>
 
@@ -282,7 +291,9 @@ $countries = $this->get("countries");
                 </div>
 
                 <div class="modal-footer center-aligned-text">
-                    <a class="btn btn-info signup login-popup-link" data-target-tab="register-form">Find My Auction</a>
+                    <a class="btn btn-info signup login-popup-link inviteShortCodeButton loading-span-button"
+                       data-check-invite-nonce="<?php echo apply_filters("handbid_create_nonce", date("d.m.Y") . "check_invite_code");?>"
+                       ><span>Find My Auction</span></a>
                 </div>
 
             </div>
@@ -362,7 +373,7 @@ $countries = $this->get("countries");
                                 class="col-md-2 copyable-field"  data-copy-to="confirm-phone-code">
                             <?php
                             foreach($countries as $country){
-                                echo "<option value='" . $country["d_code"] . "' " . selected("US", $country["code"], false) . ">" . $country["name"] . "</option>";
+                                echo "<option value='" . $country["code"] . "' " . selected("US", $country["code"], false) . ">" . $country["name"] . "</option>";
                             }
                             ?>
                         </select>
@@ -395,16 +406,36 @@ $countries = $this->get("countries");
                 <div class="row">
                     <div class="form-group col-md-12">
                         <h5>Add me as a bidder to this Auction</h5>
-<!--                        <input id="reg-add-to-auction" placeholder="" type="text" name="add-to-auction" value=""-->
-<!--                               class="col-md-6 cleanable-input copyable-field"  data-copy-to="confirm-add-to-auction" >-->
-                        <select class="col-md-6 js-data-example-ajax cleanable-input copyable-field loadAuctionsToAutoComplete loadAuctionsToAutoCompleteRegister"
-                                data-auto-complete-nonce="<?php echo apply_filters("handbid_create_nonce", date("d.m.Y") . "auto_complete");?>"
-                                data-auto-complete-input=".autoCompleteHiddenRegister, .autoCompleteHiddenConfirm"
-                                data-auto-complete-select=".loadAuctionsToAutoCompleteConfirm"
-                                name="add-to-auction" data-copy-to="confirm-add-to-auction">
-                            <option value="" selected="selected">----</option>
-                        </select>
-                        <input type="hidden" class="autoCompleteHiddenRegister cleanable-input" id="reg-add-to-auction" name="add-to-auction">
+
+                        <div class="loadAuctionsToAutoCompleteRegisterTextContainer col-md-12" style="display: none">
+                            <div class=" col-md-8">
+                                <h2 class="loadAuctionsToAutoCompleteRegisterText"></h2>
+                            </div>
+                            <div class=" col-md-4">
+                                <a class="btn btn-info signup login-popup-link change-auto-complete-auction" ><span>Change</span></a>
+                            </div>
+                        </div>
+                        <div class="loadAuctionsToAutoCompleteRegisterSelectContainer">
+                            <select class="col-md-6 js-data-example-ajax cleanable-input copyable-field loadAuctionsToAutoComplete loadAuctionsToAutoCompleteRegister"
+                                    data-auto-complete-nonce="<?php echo apply_filters("handbid_create_nonce", date("d.m.Y") . "auto_complete");?>"
+                                    data-auto-complete-input=".autoCompleteHiddenRegister, .autoCompleteHiddenConfirm"
+                                    data-auto-complete-select=".loadAuctionsToAutoCompleteConfirm"
+                                    name="add-to-auction" data-copy-to="confirm-add-to-auction">
+                                <option value="" selected="selected">----</option>
+                            </select>
+                        </div>
+                        <input type="hidden" class="autoCompleteHiddenRegister cleanable-input" id="confirm-add-to-auction" name="add-to-auction">
+
+
+
+<!--                        <select class="col-md-6 js-data-example-ajax cleanable-input copyable-field loadAuctionsToAutoComplete loadAuctionsToAutoCompleteRegister"-->
+<!--                                data-auto-complete-nonce="--><?php //echo apply_filters("handbid_create_nonce", date("d.m.Y") . "auto_complete");?><!--"-->
+<!--                                data-auto-complete-input=".autoCompleteHiddenRegister, .autoCompleteHiddenConfirm"-->
+<!--                                data-auto-complete-select=".loadAuctionsToAutoCompleteConfirm"-->
+<!--                                name="add-to-auction" data-copy-to="confirm-add-to-auction">-->
+<!--                            <option value="" selected="selected">----</option>-->
+<!--                        </select>-->
+<!--                        <input type="hidden" class="autoCompleteHiddenRegister cleanable-input" id="reg-add-to-auction" name="add-to-auction">-->
                     </div>
                 </div>
 
@@ -478,7 +509,7 @@ $countries = $this->get("countries");
                                 class="col-md-4">
                             <?php
                             foreach($countries as $country){
-                                echo "<option value='" . $country["d_code"] . "' " . selected("US", $country["code"], false) . ">" . $country["name"] . "</option>";
+                                echo "<option value='" . $country["code"] . "' " . selected("US", $country["code"], false) . ">" . $country["name"] . "</option>";
                             }
                             ?>
                         </select>

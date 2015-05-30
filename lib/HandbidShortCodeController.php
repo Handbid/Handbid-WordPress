@@ -418,11 +418,13 @@ class HandbidShortCodeController {
 
 			$template = $this->templateFromAttributes( $attributes, 'views/auction/details' );
 			$auction  = $this->state->currentAuction( $attributes );
+			$tickets  = $this->state->getCurrentAuctionTickets(  );
 
 			return $this->viewRenderer->render(
 				$template,
 				[
 					'auction'    => $auction,
+					'tickets'    => $tickets,
 				]
 			);
 
@@ -688,6 +690,9 @@ class HandbidShortCodeController {
 
             if ( $profile ) {
 
+
+                $myAuctions = $this->handbid->store( 'Bidder' )->getMyAuctions();
+
                 if ( $auction && $profile ) {
 
                     $myInventory = $this->state->currentInventory($auction->id);
@@ -702,7 +707,6 @@ class HandbidShortCodeController {
                     $purchases = $myInventory->purchases;
                     $proxyBids = $myInventory->max_bids;
 
-                    // echo "<pre>".print_r($myInventory,true)."</pre>";
                     if($winning) {
                         foreach ( $winning as $w ) {
                             $totalSpent += $w->amount;
@@ -728,7 +732,8 @@ class HandbidShortCodeController {
 					'losing'     => $losing,
 					'purchases'  => $purchases,
 					'maxBids'    => $proxyBids,
-					'totalSpent' => $totalSpent
+					'totalSpent' => $totalSpent,
+					'myAuctions' => $myAuctions,
 				]
 			);
 		} catch ( Exception $e ) {
@@ -943,7 +948,10 @@ class HandbidShortCodeController {
 			$template = $this->templateFromAttributes( $attributes, 'views/bidder/profile-form' );
 			$profile  = $this->handbid->store( 'Bidder' )->myProfile();
 
+            $countries                     = $this->state->getCountriesWithCodes();
+            $countryIDs                    = $this->state->getCountriesAndProvinces();
 			$redirect                      = isset( $attributes['redirect'] ) ? $attributes['redirect'] : null;
+			$redirect                      = $_SERVER["HTTP_REFERER"];
 			$showCreditCardRequiredMessage = isset( $attributes['show_credit_card_required_message'] ) ? $attributes['show_credit_card_required_message'] == 'true' : false;
 
 			return $this->viewRenderer->render(
@@ -951,6 +959,8 @@ class HandbidShortCodeController {
 				[
 					'profile'                       => $profile,
 					'redirect'                      => $redirect,
+					'countries'                      => $countries,
+					'countryIDs'                      => $countryIDs,
 					'showCreditCardRequiredMessage' => $showCreditCardRequiredMessage
 				]
 			);
@@ -1028,11 +1038,12 @@ class HandbidShortCodeController {
 
 		try {
 			$auction = $this->state->currentAuction( $attributes );
-
+            $tickets = $this->state->getCurrentAuctionTickets();
+            $profile   = $this->state->currentBidder(  );
+            $cards = $profile->creditCards;
 			$query = [ ];//@todo: find out hwo to pass query through attributes. then merge it with our defaults. array_merge([], $query)
 
 //			$tickets = $this->handbid->store( 'Ticket' )->byAuction( $auction->key, $query );
-
 			if ( $tickets ) {
 				$template = $this->templateFromAttributes( $attributes, 'views/ticket/list' );
 
@@ -1040,7 +1051,9 @@ class HandbidShortCodeController {
 					$template,
 					[
 						'tickets' => $tickets,
-						'auction' => $auction
+						'auction' => $auction,
+						'profile' => $profile,
+						'cards' => $cards,
 					]
 				);
 			}

@@ -8,6 +8,7 @@
  * @author Master of Code (worldclass@masterofcode.com)
  */
 $auction     = $this->get('auction');
+$tickets     = $this->get('tickets');
 $location    = $auction->locations[0];
 $hasLocation = !!($location->auctionLocationStreet1);
 $address     = null;
@@ -27,10 +28,15 @@ if ($hasLocation) {
 
     $address = $locationStreet1 . ', ' . $locationStreet2 . ', ' . $locationCity . ', ' . $locationProvince . ', ' . $locationPCode;
 }
-echo "<pre>".print_r($auction,true)."</pre>";
+
 if (!$auction) {
     return '';
 }
+
+
+
+$hasTicketItems = !!(count($tickets));
+
 ?>
 
 <div class="auction-details <?php echo $auction->status; ?>" data-handbid-auction-guid="<?php echo $auction->auctionGuid; ?>" >
@@ -135,6 +141,9 @@ if (!$auction) {
                         <option value="[data-for-sale]">For Sale</option>
                         <option value="[data-live]">Live</option>
                         <option value="[data-no-bids]">No Bids</option>
+                        <?php if($hasTicketItems){ ?>
+                        <option value="[data-is-ticket]">Tickets</option>
+                        <?php } ?>
                     </select>
 
                     <select name="mobile-category">
@@ -172,6 +181,9 @@ if (!$auction) {
                             <li data-selector="[data-for-sale]"><a href="#">For Sale</a></li>
                             <li data-selector="[data-live]"><a href="#">Live</a></li>
                             <li data-selector="[data-no-bids]"><a href="#">No Bids</a></li>
+                            <?php if($hasTicketItems){ ?>
+                                <li data-selector="[data-is-ticket]"><a href="#">Tickets</a></li>
+                            <?php } ?>
                         </ul>
                     </div>
 
@@ -191,7 +203,7 @@ if (!$auction) {
                                     ?>
                                     <li data-selector="[data-tags~='|<?php echo esc_html(
                                         sanitize_key($category->name)
-                                    ); ?>|']" data-legacy-category-id="<?php echo $category->_id; ?>"><a
+                                    ); ?>|']" data-legacy-category-id="<?php echo $category->id; ?>"><a
                                             href="#"><?php echo $category->name . ' (' . count($category->items) . ')'; ?></a>
                                     </li>
                                 <?php

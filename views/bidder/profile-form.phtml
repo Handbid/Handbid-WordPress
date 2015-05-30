@@ -13,6 +13,8 @@ if (!is_null($this->get('profile'))) {
     $profile = $this->get('profile');
     $address = $profile->shippingAddress;
     $redirect = $this->get('redirect');
+    $countries = $this->get("countries");
+    $countryIDs = $this->get("countryIDs");
 } else {
     echo "You must be logged in to view your profile.";
     return;
@@ -24,76 +26,136 @@ if (!is_null($this->get('profile'))) {
     <ul class="simple-list">
         <li class="row">
             <div class="col-md-12">
-                <input type="text" name="firstName" value="<?php echo $profile->firstName; ?>" placeholder="First Name"/>
+                <input type="text" name="alias" value="<?php echo $profile->alias; ?>" id="profileAlias" placeholder="Alias" title="Alias"/>
+                <input type="hidden" value="<?php echo $profile->alias; ?>" id="profileAliasOld"/>
             </div>
         </li>
         <li class="row">
             <div class="col-md-12">
-                <input type="text" name="lastName" value="<?php echo $profile->lastName; ?>" placeholder="Last Name"/>
+                <input type="text" name="firstName" value="<?php echo $profile->firstName; ?>" id="profileFirstName" placeholder="First Name" title="First Name"/>
+                <input type="hidden" value="<?php echo $profile->firstName; ?>" id="profileFirstNameOld"/>
             </div>
         </li>
         <li class="row">
             <div class="col-md-12">
-                <input type="email" name="email" value="<?php echo $profile->email; ?>" placeholder="Email"/>
+                <input type="text" name="lastName" value="<?php echo $profile->lastName; ?>" id="profileLastName" placeholder="Last Name" title="Last Name"/>
+                <input type="hidden" value="<?php echo $profile->lastName; ?>" id="profileLastNameOld"/>
             </div>
         </li>
         <li class="row">
             <div class="col-md-12">
-                <input type="tel" name="cellPhone[value]" value="<?php echo $profile->cellPhone->value; ?>" placeholder="Cell Phone"/>
+                <input type="email" name="email" value="<?php echo $profile->email; ?>" id="profileEmail" placeholder="Email" title="Email"/>
+                <input type="hidden" value="<?php echo $profile->email; ?>" id="profileEmailOld"/>
+            </div>
+        </li>
+        <li class="row">
+            <div class="col-md-4">
+                        <select id="userAddressCountryId" name="userAddressCountryId"
+                                title="Country"
+                                data-provinces-nonce="<?php echo apply_filters("handbid_create_nonce", date("d.m.Y") . "country_provinces");?>"
+                                class="col-md-12">
+                            <?php
+                            $provinces = [];
+                            $curID = 0;
+                            foreach($countryIDs as $country){
+                                $selected = trim($profile->userAddressCountryId) ? selected($profile->userAddressCountryId, $country->id, false) : selected("US", $country->countryCode, false);
+                                $provincesTemp = trim($profile->userAddressCountryId) ? ($profile->userAddressCountryId == $country->id ? $country->provinces : []) : ("US" == $country->countryCode ? $country->provinces : []);
+                                $curIDTemp = trim($profile->userAddressCountryId) ? ($profile->userAddressCountryId == $country->id ? $country->id : 0) : ("US" == $country->countryCode ? $country->id : 0);
+                                $provinces = (count($provincesTemp))? $provincesTemp : $provinces;
+                                $curID = ($curIDTemp == -1)? $curID : $curIDTemp;
+                                echo "<option value='" . $country->id . "' " . $selected . ">" . $country->name . "</option>";
+                            }
+                            ?>
+                        </select>
+            </div>
+            <div class="col-md-8">
+                <input type="tel" name="userCellPhone" value="<?php echo $profile->userCellPhone; ?>" id="profileCellPhone" placeholder="Cell Phone" title="Cell Phone"/>
+                <input type="hidden" value="<?php echo $profile->userCellPhone; ?>" id="profileCellPhoneOld"/>
+            </div>
+        </li>
+        <li class="row provincesRow" style="<?php echo (count($provinces))?"":"display:none";?>">
+            <div class="col-md-12">
+                        <select id="userAddressProvinceId" name="userAddressProvinceId"
+                                title="Province"
+                                class="col-md-12">
+                            <?php
+
+                            foreach($provinces as $province){
+                                $selected = selected($profile->userAddressProvinceId, $province->id, false);
+                                echo "<option value='" . $province->id . "' " . $selected . ">" . $province->countriesRegionsName . "</option>";
+                            }
+                            ?>
+                        </select>
+                <input type="hidden" id="provincesCountByCountry"
+                       data-current-country="<?php echo $curID; ?>"
+                    <?php
+                    foreach($countryIDs as $country){
+                        if(isset($country->provinces) and count($country->provinces)){
+                            echo " data-provinces-".$country->id."='".count($country->provinces)."' ";
+                        }
+                    }
+                    ?>
+                    >
             </div>
         </li>
         <li class="row">
             <div class="col-md-12">
                 <label>Upload Photo</label>
-                <input type="file" name="photo"/>
+                <input type="file" name="profile_photo"/>
             </div>
         </li>
         <li class="row">
             <div class="col-md-12">
-                <input type="password" name="password" placeholder="Password"/>
+                <input type="password" name="password" placeholder="Password" title="Password" id="profileNewPassword"/>
             </div>
         </li>
         <li class="row">
             <div class="col-md-12">
-                <input type="password" name="password2" placeholder="Confirm Password"/>
+                <input type="password" name="password2" placeholder="Confirm Password" title="Confirm Password" id="profileNewPasswordConfirm"/>
             </div>
         </li>
         <li class="row">
             <div class="col-md-12">
-                <input type="text" name="shippingAddress[street1]" value="<?php echo $address->street1; ?>" placeholder="Street"/>
+                <input type="text" name="userAddressStreet1" value="<?php echo $profile->userAddressStreet1; ?>" id="profileStreet1" placeholder="Street" title="Street"/>
+                <input type="hidden" value="<?php echo $profile->userAddressStreet1; ?>" id="profileStreet1Old"/>
             </div>
         </li>
         <li class="row">
             <div class="col-md-12">
-                <input type="text" name="shippingAddress[street2]" value="<?php echo $address->street2; ?>" placeholder="Street 2"/>
+                <input type="text" name="userAddressStreet2" value="<?php echo $profile->userAddressStreet2; ?>" id="profileStreet2" placeholder="Street 2" title="Street 2"/>
+                <input type="hidden" value="<?php echo $profile->userAddressStreet2; ?>" id="profileStreet2Old"/>
             </div>
         </li>
         <li class="row">
             <div class="col-md-12">
-                <input type="text" name="shippingAddress[city]" value="<?php echo $address->city; ?>" placeholder="City"/>
+                <input type="text" name="userAddressCity" value="<?php echo $profile->userAddressCity; ?>" id="profileCity" placeholder="City" title="City"/>
+                <input type="hidden" value="<?php echo $profile->userAddressCity; ?>" id="profileCityOld"/>
             </div>
         </li>
         <li class="row">
             <div class="col-md-12">
-                <input type="text" name="shippingAddress[province]" value="<?php echo $address->province; ?>" placeholder="Province"/>
+                <input type="text" name="userAddressPostalCode" value="<?php echo $profile->userAddressPostalCode; ?>" id="profilePostalCode" placeholder="Postal Code" title="Postal Code"/>
+                <input type="hidden" value="<?php echo $profile->userAddressPostalCode; ?>" id="profilePostalCodeOld"/>
             </div>
         </li>
-        <li class="row">
-            <div class="col-md-12">
-                <input type="text" name="shippingAddress[postalCode]" value="<?php echo $address->postalCode; ?>" placeholder="Postal Code"/>
-            </div>
-        </li>
-        <li class="row">
-            <div class="col-md-12">
-                <input type="text" name="shippingAddress[country]" value="<?php echo isset($address->country) ? $address->country : 'US'; ?>" placeholder="Country"/>
-            </div>
-        </li>
+<!--        <li class="row">-->
+<!--            <div class="col-md-12">-->
+<!--                <input type="text" name="province" value="--><?php //echo $profile->province; ?><!--" id="profileProvince" placeholder="Province" title="Province"/>-->
+<!--                <input type="hidden" value="--><?php //echo $profile->province; ?><!--" id="profileProvinceOld"/>-->
+<!--            </div>-->
+<!--        </li>-->
+
+<!--        <li class="row">-->
+<!--            <div class="col-md-12">-->
+<!--                <input type="text" name="countryCode" value="--><?php //echo isset($profile->countryCode) ? $profile->countryCode : 'US'; ?><!--" id="profileCountry" placeholder="Country" title="Country"/>-->
+<!--                <input type="hidden" value="--><?php //echo $profile->countryCode; ?><!--" id="profileCountryOld"/>-->
+<!--            </div>-->
+<!--        </li>-->
     </ul>
     <div class="row">
         <div class="col-md-12">
-            <input class="button green-solid-button" type="submit" value="submit"/>
-            <input type='hidden' name='form-id' value='handbid-update-bidder' />
-            <input type='hidden' name='action' value='submit-form' />
+            <input class="button green-solid-button"  type="submit" value="submit" id="updateUserProfile"/>
+            <input type='hidden' name='action' value='handbid_post_update_bidder' />
             <?php echo ($redirect) ? '<input type=\'hidden\' name=\'redirect\' value=\'' . $redirect . '\'/>' : null; ?>
         </div>
     </div>

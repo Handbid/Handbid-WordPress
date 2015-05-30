@@ -17,7 +17,15 @@ $profile    = $this->get('profile');
 ?>
 
 <div class="col-md-2 bidder-image-wrapper">
-    <img src="<?php echo $profile->photo; ?>" class="bidder-image"/>
+    <?php
+    $image = $profile->imageUrl;
+    if(trim($image)){
+    if(strpos($image, "http") === false){
+        $image = "http://".$image;
+    }
+    ?>
+    <img src="<?php echo $image; ?>" class="bidder-image"/>
+    <?php }?>
     <div class="slider-nav" data-slider-nav-id="bidder-dashboard-inner">
         <a data-slider-nav-key="user-profile" class="edit-picture">Edit Pic</a>
     </div>
@@ -53,11 +61,11 @@ $profile    = $this->get('profile');
 
                         ?>
                         <li class="row preview">
-                            <div class="col-md-2"><img src="<?php echo $auction->logo->small; ?>"/></div>
+                            <div class="col-md-2"><img class="full-width-image" src="<?php echo "http://" . HANDBID_IMAGES_HOST . $auction->imageUrl; ?>"/></div>
                             <div class="col-md-7">
                                 <h4><?php echo $auction->name; ?></h4>
-                                <a href="/organizations/<?php echo $auction->meta->organization->key; ?>"
-                                   class="org-link"><?php echo $auction->meta->organization->name; ?></a>
+                                <a href="/organizations/<?php echo $auction->organization->key; ?>"
+                                   class="org-link"><?php echo $auction->organization->name; ?></a>
                             </div>
                             <div class="col-md-3">
                                 <a class="cta-link" href="/auctions/<?php echo $auction->key; ?>">See Auction</a>

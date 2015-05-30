@@ -129,19 +129,22 @@ class HandbidActionController
             "handbid_ajax_removebid",
             "handbid_ajax_add_credit_card",
             "handbid_ajax_remove_credit_card",
+            "handbid_ajax_get_countries_provinces",
             "handbid_load_auto_complete_auctions",
+            "handbid_load_shortcode_auctions",
         ];
         foreach($ajaxActions as $ajaxAction){
             add_action("wp_ajax_".$ajaxAction, [$this, $ajaxAction."_callback"]);
             add_action("wp_ajax_nopriv_".$ajaxAction, [$this, $ajaxAction."_callback"]);
         }
 
-//        $postActions = [
-//        ];
-//        foreach($postActions as $postAction){
-//            add_action("admin_post_".$postAction, [$this, $postAction."_callback"]);
-//            add_action("admin_post_nopriv_".$postAction, [$this, $postAction."_callback"]);
-//        }
+        $postActions = [
+            "handbid_post_update_bidder"
+        ];
+        foreach($postActions as $postAction){
+            add_action("admin_post_".$postAction, [$this, $postAction."_callback"]);
+            add_action("admin_post_nopriv_".$postAction, [$this, $postAction."_callback"]);
+        }
     }
 
     function _handle_form_action()
@@ -206,6 +209,8 @@ class HandbidActionController
     function handbid_verify_nonce($nonce, $action = -1){
         return wp_verify_nonce($nonce, $_SERVER["SERVER_SIGNATURE"]." ". $action);
     }
+
+    // ---------------- AJAX CALLBACKS ------------------
 
     function handbid_ajax_login_callback(){
         $nonce = $_POST["nonce"];
@@ -456,6 +461,103 @@ class HandbidActionController
         }
         echo json_encode($result);
         exit;
+    }
+
+
+
+    function handbid_load_shortcode_auctions_callback(){
+
+        $nonce = $_REQUEST["nonce"];
+        $inviteCode = $_REQUEST["inviteCode"];
+        $result = [];
+        if($this->handbid_verify_nonce($nonce, date("d.m.Y") . "check_invite_code") and trim($inviteCode)){
+            $result["items"] = [];
+                try {
+                    $auctions = $this->handbid->store('Auction')->all($page = 0, $pageSize = 255, null, null, []);
+                    if(count($auctions)) {
+                    foreach($auctions as $auction) {
+                        if($auction->shortCode == $inviteCode)
+                        $result["items"][] = [
+                            "id" => $auction->id,
+                            "key" => $auction->key,
+                            "name" => $auction->name,
+                            "auctionGuid" => $auction->auctionGuid,
+                            "status" => $auction->status,
+                            "totalItems" => $auction->totalItems,
+                            "totalBidders" => $auction->totalBidders,
+                            "organization" => $auction->organization->name,
+                        ];
+                    }
+                    }
+                }
+                catch(Exception $e){
+
+                }
+        }
+        echo json_encode($result);
+        exit;
+    }
+
+
+    function handbid_ajax_get_countries_provinces_callback(){
+
+        $countryID = $_REQUEST["countryID"];
+        $nonce = $_REQUEST["nonce"];
+        $result = [];
+        if($this->handbid_verify_nonce($nonce, date("d.m.Y") . "country_provinces")){
+                try {
+                    $countriesIDs = $this->state->getCountriesAndProvinces();
+                    if(count($countriesIDs)) {
+                        foreach ($countriesIDs as $countriesID) {
+                            if($countryID == $countriesID->id and isset($countriesID->provinces)) {
+                                foreach ($countriesID->provinces as $countryProvince) {
+                                    $result[] = [
+                                        "value" => $countryProvince->id,
+                                        "text" => $countryProvince->countriesRegionsName,
+                                    ];
+                                }
+                            }
+                        }
+                    }
+                }
+                catch(Exception $e){
+
+                }
+        }
+        echo json_encode($result);
+        exit;
+    }
+
+
+    // ---------------- POST CALLBACKS ------------------
+
+    function handbid_post_update_bidder_callback(){
+        $profile  = $this->handbid->store( 'Bidder' )->myProfile();
+        $fieldsToUpdate = [];
+
+        if(isset($_POST["password"]) and ($_POST["password"] != $_POST["password2"])){
+            unset($_POST["password"]);
+            unset($_POST["password2"]);
+        }
+
+        foreach($_POST as $postField => $postFieldValue){
+            if(isset($profile->{$postField}) and trim($postFieldValue) and ($profile->{$postField} != $postFieldValue)){
+                $fieldsToUpdate[$postField] = $postFieldValue;
+            }
+        }
+
+//        if(isset($_FILES["profile_photo"]) and ! $_FILES["profile_photo"]["error"] ){
+//            $fieldsToUpdate["imageName"] = $_FILES["profile_photo"]["name"];
+//            $fieldsToUpdate["image"] = base64_encode(file_get_contents($_FILES["profile_photo"]["tmp_name"]));
+//        }
+
+        if(count($fieldsToUpdate)){
+            $this->handbid->store( 'Bidder' )->updateProfileData($fieldsToUpdate);
+        }
+        if(isset($_POST["redirect"])){
+            wp_redirect($_POST["redirect"]);
+        }
+
     }
 
 }

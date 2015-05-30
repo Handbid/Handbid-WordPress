@@ -417,16 +417,9 @@
 
         });
 
-        // Checks to see if we are wanting legacy category view
-        var url = document.URL;
-        var queryString = url.substring( url.indexOf('?') + 1 );
-
-        if(queryString.indexOf('custom-front-auction-list%5Bcategory%5D') > -1) {
-            setTimeout(function() {
-                var categoryId = queryString.split('=')[1];
-                $('[data-legacy-category-id="' + categoryId + '"] a')[0].click();
-            }, 3500);
-        }
+        setTimeout(function() {
+            $('ul.by-category li.selected a')[0].click();
+        }, 3500);
 
     });
 

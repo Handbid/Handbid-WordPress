@@ -42,7 +42,7 @@ if (!is_null($this->get('bids'))) {
                         <a href="/auctions/<?php echo $auction->key; ?>/item/<?php echo $bid->meta['itemKey']; ?>"><?php echo ($bid->meta['itemName']) ? $bid->meta['itemName'] : $bid->name; ?></a>
                     </td>
                     <td>
-                        <a class="button greenButton" href="#" data-handbid-delete-proxy="<?php echo $bid->_id; ?>"><?php echo __('Delete'); ?></a>
+                        <a class="button greenButton" href="#" data-handbid-delete-proxy="<?php echo $bid->id; ?>"><?php echo __('Delete'); ?></a>
                     </td>
                 </tr>
             <?php
