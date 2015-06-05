@@ -13,6 +13,9 @@ $item = $this->get('item');
 $auction = $this->get('auction');
 $url = '/auctions/' . $auction->key . '/item/' . $item->key . '/';
 
+if($item->isTicket){
+    $item->isDirectPurchaseItem = true;
+}
 if ($item->isDirectPurchaseItem) {
     $item->currentPrice = $item->buyNowPrice;
 }
@@ -24,6 +27,8 @@ if (!$item->hasInventory) {
 if ($auction->status == 'presale' && !$item->isDirectPurchaseItem) {
     return;
 }
+
+
 ?>
 
 <div onclick="if(event.metaKey) { return; } window.location.href='<?php echo $url; ?>'"
@@ -31,7 +36,7 @@ if ($auction->status == 'presale' && !$item->isDirectPurchaseItem) {
      class="simple-box status-<?php echo $item->status; ?>"
      <?php if ($item->isDirectPurchaseItem) { ?>data-for-sale<?php } ?>
      <?php if ($item->disableMobileBidding) { ?>data-live<?php } ?>
-     <?php if ($item->isTicket and $item->ticketQuantity) { ?>data-is-ticket<?php } ?>
+     <?php if ($item->isTicket) { ?>data-is-ticket<?php } ?>
      <?php if (!$item->isDirectPurchaseItem && $item->bidCount === 0) { ?>data-no-bids<?php } ?>
      data-tags="|<?php echo implode('|', array_map(function ($term) {
          return esc_html(sanitize_key($term));
@@ -78,13 +83,16 @@ if ($auction->status == 'presale' && !$item->isDirectPurchaseItem) {
                 <?php if ($item->isDirectPurchaseItem) { ?>
 
                     <li class="bids col-md-6 col-xs-6">Sold <em
+                            data-handbid-sold-of-id="<?php echo $item->id; ?>"
                             data-handbid-item-attribute="meta.totalSold"><?php echo $item->quantitySold; ?></em></li>
                     <li class="remaining col-md-6 col-xs-6"><em
+                            data-handbid-remaining-of-id="<?php echo $item->id; ?>"
                             data-handbid-item-attribute="inventoryRemaining"><?php echo $item->inventoryRemaining; ?></em>
                         Left
                     </li>
                 <?php } else { ?>
                     <li class="bids col-md-6 col-xs-6">Bids <em
+                            data-handbid-bids-of-id="<?php echo $item->id; ?>"
                             data-handbid-item-attribute="bidCount"><?php echo $item->bidCount; ?></em></li>
                     <li class="bid-now col-md-6 col-xs-6">Bid Now</li>
                 <?php } ?>

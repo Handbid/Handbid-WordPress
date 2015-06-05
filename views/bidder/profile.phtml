@@ -18,6 +18,8 @@ if (!is_null($this->get('profile'))) {
     $maxBids    = $this->get('maxBids');
     $total      = $this->get('totalSpent');
     $myAuctions = $this->get('myAuctions');
+    $myInvoices = $this->get('myInvoices');
+    $myMessages = $this->get('notifications');
     $bidderName = strtoupper($profile->firstName[0]) . '. ' . $profile->lastName;
     $redirect   = $_SERVER['REQUEST_URI'];
     $bidderPage = is_page('bidder');
@@ -103,7 +105,9 @@ if (!is_null($this->get('profile'))) {
                         'winning'    => $winning,
                         'losing'     => $losing,
                         'redirect'   => $redirect,
-                        'myAuctions' => $myAuctions
+                        'myAuctions' => $myAuctions,
+                        'myInvoices' => $myInvoices,
+                        'notifications' => $myMessages,
                     ]);
                     ?>
                 </div>

@@ -157,12 +157,12 @@ class Handbid
             'handbid-auction-page-js'  => 'public/js/auction-details.js',
             'handbid-details-map-js'   => 'public/js/details-map.js',
             'handbid-tooltip-js'       => 'public/js/tooltip.js',
-            'handbid-modal-js'         => 'public/js/modal.js',
             'handbid-bootstrap-js'     => 'public/js/bootstrap.js',
             'handbid-select2-js'       => 'public/js/select2.full.js',
             'handbid-login-js'      => 'public/js/login.js',
             'handbid-notices-js'    => 'public/js/pnotify.custom.min.js',
             'handbid-plugin-js'     => 'public/js/handbid.js',
+            'handbid-modal-js'         => 'public/js/modal.js',
         );
 
 //        //make this a settings

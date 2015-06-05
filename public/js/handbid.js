@@ -21,6 +21,43 @@ var handbidMain;
             loggedIn : null,
             timerNotice : null,
 
+            number_format: function(number, decimals, dec_point, thousands_sep) {
+                number = (number + '').replace(/[^0-9+\-Ee.]/g, '');
+                var n = !isFinite(+number) ? 0 : +number,
+                    prec = !isFinite(+decimals) ? 0 : Math.abs(decimals),
+                    sep = (typeof thousands_sep === 'undefined') ? ',' : thousands_sep,
+                    dec = (typeof dec_point === 'undefined') ? '.' : dec_point,
+                    s = '',
+                    toFixedFix = function(n, prec) {
+                        var k = Math.pow(10, prec);
+                        return '' + (Math.round(n * k) / k)
+                            .toFixed(prec);
+                    };
+                s = (prec ? toFixedFix(n, prec) : '' + Math.round(n))
+                    .split('.');
+                if (s[0].length > 3) {
+                    s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, sep);
+                }
+                if ((s[1] || '')
+                        .length < prec) {
+                    s[1] = s[1] || '';
+                    s[1] += new Array(prec - s[1].length + 1)
+                        .join('0');
+                }
+                return s.join(dec);
+            },
+
+
+            noticeIfNoCreditCard: function(elem){
+                var attr = elem.attr('data-handbid-credit-cards-required');
+
+                var needCreditCard = (typeof attr !== typeof undefined && attr !== false);
+                if(needCreditCard){
+                    handbidMain.notice("Please add credit card to your profile for this action", "Credit Card Required", "error");
+                }
+                return needCreditCard;
+            },
+
             disableAllBiddingButtonsIfSold: function(){
 
                 $('[data-handbid-bid-button="up"]').addClass("disabled-button");
@@ -65,7 +102,7 @@ var handbidMain;
 
                     var inventoryRemaining = parseInt($('[data-handbid-item-attribute="inventoryRemaining"]').eq(0).html());
 
-                    if(handbid.isButtonDisabledOrAlreadyActive($(this)) || handbid.cannotDoIfUnauthorized() || inventoryRemaining == 0){
+                    if(handbid.isButtonDisabledOrAlreadyActive($(this)) || handbid.cannotDoIfUnauthorized() || handbid.noticeIfNoCreditCard($(this)) || inventoryRemaining == 0){
                         return false;
                     }
 
@@ -95,7 +132,7 @@ var handbidMain;
 
                 $('[data-handbid-bid-button="down"]').live('click', function (e) {
 
-                    if(handbid.isButtonDisabledOrAlreadyActive($(this)) || handbid.cannotDoIfUnauthorized()){
+                    if(handbid.isButtonDisabledOrAlreadyActive($(this)) || handbid.cannotDoIfUnauthorized() || handbid.noticeIfNoCreditCard($(this))){
                         return false;
                     }
 
@@ -114,7 +151,7 @@ var handbidMain;
 
                 $('[data-handbid-bid-button="bid"]').live('click', function (e) {
 
-                    if(handbid.isButtonDisabledOrAlreadyActive($(this)) || handbid.cannotDoIfUnauthorized()){
+                    if(handbid.isButtonDisabledOrAlreadyActive($(this)) || handbid.cannotDoIfUnauthorized() || handbid.noticeIfNoCreditCard($(this))){
                         return false;
                     }
 
@@ -188,7 +225,7 @@ var handbidMain;
 
                 $('[data-handbid-bid-button="proxy"]').live('click', function (e) {
 
-                    if(handbid.isButtonDisabledOrAlreadyActive($(this)) || handbid.cannotDoIfUnauthorized()){
+                    if(handbid.isButtonDisabledOrAlreadyActive($(this)) || handbid.cannotDoIfUnauthorized() || handbid.noticeIfNoCreditCard($(this))){
                         return false;
                     }
 
@@ -230,7 +267,7 @@ var handbidMain;
 
                     var inventoryRemaining = parseInt($('[data-handbid-item-attribute="inventoryRemaining"]').eq(0).html());
 
-                    if(handbid.isButtonDisabledOrAlreadyActive($(this)) || handbid.cannotDoIfUnauthorized() || inventoryRemaining == 0){
+                    if(handbid.isButtonDisabledOrAlreadyActive($(this)) || handbid.cannotDoIfUnauthorized() || handbid.noticeIfNoCreditCard($(this)) || inventoryRemaining == 0){
                         return false;
                     }
 
@@ -285,7 +322,7 @@ var handbidMain;
 
                 $('[data-handbid-bid-button="buyItNow"]').live('click', function (e) {
 
-                    if(handbid.isButtonDisabledOrAlreadyActive($(this)) || handbid.cannotDoIfUnauthorized()){
+                    if(handbid.isButtonDisabledOrAlreadyActive($(this)) || handbid.cannotDoIfUnauthorized() || handbid.noticeIfNoCreditCard($(this))){
                         return false;
                     }
 
@@ -326,7 +363,7 @@ var handbidMain;
                 });
 
                 $('[data-handbid-delete-proxy]').live('click', function (e) {
-                    if(handbid.isButtonDisabledOrAlreadyActive($(this)) || handbid.cannotDoIfUnauthorized()){
+                    if(handbid.isButtonDisabledOrAlreadyActive($(this)) || handbid.cannotDoIfUnauthorized() || handbid.noticeIfNoCreditCard($(this))){
                         return false;
                     }
                     e.preventDefault();
@@ -373,9 +410,10 @@ var handbidMain;
                         quantityBlock = $("[data-handbid-ticket-quantity]", parentBlock).eq(0),
                         quantity = parseInt(quantityBlock.html()),
                         itemID = parseInt(parentBlock.data("handbid-ticket-id")),
-                        itemPrice = parseInt(parentBlock.data("handbid-ticket-price"));
+                        itemPrice = parseInt(parentBlock.data("handbid-ticket-price")),
+                        itemTitle = $("[data-handbid-ticket-title]", parentBlock).eq(0).html();
                     totalPrice += quantity * itemPrice;
-                    return {id : itemID, price : itemPrice, quantity : quantity};
+                    return (quantity > 0) ? {id : itemID, price : itemPrice, quantity : quantity, name : itemTitle} : null;
                 });
                 $("[data-handbid-tickets-total]").html(totalPrice);
                 return prices;
@@ -389,19 +427,26 @@ var handbidMain;
                     e.preventDefault();
 
                     var parentBlock = $(this).parents( "[data-handbid-ticket-id]").eq(0),
+                        otherButton = $("[data-handbid-ticket-button='down']", parentBlock).eq(0),
                         quantityBlock = $("[data-handbid-ticket-quantity]", parentBlock).eq(0),
                         remainingBlock = $("[data-handbid-tickets-remaining]", parentBlock).eq(0),
                         quantity = parseInt(quantityBlock.html()),
+                        remainingSymb = remainingBlock.val(),
                         remaining = parseInt(remainingBlock.val()),
                         itemID = parseInt(parentBlock.data("handbid-ticket-id")),
+                        itemStep = parseInt(parentBlock.data("handbid-ticket-step")),
                         itemPrice = parseInt(parentBlock.data("handbid-ticket-price"));
 
-                    var newValue = quantity + 1;
-                    if(newValue <= remaining){
+                    var newValue = quantity + itemStep;
+                    if(newValue <= remaining || (remainingSymb == "-1" || remainingSymb == "∞")){
                         quantityBlock.html(newValue);
                         handbid.recalculateTotalTicketsPrice();
-                    }
+                        otherButton.removeClass("ghosted-out");
 
+                        if(newValue + itemStep > remaining && !(remainingSymb == "-1" || remainingSymb == "∞")){
+                            $(this).addClass("ghosted-out");
+                        }
+                    }
 
                 });
 
@@ -410,17 +455,24 @@ var handbidMain;
                     e.preventDefault();
 
                     var parentBlock = $(this).parents( "[data-handbid-ticket-id]").eq(0),
+                        otherButton = $("[data-handbid-ticket-button='up']", parentBlock).eq(0),
                         quantityBlock = $("[data-handbid-ticket-quantity]", parentBlock).eq(0),
                         remainingBlock = $("[data-handbid-tickets-remaining]", parentBlock).eq(0),
                         quantity = parseInt(quantityBlock.html()),
                         remaining = parseInt(remainingBlock.val()),
                         itemID = parseInt(parentBlock.data("handbid-ticket-id")),
+                        itemStep = parseInt(parentBlock.data("handbid-ticket-step")),
                         itemPrice = parseInt(parentBlock.data("handbid-ticket-price"));
 
-                    var newValue = quantity - 1;
+                    var newValue = quantity - itemStep;
                     if(newValue >= 0){
                         quantityBlock.html(newValue);
                         handbid.recalculateTotalTicketsPrice();
+                        otherButton.removeClass("ghosted-out");
+
+                        if(newValue - itemStep < 0){
+                            $(this).addClass("ghosted-out");
+                        }
                     }
 
 
@@ -430,46 +482,129 @@ var handbidMain;
 
                     e.preventDefault();
 
-                    //if(handbid.isButtonDisabledOrAlreadyActive($(this)) || handbid.cannotDoIfUnauthorized()){
-                    //    return false;
-                    //}
-                    //
-                    //e.preventDefault();
-                    //
-                    //var nonce = $("#bidNonce").val();
-                    //var total = parseInt($(this).data("handbid-buynow-price"));
-                    //var button = $(this);
-                    //button.addClass("active");
-                    //var data = {
-                    //    action:    "handbid_ajax_createbid",
-                    //    nonce:     nonce,
-                    //    userId:    userId,
-                    //    auctionId: auctionId,
-                    //    itemId:    itemId,
-                    //    amount:    total
-                    //};
-                    //$.post(
-                    //    ajaxurl,
-                    //    data,
-                    //    function (data) {
-                    //
-                    //        console.log("-----------------------");
-                    //        console.log("----Buy Now success----");
-                    //        data = JSON.parse(data);
-                    //        console.log(data);
-                    //
-                    //        $('[data-handbid-item-banner="sold"]').show();
-                    //        handbid.disableAllBiddingButtonsIfSold();
-                    //        button.removeClass("active");
-                    //        return false;
-                    //    }
-                    //);
-                    //
-                    //
-                    //return false;
+                    var prices = handbid.recalculateTotalTicketsPrice();
+
+                    if(handbid.isButtonDisabledOrAlreadyActive($(this)) || handbid.cannotDoIfUnauthorized() || handbid.noticeIfNoCreditCard($(this)) || prices.length == 0){
+                        return false;
+                    }
+
+                    var closeModal = $(".handbid-modal.tickets-modal .modal-close").eq(0);
+                    var button = $(this);
+                    var nonce = button.data("handbid-buy-tickets-nonce");
+                    var auctionId = button.data("handbid-auction-id");
+                    var userId = button.data("handbid-profile-id");
+                    button.addClass("active");
+                    closeModal.hide();
+                    var data = {
+                        action:    "handbid_ajax_buy_tickets",
+                        nonce:     nonce,
+                        userId:    userId,
+                        auctionId: auctionId,
+                        items:     prices
+                    };
+                    console.log(data);
+                    $.post(
+                        ajaxurl,
+                        data,
+                        function (data) {
+
+                            console.log("---------------------------");
+                            console.log("----Buy Tickets success----");
+                            data = JSON.parse(data);
+                            console.log(data);
+
+                            $.map($("[data-handbid-ticket-id]"), function(val, i){
+                                var parentBlock = $(val),
+                                    quantityBlock = $("[data-handbid-ticket-quantity]", parentBlock).eq(0),
+                                    remainingBlock = $("[data-handbid-tickets-remaining]", parentBlock).eq(0),
+                                    quantity = parseInt(quantityBlock.html()),
+                                    remainingSymb = remainingBlock.val(),
+                                    remaining = parseInt(remainingBlock.val());
+                                quantityBlock.html(0);
+                                if(remainingSymb != "-1" && remainingSymb != "∞"){
+                                    remainingBlock.val(remaining - quantity);
+                                }
+                                return null;
+                            });
+                            $("[data-handbid-tickets-total]").html(0);
+
+
+                            var messages = $.map(prices, function(val, i){
+                                return "<b>"+val.quantity+"</b> of Item #"+val.id+" <br><b>"+val.name+"</b>";
+                            });
+
+                            var message = "You purchased <br>"+ messages.join("; <br>");
+
+                            button.removeClass("active");
+                            closeModal.show();
+                            closeModal.click();
+
+                            handbidMain.notice(message, "Congratulations!", "success");
+
+                            return false;
+                        }
+                    );
+                    return false;
 
                 });
 
+            },
+            makePaymentForReceipt : function() {
+                $('.make-payment-button').live('click', function (e) {
+
+                    e.preventDefault();
+
+                    if(handbid.isButtonDisabledOrAlreadyActive($(this)) || handbid.cannotDoIfUnauthorized() || handbid.noticeIfNoCreditCard($(this))){
+                        return false;
+                    }
+
+                    var button = $(this);
+                    var receiptBlock = button.parents(".receiptRow").eq(0);
+                    var paidControls = $(".paidControls", receiptBlock).eq(0);
+                    var unpaidControls = $(".unpaidControls", receiptBlock).eq(0);
+                    var receiptPaymentBlock = button.parents(".receipt-payment-block").eq(0);
+                    var cardId = $(".select-payment-card", receiptPaymentBlock).eq(0).val();
+                    var nonce = button.data("make-payment-nonce");
+                    var auctionId = button.data("auction-id");
+                    var receiptId = button.data("receipt-id");
+
+                    button.addClass("active");
+
+                    var data = {
+                        action:    "handbid_ajax_make_receipt_payment",
+                        nonce:     nonce,
+                        cardId:    cardId,
+                        receiptId: receiptId,
+                        auctionId: auctionId
+                    };
+                    $.post(
+                        ajaxurl,
+                        data,
+                        function (data) {
+
+                            console.log("---------------------------");
+                            console.log("----Make payment success----");
+                            data = JSON.parse(data);
+                            console.log(data);
+
+                            handbidMain.notice("Payment success", "Info", "info");
+
+                            if(data.result.paid){
+                                paidControls.slideDown();
+                                unpaidControls.remove();
+                                receiptBlock.addClass("open").addClass("preview");
+                                handbidMain.notice("Your receipt was successfully paid!", "Congratulations!", "success");
+                            }
+
+
+                            //handbidMain.notice(message, "Congratulations!", "success");
+                            button.removeClass("active");
+                            return false;
+                        }
+                    );
+                    return false;
+
+                });
             },
             submitBid : function(data) {},
             setupConnect:             function () {
@@ -570,10 +705,15 @@ var handbidMain;
                                 $('[data-handbid-card-row="' + cardID + '"]').remove();
                                 handbid.notice('Your card has been deleted', "Card Success", "success");
 
+                                $(".select-payment-card option[data-option-val="+cardID+"]").remove();
+
                                 if($(".credit-card ul.simple-list li").length == 0){
                                     var list = $(".credit-card ul.simple-list");
                                     list.after('<div class="row no-results-row"> <p style="text-align: left;">Note: Not all auctions use credit cards</p>  <label class="no-results"> You have no cards on file. </label> </div>');
                                     list.remove();
+
+                                    $("[data-handbid-credit-cards-need]").attr("data-handbid-credit-cards-required", "" );
+                                    $(".select-payment-card").hide();
                                 }
                             }
                             else{
@@ -631,31 +771,45 @@ var handbidMain;
                                     handbid.notice("Something wrong. Please, try again later", "Card Error", "error");
                                 }
                                 else{
-                                    handbid.notice("Your card has been added successfully", "Card Success", "success");
-                                    var template = $(' <li class="row" data-handbid-card-row="' + data.resp.id + '"> <div class="col-md-3 col-xs-3"> <h4>Name</h4>' + data.resp.nameOnCard + '</div> <div class="col-md-3 col-xs-3"> <h4>Card Number</h4> xxxx xxxx xxxx ' + data.resp.lastFour + '</div> <div class="col-md-3 col-xs-3"> <h4>Exp. Date</h4>' + data.resp.expMonth + '/' + data.resp.expYear + '</div> <div class="col-md-3 col-xs-3"> <a class="button pink-solid-button  loading-span-button" data-handbid-delete-credit-card="' + data.resp.id + '"><em>Delete</em></a></div></li>'),
-                                        hasCards = $('.credit-card .no-results-row').length > 0;
+                                    if(data.resp.success != undefined && !data.resp.success && data.resp.data.error != undefined){
+                                        var messageParts = $.map(data.resp.data.error, function(val, i){
+                                            return val.join("<br>");
+                                        });
 
-                                    if(!hasCards) {
-                                        template.appendTo(container);
+                                        handbid.notice("<b>"+messageParts.join("<br>")+"</b>", "Card Error", "error");
                                     }
-                                    else
-                                    {
-                                        $('.credit-card .no-results-row').remove();
+                                    else {
+                                        handbid.notice("Your card has been added successfully", "Card Success", "success");
+                                        var template = $(' <li class="row" data-handbid-card-row="' + data.resp.id + '"> <div class="col-md-3 col-xs-3"> <h4>Name</h4>' + data.resp.nameOnCard + '</div> <div class="col-md-3 col-xs-3"> <h4>Card Number</h4> xxxx xxxx xxxx ' + data.resp.lastFour + '</div> <div class="col-md-3 col-xs-3"> <h4>Exp. Date</h4>' + data.resp.expMonth + '/' + data.resp.expYear + '</div> <div class="col-md-3 col-xs-3"> <a class="button pink-solid-button  loading-span-button" data-handbid-delete-credit-card="' + data.resp.id + '"><em>Delete</em></a></div></li>'),
+                                            hasCards = $('.credit-card .no-results-row').length > 0;
 
-                                        var list = null;
+                                        var cardSelects = $(".select-payment-card");
+                                        cardSelects.show();
+                                        cardSelects.append("<option data-option-val='" + data.resp.id + "' value='" + data.resp.id + "'>" + data.resp.nameOnCard + " (xxxx xxxx xxxx " + data.resp.lastFour + ")</option>");
 
-                                        if($('.credit-card .simple-list').length > 0) {
-                                            console.log("1");
-                                            list = $('.credit-card .simple-list');
+                                        if (!hasCards) {
+                                            template.appendTo(container);
                                         }
                                         else {
-                                            console.log("2");
-                                            list = $('<ul class="simple-list"></ul>');
-                                        }
-                                        console.log(list);
-                                        list.prependTo($('.credit-card'));
-                                        template.appendTo(list);
+                                            $('.credit-card .no-results-row').remove();
 
+                                            var list = null;
+
+                                            if ($('.credit-card .simple-list').length > 0) {
+                                                console.log("1");
+                                                list = $('.credit-card .simple-list');
+                                            }
+                                            else {
+                                                console.log("2");
+                                                list = $('<ul class="simple-list"></ul>');
+                                            }
+                                            console.log(list);
+                                            list.prependTo($('.credit-card'));
+                                            template.appendTo(list);
+
+                                        }
+
+                                        jQuery("[data-handbid-credit-cards-need]").removeAttr("data-handbid-credit-cards-required");
                                     }
                                 }
                             }
@@ -812,7 +966,7 @@ var handbidMain;
 
                 try {
 
-                    PNotify.prototype.options.delay  = 120000;
+                    //PNotify.prototype.options.delay  = 120000;
 
                     return new PNotify({
                         title: title,
@@ -835,6 +989,7 @@ var handbidMain;
             },
             startTimer: function (handbid) {
 
+                var continueTimer = true;
                 $.map($("[data-handbid-timer]"), function(timer){
                     timer = $(timer);
                     var time = timer.html();
@@ -845,7 +1000,8 @@ var handbidMain;
                     if (s == 0) {
                         if (m == 0) {
                             if (h == 0) {
-                                alert("Время вышло");
+                                handbidMain.notice("Auction closed!");
+                                continueTimer = false;
                                 //window.location.reload();
                                 return;
                             }
@@ -863,8 +1019,11 @@ var handbidMain;
                 });
 
 
-
-                setTimeout(function() { handbid.startTimer(handbid) }, 1000);
+                if(continueTimer) {
+                    setTimeout(function () {
+                        handbid.startTimer(handbid)
+                    }, 1000);
+                }
             },
             setTimerRemaining: function(handbid){
                 var timerRemaining = $("#timerRemaining");
@@ -893,6 +1052,7 @@ var handbidMain;
 
         restEndpoint = $("#apiEndpointsAddress").val();
         handbid.setupAuthorizationStatus();
+        handbid.makePaymentForReceipt();
 
         if ($('[data-handbid-item-key], [data-no-bids], [data-tags]').length > 0) {
             $('body').addClass('enable-handbid-fatal-error');
@@ -903,7 +1063,6 @@ var handbidMain;
 
             handbid.notice(window.location.href.split('handbid-notice=')[1]);
         }
-
 
         //console.log(this.loggedIn);
 
@@ -962,6 +1121,20 @@ var handbidMain;
                 }).on('pnotify.cancel', function() {
                     return false;
                 });
+        });
+
+        $("[data-toggle-invoice-link]").live("click", function(e){
+            e.preventDefault();
+            var invoiceID = $(this).data("toggle-invoice-link");
+            $(this).toggleClass("opened-invoice");
+            $("[data-receipt-block-id="+invoiceID+"] .invoice-details-container").slideToggle("normal");
+        })
+
+        $("[data-toggle-invoice-more-link]").live("click", function(e){
+            e.preventDefault();
+            var invoiceID = $(this).data("toggle-invoice-more-link");
+            $(this).toggleClass("opened-invoice");
+            $("[data-receipt-block-id="+invoiceID+"] .invoice-more-details-container").slideToggle("normal");
         })
 
     });

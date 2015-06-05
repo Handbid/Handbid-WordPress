@@ -16,6 +16,10 @@
 
             e.preventDefault();
 
+            if(handbidMain.noticeIfNoCreditCard($(this))){
+                return false;
+            }
+
             var key    = $(this).attr('data-handbid-modal-key'),
                 modal  = $('.handbid-modal[data-handbid-modal-key="' + key + '"]');
 

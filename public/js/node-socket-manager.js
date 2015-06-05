@@ -387,6 +387,13 @@ console.log(auctionChannelId+"  ==");
 
         }
 
+        if(data.values.inventoryRemaining != undefined &&
+            data.values.inventoryRemaining != -1 &&
+            data.values.inventoryRemaining != "∞"){
+            $('[data-handbid-remaining-of-id=' + data.values.id + ']').html(data.values.inventoryRemaining);
+        }
+        $('[data-handbid-sold-of-id=' + data.values.id + ']').html(data.values.quantitySold);
+        $('[data-handbid-bids-of-id=' + data.values.id + ']').html(data.values.bidCount);
         //var item = $('[data-guid=' + data.guid + ']');
         //var attribute = item.children('[data-attribute=' + data.attribute + ']');
         //var icon = ' <i class="fa fa-arrow-up" aria-hidden="true"></i> ';

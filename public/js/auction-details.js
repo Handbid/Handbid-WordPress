@@ -418,7 +418,10 @@
         });
 
         setTimeout(function() {
-            $('ul.by-category li.selected a')[0].click();
+            var firstCatLink = $('ul.by-category li.selected a')[0];
+            if(firstCatLink != undefined){
+                firstCatLink.click();
+            }
         }, 3500);
 
     });

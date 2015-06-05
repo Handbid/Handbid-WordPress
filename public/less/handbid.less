@@ -925,6 +925,10 @@ body.handbid-logged-in {
     [data-handbid-tickets-button] {
         margin-top: 10px;
     }
+    [data-handbid-tickets-button]:hover {
+      color: @green;
+      border-color: @green;
+    }
     .ticket-row:first-of-type {
         border-top: 1px solid @dropShadow;
     }
@@ -2250,12 +2254,32 @@ section.container.what-clients-say-nav {
         padding-left: 15px;
     }
 
+    li.purchased {
+        -webkit-box-shadow: inset 10px 0 0 0 @lightBlue;
+        box-shadow: inset 10px 0 0 0 @lightBlue;
+        padding-left: 15px;
+    }
+
+    li.general {
+        -webkit-box-shadow: inset 10px 0 0 0 @gray;
+        box-shadow: inset 10px 0 0 0 @gray;
+        padding-left: 15px;
+    }
+
     .winning {
         color: @green;
     }
 
     .losing {
         color: @pink;
+    }
+
+    .purchased {
+        color: @lightBlue;
+    }
+
+    .general {
+        color: @gray;
     }
 
     .bid-amount {

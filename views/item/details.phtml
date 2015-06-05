@@ -28,6 +28,9 @@ $isLosing = count(array_filter($losing, function ($bid) use ($item) {
 if (!$item) {
     return;
 }
+if($item->isTicket){
+    $item->isDirectPurchaseItem = true;
+}
 $category       = $item->categoryName;
 $description    = $item->description;
 $isBiddable     = !$item->isDirectPurchaseItem;
@@ -243,7 +246,7 @@ $hasManyImages = (count($item->images) > 1);
 <?php } ?>
 <input type="hidden" id="currentItemID" value="<?php echo $item->id; ?>">
 <input type="hidden" id="currentUserID" value="<?php echo $profile->id; ?>">
-<?php if($auction->timerRemaining != -1) {
+<?php if($auction->timerRemaining > 0) {
     ?>
     <input type="hidden" id="timerRemaining" data-auction-name="<?php echo $auction->name; ?>" value="<?php echo $auction->timerRemaining; ?>">
 <?php

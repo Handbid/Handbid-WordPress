@@ -16,6 +16,9 @@ $isBiddable = !$item->isDirectPurchaseItem;
 $buyItNow   = $isBiddable && $item->buyNowPrice > 0 && $item->buyNowPrice > $item->minimumBidAmount;
 $itemSold   = ($item->status == "sold" || $item->status == "paid");
 
+$needCreditCards = ($item->isTicket or $auction->requireCreditCard);
+$creditCardsRequired = ($needCreditCards) ? " data-handbid-credit-cards-need " : "";
+$creditCardsRequired .= (!count($profile->creditCards) and $needCreditCards) ? " data-handbid-credit-cards-required " : "";
 ?>
 <div data-handbid-bid data-handbid-item-key="<?php echo $item->key; ?>">
 
@@ -55,12 +58,14 @@ $itemSold   = ($item->status == "sold" || $item->status == "paid");
         <div class="col-md-6 col-xs-12">
             <a class="proxy-bid gray-solid-button handbid-modal-link loading-span-button"
                href=""
+                <?php echo $creditCardsRequired; ?>
                data-handbid-modal-key="proxy"><span><?php echo __('Set Max Bid'); ?></span></a>
         </div>
 
         <div class="col-md-6 col-xs-12">
             <a class="bid-now green-solid-button  loading-span-button"
                href=""
+               <?php echo $creditCardsRequired; ?>
                data-handbid-bid-button="bid"><span><?php echo __('Bid Now'); ?></span></a>
         </div>
 
@@ -73,6 +78,7 @@ $itemSold   = ($item->status == "sold" || $item->status == "paid");
         <div class="col-md-12">
             <a class="buy-now pink-solid-button loading-span-button"
                href=""
+                <?php echo $creditCardsRequired; ?>
                data-handbid-bid-button="buyItNow" data-handbid-buynow-price="<?php echo $item->buyNowPrice?>"><span><?php echo __('Buy Now For $')  . $item->buyNowPrice; ?></span></a>
         </div>
 
@@ -82,6 +88,7 @@ $itemSold   = ($item->status == "sold" || $item->status == "paid");
             <div class="col-md-12 col-xs-12">
                 <a class="buy-now green-solid-button  loading-span-button"
                    href=""
+                    <?php echo $creditCardsRequired; ?>
                    data-handbid-bid-button="purchase" data-handbid-buynow-price="<?php echo (int) $item->buyNowPrice;?>"><span><?php echo __('Buy Now'); ?></span></a>
             </div>
         <?php } ?>
@@ -133,6 +140,7 @@ $itemSold   = ($item->status == "sold" || $item->status == "paid");
         <div class="submit-proxy-bid col-md-12 col-xs-12">
             <a class="proxy-bid button green-solid-button  loading-span-button"
                href=""
+                <?php echo $creditCardsRequired; ?>
                data-handbid-bid-button="proxy"><span><?php echo __('Set Max Bid'); ?></span></a>
         </div>
 

@@ -182,7 +182,7 @@ class HandbidState
             }
 
             if ($auctionID) {
-                $this->inventory = $this->handbid->store( 'Bid' )->auctionMyInventory( $auctionID );
+                $this->inventory = $this->handbid->store( 'Auction' )->auctionMyInventory( $auctionID );
             }
 
             return $this->inventory;

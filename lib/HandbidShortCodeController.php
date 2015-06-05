@@ -687,11 +687,14 @@ class HandbidShortCodeController {
             $proxyBids  = null;
             $totalSpent = 0;
             $myAuctions = null;
+            $myInvoices = null;
 
             if ( $profile ) {
 
 
                 $myAuctions = $this->handbid->store( 'Bidder' )->getMyAuctions();
+                $myInvoices = $this->handbid->store( 'Receipt' )->allReceipts();
+                $myMessages = $this->handbid->store( 'Notification' )->allMessages( 0, 255 );
 
                 if ( $auction && $profile ) {
 
@@ -734,6 +737,8 @@ class HandbidShortCodeController {
 					'maxBids'    => $proxyBids,
 					'totalSpent' => $totalSpent,
 					'myAuctions' => $myAuctions,
+					'myInvoices' => $myInvoices,
+					'notifications' => $myMessages,
 				]
 			);
 		} catch ( Exception $e ) {
@@ -868,7 +873,7 @@ class HandbidShortCodeController {
 			$template = $this->templateFromAttributes( $attributes, 'views/bidder/notifications' );
 
 			$limit         = ( isset( $attributes['limit'] ) ) ? $attributes['limit'] : '15';
-			$notifications = $this->handbid->store( 'Notification' )->all( 0, $limit );
+			$notifications = $this->handbid->store( 'Notification' )->allMessages( 0, $limit );
 
 			return $this->viewRenderer->render(
 				$template,
@@ -1039,7 +1044,7 @@ class HandbidShortCodeController {
 		try {
 			$auction = $this->state->currentAuction( $attributes );
             $tickets = $this->state->getCurrentAuctionTickets();
-            $profile   = $this->state->currentBidder(  );
+            $profile   = $this->state->currentBidder( );
             $cards = $profile->creditCards;
 			$query = [ ];//@todo: find out hwo to pass query through attributes. then merge it with our defaults. array_merge([], $query)
 

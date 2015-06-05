@@ -14,6 +14,8 @@ $profile    = $this->get('profile');
     $losing     = $this->get('losing');
     $redirect   = $this->get('redirect');
     $myAuctions = $this->get('myAuctions');
+$myInvoices = $this->get('myInvoices');
+$myMessages = $this->get('notifications');
 ?>
 
 <div class="col-md-2 bidder-image-wrapper">
@@ -35,7 +37,7 @@ $profile    = $this->get('profile');
         <li><a data-slider-nav-key="user-profile">User Profile</a></li>
         <li><a data-slider-nav-key="update-credit-card">Update Credit Card</a></li>
         <li><a data-slider-nav-key="see-my-auctions">See My Auctions</a></li>
-<!--        <li><a data-slider-nav-key="bidder-notifications">Notifications</a></li>-->
+        <li><a data-slider-nav-key="bidder-notifications">Messages</a></li>
         <li><a data-slider-nav-key="see-my-receipt">View Receipts/Invoices</a></li>
         <li><a href="/organizations">Find an Organization</a></li>
         <li><a href="/auctions">Find an Auction</a></li>
@@ -60,7 +62,7 @@ $profile    = $this->get('profile');
                     forEach ($myAuctions as $auction) {
 
                         ?>
-                        <li class="row preview">
+                        <li class="row preview <?php echo $auction->status; ?>">
                             <div class="col-md-2"><img class="full-width-image" src="<?php echo "http://" . HANDBID_IMAGES_HOST . $auction->imageUrl; ?>"/></div>
                             <div class="col-md-7">
                                 <h4><?php echo $auction->name; ?></h4>
@@ -81,12 +83,20 @@ $profile    = $this->get('profile');
                 ?>
             </ul>
         </div>
-<!--        <div class="" data-slider-nav-key="bidder-notifications">-->
-<!--            --><?php //echo do_shortcode('[handbid_bidder_notifications template="views/bidder/notifications"]'); ?>
-<!--        </div>-->
+        <div class="" data-slider-nav-key="bidder-notifications">
+            <?php
+            echo $this->partial('notifications.phtml', [
+                'notifications' => $myMessages,
+            ]);?>
+            <?php // echo do_shortcode('[handbid_bidder_notifications template="views/bidder/notifications"]'); ?>
+        </div>
         <div class="" data-slider-nav-key="see-my-receipt">
             <ul class="simple-list">
-                <?php echo do_shortcode('[handbid_bidder_receipt]'); ?>
+                <?php
+                echo $this->partial('receipt.phtml', [
+                    'profile'    => $profile,
+                    'myInvoices' => $myInvoices,
+                ]);?>
             </ul>
         </div>
     </div>

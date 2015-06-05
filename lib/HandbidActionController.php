@@ -126,6 +126,8 @@ class HandbidActionController
             "handbid_ajax_registration",
             "handbid_ajax_reset_password",
             "handbid_ajax_createbid",
+            "handbid_ajax_buy_tickets",
+            "handbid_ajax_make_receipt_payment",
             "handbid_ajax_removebid",
             "handbid_ajax_add_credit_card",
             "handbid_ajax_remove_credit_card",
@@ -319,6 +321,68 @@ class HandbidActionController
             }
         }
         echo json_encode($result);
+        exit;
+    }
+
+    function handbid_ajax_buy_tickets_callback(){
+        $nonce = $_POST["nonce"];
+        $result = [
+            "success" => [],
+            "fail" => [],
+        ];
+
+        if($this->handbid_verify_nonce($nonce, date("d.m.Y") . "buy_tickets_array")){
+            $items = $_POST["items"];
+            if(count($items)){
+                foreach($items as $item){
+                    $values = [
+                        'userId' => (int) $_POST['userId'],
+                        'auctionId'  => (int) $_POST['auctionId'],
+                        'itemId'    => (int) $item['id'],
+                        'amount'    => (int) $item['price'],
+                        'quantity'    => (int) $item['quantity']
+                    ];
+                    try{
+                        $resp = $this->handbid->store( 'Bid' )->createBid( $values );
+                        $result["success"][] = $values["itemId"];
+                    }
+                    catch(Exception $e){
+                        $result["fail"][] = $values["itemId"];
+                    }
+                }
+            }
+        }
+        echo json_encode($result);
+        exit;
+    }
+
+    function handbid_ajax_make_receipt_payment_callback(){
+        $nonce = $_POST["nonce"];
+        $response = [];
+        $values = [
+            "cardId" => (int) $_POST["cardId"],
+            "receiptId" => (int) $_POST["receiptId"],
+            "auctionId" => (int) $_POST["auctionId"],
+        ];
+        if($this->handbid_verify_nonce($nonce, date("d.m.Y") . "make_receipt_payment")){
+            $profile = $this->state->currentBidder( );
+            if(count($profile->creditCards)){
+                foreach($profile->creditCards as $card){
+                    if($card->id == $values["cardId"]){
+                        $values["stripeId"] = $card->stripeId;
+                        $values["creditCardHandle"] = $card->creditCardHandle;
+                    }
+                }
+            }
+            try {
+                $resp = $this->handbid->store('Receipt')->makePayment($values);
+                $response["result"] = $resp;
+            }
+            catch(Exception $e) {
+                $response["error"] = $e;
+            }
+        }
+        echo json_encode($response);
         exit;
     }
 
