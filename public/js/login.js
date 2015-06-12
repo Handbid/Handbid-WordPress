@@ -262,6 +262,7 @@
                 function (data) {
                     console.log(data);
                     data = JSON.parse(data);
+                    console.log(data);
                     button.removeClass("active");
                     if(data.success){
                         errorRow.hide();

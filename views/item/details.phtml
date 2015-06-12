@@ -89,10 +89,10 @@ $hasManyImages = (count($item->images) > 1);
                 }
                 ?>
 
-                <div style="<?php if(!$isLiveItem) { ?>display:none;<?php } ?>" data-handbid-item-banner="live" class="item-banner live-item">This item is only available in the live auction.</div>
-                <div style="<?php if(!$isLosing) { ?>display:none;<?php } ?>" data-handbid-item-banner="losing" class="item-banner losing">You are losing this item.</div>
-                <div style="<?php if(!$isWinning) { ?>display:none;<?php } ?>" data-handbid-item-banner="winning" class="item-banner winning">You are winning this item.</div>
-                <div style="<?php if(!($item->status == "sold" || $item->status == "paid")) { ?>display:none;<?php } ?>" data-handbid-item-banner="sold" class="item-banner winning">This item has already been SOLD!</div>
+                <div style="<?php if(!$isLiveItem) { ?>display:none;<?php } ?>" data-handbid-item-banner="live" class="item-banner live-item" data-handbid-box-id="<?php echo $item->id; ?>">This item is only available in the live auction.</div>
+                <div style="<?php if(!$isLosing) { ?>display:none;<?php } ?>" data-handbid-item-banner="losing" class="item-banner losing" data-handbid-box-id="<?php echo $item->id; ?>">You are losing this item.</div>
+                <div style="<?php if(!$isWinning) { ?>display:none;<?php } ?>" data-handbid-item-banner="winning" class="item-banner winning" data-handbid-box-id="<?php echo $item->id; ?>">You are winning this item.</div>
+                <div style="<?php if(!($item->status == "sold" || $item->status == "paid")) { ?>display:none;<?php } ?>" data-handbid-item-banner="sold" class="item-banner winning" data-handbid-box-id="<?php echo $item->id; ?>">This item has already been SOLD!</div>
             </div>
 
             <?php if($hasManyImages) { ?>
@@ -115,7 +115,7 @@ $hasManyImages = (count($item->images) > 1);
                 <?php if($isBiddable) { ?>
                     <li class="bids col-md-4 col-xs-3"><em data-handbid-item-attribute="meta.totalBids"><?php echo $item->bidCount; ?></em>Bids</li>
                     <li class="increment col-md-4 col-xs-5"><em>$<span class="incrementSpan"><?php echo $item->bidIncrement; ?></span></em>Increment</li>
-                    <li class="min col-md-4 col-xs-4"><em>$<?php echo $item->minimumBidAmount; ?></em>Value</li>
+                    <li class="min col-md-4 col-xs-4"><em>$<span data-change-attribute="minimumBidAmount"><?php echo $item->minimumBidAmount; ?></span></em>Value</li>
                 <?php } else { ?>
                     <li class="purchases col-md-4 col-xs-4" data-handbid-item-attribute="meta.totalSold"><em  data-handbid-item-attribute="totalSoldItems"><?php echo $item->quantitySold; ?></em>Sold</li>
                     <li class="increment col-md-4 col-xs-4" data-handbid-item-attribute="buyNowPrice"><em>$<span id="singleItemPrice"><?php echo $item->buyNowPrice; ?></span></em>Price</li>

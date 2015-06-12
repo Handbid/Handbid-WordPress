@@ -22,6 +22,8 @@ $mdClass .= ' ' . sprintf('col-sm-%d', 6); //12 total cols in bootstrap
 $mdClass .= ' ' . sprintf('col-xs-%d', 12); //12 total cols in bootstrap
 
 $auction = $this->get('auction');
+$winning = $this->get('winning');
+$losing = $this->get('losing');
 
 
 ?>
@@ -35,7 +37,9 @@ $auction = $this->get('auction');
 
 		    echo $this->partial( 'simple-box.phtml', [
 			    'item'    => $item,
-			    'auction' => $auction
+			    'auction' => $auction,
+			    'winning' => $winning,
+			    'losing'  => $losing,
 		    ] );
 
 		    $newRow = ( $col % $cols === 0 && $col != $total );

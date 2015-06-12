@@ -338,30 +338,11 @@ console.log(auctionChannelId+"  ==");
      * @returns {Boolean}
      */
     $.effectNodeBidUpdate = function (data) {
-        var winnerName = (data.values.winnerPin != undefined) ? data.values.winnerPin : data.values.winnerName ;
+        var winnerName = (data.values.winnerName != undefined) ? data.values.winnerName : data.values.bidderName ;
         var message = data.values.item.name + ' <br>New Winner <b>' + winnerName + '</b> <br>Amount $<b>' + data.values.amount + '</b>';
-        console.log(message);
         handbidMain.notice(message, "New Item Winner");
-        var itemBannerWinning = $(".item-banner.winning").eq(0);
-        var itemBannerLosing = $(".item-banner.losing").eq(0);
-        var currentItemID = parseInt($("#currentItemID").val());
-        var currentUserID = parseInt($("#currentUserID").val());
-
-
-        if(itemBannerWinning.is(":visible") && (data.values.itemId == currentItemID) && (data.values.bidderId != currentUserID))
-        {
-            message = 'You are <br>losing</b> the item <b>' + data.values.item.name + '</b> now!';
-            itemBannerWinning.hide();
-            itemBannerLosing.show();
-            handbidMain.notice(message, "Losing Item", "error");
-        }
-        if(itemBannerLosing.is(":visible") && (data.values.itemId == currentItemID) && (data.values.bidderId == currentUserID))
-        {
-            message = 'You are <br>winning</b> the item <b>' + data.values.item.name + '</b> now!';
-            itemBannerWinning.show();
-            itemBannerLosing.hide();
-            handbidMain.notice(message, "Winning Item", "success");
-        }
+        handbidMain.addItemBidsHistory(data.values.item.id, data.values.id, winnerName, data.values.amount);
+        handbidMain.checkIfBidsExistsAndChange(data.values, data.type);
 
         return true;
     };

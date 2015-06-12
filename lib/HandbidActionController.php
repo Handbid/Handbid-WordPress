@@ -315,9 +315,20 @@ class HandbidActionController
                 $values["quantity"] = (int) $_POST["quantity"];
             }
 
-            $resp    = $this->handbid->store( 'Bid' )->createBid( $values );
-            if(isset($resp->status)){
+            try {
+                $resp = $this->handbid->store('Bid')->createBid($values);
                 $result = $resp;
+                if(isset($result->data->error)){
+                    $result->status = "failed";
+                    $reasons = [];
+                    foreach((array) $result->data->error as $error){
+                        $reasons[] = implode("<br>", $error);
+                    }
+                    $result->statusReason = implode("<br>", $reasons);
+                }
+            }
+            catch(Exception $e){
+
             }
         }
         echo json_encode($result);
@@ -329,6 +340,8 @@ class HandbidActionController
         $result = [
             "success" => [],
             "fail" => [],
+            "successID" => [],
+            "failID" => [],
         ];
 
         if($this->handbid_verify_nonce($nonce, date("d.m.Y") . "buy_tickets_array")){
@@ -344,10 +357,15 @@ class HandbidActionController
                     ];
                     try{
                         $resp = $this->handbid->store( 'Bid' )->createBid( $values );
-                        $result["success"][] = $values["itemId"];
+                        $arr = ((isset($resp->status) and $resp->status == "purchase" and !isset($resp->success) ) or $resp->success) ? "success" : "fail" ;
+                        $itemId = $values["itemId"];
+                        $result[$arr][$itemId] = $resp;
+                        $result[$arr."ID"][] = $itemId;
                     }
                     catch(Exception $e){
-                        $result["fail"][] = $values["itemId"];
+                        $itemId = $values["itemId"];
+                        $result["fail"][$itemId] = $e;
+                        $result["failID"][] = $itemId;
                     }
                 }
             }

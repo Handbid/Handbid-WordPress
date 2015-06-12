@@ -468,6 +468,16 @@ class HandbidShortCodeController {
 					$items[] = $item;
 				}
 			}
+            $profile = $this->handbid->store( 'Bidder' )->myProfile();
+            if($profile){
+                $myInventory = $this->state->currentInventory($auction->id);
+                $winning   = $myInventory->winning;
+                $losing    = $myInventory->losing;
+            }
+            else{
+                $winning = [];
+                $losing = [];
+            }
 
 			$template = $this->templateFromAttributes( $attributes, 'views/item/list' );
 
@@ -479,6 +489,8 @@ class HandbidShortCodeController {
 					'auction' => $auction,
 					'items'   => $items,
                     'cols_count' => $colsCount,
+                    'winning' => $winning,
+                    'losing'  => $losing,
 				]
 			);
 		} catch ( Exception $e ) {
@@ -701,9 +713,9 @@ class HandbidShortCodeController {
                     $myInventory = $this->state->currentInventory($auction->id);
 
 //                     $winning   = $this->handbid->store( 'Bid' )->myWinning($auction->id );
-                    // $losing    = $this->handbid->store( 'Bid' )->myLosing( $auction->id );
-                    // $purchases = $this->handbid->store( 'Bid' )->myPurchases( $auction->id );
-                    // $proxyBids = $this->handbid->store( 'Bid' )->myProxyBids( $auction->id );
+//                     $losing    = $this->handbid->store( 'Bid' )->myLosing( $auction->id );
+//                     $purchases = $this->handbid->store( 'Bid' )->myPurchases( $auction->id );
+//                     $proxyBids = $this->handbid->store( 'Bid' )->myProxyBids( $auction->id );
 
                     $winning   = $myInventory->winning;
                     $losing    = $myInventory->losing;
@@ -1225,7 +1237,7 @@ class HandbidShortCodeController {
 
         $nonce = $_POST["nonce"];
 
-        if(wp_verify_nonce($nonce, "bidder-".date("Y.m.d.H"))){
+        if(wp_verify_nonce($nonce, "bidder-".date("Y.m.d"))){
 
             $auction = (int) $_POST["auction"];
             echo do_shortcode("[handbid_bidder_profile_bar ". (($auction) ? " auction='".$auction."' " : "" ) ."]");

@@ -135,3 +135,55 @@
 .message-row .message-status.message-status-purchased{
     background-image: url("../images/dashboard/ic_purchased.png");
 }
+
+.ticket-row{
+    margin-right: -25px;
+    margin-left: -25px;
+}
+.ticket-row h4.ticket-title,
+.ticket-row .ticket-description{
+    text-align: left !important;
+}
+.ticket-row h4.ticket-title{
+    color: #45AFCD;
+    font-size: 24px;
+    margin: 0;
+}
+.ticket-row .ticket-description{
+    color: #6D818B;
+    font-size: 14px;
+}
+.ticket-row .ticket-part-container{
+    padding: 15px;
+}
+.ticket-row .ticket-price{
+    color: #45AFCD;
+    font-size: 26px;
+    display: block;
+    font-weight: normal;
+}
+
+.tickets-modal .bid-price-toggle {
+    width: 30px;
+    padding: 0 !important;
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
+}
+
+.tickets-modal .buy-quantity {
+    height: 30px;
+    line-height: 30px;
+}
+
+.no-padding{
+    padding: 0 !important;
+}
+
+.no-padding-left{
+    padding-left: 0 !important;
+}
+
+.no-padding-right{
+    padding-right: 0 !important;
+}

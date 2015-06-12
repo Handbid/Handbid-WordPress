@@ -19,16 +19,17 @@ if ($this->get('item')) {
     echo "No item found.";
     return;
 }
+?>
 
+<ul class="simple-list bid-history bid-history-item-<?php echo $item->id; ?>"  data-no-items-text="This item has no bids.">
+<?php
+$bids = array_reverse($bids);
 if(count($bids) > 0) {
-    ?>
 
-    <ul class="simple-list bid-history">
-        <?php
         foreach ($bids as $bid) {
             if($bid->amount){
             ?>
-            <li class="row <?php echo ($bid->status == 'winning') ? 'open' : 'closed'; ?>">
+            <li class="row <?php echo ($bid->status == 'winning') ? 'open' : 'closed'; ?>" data-list-bid-id="<?php echo $bid->id; ?>">
                 <div class="col-md-6">
                     <h4>Bidder Pin</h4>
                     <span><?php echo $bid->bidderName; ?></span>
@@ -40,9 +41,7 @@ if(count($bids) > 0) {
         <?php
             }
         }
-        ?>
-    </ul>
-<?php
+
 }
 else
 {
@@ -51,3 +50,4 @@ else
 <?php
 }
 ?>
+</ul>

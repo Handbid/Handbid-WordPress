@@ -27,7 +27,7 @@ if (!is_null($this->get('profile'))) {
     return;
 }
 ?>
-<div class="bidder-info-container">
+<div class="bidder-info-container" data-dashboard-profile-id="<?php echo $profile->id; ?>">
     <div class="container container-fluid underlined">
         <div class="row meta">
             <div class="pin col-md-6 col-xs-6">
@@ -114,12 +114,13 @@ if (!is_null($this->get('profile'))) {
 
                 <div class="row" data-slider-nav-key="profile-max-bids">
                     <div class="col-md-12">
-                        <ul class="simple-list">
+                        <ul class="simple-list handbid-list-of-bids-proxy" data-no-items-text="You have not set any max bids on items.">
                             <?php
                             if(count($maxBids) > 0) {
                                 forEach($maxBids as $bid) {
                                     ?>
-                                    <li class="row bid-row-id-<?php echo $bid->id; ?>">
+                                    <li class="row bid-row-id-<?php echo $bid->id; ?>"
+                                        data-maxbid-item-id="<?php echo $bid->item->id; ?>">
                                         <div class="col-md-8 col-xs-8">
                                             <a href="/auctions/<?php echo $auction->key; ?>/item/<?php echo $bid->item->key; ?>"><h4><?php echo $bid->item->name; ?></h4></a>
                                         </div>
@@ -127,7 +128,7 @@ if (!is_null($this->get('profile'))) {
                                             <span class="bid-amount winning">$<span><?php echo (int) $bid->maxAmount; ?></span></span>
                                         </div>
                                         <div class="col-md-2 col-xs-2">
-                                            <a class="button pink-solid-button loading-span-button" href="#" data-handbid-delete-proxy="<?php echo $bid->id; ?>"><em><?php echo __('Delete'); ?></em></a>
+                                            <a class="button pink-solid-button loading-span-button" href="#" data-handbid-delete-proxy="<?php echo $bid->id; ?>"><em>Delete</em></a>
                                         </div>
                                     </li>
                                 <?php
@@ -144,12 +145,14 @@ if (!is_null($this->get('profile'))) {
 
                 <div class="row" data-slider-nav-key="profile-winning">
                     <div class="col-md-12">
-                        <ul class="simple-list">
+                        <ul class="simple-list handbid-list-of-bids-winning" data-no-items-text="You are currently not winning any items.">
                             <?php
                             if(count($winning) > 0 ) {
                                 forEach($winning as $bid) {
                                     ?>
-                                    <li class="row">
+                                    <li class="row"
+                                        data-dashboard-price="<?php echo (int) $bid->amount; ?>"
+                                        data-winning-item-id="<?php echo $bid->item->id; ?>">
                                         <div class="col-md-10 col-xs-10">
                                             <a href="/auctions/<?php echo $auction->key; ?>/item/<?php echo $bid->item->key; ?>"><h4><?php echo $bid->item->name; ?></h4></a>
                                         </div>
@@ -166,17 +169,19 @@ if (!is_null($this->get('profile'))) {
                             }
                             ?>
                         </ul>
+
                     </div>
                 </div>
 
                 <div class="row" data-slider-nav-key="profile-losing">
                     <div class="col-md-12">
-                        <ul class="simple-list">
+                        <ul class="simple-list handbid-list-of-bids-losing" data-no-items-text="You are currently not losing any items.">
                             <?php
                             if(count($losing) > 0 ) {
                                 forEach($losing as $bid) {
                                     ?>
-                                    <li class="row">
+                                    <li class="row"
+                                        data-losing-item-id="<?php echo $bid->item->id; ?>">
                                         <div class="col-md-8 col-xs-8">
                                             <a href="/auctions/<?php echo $auction->key; ?>/item/<?php echo $bid->item->key; ?>"><h4><?php echo $bid->item->name; ?></h4></a>
                                         </div>
@@ -198,12 +203,14 @@ if (!is_null($this->get('profile'))) {
 
                 <div class="row" data-slider-nav-key="profile-purchases">
                     <div class="col-md-12">
-                        <ul class="simple-list">
+                        <ul class="simple-list handbid-list-of-bids-purchases" data-no-items-text="You have not purchased any items.">
                             <?php
                             if(count($purchases) > 0 ) {
                                 forEach($purchases as $purchase) {
                                     ?>
-                                    <li class="row">
+                                    <li class="row"
+                                        data-dashboard-price="<?php echo (int) $purchase->grandTotal; ?>"
+                                        data-purchased-item-id="<?php echo $purchase->item->id; ?>">
                                         <div class="col-md-4 col-xs-4">
                                             <a href="/auctions/<?php echo $auction->key; ?>/item/<?php echo $purchase->item->key; ?>"><h4><?php echo explode(' x ', $purchase->name)[0]; ?></h4></a>
                                         </div>

@@ -15,6 +15,6 @@ if(!$this->get('profile'))
 $auction = $this->get('auction');
 
 ?>
-<div id="bidder-info-load" class="bidder-info-load" data-auction="<?php echo (int) $auction->id; ?>"  data-load="<?php echo wp_create_nonce("bidder-".date("Y.m.d.H"));?>">
+<div id="bidder-info-load" class="bidder-info-load" data-auction="<?php echo (int) $auction->id; ?>"  data-load="<?php echo wp_create_nonce("bidder-".date("Y.m.d"));?>">
 
 </div>

@@ -410,7 +410,8 @@ body.handbid-logged-in {
         color: #fff;
         padding: 10px;
         h3 {
-            margin: 0;
+          margin: 0;
+          display: none;
         }
     }
 }
@@ -432,12 +433,37 @@ body.handbid-logged-in {
     .box-flag {
         background: @pink;
         display: block;
+      h3[data-handbid-box-banner="sold"]{
+        display: block;
+      }
     }
 }
 
 .simple-box[data-live] .box-flag {
     background: @orange;
     display: block;
+
+  h3[data-handbid-box-banner="live"]{
+    display: block;
+  }
+}
+
+.simple-box[data-handbid-item-box-status="losing"] .box-flag {
+    background: rgba(233, 77, 112, 0.8);
+    display: block;
+
+  h3[data-handbid-box-banner="losing"]{
+    display: block;
+  }
+}
+
+.simple-box[data-handbid-item-box-status="winning"] .box-flag {
+    background: rgba(159, 185, 74, 1);
+    display: block;
+
+  h3[data-handbid-box-banner="winning"]{
+    display: block;
+  }
 }
 
 .simple-box.status-closed,
@@ -941,7 +967,7 @@ body.handbid-logged-in {
         display: inline-block;
     }
     .ticket:nth-child(even) {
-        border-left: 1px solid @dropShadow;
+//        border-left: 1px solid @dropShadow;
     }
 }
 
