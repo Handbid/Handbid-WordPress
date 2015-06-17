@@ -123,9 +123,9 @@ $countries = $this->get("countries");
                         </div>
 
                         <div class="modal-footer">
-                            <a class="btn btn-info signup login-popup-link reset-password-link loading-span-button"
+                            <button type="submit" class="btn btn-info signup login-popup-link reset-password-link loading-span-button"
                                data-change-pass-nonce="<?php echo apply_filters("handbid_create_nonce", date("d.m.Y") . "reset_pass");?>"
-                                ><em>Send Instructions</em></a>
+                                ><span>Send Instructions</span></button>
                         </div>
 
                     </form>
