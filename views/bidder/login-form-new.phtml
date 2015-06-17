@@ -59,7 +59,7 @@ $countries = $this->get("countries");
                         </div>
 
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-info signup" id="hb-login-form-submit"><span>Sign Up</span></button>
+                            <button type="submit" class="btn btn-info signup" id="hb-login-form-submit"><span>Sign In</span></button>
 
                             <a class="btn btn-info signup login-popup-link" data-target-tab="tutorial-info-1">Tutorial</a>
                         </div>
@@ -179,7 +179,7 @@ $countries = $this->get("countries");
                         <div class="row">
                             <div class="col-lg-4 center-aligned-text">
                                 <img class="img-circle"
-                                     src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
+                                     src="<?php echo plugin_dir_url(__FILE__)."../../public/images/login-modal/icon-phone.png"; ?>"
                                      alt="Generic placeholder image" width="140" height="140">
 
                                 <h2 class="center-aligned-text">YOUR PHONE</h2>
@@ -190,7 +190,7 @@ $countries = $this->get("countries");
                             </div>
                             <div class="col-lg-4 center-aligned-text">
                                 <img class="img-circle"
-                                     src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
+                                     src="<?php echo plugin_dir_url(__FILE__)."../../public/images/login-modal/icon-tab.png"; ?>"
                                      alt="Generic placeholder image" width="140" height="140">
 
                                 <h2 class="center-aligned-text">IPADS</h2>
@@ -198,7 +198,7 @@ $countries = $this->get("countries");
                             </div>
                             <div class="col-lg-4 center-aligned-text">
                                 <img class="img-circle"
-                                     src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
+                                     src="<?php echo plugin_dir_url(__FILE__)."../../public/images/login-modal/icon-comp.png"; ?>"
                                      alt="Generic placeholder image" width="140" height="140">
 
                                 <h2 class="center-aligned-text">YOUR COMPUTER</h2>
@@ -547,6 +547,8 @@ $countries = $this->get("countries");
                         </select>
                         </div>
                         <input type="hidden" class="autoCompleteHiddenConfirm cleanable-input" id="confirm-add-to-auction" name="add-to-auction">
+                        <input type="hidden" class="autoCompleteHiddenConfirmSlug cleanable-input" id="confirm-add-to-auction-slug" name="add-to-auction-slug">
+                        <input type="hidden" class="autoCompleteHiddenConfirmName cleanable-input" id="confirm-add-to-auction-name" name="add-to-auction-name">
                     </div>
                 </div>
                 <input type="hidden" id="confirm-password" name="password">
@@ -575,6 +577,8 @@ $countries = $this->get("countries");
                 <h4>REGISTRATION COMPLETE!<br></h4>
 
                 <h3 class="bidder-name" id="reg-complete-name">Fred Flinstone</h3>
+
+                <div id="reg-complete-have-paddle-number">
                 <h4 class="paddle-number-info">your paddle number for the</h4>
 
                 <h3 class="auction-name" id="reg-complete-auction">Night at the Museum</h3>
@@ -583,6 +587,8 @@ $countries = $this->get("countries");
                 <div class="center-aligned-text bottom-margin">
                     <span class="what-is-paddle-number">What is a <a href="#" target="_blank">Paddle Number</a>?</span>
                 </div>
+                </div>
+
 
                 <div class="modal-footer center-aligned-text">
                     <div class="col-xs-12 col-md-6">
@@ -590,7 +596,7 @@ $countries = $this->get("countries");
                             tutorial</a>
                     </div>
                     <div class="col-xs-12 col-md-6">
-                        <a class="btn btn-info signup" href="/auctions/">Start Bidding</a>
+                        <a class="btn btn-info signup" id="start-bidding-button" href="/auctions/">Start Bidding</a>
                     </div>
                 </div>
 
@@ -616,7 +622,7 @@ $countries = $this->get("countries");
                     <div class="col-lg-4 center-aligned-text active tutorialTabsContainer"  role="presentation">
                         <a href="#your-phone" aria-controls="your-phone" role="tab" data-toggle="tab" class="tutorialTabs">
                         <img class="img-circle"
-                             src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
+                             src="<?php echo plugin_dir_url(__FILE__)."../../public/images/login-modal/icon-phone.png"; ?>"
                              alt="Generic placeholder image" width="140" height="140">
                         <h2 class="center-aligned-text">YOUR PHONE</h2>
                             </a>
@@ -624,7 +630,7 @@ $countries = $this->get("countries");
                     <div class="col-lg-4 center-aligned-text tutorialTabsContainer"  role="presentation">
                         <a href="#ipads" aria-controls="ipads" role="tab" data-toggle="tab" class="tutorialTabs">
                         <img class="img-circle"
-                             src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
+                             src="<?php echo plugin_dir_url(__FILE__)."../../public/images/login-modal/icon-tab.png"; ?>"
                              alt="Generic placeholder image" width="140" height="140">
                         <h2 class="center-aligned-text">IPADS</h2>
                             </a>
@@ -632,7 +638,7 @@ $countries = $this->get("countries");
                     <div class="col-lg-4 center-aligned-text tutorialTabsContainer"  role="presentation">
                         <a href="#your-comp" aria-controls="your-comp" role="tab" data-toggle="tab" class="tutorialTabs">
                         <img class="img-circle"
-                             src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
+                             src="<?php echo plugin_dir_url(__FILE__)."../../public/images/login-modal/icon-comp.png"; ?>"
                              alt="Generic placeholder image" width="140" height="140">
                         <h2 class="center-aligned-text">YOUR COMPUTER</h2>
                             </a>

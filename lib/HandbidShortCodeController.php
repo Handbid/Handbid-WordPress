@@ -156,7 +156,8 @@ class HandbidShortCodeController {
 
 			// Get orgs from handbid server
 			if ( $org ) {
-                $profile = $this->handbid->store( 'Bidder' )->myProfile();
+                //$profile = $this->handbid->store( 'Bidder' )->myProfile();
+                $profile = $this->state->currentBidder();
                 $this->handbid->store('Auction')->setBasePublicity(! $profile);
 				$auctions = $this->handbid->store( 'Auction' )->{$attributes['type']}( 0, 25, 'name', 'ASC', $org->id );
 			} else {
@@ -222,7 +223,8 @@ class HandbidShortCodeController {
 			$sortDirection = isset( $attributes['sort_direction'] ) ? $attributes['sort_direction'] : "asc";
 			$id            = isset( $attributes['id'] ) ? $attributes['id'] : 'auctions';
 
-            $profile = $this->handbid->store( 'Bidder' )->myProfile();
+            //$profile = $this->handbid->store( 'Bidder' )->myProfile();
+            $profile = $this->state->currentBidder();
             $this->handbid->store('Auction')->setBasePublicity(! $profile);
             $auctions = $this->handbid->store('Auction')->byStatus($attributes['type'], (int) $page + 1, $pageSize);
             $total = $this->handbid->store('Auction')->count($attributes['type']);
@@ -279,7 +281,8 @@ class HandbidShortCodeController {
 
 			$query = [ ];
 
-            $profile = $this->handbid->store( 'Bidder' )->myProfile();
+            //$profile = $this->handbid->store( 'Bidder' )->myProfile();
+            $profile = $this->state->currentBidder();
             //$this->handbid->store('Organization')->setBasePublicity(! $profile);
 			$organizations = $this->handbid->store( 'Organization' )->all(
 				$page,
@@ -336,7 +339,8 @@ class HandbidShortCodeController {
 
 			try {
 
-				$profile = $this->handbid->store( 'Bidder' )->myProfile( $auction->id );
+				//$profile = $this->handbid->store( 'Bidder' )->myProfile( $auction->id );
+                $this->state->currentBidder($auction->id);
 				if ( $profile ) {
 
                     $myInventory = $this->state->currentInventory($auction->id);
@@ -468,7 +472,8 @@ class HandbidShortCodeController {
 					$items[] = $item;
 				}
 			}
-            $profile = $this->handbid->store( 'Bidder' )->myProfile();
+            //$profile = $this->handbid->store( 'Bidder' )->myProfile();
+            $profile = $this->state->currentBidder($auction->id);
             if($profile){
                 $myInventory = $this->state->currentInventory($auction->id);
                 $winning   = $myInventory->winning;
@@ -523,7 +528,8 @@ class HandbidShortCodeController {
 				] );
 			}
 
-            $profile = $this->handbid->store( 'Bidder' )->myProfile();
+            //$profile = $this->handbid->store( 'Bidder' )->myProfile();
+            $profile = $this->state->currentBidder($auction->id);
             if($profile){
                 $myInventory = $this->state->currentInventory($auction->id);
                 $winning   = $myInventory->winning;
@@ -668,9 +674,10 @@ class HandbidShortCodeController {
 
         $template = $this->templateFromAttributes( $attributes, 'views/bidder/profile-load' );
 
-        $profile  = $this->handbid->store( 'Bidder' )->myProfile();
+        // $profile  = $this->handbid->store( 'Bidder' )->myProfile();
 
         $auction = $this->state->currentAuction();
+        $profile  = $this->state->currentBidder($auction->id);
 
         return $this->viewRenderer->render(
             $template, [
@@ -685,9 +692,10 @@ class HandbidShortCodeController {
 		try {
             $template = $this->templateFromAttributes( $attributes, 'views/bidder/profile' );
 
-            $profile  = $this->handbid->store( 'Bidder' )->myProfile();
+            // $profile  = $this->handbid->store( 'Bidder' )->myProfile();
 
             $auction = $this->state->currentAuction();
+            $profile  = $this->state->currentBidder($auction->id);
 
             if(is_null($auction) and isset($attributes["auction"]) and (int) $attributes["auction"] ){
                 $auction = $this->auction = $this->handbid->store('Auction')->byId($attributes["auction"], false);
@@ -712,10 +720,10 @@ class HandbidShortCodeController {
 
                     $myInventory = $this->state->currentInventory($auction->id);
 
-//                     $winning   = $this->handbid->store( 'Bid' )->myWinning($auction->id );
-//                     $losing    = $this->handbid->store( 'Bid' )->myLosing( $auction->id );
-//                     $purchases = $this->handbid->store( 'Bid' )->myPurchases( $auction->id );
-//                     $proxyBids = $this->handbid->store( 'Bid' )->myProxyBids( $auction->id );
+                    // $winning   = $this->handbid->store( 'Bid' )->myWinning($auction->id );
+                    // $losing    = $this->handbid->store( 'Bid' )->myLosing( $auction->id );
+                    // $purchases = $this->handbid->store( 'Bid' )->myPurchases( $auction->id );
+                    // $proxyBids = $this->handbid->store( 'Bid' )->myProxyBids( $auction->id );
 
                     $winning   = $myInventory->winning;
                     $losing    = $myInventory->losing;
@@ -766,9 +774,10 @@ class HandbidShortCodeController {
         try {
 
             $template = $this->templateFromAttributes( $attributes, 'views/bidder/dashboard-inner' );
-            $profile  = $this->handbid->store( 'Bidder' )->myProfile();
+            // $profile  = $this->handbid->store( 'Bidder' )->myProfile();
 
             $auction = $this->state->currentAuction();
+            $profile  = $this->state->currentBidder($auction->id);
 
             $winning    = null;
             $losing     = null;
@@ -852,8 +861,9 @@ class HandbidShortCodeController {
 		try {
 
 			$template = $this->templateFromAttributes( $attributes, 'views/bidder/bids' );
-			$profile  = $this->handbid->store( 'Bidder' )->myProfile();
-			$auction  = $this->state->currentAuction();
+            // $profile  = $this->handbid->store( 'Bidder' )->myProfile();
+            $auction  = $this->state->currentAuction();
+			$profile  = $this->state->currentBidder($auction->id);
 
             $myInventory = $this->state->currentInventory($auction->id);
 
@@ -906,8 +916,9 @@ class HandbidShortCodeController {
 	public function myProxyBids( $attributes ) {
 		try {
 			$template = $this->templateFromAttributes( $attributes, 'views/bidder/proxybids' );
-			$profile  = $this->handbid->store( 'Bidder' )->myProfile();
-			$auction  = $this->state->currentAuction();
+            // $profile  = $this->handbid->store( 'Bidder' )->myProfile();
+            $auction  = $this->state->currentAuction();
+			$profile  = $this->state->currentBidder($auction->id);
 
             $myInventory = $this->state->currentInventory($auction->id);
 
@@ -934,8 +945,9 @@ class HandbidShortCodeController {
 		try {
 
 			$template = $this->templateFromAttributes( $attributes, 'views/bidder/purchases' );
-			$profile  = $this->handbid->store( 'Bidder' )->myProfile();
-			$auction  = $this->state->currentAuction();
+			//$profile  = $this->handbid->store( 'Bidder' )->myProfile();
+            $auction  = $this->state->currentAuction();
+			$profile  = $this->state->currentBidder($auction->id);
 
             $myInventory = $this->state->currentInventory($auction->id);
 
@@ -963,7 +975,8 @@ class HandbidShortCodeController {
 		try {
 
 			$template = $this->templateFromAttributes( $attributes, 'views/bidder/profile-form' );
-			$profile  = $this->handbid->store( 'Bidder' )->myProfile();
+			//$profile  = $this->handbid->store( 'Bidder' )->myProfile();
+			$profile  = $this->state->currentBidder();
 
             $countries                     = $this->state->getCountriesWithCodes();
             $countryIDs                    = $this->state->getCountriesAndProvinces();
@@ -997,7 +1010,8 @@ class HandbidShortCodeController {
 	public function myCreditCards( $attributes ) {
 		try {
 			$template = $this->templateFromAttributes( $attributes, 'views/bidder/credit-cards' );
-			$profile  = $this->handbid->store( 'Bidder' )->myProfile();
+			//$profile  = $this->handbid->store( 'Bidder' )->myProfile();
+			$profile  = $this->state->currentBidder();
 
 			$cards = (isset($profile->creditCards)) ?
 				$profile->creditCards :
@@ -1091,14 +1105,16 @@ class HandbidShortCodeController {
 
 	// Control flow
 	public function isLoggedIn( $attributes, $content ) {
-		$profile = $this->handbid->store( 'Bidder' )->myProfile();
+		//$profile = $this->handbid->store( 'Bidder' )->myProfile();
+		$profile = $this->state->currentBidder();
 		if ( $profile ) {
 			echo do_shortcode( $content );
 		}
 	}
 
 	public function isLoggedOut( $attributes, $content ) {
-		$profile = $this->handbid->store( 'Bidder' )->myProfile();
+		//$profile = $this->handbid->store( 'Bidder' )->myProfile();
+		$profile = $this->state->currentBidder();
 		if ( ! $profile ) {
 			echo do_shortcode( $content );
 		}

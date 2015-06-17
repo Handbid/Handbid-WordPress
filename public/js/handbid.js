@@ -8,15 +8,6 @@
  */
 
 
-Array.prototype.in_array = function(p_val) {
-    for(var i = 0, l = this.length; i < l; i++)	{
-        if(this[i] == p_val) {
-            return true;
-        }
-    }
-    return false;
-}
-
 
 var handbidMain;
 (function ($) {
@@ -56,6 +47,15 @@ var handbidMain;
                         .join('0');
                 }
                 return s.join(dec);
+            },
+
+            in_array: function(array, p_val){
+                for(var i = 0, l = array.length; i < l; i++)	{
+                    if(array[i] == p_val) {
+                        return true;
+                    }
+                }
+                return false;
             },
 
 
@@ -161,15 +161,13 @@ var handbidMain;
             },
 
 
-            addDashboardBidPurchased: function(itemID, itemName, itemKey, auctionKey, amount, quantity, bidderName){
-
-                var nameToInsert = "Purchase of "+quantity+" "+itemName+" by "+bidderName+".";
+            addDashboardBidPurchased: function(itemID, itemName, itemKey, auctionKey, amount, quantity){
 
                 var pattern = '<li class="row"' +
                     'data-dashboard-price="'+(amount * quantity)+'"' +
                     'data-purchased-item-id="'+itemID+'">' +
                     '<div class="col-md-4 col-xs-4">' +
-                    '<a href="/auctions/'+auctionKey+'/item/'+itemKey+'"><h4>'+nameToInsert+'</h4></a>' +
+                    '<a href="/auctions/'+auctionKey+'/item/'+itemKey+'"><h4>'+itemName+'</h4></a>' +
                 '</div>' +
                 '<div class="col-md-4 col-xs-4">' +
                 '<h4 class="quantity-total">'+quantity+' x $'+amount+'</h4>' +
@@ -181,7 +179,7 @@ var handbidMain;
 
                 var listBidsPurchases = $(".handbid-list-of-bids-purchases").eq(0);
                 $("p", listBidsPurchases).eq(0).remove();
-                listBidsPurchases.prepend(pattern);
+                listBidsPurchases.append(pattern);
 
                 this.recheckBidCounts();
                 this.recalculateDashboardPrice();
@@ -207,6 +205,63 @@ var handbidMain;
                 this.recheckBidCounts();
                 this.recalculateDashboardPrice();
             },
+
+            addProfileActiveAuctions: function(){
+
+                var bidderDashboardPlace = $("#bidder-info-load"),
+                    bidderListOfActiveAuctions = $(".handbid-list-of-active-auctions").eq(0),
+                    hiddenListOfActiveAuctions = $(".handbid-hidden-of-active-auctions").eq(0),
+                    auctionID = parseInt(bidderDashboardPlace.data("auction")),
+                    auctionStatus = bidderDashboardPlace.data("auction-status"),
+                    auctionName = bidderDashboardPlace.data("auction-name"),
+                    auctionKey = bidderDashboardPlace.data("auction-key"),
+                    auctionImage = bidderDashboardPlace.data("auction-image"),
+                    auctionOrgKey = bidderDashboardPlace.data("auction-organization-key"),
+                    auctionOrgName = bidderDashboardPlace.data("auction-organization-name"),
+                    alreadyInList = $("[data-handbid-active-profile-auction='"+auctionID+"']", bidderListOfActiveAuctions).length;
+
+                var pattern = '<li class="row '+auctionStatus+'" data-handbid-active-profile-auction="'+auctionID+'">' +
+                    ' <div class="col-md-2"><img class="full-width-image"' +
+                    'src="'+auctionImage+'"/>' +
+                    '</div>' +
+                    '<div class="col-md-7">' +
+                    '<h4>'+auctionName+'</h4>' +
+                    '<a href="/organizations/'+auctionOrgKey+'"' +
+                    'class="org-link">'+auctionOrgName+'</a>' +
+                    '</div>' +
+                    '<div class="col-md-3">' +
+                    '<a class="cta-link" href="/auctions/'+auctionKey+'">See Auction</a>' +
+                    '</div>' +
+                    '</li>';
+
+                $("p", bidderListOfActiveAuctions).eq(0).remove();
+                if(! alreadyInList) {
+                    bidderListOfActiveAuctions.prepend(pattern);
+                }
+            },
+
+
+            processAuctionChange: function(values){
+
+                var listAuctions = $(".handbid-list-of-active-auctions").eq(0);
+                var listHiddenAuctions = $(".handbid-hidden-of-active-auctions").eq(0);
+                var auctionID = values.id;
+
+                if(values.status != "open"){
+                    $("[data-handbid-active-profile-auction="+auctionID+"]").remove();
+
+                    if($("li", listAuctions).length == 0){
+                        var noItemsText = listAuctions.data("no-items-text");
+                        listAuctions.prepend("<p>"+noItemsText+"</p>");
+                    }
+
+                    if(values.status == "closed"){
+                        $("[data-hidden-active-auction="+auctionID+"]").remove();
+                    }
+                }
+
+            },
+
 
             removeItemFromDashboardList: function(itemID, status){
                 var listBids = $(".handbid-list-of-bids-"+status).eq(0);
@@ -234,19 +289,19 @@ var handbidMain;
                 var isBidInWinning = $("[data-winning-item-id="+itemID+"]").length;
                 var isBidInLosing = $("[data-losing-item-id="+itemID+"]").length;
 
-                console.log("BID TYPE: "+ type);
-                console.log("isBidInWinning: "+ isBidInWinning);
-                console.log("isBidInLosing: "+ isBidInLosing);
-                console.log("profileID: "+ profileID);
-                console.log("bidWinnerID: "+ bidWinnerID);
+                //console.log("BID TYPE: "+ type);
+                //console.log("isBidInWinning: "+ isBidInWinning);
+                //console.log("isBidInLosing: "+ isBidInLosing);
+                //console.log("profileID: "+ profileID);
+                //console.log("bidWinnerID: "+ bidWinnerID);
 
                 if(isBidInWinning && (bidWinnerID != profileID)){
                     // You Are Losing This Item.
                     console.log("----- LOSING ITEM -----");
 
-                    values.item.key = "undefinedz";
-                    values.item.auctionKey = "undefinedz";
-                    this.addDashboardBidLosing(values.item.id, values.name, values.item.key, values.item.auctionKey, values.amount );
+                    //values.item.key = "undefinedz";
+                    //values.item.auctionKey = "undefinedz";
+                    this.addDashboardBidLosing(values.item.id, values.item.name, values.item.key, values.auctionKey, values.amount );
 
                     this.removeItemFromDashboardList(itemID, "winning");
 
@@ -259,12 +314,13 @@ var handbidMain;
                     // You Are Winning This Item.
                     console.log("----- WINNING ITEM -----");
 
-                    values.item.key = "undefinedz";
-                    values.item.auctionKey = "undefinedz";
-                    this.addDashboardBidWinning(values.item.id, values.name, values.item.key, values.item.auctionKey, values.amount );
+                    //values.item.key = "undefinedz";
+                    //values.item.auctionKey = "undefinedz";
+                    //var oldAmount = parseInt($("[data-winning-item-id='"+itemID+"']").data("dashboard-price"));
+                    this.addDashboardBidWinning(values.item.id, values.item.name, values.item.key, values.auctionKey, values.amount );
                     this.removeItemFromDashboardList(itemID, "losing");
-                    var oldAmount = parseInt($("[data-winning-item-id='"+itemID+"']").data("dashboard-price"));
-                    this.addDashboardBidLosing(values.item.id, values.name, values.item.key, values.item.auctionKey, oldAmount );
+
+                    //this.addDashboardBidLosing(values.item.id, values.name, values.item.key, values.item.auctionKey, oldAmount );
 
                     this.recheckBidCounts();
                     this.recalculateDashboardPrice();
@@ -272,6 +328,16 @@ var handbidMain;
                     this.notice('You are <br>winning</b> the item <b>' + values.item.name + '</b> now!', "Winning Item", "success");
                 }
 
+
+            },
+
+
+
+
+            addUserPurchase: function(values){
+                values.key = "undefinedz";
+                values.auctionKey = "undefinedz";
+                this.addDashboardBidPurchased(values.itemId, values.name, values.key, values.auctionKey, values.pricePerItem, values.quantity );
 
             },
 
@@ -466,7 +532,7 @@ var handbidMain;
                                 handbid.notice(message, data.status.toUpperCase(), data.status);
                             }
                             else{
-                                data.item.auctionKey = "undefinedz";
+                                data.item.auctionKey = $("#bidder-info-load").data("auction-key");
                                 handbid.addDashboardBidProxy(data.id, data.item.id, data.item.name, data.item.key, data.item.auctionKey, data.maxAmount);
                             }
 
@@ -537,10 +603,10 @@ var handbidMain;
 
                                 message = "You purchased " + quantity + " <br>of Item #" + data.item.id + " <br><b>" + data.item.name + "</b>";
                                 handbidMain.notice(message, "Congratulations!", "success");
-                                var itemKey = "undefinedz";
-                                var auctionKey = "undefinedz";
-                                var bidderName = "bidderName";
-                                handbid.addDashboardBidPurchased(data.item.id, data.item.name, itemKey, auctionKey, perItem, quantity, bidderName);
+
+                                handbidMain.removeItemFromDashboardList(itemId, "proxy");
+                                handbidMain.recheckBidCounts();
+                                handbidMain.recalculateDashboardPrice();
 
                             }
 
@@ -757,7 +823,7 @@ var handbidMain;
                                     remainingSymb = remainingBlock.val(),
                                     remaining = parseInt(remainingBlock.val());
                                 quantityBlock.html(0);
-                                if(remainingSymb != "-1" && remainingSymb != "∞" && data.successID.in_array(ticketID)){
+                                if(remainingSymb != "-1" && remainingSymb != "∞" && handbid.in_array(data.successID, ticketID)){
                                     remainingBlock.val(remaining - quantity);
                                 }
                                 return null;
@@ -767,7 +833,7 @@ var handbidMain;
                             var messages = [];
                             if(data.failID.length){
                                 messages = $.map(prices, function(val, i){
-                                    if(data.failID.in_array(val.id)) {
+                                    if(handbid.in_array(data.failID, val.id)) {
                                         var reason = "";
                                         if(data.fail[val.id].data != undefined && data.fail[val.id].data.error != undefined) {
                                             var reasons = $.map(data.fail[val.id].data.error, function (val, i) {
@@ -778,7 +844,7 @@ var handbidMain;
                                         else{
                                             reason = "<br> Reason: Something wrong. Please, try again later";
                                         }
-                                        return (!data.failID.in_array(val.id)) ? null : "Item #" + val.id + " <br><b>" + val.name + "</b>" + reason;
+                                        return (!handbid.in_array(data.failID, val.id)) ? null : "Item #" + val.id + " <br><b>" + val.name + "</b>" + reason;
 
                                     }
                                     else return null;
@@ -788,18 +854,14 @@ var handbidMain;
 
                             if(data.successID.length){
                                 messages = $.map(prices, function(val, i){
-                                    if((data.successID.in_array(val.id))){
+                                    if((handbid.in_array(data.successID, val.id))){
 
                                         var itemData = data.success[val.id];
 
-                                        var itemKey = "undefinedz";
-                                        var auctionKey = "undefinedz";
-                                        var bidderName = itemData.bidderName;
                                         var amount = itemData.amount;
                                         var quantity = itemData.quantity;
                                         var name = itemData.name;
-                                        handbid.addDashboardBidPurchased(val.id, name, itemKey, auctionKey, amount, quantity, bidderName);
-                                        return (! data.successID.in_array(val.id)) ? null : "<b>"+val.quantity+"</b> of Item #"+val.id+" <br><b>"+val.name+"</b>";
+                                        return (! handbid.in_array(data.successID, val.id)) ? null : "<b>"+val.quantity+"</b> of Item #"+val.id+" <br><b>"+val.name+"</b>";
                                     }
                                     else{
                                         return null;
@@ -1237,7 +1299,6 @@ var handbidMain;
 
                 try {
 
-                    //PNotify.prototype.options.delay  = 120000;
 
                     return new PNotify({
                         title: title,
@@ -1258,6 +1319,164 @@ var handbidMain;
                 }
 
             },
+
+
+            detectIfUserWantToBid: function(){
+
+                var bidderDashboardPlace = $("#bidder-info-load"),
+                    auctionID = parseInt(bidderDashboardPlace.data("auction")),
+                    profileID = parseInt(bidderDashboardPlace.data("profile-id")),
+                    paddleNumber = bidderDashboardPlace.data("profile-paddle-number"),
+                    nonce = bidderDashboardPlace.data("paddle-nonce");
+
+                if(auctionID && profileID && paddleNumber == "N/A") {
+                //if(true) {
+                    (new PNotify({
+                        title: 'Choose a Variant',
+                        text: 'Do you want to bid on this auction or just view it?',
+                        icon: 'glyphicon glyphicon-question-sign',
+                        hide: false,
+                        confirm: {
+                            confirm: true,
+                            buttons: [{
+                                text: 'Bid',
+                                addClass: 'btn-primary',
+                                click: function (notice) {
+                                    notice.update({
+                                        title: 'Receiving the Paddle Number for this Auction',
+                                        text: '<div class="progress progress-striped active" style="margin:0">\
+	                                            <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">\
+		                                        <span class="sr-only">100%</span>\
+	                                            </div>\
+                                                </div>',
+                                        icon: 'glyphicon glyphicon-refresh gly-spin',
+                                        hide: false,
+                                        confirm: {
+                                            confirm: false
+                                        },
+                                        buttons: {
+                                            closer: false,
+                                            sticker: false
+                                        },
+                                        history: {
+                                            history: false
+                                        }
+                                    });
+                                    var data = {
+                                        action: "handbid_ajax_get_paddle_number",
+                                        auctionID: auctionID,
+                                        nonce: nonce
+                                    };
+                                    console.log(data);
+                                    $.post(
+                                        ajaxurl,
+                                        data,
+                                        function (data) {
+
+                                            console.log("-----------------------");
+                                            console.log("----Receive Paddle Number success----");
+                                            data = JSON.parse(data);
+                                            console.log(data);
+
+                                            var text = "";
+                                            var title = "";
+                                            var type = "";
+                                            var icon = "";
+
+                                            if(data.paddleId != undefined){
+                                                $("[data-paddle-for-auction-"+auctionID+"]").html(data.paddleId);
+                                                text = 'Your paddle number for this auction is <b>'+data.paddleId+'</b>';
+                                                title = 'Done';
+                                                type = 'success';
+                                                icon = 'glyphicon glyphicon-ok';
+                                            }
+                                            else{
+                                                text = data.errors.join("<br>");
+                                                title = 'Failed';
+                                                type = 'error';
+                                                icon = 'glyphicon glyphicon-remove-sign';
+                                            }
+
+
+
+                                            notice.update({
+                                                title: title,
+                                                text: text,
+                                                icon: icon,
+                                                hide: true,
+                                                type: type,
+                                                confirm: {
+                                                    confirm: false
+                                                },
+                                                buttons: {
+                                                    closer: true,
+                                                    sticker: false
+                                                },
+                                                history: {
+                                                    history: false
+                                                }
+                                            });
+
+                                            handbid.addProfileActiveAuctions();
+
+
+                                            return false;
+                                        }
+                                    );
+                                }
+                            }, {
+                                text: 'Just View',
+                                addClass: 'btn-primarya',
+                                click: function (notice) {
+                                    notice.remove();
+                                }
+                            }]
+                        },
+                        buttons: {
+                            closer: false,
+                            sticker: false
+                        },
+                        history: {
+                            history: false
+                        }
+                    })).get().on('pnotify.cancel', function () {
+                            return false;
+                        });
+                }
+
+            },
+
+
+            displayRequiredCardsMessage: function(){
+                (new PNotify({
+                    title: 'Credit cards required',
+                    type: 'error',
+                    text: '<b>You must supply a credit card to bid in this auction.</b>',
+                    icon: 'glyphicon glyphicon-exclamation-sign',
+                    hide: false,
+                    confirm: {
+                        confirm: true,
+                        buttons: [{
+                            text: 'Add a card',
+                            addClass: 'btn-primary',
+                            click: function (notice) {
+                                $(".credit-card-form-link").eq(0).click();
+                                notice.remove();
+
+                            }
+                        }]
+                    },
+                    buttons: {
+                        closer: false,
+                        sticker: false
+                    },
+                    history: {
+                        history: false
+                    }
+                }));
+            },
+
+
             startTimer: function (handbid) {
 
                 var continueTimer = true;
@@ -1324,6 +1543,7 @@ var handbidMain;
         restEndpoint = $("#apiEndpointsAddress").val();
         handbid.setupAuthorizationStatus();
         handbid.makePaymentForReceipt();
+        handbid.detectIfUserWantToBid();
 
         if ($('[data-handbid-item-key], [data-no-bids], [data-tags]').length > 0) {
             $('body').addClass('enable-handbid-fatal-error');

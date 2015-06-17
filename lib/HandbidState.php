@@ -42,6 +42,10 @@ class HandbidState
     {
 
         try {
+
+            $profile = $this->currentBidder();
+            $this->handbid->store('Organization')->setBasePublicity(! $profile);
+
             if (!$this->org) {
                 $orgKey = (isset($attributes['organization']) && $attributes['organization']) ? $attributes['organization'] : get_query_var(
                     'organization'
@@ -68,6 +72,9 @@ class HandbidState
     {
 
         try {
+
+            $profile = $this->currentBidder();
+            $this->handbid->store('Auction')->setBasePublicity(! $profile);
 
             if ($this->auction && !$attributes) {
                 return $this->auction;
@@ -126,6 +133,9 @@ class HandbidState
     {
         try {
 
+            $profile = $this->currentBidder();
+            $this->handbid->store('Item')->setBasePublicity(! $profile);
+
             if (!$this->item || $attributes) {
 
                 $itemKey = (isset($attributes['key']) && $attributes['key']) ? $attributes['key'] : get_query_var(
@@ -162,10 +172,10 @@ class HandbidState
 
     }
 
-    public function currentBidder()
+    public function currentBidder($auction_id = null)
     {
         try {
-            return $this->handbid->store('Bidder')->myProfile();
+            return $this->handbid->store('Bidder')->myProfile($auction_id);
         } catch (Exception $e) {
 
             return null;

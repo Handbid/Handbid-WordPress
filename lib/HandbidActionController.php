@@ -125,6 +125,7 @@ class HandbidActionController
             "handbid_ajax_login",
             "handbid_ajax_registration",
             "handbid_ajax_reset_password",
+            "handbid_ajax_get_paddle_number",
             "handbid_ajax_createbid",
             "handbid_ajax_buy_tickets",
             "handbid_ajax_make_receipt_payment",
@@ -267,6 +268,8 @@ class HandbidActionController
             $result["profile"] = $profile;
             if(! $result["success"]){
                 $result["error"] = str_replace("/auth/","",$profile->data->status);
+                $result["error"] = trim(strpos($result["error"], "use login") === false)?$result["error"]:$result["error"].'<a class="btn btn-info signup login-popup-link" data-target-tab="login-form">Sign In</a>';
+                $result["error"] = trim($result["error"])?$result["error"]:"Something went wrong. Please, try again later. ";
             }
 
         }
@@ -287,6 +290,25 @@ class HandbidActionController
             $result = $profile;
 
         }
+        echo json_encode($result);
+        exit;
+    }
+
+
+    function handbid_ajax_get_paddle_number_callback(){
+        $result = [];
+
+        $nonce = $_POST["nonce"];
+        $auctionID = $_POST["auctionID"];
+
+//        if($this->handbid_verify_nonce($nonce, date("d.m.Y") . "add_paddle")){
+
+            $result = $this->handbid->store('Bidder')->addActiveAuction($auctionID);
+
+//        }
+//        else{
+//            $result = $nonce;
+//        }
         echo json_encode($result);
         exit;
     }

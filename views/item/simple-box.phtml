@@ -74,8 +74,6 @@ $boxStatus = ($isWinning) ? "winning" : (($isLosing) ? "losing" : $item->status)
         <div class="full-image-wrapper" style="<?php echo $backImageStyle; ?>">
             <div class="dim-overlay"></div>
             <div class="box-flag">
-                <?php //echo ($item->status == "sold") ? '<h3>Sold Out</h3>' : ''; ?>
-                <?php //echo ($item->disableMobileBidding) ? '<h3>Live Auction Only</h3>' : ''; ?>
 
                 <h3 data-handbid-box-banner="live" data-handbid-box-id="<?php echo $item->id; ?>">Live Auction Only</h3>
                 <h3 data-handbid-box-banner="losing" data-handbid-box-id="<?php echo $item->id; ?>">Losing this item.</h3>

@@ -34,12 +34,17 @@ if (!is_null($this->get('profile'))) {
                 <label>Pin Code:</label>
                 <?php echo $profile->pin; ?>
             </div>
-            <div class="auction col-md-6 col-xs-6">
+            <div class="auction col-md-4 col-xs-4">
                 <?php
                 if($auction) {
                     echo $auction->name;
-                } else { ?>
-                <?php } ?>
+                } ?>
+            </div>
+            <div class="paddle-number col-md-2 col-xs-2">
+                <?php
+                if($auction) {
+                    echo "Paddle # : <span data-profile-current-paddle-number data-paddle-for-auction-".$auction->id.">".$auction->currentPaddleNumber;
+                } ?>
             </div>
         </div>
 

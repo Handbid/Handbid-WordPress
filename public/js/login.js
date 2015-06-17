@@ -47,8 +47,7 @@
 
             $("." + tabName + " input.is-email").each(function () {
                 field = $(this);
-                var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
-                if (field.val().trim() != "" && !re.test(field.val())) {
+                if (field.val().trim() != "" && ! handbidLogin.validEmail(field.val())) {
                     field.addClass("validation-email-error");
                     errorsContainer.append(field.data("not-email-message") + "<br>");
                     valid = false;
@@ -91,13 +90,26 @@
             $("#" + selector).val(input.val());
         },
 
+        getPhoneNumber: function (thestring) {
+            return thestring.replace(/\D+/g, "");
+        },
+
+        validEmail: function (thestring) {
+            var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+            return re.test(thestring);
+        },
+
         formatRepo: function (repo) {
             return repo.name + " ("+repo.totalItems+" items, by "+repo.organization+")";
         },
 
         formatRepoSelection: function (repo) {
             //console.log(repo);
-            (repo.auctionGuid != undefined) ? $(repo.inputIt).val(repo.auctionGuid) : "";
+            if(repo.auctionGuid != undefined){
+                $(repo.inputIt).val(repo.auctionGuid);
+                $("#confirm-add-to-auction-slug").val(repo.key);
+                $("#confirm-add-to-auction-name").val(repo.name);
+            }
             if(repo.text != "----") {
                 $(".loadAuctionsToAutoCompleteRegisterTextContainer").show();
                 $(".loadAuctionsToAutoCompleteRegisterText").html(repo.name);
@@ -206,6 +218,10 @@
 
             var errorBlock = $(".login-modal-tab .errorsRow");
 
+            if(!handbidLogin.validEmail(username)){
+                username = handbidLogin.getPhoneNumber(username);
+            }
+
             button.addClass("active");
             $.post(ajaxurl,
                 {
@@ -236,9 +252,11 @@
             var password = $("#confirm-password").val();
             var email = $("#confirm-email").val();
             var countryCode = $("#confirm-phone-code").val();
-            var mobile = $("#confirm-phone-number").val();
+            var mobile = handbidLogin.getPhoneNumber($("#confirm-phone-number").val());
             var deviceType = $("#confirm-phone-type").val();
             var auctionGuid = $("#confirm-add-to-auction").val();
+            var auctionSlug = $("#confirm-add-to-auction-slug").val();
+            var auctionName = $("#confirm-add-to-auction-name").val();
             var nonce = $("#hb-reg-form-nonce").val();
 
             var errorRow = $(".register-confirm-tab .errorsRow").eq(0);
@@ -257,6 +275,8 @@
                     mobile: mobile,
                     deviceType: deviceType,
                     auctionGuid: auctionGuid,
+                    auctionSlug: auctionSlug,
+                    auctionName: auctionName,
                     nonce: nonce
                 },
                 function (data) {
@@ -267,6 +287,27 @@
                     if(data.success){
                         errorRow.hide();
                         errorsContainer.html("");
+                        var nameContainer = $("#reg-complete-name");
+                        var auctionNameContainer = $("#reg-complete-auction");
+                        var paddleNumberContainer = $("#reg-paddle-number");
+                        var paddleContainer = $("#reg-complete-have-paddle-number");
+                        var closeButton = $(".handbid-modal.user-modal.login-modal-tab .modal-close").eq(0);
+                        var startBiddingButton = $("#start-bidding-button");
+                        nameContainer.html(data.values.firstname + " " + data.values.lastname);
+                        var auctionUrl = "/auctions/" + auctionSlug;
+                        if(data.profile.data.currentPaddleNumber){
+                            startBiddingButton.attr("href", auctionUrl);
+                            closeButton.attr("data-reload-href", auctionUrl);
+                            auctionNameContainer.html(auctionName);
+                            paddleNumberContainer.html(data.profile.data.currentPaddleNumber);
+                            paddleContainer.show();
+                        }
+                        else{
+                            startBiddingButton.attr("href", "/auctions/");
+                            closeButton.attr("data-reload-href", "/auctions/");
+                            paddleContainer.hide();
+                        }
+                        handbidLogin.displaySpecifiedTabOfLoginPopup("register-complete");
                     }
                     else{
                         errorRow.show();
@@ -279,6 +320,9 @@
         resendPasswordLink: function(button){
 
             var emailOrPhone = $("#emailOrPhoneToResetPass").val();
+            if(!handbidLogin.validEmail(emailOrPhone)){
+                emailOrPhone = handbidLogin.getPhoneNumber(emailOrPhone);
+            }
             var nonce = button.data("change-pass-nonce");
             var errorBlock = $(".forgot-pass-tab .errorsRow");
             //console.log(nonce);
@@ -312,7 +356,7 @@
 
         $('.has-popover').popover();
 
-        $('.login-popup-link').on('click', function (e) {
+        $('.login-popup-link').live('click', function (e) {
             e.preventDefault();
             if (!$(this).hasClass("register-next") && !$(this).hasClass("register-confirm")) {
                 var tabName = $(this).data("target-tab");
@@ -336,6 +380,10 @@
 
         $('.handbid-modal .modal-close').on('click', function () {
             handbidLogin.restoreInitialTabState();
+            var reloadHref = $(this).data("reload-href");
+            if(reloadHref != undefined){
+                window.location = reloadHref;
+            }
         });
 
         $('.copyable-field').on('focusout', function () {

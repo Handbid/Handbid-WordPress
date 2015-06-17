@@ -84,7 +84,7 @@ console.log(auctionChannelId+"  ==");
 
             this.on('event.receipt', function (data) {
                 console.log(" ===== user event.receipt ====="+ $.getCurrentDateAndTime());
-                $.eventUserReciept(data);
+                $.eventUserReceipt(data);
             });
 
             this.on('event.user', function (data) {
@@ -119,6 +119,8 @@ console.log(auctionChannelId+"  ==");
      * @returns boolean
      */
     $.eventAuction = function (data) {
+
+        handbidMain.processAuctionChange(data.values);
 
         switch (data.attribute) {
             case 'status':
@@ -193,7 +195,8 @@ console.log(auctionChannelId+"  ==");
      */
     $.eventUserBid = function (data) {
         var message = JSON.stringify(data, null, 2);
-        handbidMain.notice(message);
+        console.log(data.values);
+        //handbidMain.notice(message);
     };
 
     /**
@@ -205,7 +208,8 @@ console.log(auctionChannelId+"  ==");
      */
     $.eventUserBroadcast = function (data) {
         var message = JSON.stringify(data, null, 2);
-        handbidMain.notice(message);
+        console.log(data.values);
+        //handbidMain.notice(message);
     };
 
     /**
@@ -219,7 +223,8 @@ console.log(auctionChannelId+"  ==");
      */
     $.eventUserPurchase = function (data) {
         var message = JSON.stringify(data, null, 2);
-        handbidMain.notice(message);
+        console.log(data.values);
+        handbidMain.addUserPurchase(data.values);
     };
 
     /**
@@ -229,9 +234,10 @@ console.log(auctionChannelId+"  ==");
      * @param Object data
      * @returns boolean
      */
-    $.eventUserReciept = function (data) {
+    $.eventUserReceipt = function (data) {
         var message = JSON.stringify(data, null, 2);
-        handbidMain.notice(message);
+        console.log(data);
+        //handbidMain.notice(message);
     };
 
     /**
@@ -243,7 +249,8 @@ console.log(auctionChannelId+"  ==");
      */
     $.eventUser = function (data) {
         var message = JSON.stringify(data, null, 2);
-        handbidMain.notice(message);
+        console.log(data.values);
+        //handbidMain.notice(message);
     };
 
     /*
