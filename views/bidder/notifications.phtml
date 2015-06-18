@@ -9,6 +9,7 @@
  */
 
 $notifications = $this->get( 'notifications' );
+$notifications = array_reverse($notifications);
 ?>
     <ul class="simple-list">
         <?php if ( count( $notifications ) > 0 ) {

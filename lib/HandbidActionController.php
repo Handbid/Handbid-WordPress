@@ -131,6 +131,8 @@ class HandbidActionController
             "handbid_ajax_make_receipt_payment",
             "handbid_ajax_removebid",
             "handbid_ajax_add_credit_card",
+            "handbid_ajax_get_invoices",
+            "handbid_ajax_get_messages",
             "handbid_ajax_remove_credit_card",
             "handbid_ajax_get_countries_provinces",
             "handbid_load_auto_complete_auctions",
@@ -507,6 +509,74 @@ class HandbidActionController
 
 
 
+    function handbid_ajax_get_invoices_callback(){
+
+        $result = [
+            "unpaid" => 0,
+            "invoices" => "",
+        ];
+
+        $nonce = $_POST["nonce"];
+
+        if($this->handbid_verify_nonce($nonce, date("d.m.Y") . "get_invoices")) {
+
+            $auction = $this->state->currentAuction();
+            $profile = $this->state->currentBidder($auction->id);
+
+            $myInvoices = $this->handbid->store('Receipt')->allReceipts();
+
+            $unpaidInvoices = 0;
+            if (count($myInvoices)) {
+                foreach ($myInvoices as $invoice) {
+                    if (!$invoice->paid) {
+                        $unpaidInvoices++;
+                    }
+                }
+            }
+            $result["unpaid"] = $unpaidInvoices;
+            $result["invoices"] = $this->viewRenderer->render(
+                'views/bidder/receipt',
+                [
+                    'profile' => $profile,
+                    'myInvoices' => $myInvoices
+                ]
+            );
+        }
+
+
+        echo json_encode($result);
+        exit;
+    }
+
+
+
+    function handbid_ajax_get_messages_callback(){
+
+        $result = [
+            "messages" => "",
+        ];
+
+        $nonce = $_POST["nonce"];
+
+        if($this->handbid_verify_nonce($nonce, date("d.m.Y") . "get_messages")) {
+
+            $myMessages = $this->handbid->store( 'Notification' )->allMessages( 0, 255 );
+
+            $result["messages"] = $this->viewRenderer->render(
+                'views/bidder/notifications',
+                [
+                    'notifications' => $myMessages,
+                ]
+            );
+        }
+
+
+        echo json_encode($result);
+        exit;
+    }
+
+
+
     function handbid_ajax_remove_credit_card_callback(){
 
         $nonce = $_POST["nonce"];
@@ -650,10 +720,10 @@ class HandbidActionController
             }
         }
 
-//        if(isset($_FILES["profile_photo"]) and ! $_FILES["profile_photo"]["error"] ){
-//            $fieldsToUpdate["imageName"] = $_FILES["profile_photo"]["name"];
-//            $fieldsToUpdate["image"] = base64_encode(file_get_contents($_FILES["profile_photo"]["tmp_name"]));
-//        }
+        if(isset($_FILES["profile_photo"]) and ! $_FILES["profile_photo"]["error"] ){
+            $fieldsToUpdate["imageName"] = $_FILES["profile_photo"]["name"];
+            $fieldsToUpdate["image"] = base64_encode(file_get_contents($_FILES["profile_photo"]["tmp_name"]));
+        }
 
         if(count($fieldsToUpdate)){
             $this->handbid->store( 'Bidder' )->updateProfileData($fieldsToUpdate);

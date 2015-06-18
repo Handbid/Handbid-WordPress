@@ -18,14 +18,14 @@ $profile = $this->get('profile');
 <div id="bidder-info-load" class="bidder-info-load"
      data-profile-paddle-number="<?php echo $auction->currentPaddleNumber; ?>"
      data-auction="<?php echo (int) $auction->id; ?>"
-     data-auction-status="<?php echo (int) $auction->status; ?>"
-     data-auction-name="<?php echo (int) $auction->name; ?>"
+     data-auction-status="<?php echo $auction->status; ?>"
+     data-auction-name="<?php echo esc_js($auction->name); ?>"
      data-auction-key="<?php echo $auction->key; ?>"
      data-auction-image="<?php echo "http://" . HANDBID_IMAGES_HOST . $auction->imageUrl; ?>"
      data-auction-organization-key="<?php echo $auction->organization->key; ?>"
      data-auction-organization-name="<?php echo $auction->organization->name; ?>"
      data-profile-id="<?php echo (int) $profile->id; ?>"
      data-load="<?php echo wp_create_nonce("bidder-".date("Y.m.d"));?>"
-     data-paddle-nonce="<?php echo wp_create_nonce(date("d.m.Y") . "add_paddle");?>">
+     data-paddle-nonce="<?php echo apply_filters("handbid_create_nonce", date("d.m.Y") . "add_paddle");?>">
 
 </div>

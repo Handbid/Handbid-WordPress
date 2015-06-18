@@ -218,7 +218,8 @@ var handbidMain;
                     auctionImage = bidderDashboardPlace.data("auction-image"),
                     auctionOrgKey = bidderDashboardPlace.data("auction-organization-key"),
                     auctionOrgName = bidderDashboardPlace.data("auction-organization-name"),
-                    alreadyInList = $("[data-handbid-active-profile-auction='"+auctionID+"']", bidderListOfActiveAuctions).length;
+                    alreadyInList = $("[data-handbid-active-profile-auction='"+auctionID+"']", bidderListOfActiveAuctions).length,
+                    alreadyInHiddenList = $("[data-hidden-active-auction='"+auctionID+"']", hiddenListOfActiveAuctions).length;
 
                 var pattern = '<li class="row '+auctionStatus+'" data-handbid-active-profile-auction="'+auctionID+'">' +
                     ' <div class="col-md-2"><img class="full-width-image"' +
@@ -238,6 +239,9 @@ var handbidMain;
                 if(! alreadyInList) {
                     bidderListOfActiveAuctions.prepend(pattern);
                 }
+                if(! alreadyInHiddenList) {
+                    hiddenListOfActiveAuctions.prepend('<input type="hidden" data-hidden-active-auction="'+auctionID+'">');
+                }
             },
 
 
@@ -256,9 +260,118 @@ var handbidMain;
                     }
 
                     if(values.status == "closed"){
-                        $("[data-hidden-active-auction="+auctionID+"]").remove();
+                        handbid.notifyUserAboutAuctionClosing(values);
+                        var hiddenAuctionIds = $("[data-hidden-active-auction="+auctionID+"]");
+
+                        (hiddenAuctionIds.length) ? hiddenAuctionIds.remove() : "" ;
+                        var hasInvoices = (hiddenAuctionIds.length);
+                        handbid.notifyUserAboutAuctionClosing(values, hasInvoices);
                     }
                 }
+
+            },
+
+
+            loadInvoicesToContainer: function(){
+
+                var unpaidInvoicesCountContainer = $(".unpaidInvoicesCountContainer");
+                var invoicesContainer = $(".receipts-list-area");
+                invoicesContainer.addClass("loading-invoices");
+                var nonce = invoicesContainer.data("nonce");
+                $.post(
+                    ajaxurl,
+                    {
+                        action: "handbid_ajax_get_invoices",
+                        nonce: nonce
+                    },
+                    function (data) {
+
+                        data = JSON.parse(data);
+
+                        invoicesContainer.removeClass("loading-invoices");
+                        unpaidInvoicesCountContainer.html(data.unpaid);
+                        (data.unpaid) ? unpaidInvoicesCountContainer.show() : unpaidInvoicesCountContainer.hide() ;
+                        invoicesContainer.html(data.invoices);
+
+                        return false;
+                    }
+                );
+
+            },
+
+
+            loadMessagesToContainer: function(){
+
+                var messagesContainer = $(".messages-list-area");
+                messagesContainer.addClass("loading-messages");
+                var nonce = messagesContainer.data("nonce");
+                $.post(
+                    ajaxurl,
+                    {
+                        action: "handbid_ajax_get_messages",
+                        nonce: nonce
+                    },
+                    function (data) {
+
+                        data = JSON.parse(data);
+
+                        messagesContainer.removeClass("loading-messages");
+                        messagesContainer.html(data.messages);
+
+                        return false;
+                    }
+                );
+
+            },
+
+
+            notifyUserAboutAuctionClosing: function(values, hasInvoices){
+
+                var auctionName = "Auction Name";
+                var noticeText = 'Auction <b>'+auctionName+'</b> is closed now.';
+                var buttons = [];
+                var confirm = false;
+                var hide = true;
+                if(hasInvoices){
+                    noticeText += "<br>You may have an unpaid invoices so you can check them.";
+                    buttons.push({
+                        text: 'View Invoices',
+                        addClass: 'btn-primary',
+                        click: function (notice) {
+                            var profileLinkVisible = $('a[data-slider-nav-key="profile-user-info"]:visible');
+                            profileLinkVisible.click();
+                            $('a[data-slider-nav-key="see-my-receipt"]:visible').click();
+                            $('html,body').animate({scrollTop: profileLinkVisible.offset().top},'normal');
+                            notice.remove();
+
+                            handbid.loadInvoicesToContainer();
+
+
+                        }
+                    });
+                    confirm = {
+                        confirm: true,
+                        buttons: buttons
+                    };
+                    hide = false;
+                }
+
+
+                (new PNotify({
+                    title: 'Auction Closed',
+                    type: 'info',
+                    text: noticeText,
+                    icon: 'glyphicon glyphicon-off',
+                    hide: hide,
+                    confirm: confirm,
+                    buttons: {
+                        closer: true,
+                        sticker: false
+                    },
+                    history: {
+                        history: false
+                    }
+                }));
 
             },
 
@@ -299,8 +412,6 @@ var handbidMain;
                     // You Are Losing This Item.
                     console.log("----- LOSING ITEM -----");
 
-                    //values.item.key = "undefinedz";
-                    //values.item.auctionKey = "undefinedz";
                     this.addDashboardBidLosing(values.item.id, values.item.name, values.item.key, values.auctionKey, values.amount );
 
                     this.removeItemFromDashboardList(itemID, "winning");
@@ -309,14 +420,13 @@ var handbidMain;
                     this.recalculateDashboardPrice();
 
                     this.notice('You are <br>outbid</b> the item <b>' + values.item.name + '</b> now!', "Losing Item", "error");
+
+                    this.loadMessagesToContainer();
                 }
                 if(bidWinnerID == profileID){
                     // You Are Winning This Item.
                     console.log("----- WINNING ITEM -----");
 
-                    //values.item.key = "undefinedz";
-                    //values.item.auctionKey = "undefinedz";
-                    //var oldAmount = parseInt($("[data-winning-item-id='"+itemID+"']").data("dashboard-price"));
                     this.addDashboardBidWinning(values.item.id, values.item.name, values.item.key, values.auctionKey, values.amount );
                     this.removeItemFromDashboardList(itemID, "losing");
 
@@ -326,6 +436,8 @@ var handbidMain;
                     this.recalculateDashboardPrice();
 
                     this.notice('You are <br>winning</b> the item <b>' + values.item.name + '</b> now!', "Winning Item", "success");
+
+                    this.loadMessagesToContainer();
                 }
 
 
@@ -335,10 +447,8 @@ var handbidMain;
 
 
             addUserPurchase: function(values){
-                values.key = "undefinedz";
-                values.auctionKey = "undefinedz";
-                this.addDashboardBidPurchased(values.itemId, values.name, values.key, values.auctionKey, values.pricePerItem, values.quantity );
-
+                this.addDashboardBidPurchased(values.item.id, values.name, values.item.key, values.auctionKey, values.pricePerItem, values.quantity );
+                this.loadMessagesToContainer();
             },
 
 
@@ -483,7 +593,7 @@ var handbidMain;
                                 $('[data-handbid-item-attribute="bidCount"]').html(data.item.bidCount);
                                 $('[data-handbid-item-attribute="minimumBidAmount"]').html(currencySymbol + data.item.minimumBidAmount);
                                 //$('[data-handbid-item-banner="' + data.status + '"]').show();
-                                handbid.notice('Bid placed for ' + currencySymbol + data.amount + '. You are now ' + data.status + ' this item');
+                                //handbid.notice('Bid placed for ' + currencySymbol + data.amount + '. You are now ' + data.status + ' this item');
 
 
                             }
@@ -925,8 +1035,13 @@ var handbidMain;
                             if(data.result.paid){
                                 paidControls.slideDown();
                                 unpaidControls.remove();
-                                receiptBlock.addClass("open").addClass("preview");
+                                receiptBlock.addClass("open").removeClass("preview");
                                 handbidMain.notice("Your receipt was successfully paid!", "Congratulations!", "success");
+
+                                var unpaidInvoicesCountContainer = $(".unpaidInvoicesCountContainer");
+                                var unpaidInvoices = $(".receipts-list-area li.preview").length;
+                                (unpaidInvoices)?unpaidInvoicesCountContainer.show():unpaidInvoicesCountContainer.hide();
+                                unpaidInvoicesCountContainer.html(unpaidInvoices);
                             }
 
 

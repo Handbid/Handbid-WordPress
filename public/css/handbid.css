@@ -132,7 +132,7 @@
 .message-row .message-status.message-status-losing{
     background-image: url("../images/dashboard/ic_losing.png");
 }
-.message-row .message-status.message-status-purchased{
+.message-row .message-status.message-status-purchase{
     background-image: url("../images/dashboard/ic_purchased.png");
 }
 
@@ -232,4 +232,19 @@
         -webkit-transform: rotate(359deg);
         transform: rotate(359deg);
     }
+}
+
+.messages-list-area.loading-messages,
+.receipts-list-area.loading-invoices{
+    background: url("../images/ajax-loader.gif") no-repeat center center;
+    min-height: 100px;
+}
+.messages-list-area.loading-messages .simple-list,
+.receipts-list-area.loading-invoices .simple-list{
+    display: none;
+}
+
+.bidder-info-container a > span.unpaidInvoicesCountContainer{
+    font-size: 14px;
+    color: #fff !important;
 }

@@ -16,6 +16,14 @@ $profile    = $this->get('profile');
     $myAuctions = $this->get('myAuctions');
 $myInvoices = $this->get('myInvoices');
 $myMessages = $this->get('notifications');
+$unpaidInvoices = 0;
+if(count($myInvoices)){
+    foreach($myInvoices as $invoice){
+        if(! $invoice->paid){
+            $unpaidInvoices++;
+        }
+    }
+}
 ?>
 
 <div class="col-md-2 bidder-image-wrapper">
@@ -38,7 +46,7 @@ $myMessages = $this->get('notifications');
         <li><a data-slider-nav-key="update-credit-card">Update Credit Card</a></li>
         <li><a data-slider-nav-key="see-my-auctions">See My Auctions</a></li>
         <li><a data-slider-nav-key="bidder-notifications">Messages</a></li>
-        <li><a data-slider-nav-key="see-my-receipt">View Receipts/Invoices</a></li>
+        <li><a data-slider-nav-key="see-my-receipt">View Receipts/Invoices <span class="badge unpaidInvoicesCountContainer" style="<?php echo ($unpaidInvoices)?"":"display:none;";?>"><?php echo $unpaidInvoices;?></span></a></li>
         <li><a href="/organizations">Find an Organization</a></li>
         <li><a href="/auctions">Find an Auction</a></li>
         <li><a href="/handbid-logout">Logout</a></li>
@@ -100,20 +108,21 @@ $myMessages = $this->get('notifications');
             </div>
         </div>
         <div class="" data-slider-nav-key="bidder-notifications">
+            <div class="messages-list-area" data-nonce="<?php echo apply_filters("handbid_create_nonce", date("d.m.Y") . "get_messages");?>">
             <?php
             echo $this->partial('notifications.phtml', [
                 'notifications' => $myMessages,
             ]);?>
-            <?php // echo do_shortcode('[handbid_bidder_notifications template="views/bidder/notifications"]'); ?>
+            </div>
         </div>
         <div class="" data-slider-nav-key="see-my-receipt">
-            <ul class="simple-list">
+            <div class="receipts-list-area" data-nonce="<?php echo apply_filters("handbid_create_nonce", date("d.m.Y") . "get_invoices");?>">
                 <?php
                 echo $this->partial('receipt.phtml', [
                     'profile'    => $profile,
                     'myInvoices' => $myInvoices,
                 ]);?>
-            </ul>
+            </div>
         </div>
     </div>
 </div>
