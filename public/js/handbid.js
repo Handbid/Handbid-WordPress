@@ -327,7 +327,7 @@ var handbidMain;
 
             notifyUserAboutAuctionClosing: function(values, hasInvoices){
 
-                var auctionName = "Auction Name";
+                var auctionName = values.name;
                 var noticeText = 'Auction <b>'+auctionName+'</b> is closed now.';
                 var buttons = [];
                 var confirm = false;
