@@ -133,6 +133,7 @@ class HandbidActionController
             "handbid_ajax_add_credit_card",
             "handbid_ajax_get_invoices",
             "handbid_ajax_get_messages",
+            "handbid_ajax_send_message",
             "handbid_ajax_remove_credit_card",
             "handbid_ajax_get_countries_provinces",
             "handbid_load_auto_complete_auctions",
@@ -572,6 +573,29 @@ class HandbidActionController
 
 
         echo json_encode($result);
+        exit;
+    }
+
+
+
+    function handbid_ajax_send_message_callback(){
+
+        $to = $_POST["email"];
+        $body = $_POST["text"];
+        $nonce = $_POST["nonce"];
+        $auctionName = $_POST["auction"];
+        $bidder   = $this->state->currentBidder();
+
+        if($this->handbid_verify_nonce($nonce, date("d.m.Y") . "send_message")) {
+
+            $name = $bidder->firstName . " " . $bidder->lastName;
+            $from = $bidder->email;
+            $subject = 'New message from bidder '.$name.' at auction "'.$auctionName.'"';
+            $headers = 'From: '.$name.' <'.$from.'>' . "\r\n";
+            @wp_mail( $to, $subject, $body, $headers );
+
+        }
+
         exit;
     }
 

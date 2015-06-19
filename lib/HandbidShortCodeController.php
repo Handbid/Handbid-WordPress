@@ -423,12 +423,14 @@ class HandbidShortCodeController {
 			$template = $this->templateFromAttributes( $attributes, 'views/auction/details' );
 			$auction  = $this->state->currentAuction( $attributes );
 			$tickets  = $this->state->getCurrentAuctionTickets(  );
+            $bidder   = $this->state->currentBidder( $auction->id );
 
 			return $this->viewRenderer->render(
 				$template,
 				[
 					'auction'    => $auction,
 					'tickets'    => $tickets,
+					'profile'    => $bidder,
 				]
 			);
 

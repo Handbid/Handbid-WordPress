@@ -464,6 +464,72 @@ var handbidMain;
                 return needCreditCard;
             },
 
+
+
+
+
+            messageToAuctionManager: function(){
+
+                $("[data-handbid-mail-to-manager]").live("click", function(e){
+                    var emailTo = $(this).data("handbid-mail-to-manager");
+                    var auction = $(this).data("auction");
+                    var nonce = $(this).data("nonce");
+                    e.preventDefault();
+                    (new PNotify({
+                        title: 'Send Email To Auction Manager',
+                        text: 'TO: <b>'+emailTo+'</b><br><br>',
+                        icon: 'glyphicon glyphicon-question-sign',
+                        hide: false,
+                        confirm: {
+                            prompt: true,
+                            prompt_multi_line: true,
+                            prompt_default: ''
+                        },
+                        buttons: {
+                            closer: false,
+                            sticker: false
+                        },
+                        history: {
+                            history: false
+                        }
+                    })).get().on('pnotify.confirm', function(e, notice, val) {
+                            notice.cancelRemove().update({
+                                title: 'Sending Your Message',
+                                text: $('<div/>').text(val).html() + '<br><br><div class="progress progress-striped active" style="margin:0">\
+	                                            <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">\
+		                                        <span class="sr-only">100%</span>\
+	                                            </div>\
+                                                </div>',
+                                icon: true,
+                                type: 'info',
+                                hide: false,
+                                confirm: {
+                                    prompt: false
+                                },
+                                buttons: {
+                                    closer: false,
+                                    sticker: false
+                                }
+                            });
+                            $.post(
+                                ajaxurl,
+                                {
+                                    action: "handbid_ajax_send_message",
+                                    text: val,
+                                    email: emailTo,
+                                    auction: auction,
+                                    nonce: nonce
+                                },
+                                function (data) {
+                                    notice.remove();
+                                }
+                            );
+                        });
+                });
+
+            },
+
+
             disableAllBiddingButtonsIfSold: function(){
 
                 $('[data-handbid-bid-button="up"]').addClass("disabled-button");
@@ -1659,6 +1725,7 @@ var handbidMain;
         handbid.setupAuthorizationStatus();
         handbid.makePaymentForReceipt();
         handbid.detectIfUserWantToBid();
+        handbid.messageToAuctionManager();
 
         if ($('[data-handbid-item-key], [data-no-bids], [data-tags]').length > 0) {
             $('body').addClass('enable-handbid-fatal-error');

@@ -9,6 +9,7 @@
  */
 $auction     = $this->get('auction');
 $tickets     = $this->get('tickets');
+$profile     = $this->get('profile');
 $location    = $auction->locations[0];
 $hasLocation = !!($location->auctionLocationStreet1);
 $address     = null;
@@ -53,6 +54,17 @@ $hasTicketItems = !!(count($tickets));
 
         <span class="buttons">
             <a href="#" class="button pink-button register" data-handbid-connect>Register</a>
+
+            <?php
+            $managerEmail = $auction->organization->email;
+            $managerEmail = "palijchuk.b.g@gmail.com";
+            if(trim($managerEmail) and $profile){?>
+                <a href="#" class="button pink-button register"
+                   data-handbid-mail-to-manager="<?php echo antispambot($managerEmail);?>"
+                   data-handbid-auction="<?php echo $auction->name;?>"
+                   data-nonce="<?php echo apply_filters("handbid_create_nonce", date("d.m.Y") . "send_message");?>">
+                    Mail to manager</a>
+            <?php } ?>
 
             <?php if ($auction->enableTicketSales) { ?>
                 <?php echo do_shortcode('[handbid_auction_ticket_list]'); ?>
