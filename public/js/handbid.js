@@ -472,7 +472,7 @@ var handbidMain;
 
                 $("[data-handbid-mail-to-manager]").live("click", function(e){
                     var emailTo = $(this).data("handbid-mail-to-manager");
-                    var auction = $(this).data("auction");
+                    var auction = $(this).data("handbid-auction");
                     var nonce = $(this).data("nonce");
                     e.preventDefault();
                     (new PNotify({

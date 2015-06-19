@@ -57,7 +57,6 @@ $hasTicketItems = !!(count($tickets));
 
             <?php
             $managerEmail = $auction->organization->email;
-            $managerEmail = "palijchuk.b.g@gmail.com";
             if(trim($managerEmail) and $profile){?>
                 <a href="#" class="button pink-button register"
                    data-handbid-mail-to-manager="<?php echo antispambot($managerEmail);?>"
