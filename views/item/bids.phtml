@@ -23,7 +23,7 @@ if ($this->get('item')) {
 
 <ul class="simple-list bid-history bid-history-item-<?php echo $item->id; ?>"  data-no-items-text="This item has no bids.">
 <?php
-$bids = array_reverse($bids);
+//$bids = array_reverse($bids);
 if(count($bids) > 0) {
 
         foreach ($bids as $bid) {

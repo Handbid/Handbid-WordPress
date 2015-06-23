@@ -248,3 +248,7 @@
     font-size: 14px;
     color: #fff !important;
 }
+
+.not-available-in-presale{
+    display: none !important;
+}

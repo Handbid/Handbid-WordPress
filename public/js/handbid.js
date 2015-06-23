@@ -269,6 +269,10 @@ var handbidMain;
                     }
                 }
 
+                var itemsOfAuctionCanBeToggled = $("[data-handbid-item-auction='"+auctionID+"']:not(.simple-box.status-available)");
+                (values.status == "preview" || values.status == "presale") ? itemsOfAuctionCanBeToggled.addClass("not-available-in-presale") : itemsOfAuctionCanBeToggled.removeClass("not-available-in-presale") ;
+                $(".filters .by-item-type li.selected a").eq(0).click();
+
             },
 
 
