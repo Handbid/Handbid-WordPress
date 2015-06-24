@@ -93,7 +93,8 @@ console.log(auctionChannelId+"  ==");
             });
 
         } else {
-            //console.log(this.getError());
+            console.log(" ===== USER CHANNEL ERROR ====="+ $.getCurrentDateAndTime());
+            this.log(this.getError());
         }
         return true;
     });

@@ -237,9 +237,6 @@ class HandbidActionController
 
             $result["success"] = (isset($resp->success) and $resp->success) ? $resp->success : 0;
             $result["resp"] = $resp;
-            if($resp->data->token){
-                setcookie('PHPSESSID', $resp->data->token, time()+3600*24, "/", $_SERVER["HTTP_HOST"], false);
-            }
         }
         echo json_encode($result);
         exit;
