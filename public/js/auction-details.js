@@ -434,6 +434,28 @@
             }
         }, 3500);
 
+
+        //reset search button
+        $('[data-slider-nav-key="items"]').on('click', function (e) {
+
+            e.preventDefault();
+            checkAndUpdateIsotope();
+
+        });
+
+        var wasNotVisible = true;
+
+        $( window ).scroll(function() {
+            if(wasNotVisible) {
+                var container = $('.container[data-slider-nav-key="items"]');
+                var isVisible = container.is(":visible");
+                if (isVisible) {
+                    checkAndUpdateIsotope();
+                    wasNotVisible = false;
+                }
+            }
+        });
+
     });
 
 
