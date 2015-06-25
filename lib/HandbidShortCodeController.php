@@ -425,12 +425,34 @@ class HandbidShortCodeController {
 			$tickets  = $this->state->getCurrentAuctionTickets(  );
             $bidder   = $this->state->currentBidder( $auction->id );
 
+            $items = [];
+            forEach($auction->categories as $category) {
+                forEach($category->items as $item) {
+                    $items[] = $item;
+                }
+            }
+
+            if($bidder){
+                $myInventory = $this->state->currentInventory($auction->id);
+                $winning   = $myInventory->winning;
+                $losing    = $myInventory->losing;
+            }
+            else{
+                $winning = [];
+                $losing = [];
+            }
+            $colsCount = $this->state->getGridColsCount(3, "Item");
+
 			return $this->viewRenderer->render(
 				$template,
 				[
 					'auction'    => $auction,
 					'tickets'    => $tickets,
 					'profile'    => $bidder,
+					'items'      => $items,
+					'winning'    => $winning,
+					'losing'     => $losing,
+					'cols_count' => $colsCount,
 				]
 			);
 

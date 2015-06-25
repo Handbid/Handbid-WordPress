@@ -239,7 +239,9 @@
             });
 
         }
+        return true;
     }
+
 
     function refreshSearchResults() {
 
@@ -253,37 +255,45 @@
         selector = selectors.join('');
 
         //refresh with new options
-        iso.isotope({
-            sortAscending: sortAscending,
-            sortBy: sortBy,
-            filter: function () {
+        if (iso) {
+            iso.isotope({
+                sortAscending: sortAscending,
+                sortBy: sortBy,
+                filter: function () {
 
-                //text search
-                if (searchTerm) {
+                    //text search
+                    if (searchTerm) {
 
-                    var regex = new RegExp(escapeRegExp(searchTerm), 'i'),
-                        html = $(this).html();
+                        var regex = new RegExp(escapeRegExp(searchTerm), 'i'),
+                            html = $(this).html();
 
-                    if (regex && html && !regex.test(html)) {
-                        return false;
+                        if (regex && html && !regex.test(html)) {
+                            return false;
+                        }
                     }
-                }
 
-                return selector ? matchesSelector(this, selector) : true;
-            }
-        });
+                    return selector ? matchesSelector(this, selector) : true;
+                }
+            });
+        }
+        return true;
+    }
+
+    function checkAndUpdateIsotope(){
+        (iso) ? refreshSearchResults() : prepareIsotope() && refreshSearchResults();
     }
 
     $(document).ready(function () {
 
         var searchEnabled = true;
-        prepareIsotope();
-        refreshSearchResults();
+        //alert("ready");
+        //prepareIsotope();
+        //refreshSearchResults();
 
         //show iso on first load of items tab
         $('.slider-nav [data-slider-nav-key="items"], [data-slider-nav-key="items"] .filter-wrapper').on('click', function () {
 
-            prepareIsotope();
+            //prepareIsotope();
 
             var top = $(".sticky-for-sort-bar").offset().top;
 
@@ -312,7 +322,7 @@
                     searchEnabled = true;
 
 
-                    refreshSearchResults();
+                    checkAndUpdateIsotope();
                 }.bind(this);
 
 
@@ -348,7 +358,7 @@
             searchTerm = false;
             $(this).hide();
 
-            refreshSearchResults();
+            checkAndUpdateIsotope();
 
         });
 
@@ -357,7 +367,7 @@
             var sort = $(this).val();
             if (window[sort]) {
                 window[sort]();
-                refreshSearchResults();
+                checkAndUpdateIsotope();
             } else {
                 console.log('not found', sort);
             }
@@ -388,7 +398,7 @@
                 if (searchEnabled) {
                     $('.fancy-search .query').val('');
                     searchTerm = false;
-                    refreshSearchResults();
+                    checkAndUpdateIsotope();
                 }
 
             });
@@ -412,7 +422,7 @@
             if (searchEnabled) {
                 $('.fancy-search .query').val('');
                 searchTerm = false;
-                refreshSearchResults();
+                checkAndUpdateIsotope();
             }
 
         });
@@ -424,6 +434,13 @@
             }
         }, 3500);
 
+    });
+
+
+    $(window).load(function () {
+        console.log("Can be isotoped-----------------------------------");
+        prepareIsotope();
+        checkAndUpdateIsotope();
     });
 
 
