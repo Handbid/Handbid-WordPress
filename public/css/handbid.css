@@ -252,3 +252,7 @@
 .not-available-in-presale{
     display: none !important;
 }
+
+[data-handbid-bid-button]{
+    text-decoration: none !important;
+}

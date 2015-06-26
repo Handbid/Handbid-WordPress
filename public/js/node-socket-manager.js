@@ -15,10 +15,12 @@ var socket = new YiiNodeSocket();
  ********************** BOOTSTRAP / CONNECT **********************
  */
 
-//var auctionChannelId = "auction";
+var connectedToSocket = false;
 
 socket.onConnect(function () {
-console.log(auctionChannelId+"  ==");
+
+    connectedToSocket = true;
+
     var $ = jQuery;
 
     var auctionChannel = socket.room(auctionChannelId).join(function (success) {

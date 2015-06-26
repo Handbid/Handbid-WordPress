@@ -28,13 +28,13 @@ $creditCardsRequired .= (!count($profile->creditCards) and $needCreditCards) ? "
             <a href="" class="green-button button <?php
             echo ($isBiddable) ? "isBiddable" : "isDirectPurchase" ;
             ?>" data-handbid-bid-button="down" style="<?php
-            echo ($isBiddable) ? "display: none" : "" ;
+//            echo ($isBiddable) ? "display: none" : "" ;
             ?>">-</a>
         </div>
 
         <?php if ($isBiddable) { ?>
             <div class="bid-amount col-md-6 col-xs-6">$<span
-                    data-handbid-bid-amount  data-change-attribute="minimumBidAmount"><?php echo $item->minimumBidAmount; ?></span></div>
+                    data-handbid-bid-amount data-handbid-onlybid-amount data-change-attribute="minimumBidAmount"><?php echo $item->minimumBidAmount; ?></span></div>
         <?php } else { ?>
             <div class="buy-quantity col-md-6 col-xs-6"><span data-handbid-quantity>1</span></div>
 
@@ -43,7 +43,7 @@ $creditCardsRequired .= (!count($profile->creditCards) and $needCreditCards) ? "
             <a href="" class="green-button button  <?php
             echo ($isBiddable) ? "isBiddable" : "isDirectPurchase" ;
             ?>" data-handbid-bid-button="up" style="<?php
-            echo ($isBiddable) ? "display: none" : "" ;
+//            echo ($isBiddable) ? "display: none" : "" ;
             ?>">+</a>
         </div>
 
@@ -118,19 +118,19 @@ $creditCardsRequired .= (!count($profile->creditCards) and $needCreditCards) ? "
             </ul>
         </div>
         <div class="col-md-2 col-xs-3 bid-down">
-            <a href="" class="green-button button" data-handbid-bid-button="down">-</a>
+            <a href="" class="green-button button max-bid-down" data-handbid-bid-button="down">-</a>
         </div>
 
         <?php if ($isBiddable) { ?>
             <div class="bid-amount minimalBidAmount col-md-8 col-xs-6">$<span
-                    data-handbid-bid-amount data-change-attribute="minimumBidAmount"><?php echo $item->minimumBidAmount; ?></span></div>
+                    data-handbid-bid-amount data-handbid-maxbid-amount data-change-attribute="minimumBidAmount"><?php echo $item->minimumBidAmount; ?></span></div>
         <?php } else { ?>
 <!--            <div class="buy-quantity col-md-8 col-xs-7"><span data-handbid-quantity>--><?php //echo ($item->inventoryRemaining != 0) ? 1 : 0 ;?><!--</span></div>-->
             <div class="buy-quantity col-md-8 col-xs-7"><span data-handbid-quantity><?php echo $item->inventoryRemaining;?></span></div>
 
         <?php } ?>
         <div class="col-md-2 col-xs-3 bid-up">
-            <a href="" class="green-button button" data-handbid-bid-button="up">+</a>
+            <a href="" class="green-button button max-bid-up" data-handbid-bid-button="up">+</a>
         </div>
 
     </div>
@@ -141,7 +141,9 @@ $creditCardsRequired .= (!count($profile->creditCards) and $needCreditCards) ? "
             <a class="proxy-bid button green-solid-button  loading-span-button"
                href=""
                 <?php echo $creditCardsRequired; ?>
-               data-handbid-bid-button="proxy"><span><?php echo __('Set Max Bid'); ?></span></a>
+               data-handbid-bid-button="proxy"
+               data-data-item-id-maxbid="<?php echo $item->id; ?>"
+                ><span><?php echo __('Set Max Bid'); ?></span></a>
         </div>
 
     </div>

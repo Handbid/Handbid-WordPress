@@ -406,11 +406,6 @@ var handbidMain;
                 var isBidInWinning = $("[data-winning-item-id="+itemID+"]").length;
                 var isBidInLosing = $("[data-losing-item-id="+itemID+"]").length;
 
-                //console.log("BID TYPE: "+ type);
-                //console.log("isBidInWinning: "+ isBidInWinning);
-                //console.log("isBidInLosing: "+ isBidInLosing);
-                //console.log("profileID: "+ profileID);
-                //console.log("bidWinnerID: "+ bidWinnerID);
 
                 if(isBidInWinning && (bidWinnerID != profileID)){
                     // You Are Losing This Item.
@@ -471,17 +466,33 @@ var handbidMain;
 
 
 
+            alreadyHaveMaxBidForItem: function(elem){
+                var itemID = elem.data('data-item-id-maxbid');
+
+                var haveMaxBid = $("[data-maxbid-item-id='"+itemID+"']").length;
+
+                if(haveMaxBid){
+                    handbidMain.notice("You already have a maxbid for this item. Please remove the current maxbid to create a new one.", "Already Have MaxBid", "error");
+                }
+                return haveMaxBid > 0;
+            },
+
+
+
+
 
             messageToAuctionManager: function(){
 
                 $("[data-handbid-mail-to-manager]").live("click", function(e){
                     var emailTo = $(this).data("handbid-mail-to-manager");
                     var auction = $(this).data("handbid-auction");
+                    var auctionID = $(this).data("handbid-auction-id");
+                    var auctionOrg = $(this).data("handbid-auction-org");
                     var nonce = $(this).data("nonce");
                     e.preventDefault();
                     (new PNotify({
                         title: 'Send Email To Auction Manager',
-                        text: 'TO: <b>'+emailTo+'</b><br><br>',
+                        text: '<br>',
                         icon: 'glyphicon glyphicon-question-sign',
                         hide: false,
                         confirm: {
@@ -522,9 +533,12 @@ var handbidMain;
                                     text: val,
                                     email: emailTo,
                                     auction: auction,
+                                    auctionID: auctionID,
+                                    auctionOrg: auctionOrg,
                                     nonce: nonce
                                 },
                                 function (data) {
+                                    console.log(data);
                                     notice.remove();
                                 }
                             );
@@ -586,7 +600,13 @@ var handbidMain;
 
                     var canBeUp = true;
 
-                    var value = parseInt(amount[0].innerHTML) + increment;
+                    var amountContainer = amount;
+
+                    if(! $(this).hasClass("isDirectPurchase")) {
+                        amountContainer = ($(this).hasClass("max-bid-up")) ? $('[data-handbid-maxbid-amount]') : $('[data-handbid-onlybid-amount]');
+                    }
+
+                    var value = parseInt(amountContainer[0].innerHTML) + increment;
 
                     if($(this).hasClass("isDirectPurchase")) {
                         var inventoryRemaining = ($('[data-handbid-item-attribute="inventoryRemaining"]').length > 0 ) ? parseInt($('[data-handbid-item-attribute="inventoryRemaining"]')[0].innerHTML) : -1;
@@ -594,14 +614,17 @@ var handbidMain;
                         var totalSoldItems = ($('[data-handbid-item-attribute="totalSoldItems"]').length > 0 ) ? parseInt($('[data-handbid-item-attribute="totalSoldItems"]')[0].innerHTML) : 0;
                         totalSoldItems = (totalSoldItems) ? totalSoldItems : 0;
                         canBeUp = ((inventoryRemaining == -1 ) || ((inventoryRemaining != -1) && (value <= inventoryRemaining)));
+
+                    }
+                    else{
+                        var buyNowPrice = ($('[data-handbid-buynow-price]').length > 0 ) ? parseInt($('[data-handbid-buynow-price]').eq(0).data("handbid-buynow-price")) : -1;
+                        var isMaxBidButton = $(this).hasClass("max-bid-up");
+                        canBeUp = (!isMaxBidButton)? true : ((buyNowPrice == -1 ) || ((buyNowPrice != -1) && (value <= buyNowPrice)));
+
+                        amountContainer = (isMaxBidButton) ? $('[data-handbid-maxbid-amount]') : $('[data-handbid-onlybid-amount]');
                     }
                     if(canBeUp) {
-
-                        amount.each(function () {
-
-                            this.innerHTML = value;
-
-                        });
+                        amountContainer.html(value);
                     }
 
                 });
@@ -614,13 +637,16 @@ var handbidMain;
 
                     e.preventDefault();
 
-                        var value = parseInt(amount[0].innerHTML) - increment;
+                    var amountContainer = amount;
+
+                    if(! $(this).hasClass("isDirectPurchase")) {
+                        amountContainer = ($(this).hasClass("max-bid-down")) ? $('[data-handbid-maxbid-amount]') : $('[data-handbid-onlybid-amount]');
+                    }
+
+                        var value = parseInt(amountContainer[0].innerHTML) - increment;
 
                         if(value >= minimalBidAmount) {
-
-                            amount.each(function () {
-                                    this.innerHTML -= increment;
-                            });
+                            amountContainer.html(value);
                         }
 
                 });
@@ -633,7 +659,9 @@ var handbidMain;
 
                     e.preventDefault();
 
-                    var total = amount[0].innerHTML;
+                    var amountContainer = $('[data-handbid-onlybid-amount]');
+
+                    var total = amountContainer[0].innerHTML;
                     var nonce = $("#bidNonce").val();
                     var button = $(this);
                     var message = "";
@@ -662,9 +690,9 @@ var handbidMain;
                             else{
                                 $('[data-handbid-item-attribute="bidCount"]').html(data.item.bidCount);
                                 $('[data-handbid-item-attribute="minimumBidAmount"]').html(currencySymbol + data.item.minimumBidAmount);
-                                //$('[data-handbid-item-banner="' + data.status + '"]').show();
-                                //handbid.notice('Bid placed for ' + currencySymbol + data.amount + '. You are now ' + data.status + ' this item');
+                            }
 
+                            if(!connectedToSocket){
 
                             }
                             button.removeClass("active");
@@ -680,11 +708,11 @@ var handbidMain;
 
                 $('[data-handbid-bid-button="proxy"]').live('click', function (e) {
 
-                    if(handbid.isButtonDisabledOrAlreadyActive($(this)) || handbid.cannotDoIfUnauthorized() || handbid.noticeIfNoCreditCard($(this))){
+                    if(handbid.isButtonDisabledOrAlreadyActive($(this)) || handbid.cannotDoIfUnauthorized() || handbid.noticeIfNoCreditCard($(this)) || handbid.alreadyHaveMaxBidForItem($(this))){
                         return false;
                     }
-
-                    var total = amount[0].innerHTML;
+                    var amountContainer = $('[data-handbid-maxbid-amount]');
+                    var total = amountContainer[0].innerHTML;
                     var nonce = $("#bidNonce").val();
                     var button = $(this);
                     button.addClass("active");
@@ -1718,6 +1746,21 @@ var handbidMain;
                 console.log(timeFormatted);
                 (handbid.timerNotice) ? handbid.timerNotice.remove() : '';
                 handbid.timerNotice = handbid.notice("Auction "+timerTitle+"<br>closes after <b><div data-handbid-timer>" + timeFormatted + "</div></b>", "Closing Auction Timer");
+            },
+            reloadBidderProfile: function(){
+                var bidderInfo = jQuery("#bidder-info-load");
+                bidderInfo.hide();
+                $.post(ajaxurl, {
+                        action: "handbid_profile_load",
+                        auction: bidderInfo.data("auction"),
+                        nonce: bidderInfo.data("load")
+                    },
+                    function (resp) {
+                        bidderInfo.html(resp);
+                        bidderInfo.slideDown("normal");
+                        ($('.creditcard-template').length > 0) ? handbid.setupAddCreditCard() : '';
+                        handbid.setupProvincesSelect();
+                    });
             }
         };
 
@@ -1759,21 +1802,9 @@ var handbidMain;
         handbid.setTimerRemaining(handbid);
 
 
+        handbid.reloadBidderProfile();
 
 
-        var bidderInfo = jQuery("#bidder-info-load");
-        bidderInfo.hide();
-        jQuery.post(ajaxurl, {
-                action: "handbid_profile_load",
-                auction: bidderInfo.data("auction"),
-                nonce: bidderInfo.data("load")
-            },
-            function (resp) {
-                bidderInfo.html(resp);
-                bidderInfo.slideDown("normal");
-                ($('.creditcard-template').length > 0) ? handbid.setupAddCreditCard() : '';
-                handbid.setupProvincesSelect();
-            });
 
         $(".handbid-logout a").live("click", function(e){
             e.preventDefault();

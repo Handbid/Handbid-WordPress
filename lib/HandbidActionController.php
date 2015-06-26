@@ -584,22 +584,35 @@ class HandbidActionController
 
     function handbid_ajax_send_message_callback(){
 
-        $to = $_POST["email"];
         $body = $_POST["text"];
         $nonce = $_POST["nonce"];
-        $auctionName = $_POST["auction"];
+        $auctionOrg = $_POST["auctionOrg"];
         $bidder   = $this->state->currentBidder();
+        $result = "";
 
         if($this->handbid_verify_nonce($nonce, date("d.m.Y") . "send_message")) {
 
             $name = $bidder->firstName . " " . $bidder->lastName;
             $from = $bidder->email;
-            $subject = 'New message from bidder '.$name.' at auction "'.$auctionName.'"';
-            $headers = 'From: '.$name.' <'.$from.'>' . "\r\n";
-            @wp_mail( $to, $subject, $body, $headers );
+            $userCellPhone = $bidder->userCellPhone;
 
+            $params = [
+                "name" => $name,
+                "email" => $from,
+                "phone" => $userCellPhone."",
+                "orgName" => $auctionOrg,
+                "comments" => $body,
+            ];
+
+            try {
+                $result = $this->handbid->store( 'Bidder' )->createLead( $params );
+
+            }
+            catch(Exception $e){
+                $result = $e;
+            }
         }
-
+        echo json_encode($result);
         exit;
     }
 
