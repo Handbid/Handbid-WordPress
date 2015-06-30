@@ -133,6 +133,7 @@ class HandbidActionController
             "handbid_ajax_add_credit_card",
             "handbid_ajax_get_invoices",
             "handbid_ajax_get_messages",
+            "handbid_ajax_get_active_auctions",
             "handbid_ajax_get_bid_history",
             "handbid_ajax_send_message",
             "handbid_ajax_remove_credit_card",
@@ -572,6 +573,34 @@ class HandbidActionController
                 'views/bidder/notifications',
                 [
                     'notifications' => $myMessages,
+                ]
+            );
+        }
+
+
+        echo json_encode($result);
+        exit;
+    }
+
+
+
+
+    function handbid_ajax_get_active_auctions_callback(){
+
+        $result = [
+            "auctions" => "",
+        ];
+
+        $nonce = $_POST["nonce"];
+
+        if($this->handbid_verify_nonce($nonce, date("d.m.Y") . "get_active_auctions")) {
+
+            $myAuctions = $this->handbid->store( 'Bidder' )->getMyAuctions();
+
+            $result["auctions"] = $this->viewRenderer->render(
+                'views/bidder/active-auctions',
+                [
+                    'myAuctions' => $myAuctions,
                 ]
             );
         }

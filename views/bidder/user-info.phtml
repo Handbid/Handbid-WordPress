@@ -65,47 +65,13 @@ if(count($myInvoices)){
         </div>
 
         <div class="" data-slider-nav-key="see-my-auctions">
-            <ul class="simple-list  handbid-list-of-active-auctions">
+            <div class="active-auctions-list-area" data-nonce="<?php echo apply_filters("handbid_create_nonce", date("d.m.Y") . "get_active_auctions");?>">
                 <?php
-                if (count($myAuctions) > 0) {
-                    forEach ($myAuctions as $auction) {
-                        if ($auction->status == "open") {
-                            ?>
-                            <li class="row <?php echo $auction->status; ?>" data-handbid-active-profile-auction="<?php echo $auction->id; ?>">
-                                <div class="col-md-2"><img class="full-width-image"
-                                                           src="<?php echo "http://" . HANDBID_IMAGES_HOST . $auction->imageUrl; ?>"/>
-                                </div>
-                                <div class="col-md-7">
-                                    <h4><?php echo $auction->name; ?></h4>
-                                    <a href="/organizations/<?php echo $auction->organization->key; ?>"
-                                       class="org-link"><?php echo $auction->organization->name; ?></a>
-                                </div>
-                                <div class="col-md-3">
-                                    <a class="cta-link" href="/auctions/<?php echo $auction->key; ?>">See Auction</a>
-                                </div>
-                            </li>
-                        <?php
-                        }
-                    }
-                } else {
-                    ?>
-                    <p>You are not registered for any upcoming auctions.</p>
-                <?php
-                }
-                ?>
-            </ul>
-
-            <div class="handbid-hidden-of-active-auctions">
-                <?php
-                if (count($myAuctions) > 0) {
-                    forEach ($myAuctions as $auction) {
-                            ?>
-                        <input type="hidden" data-hidden-active-auction="<?php echo $auction->id; ?>">
-                        <?php
-                    }
-                }
-                ?>
+                echo $this->partial('active-auctions.phtml', [
+                    'myAuctions' => $myAuctions,
+                ]);?>
             </div>
+
         </div>
         <div class="" data-slider-nav-key="bidder-notifications">
             <div class="messages-list-area" data-nonce="<?php echo apply_filters("handbid_create_nonce", date("d.m.Y") . "get_messages");?>">

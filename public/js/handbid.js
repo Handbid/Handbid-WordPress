@@ -283,11 +283,36 @@ var handbidMain;
             },
 
 
+            loadActiveAuctionsToContainer: function(){
+
+                var auctionsContainer = $(".active-auctions-list-area");
+                auctionsContainer.addClass("loading-messages");
+                var nonce = auctionsContainer.data("nonce");
+                $.post(
+                    ajaxurl,
+                    {
+                        action: "handbid_ajax_get_active_auctions",
+                        nonce: nonce
+                    },
+                    function (data) {
+
+                        data = JSON.parse(data);
+
+                        auctionsContainer.removeClass("loading-messages");
+                        auctionsContainer.html(data.auctions);
+
+                        return false;
+                    }
+                );
+
+            },
+
+
             loadInvoicesToContainer: function(){
 
                 var unpaidInvoicesCountContainer = $(".unpaidInvoicesCountContainer");
                 var invoicesContainer = $(".receipts-list-area");
-                invoicesContainer.addClass("loading-invoices");
+                invoicesContainer.addClass("loading-messages");
                 var nonce = invoicesContainer.data("nonce");
                 $.post(
                     ajaxurl,
@@ -299,7 +324,7 @@ var handbidMain;
 
                         data = JSON.parse(data);
 
-                        invoicesContainer.removeClass("loading-invoices");
+                        invoicesContainer.removeClass("loading-messages");
                         unpaidInvoicesCountContainer.html(data.unpaid);
                         (data.unpaid) ? unpaidInvoicesCountContainer.show() : unpaidInvoicesCountContainer.hide() ;
                         invoicesContainer.html(data.invoices);
@@ -360,6 +385,15 @@ var handbidMain;
                     );
                 }
             },
+
+
+            loadAllToContainers: function(){
+                this.loadActiveAuctionsToContainer();
+                this.loadInvoicesToContainer();
+                this.loadMessagesToContainer();
+            },
+
+
 
 
             notifyUserAboutAuctionClosing: function(values, hasInvoices){
@@ -1814,6 +1848,9 @@ var handbidMain;
                         bidderInfo.slideDown("normal");
                         ($('.creditcard-template').length > 0) ? handbid.setupAddCreditCard() : '';
                         handbid.setupProvincesSelect();
+
+                        handbid.loadAllToContainers();
+
                     });
             }
         };

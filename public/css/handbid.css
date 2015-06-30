@@ -126,9 +126,12 @@
 .message-row .message-status.message-status-general{
     background-image: url("../images/dashboard/ic_mail.png");
 }
+.message-row .message-status.message-status-was_winning,
 .message-row .message-status.message-status-winning{
     background-image: url("../images/dashboard/ic_winning.png");
 }
+.message-row .message-status.message-status-was_losing,
+.message-row .message-status.message-status-outbid,
 .message-row .message-status.message-status-losing{
     background-image: url("../images/dashboard/ic_losing.png");
 }
@@ -234,14 +237,16 @@
     }
 }
 
+.active-auctions-list-area.loading-messages,
 .messages-list-area.loading-messages,
-.receipts-list-area.loading-invoices{
-    background: url("../images/ajax-loader.gif") no-repeat center center;
-    min-height: 100px;
+.receipts-list-area.loading-messages{
+    background: url("../images/ajax-loader.gif") no-repeat center center !important;
+    min-height: 100px !important;
 }
+.active-auctions-list-area.loading-messages .simple-list,
 .messages-list-area.loading-messages .simple-list,
-.receipts-list-area.loading-invoices .simple-list{
-    display: none;
+.receipts-list-area.loading-messages .simple-list{
+    display: none !important;
 }
 
 .bidder-info-container a > span.unpaidInvoicesCountContainer{
