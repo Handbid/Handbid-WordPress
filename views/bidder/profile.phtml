@@ -125,7 +125,9 @@ if (!is_null($this->get('profile'))) {
                                 forEach($maxBids as $bid) {
                                     ?>
                                     <li class="row bid-row-id-<?php echo $bid->id; ?>"
-                                        data-maxbid-item-id="<?php echo $bid->item->id; ?>">
+                                        data-maxbid-item-id="<?php echo $bid->item->id; ?>"
+                                        data-proxy-item-id="<?php echo $bid->item->id; ?>"
+                                        >
                                         <div class="col-md-8 col-xs-8">
                                             <a href="/auctions/<?php echo $auction->key; ?>/item/<?php echo $bid->item->key; ?>"><h4><?php echo $bid->item->name; ?></h4></a>
                                         </div>

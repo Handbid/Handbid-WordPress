@@ -204,7 +204,10 @@ $hasManyImages = (count($item->images) > 1);
         <?php } ?>
 
         <?php if($isBiddable) { ?>
-            <div class="additional big-content" data-slider-nav-key="bids">
+            <div class="additional big-content bid-history-container-<?php echo $item->id;?>"
+                 data-slider-nav-key="bids"
+                 data-bids-nonce="<?php echo apply_filters("handbid_create_nonce", date("d.m.Y") . "get_bids_".((int) $item->id));?>"
+                >
                 <?php
                 // echo do_shortcode('[handbid_item_bids key="' . $item->key . '"]');
                 echo $this->partial('bids.phtml', [

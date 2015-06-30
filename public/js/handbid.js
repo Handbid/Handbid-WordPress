@@ -85,9 +85,18 @@ var handbidMain;
             },
 
 
+            recheckAndRecalculateBids: function(){
+                this.recheckBidCounts();
+                this.recalculateDashboardPrice();
+            },
+
+
+
+
             addDashboardBidProxy: function(bidID, itemID, itemName, itemKey, auctionKey, maxAmount){
 
                 var pattern = '<li class="row bid-row-id-'+bidID+'" ' +
+                    ' data-proxy-item-id="'+itemID+'" ' +
                     ' data-maxbid-item-id="'+itemID+'" ' +
                     ' data-maxbid-bid-id="'+bidID+'">' +
                     ' <div class="col-md-8 col-xs-8">' +
@@ -102,11 +111,11 @@ var handbidMain;
                     ' </li>';
 
                 var listBidsProxy = $(".handbid-list-of-bids-proxy").eq(0);
+                this.removeItemFromDashboardList(itemID, "proxy");
                 $("p", listBidsProxy).eq(0).remove();
                 listBidsProxy.prepend(pattern);
 
-                this.recheckBidCounts();
-                this.recalculateDashboardPrice();
+                this.recheckAndRecalculateBids();
             },
 
 
@@ -131,8 +140,7 @@ var handbidMain;
 
                 this.displayOnlyCurrentStatusOfItem(itemID, "winning");
 
-                this.recheckBidCounts();
-                this.recalculateDashboardPrice();
+                this.recheckAndRecalculateBids();
             },
 
 
@@ -156,8 +164,7 @@ var handbidMain;
 
                 this.displayOnlyCurrentStatusOfItem(itemID, "losing");
 
-                this.recheckBidCounts();
-                this.recalculateDashboardPrice();
+                this.recheckAndRecalculateBids();
             },
 
 
@@ -181,11 +188,12 @@ var handbidMain;
                 $("p", listBidsPurchases).eq(0).remove();
                 listBidsPurchases.append(pattern);
 
-                this.recheckBidCounts();
-                this.recalculateDashboardPrice();
+                this.recheckAndRecalculateBids();
             },
 
-            addItemBidsHistory: function(itemID, bidID, bidderName, amount){
+            addItemBidsHistory: function(itemID, bidID, values, amount){
+
+                var winnerName = (values.winnerName != undefined) ? values.winnerName : values.bidderName ;
 
                 var pattern = '<li class="row open" data-list-bid-id="' + bidID + '">' +
                     '<div class="col-md-6">' +
@@ -202,8 +210,7 @@ var handbidMain;
                 $("li", listBidsHistory).removeClass("open").addClass("closed");
                 listBidsHistory.prepend(pattern);
 
-                this.recheckBidCounts();
-                this.recalculateDashboardPrice();
+                this.recheckAndRecalculateBids();
             },
 
             addProfileActiveAuctions: function(){
@@ -329,6 +336,32 @@ var handbidMain;
             },
 
 
+            loadBidsHistoryToContainer: function(itemID){
+
+                var bidsHistoryContainer = $(".bid-history-container-"+itemID);
+                if(bidsHistoryContainer.length) {
+                    bidsHistoryContainer.addClass("loading-messages");
+                    var nonce = bidsHistoryContainer.data("bids-nonce");
+                    $.post(
+                        ajaxurl,
+                        {
+                            action: "handbid_ajax_get_bid_history",
+                            itemID: itemID,
+                            nonce: nonce
+                        },
+                        function (data) {
+                            data = JSON.parse(data);
+
+                            bidsHistoryContainer.removeClass("loading-messages");
+                            bidsHistoryContainer.html(data.history);
+
+                            return false;
+                        }
+                    );
+                }
+            },
+
+
             notifyUserAboutAuctionClosing: function(values, hasInvoices){
 
                 var auctionName = values.name;
@@ -397,6 +430,33 @@ var handbidMain;
                 $("[data-handbid-item-box="+itemID+"]").attr("data-handbid-item-box-status", status);
             },
 
+            addLosingItemRow: function(itemID, values, type){
+
+                var reasonStr = (type == "under_maxbid") ? " by MaxBid! " : " now!";
+
+                this.addDashboardBidLosing(values.item.id, values.item.name, values.item.key, values.auctionKey, values.amount );
+
+                this.removeItemFromDashboardList(itemID, "winning");
+
+                this.recheckAndRecalculateBids();
+
+                this.notice('You are <br>outbid</b> the item <b>' + values.item.name + '</b>' + reasonStr, "Losing Item", "error");
+
+            },
+
+            addWinningItemRow: function(itemID, values, type){
+
+                var reasonStr = (type == "under_maxbid") ? " by MaxBid! " : " now!";
+
+                this.addDashboardBidWinning(values.item.id, values.item.name, values.item.key, values.auctionKey, values.amount );
+
+                this.removeItemFromDashboardList(itemID, "losing");
+
+                this.recheckAndRecalculateBids();
+
+                this.notice('You are <br>winning</b> the item <b>' + values.item.name + '</b>'+reasonStr, "Winner Winner!", "success");
+            },
+
             checkIfBidsExistsAndChange: function(values, type){
 
                 var profileID = $("[data-dashboard-profile-id]").eq(0).data("dashboard-profile-id");
@@ -411,14 +471,7 @@ var handbidMain;
                     // You Are Losing This Item.
                     console.log("----- LOSING ITEM -----");
 
-                    this.addDashboardBidLosing(values.item.id, values.item.name, values.item.key, values.auctionKey, values.amount );
-
-                    this.removeItemFromDashboardList(itemID, "winning");
-
-                    this.recheckBidCounts();
-                    this.recalculateDashboardPrice();
-
-                    this.notice('You are <br>outbid</b> the item <b>' + values.item.name + '</b> now!', "Losing Item", "error");
+                    this.addLosingItemRow(itemID, values);
 
                     this.loadMessagesToContainer();
                 }
@@ -426,15 +479,7 @@ var handbidMain;
                     // You Are Winning This Item.
                     console.log("----- WINNING ITEM -----");
 
-                    this.addDashboardBidWinning(values.item.id, values.item.name, values.item.key, values.auctionKey, values.amount );
-                    this.removeItemFromDashboardList(itemID, "losing");
-
-                    //this.addDashboardBidLosing(values.item.id, values.name, values.item.key, values.item.auctionKey, oldAmount );
-
-                    this.recheckBidCounts();
-                    this.recalculateDashboardPrice();
-
-                    this.notice('You are <br>winning</b> the item <b>' + values.item.name + '</b> now!', "Winning Item", "success");
+                    this.addWinningItemRow(itemID, values);
 
                     this.loadMessagesToContainer();
                 }
@@ -463,23 +508,16 @@ var handbidMain;
                 return needCreditCard;
             },
 
-
-
-
-            alreadyHaveMaxBidForItem: function(elem){
-                var itemID = elem.data('data-item-id-maxbid');
-
-                var haveMaxBid = $("[data-maxbid-item-id='"+itemID+"']").length;
-
-                if(haveMaxBid){
-                    handbidMain.notice("You already have a maxbid for this item. Please remove the current maxbid to create a new one.", "Already Have MaxBid", "error");
+            alreadyHaveMaxBidForItem: function(values){
+                var currentBidderID = parseInt($("[data-dashboard-profile-id]").eq(0).data("dashboard-profile-id"));
+                var winnerBidderID = values.item.winnerId;
+                if(winnerBidderID == currentBidderID && values) {
+                    var itemName = values.item.name;
+                    var newMax = values.proxyBid;
+                    var oldMax = values.item.highestProxyBid;
+                    handbidMain.notice("Cannot create MaxBid at <b>" + itemName + "</b> at $" + newMax + ". You already have a maxbid for this item at $" + oldMax + " . Please remove the current maxbid to create a new one.", "Already Have MaxBid", "error");
                 }
-                return haveMaxBid > 0;
             },
-
-
-
-
 
             messageToAuctionManager: function(){
 
@@ -690,10 +728,14 @@ var handbidMain;
                             else{
                                 $('[data-handbid-item-attribute="bidCount"]').html(data.item.bidCount);
                                 $('[data-handbid-item-attribute="minimumBidAmount"]').html(currencySymbol + data.item.minimumBidAmount);
+                                if(data.statusReason == "under_maxbid"){
+                                    handbid.addLosingItemRow(data.item.id, data, data.statusReason);
+                                    handbid.loadBidsHistoryToContainer(data.item.id);
+                                }
                             }
 
                             if(!connectedToSocket){
-
+                                console.log("CONNECTED TO SOCKET");
                             }
                             button.removeClass("active");
                             return false;
@@ -708,7 +750,7 @@ var handbidMain;
 
                 $('[data-handbid-bid-button="proxy"]').live('click', function (e) {
 
-                    if(handbid.isButtonDisabledOrAlreadyActive($(this)) || handbid.cannotDoIfUnauthorized() || handbid.noticeIfNoCreditCard($(this)) || handbid.alreadyHaveMaxBidForItem($(this))){
+                    if(handbid.isButtonDisabledOrAlreadyActive($(this)) || handbid.cannotDoIfUnauthorized() || handbid.noticeIfNoCreditCard($(this))){
                         return false;
                     }
                     var amountContainer = $('[data-handbid-maxbid-amount]');
@@ -736,12 +778,25 @@ var handbidMain;
                             console.log(data);
 
                             if(data.status == "failed"){
-                                var message = handbid.getStatusReasonByCode(data.statusReason);
-                                handbid.notice(message, data.status.toUpperCase(), data.status);
+                                var message = "";
+                                if(data.bidType == "max_bid") {
+                                    handbid.alreadyHaveMaxBidForItem(data);
+                                }
+                                else{
+                                    message = handbid.getStatusReasonByCode(data.statusReason);
+                                    handbid.notice(message, data.status.toUpperCase(), data.status);
+                                }
                             }
                             else{
                                 data.item.auctionKey = $("#bidder-info-load").data("auction-key");
                                 handbid.addDashboardBidProxy(data.id, data.item.id, data.item.name, data.item.key, data.item.auctionKey, data.maxAmount);
+
+                                if(data.statusReason == "raised_maxbid"){
+                                    if(data.status == "winning"){
+                                        handbid.addWinningItemRow(data.item.id, data, data.statusReason);
+                                        handbid.loadBidsHistoryToContainer(data.item.id);
+                                    }
+                                }
                             }
 
 
@@ -813,8 +868,7 @@ var handbidMain;
                                 handbidMain.notice(message, "Congratulations!", "success");
 
                                 handbidMain.removeItemFromDashboardList(itemId, "proxy");
-                                handbidMain.recheckBidCounts();
-                                handbidMain.recalculateDashboardPrice();
+                                handbidMain.recheckAndRecalculateBids();
 
                             }
 
@@ -880,6 +934,7 @@ var handbidMain;
                     var nonce = $("#bidNonce").val();
                     var bidID = parseInt($(this).data("handbid-delete-proxy"));
                     var button = $(this);
+                    var itemID = button.data("item-id");
                     button.addClass("active");
                     var data = {
                         action:    "handbid_ajax_removebid",
@@ -896,10 +951,9 @@ var handbidMain;
                             data = JSON.parse(data);
                             console.log(data);
 
-                            $(".bid-row-id-"+bidID).remove();
+                            handbid.removeItemFromDashboardList(itemID, "proxy");
 
-                            handbid.recheckBidCounts();
-                            handbid.recalculateDashboardPrice();
+                            handbid.recheckAndRecalculateBids();
 
                             button.removeClass("active");
                             return false;

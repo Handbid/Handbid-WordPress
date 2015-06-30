@@ -9,19 +9,19 @@
  */
 
 
-if ($this->get('item')) {
+if ($this->get('bids')) {
 
     $item       = $this->get('item');
+    $itemID       = $this->get('itemID');
     $bids       = $this->get('bids');
-    $profile    = $this->get('profile');
 
 } else {
-    echo "No item found.";
+    echo "No item history found.";
     return;
 }
 ?>
 
-<ul class="simple-list bid-history bid-history-item-<?php echo $item->id; ?>"  data-no-items-text="This item has no bids.">
+<ul class="simple-list bid-history bid-history-item-<?php echo ($item) ? $item->id : $itemID ; ?>"  data-no-items-text="This item has no bids.">
 <?php
 //$bids = array_reverse($bids);
 if(count($bids) > 0) {

@@ -133,6 +133,7 @@ class HandbidActionController
             "handbid_ajax_add_credit_card",
             "handbid_ajax_get_invoices",
             "handbid_ajax_get_messages",
+            "handbid_ajax_get_bid_history",
             "handbid_ajax_send_message",
             "handbid_ajax_remove_credit_card",
             "handbid_ajax_get_countries_provinces",
@@ -573,6 +574,38 @@ class HandbidActionController
                     'notifications' => $myMessages,
                 ]
             );
+        }
+
+
+        echo json_encode($result);
+        exit;
+    }
+
+
+
+    function handbid_ajax_get_bid_history_callback(){
+
+        $result = [
+            "history" => "",
+        ];
+
+        $nonce = $_POST["nonce"];
+
+        $itemID = (int) $_REQUEST["itemID"];
+
+        if($this->handbid_verify_nonce($nonce, date("d.m.Y") . "get_bids_".$itemID)) {
+
+            if($itemID) {
+                $bids = $this->handbid->store('Bid')->itemBids($itemID);
+
+                $result["history"] = $this->viewRenderer->render(
+                    'views/item/bids',
+                    [
+                        'itemID'    => $itemID,
+                        'bids'    => $bids
+                    ]
+                );
+            }
         }
 
 
