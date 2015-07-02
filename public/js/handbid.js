@@ -1014,6 +1014,7 @@ var handbidMain, connectMessage;
                     totalPrice += quantity * itemPrice;
                     return (quantity > 0) ? {id : itemID, price : itemPrice, quantity : quantity, name : itemTitle} : null;
                 });
+                totalPrice = handbid.number_format(totalPrice, 0, ".", ",");
                 $("[data-handbid-tickets-total]").html(totalPrice);
                 return prices;
             },
