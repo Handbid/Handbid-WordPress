@@ -49,7 +49,11 @@ $hasTicketItems = !!(count($tickets));
 <div class="container container-fluid detail-banner-wrapper">
     <div class="detail-banner" style="background-image: url('<?php echo "http://" . HANDBID_IMAGES_HOST . $auction->sponsorImage; ?>')">
         <div class="logo">
-            <img src="<?php echo "http://" . HANDBID_IMAGES_HOST . $auction->imageUrl; ?>"/>
+            <img src="<?php
+            $image = $auction->imageUrl;
+            $image = (strpos($image, "http://") === false and strpos($image, "https://") === false) ? "http://" .HANDBID_IMAGES_HOST. $image : $image;
+            echo $image;
+            ?>"/>
         </div>
     </div>
     <div class="controls">
