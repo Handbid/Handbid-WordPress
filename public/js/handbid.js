@@ -106,13 +106,13 @@ var handbidMain, connectMessage;
                     ' <span class="bid-amount winning">$<span>'+maxAmount+'</span></span>' +
                     ' </div>' +
                     ' <div class="col-md-2 col-xs-2">' +
-                    ' <a class="button pink-solid-button loading-span-button" href="#" data-handbid-delete-proxy="'+bidID+'"><em>Delete</em></a>' +
+                    ' <a class="button pink-solid-button loading-span-button" href="#" data-handbid-delete-proxy="'+bidID+'" data-item-id="'+itemID+'"><em>Delete</em></a>' +
                     ' </div>' +
                     ' </li>';
 
                 var listBidsProxy = $(".handbid-list-of-bids-proxy").eq(0);
                 this.removeItemFromDashboardList(itemID, "proxy");
-                $("p", listBidsProxy).eq(0).remove();
+                $("p", listBidsProxy).remove();
                 listBidsProxy.prepend(pattern);
 
                 this.recheckAndRecalculateBids();
@@ -133,7 +133,7 @@ var handbidMain, connectMessage;
                 ' </li>';
 
                 var listBidsWinning = $(".handbid-list-of-bids-winning").eq(0);
-                $("p", listBidsWinning).eq(0).remove();
+                $("p", listBidsWinning).remove();
                 listBidsWinning.prepend(pattern);
 
                 //this.removeItemFromDashboardList(itemID, "losing");
@@ -158,7 +158,7 @@ var handbidMain, connectMessage;
 
                 var listBidsLosing = $(".handbid-list-of-bids-losing").eq(0);
                 listBidsLosing.prepend(pattern);
-                $("p", listBidsLosing).eq(0).remove();
+                $("p", listBidsLosing).remove();
 
                 //this.removeItemFromDashboardList(itemID, "winning");
 
@@ -185,7 +185,7 @@ var handbidMain, connectMessage;
                 '</li>';
 
                 var listBidsPurchases = $(".handbid-list-of-bids-purchases").eq(0);
-                $("p", listBidsPurchases).eq(0).remove();
+                $("p", listBidsPurchases).remove();
                 listBidsPurchases.append(pattern);
 
                 this.recheckAndRecalculateBids();
@@ -206,7 +206,7 @@ var handbidMain, connectMessage;
                     '</li>';
 
                 var listBidsHistory = $(".bid-history-item-"+itemID).eq(0);
-                $("p", listBidsHistory).eq(0).remove();
+                $("p", listBidsHistory).remove();
                 $("li", listBidsHistory).removeClass("open").addClass("closed");
                 listBidsHistory.prepend(pattern);
 
@@ -242,7 +242,7 @@ var handbidMain, connectMessage;
                     '</div>' +
                     '</li>';
 
-                $("p", bidderListOfActiveAuctions).eq(0).remove();
+                $("p", bidderListOfActiveAuctions).remove();
                 if(! alreadyInList) {
                     bidderListOfActiveAuctions.prepend(pattern);
                 }
@@ -451,7 +451,6 @@ var handbidMain, connectMessage;
             removeItemFromDashboardList: function(itemID, status){
                 var listBids = $(".handbid-list-of-bids-"+status).eq(0);
                 $("[data-"+status+"-item-id="+itemID+"]").remove();
-
                 if($("li", listBids).length == 0){
                     var noItemsText = listBids.data("no-items-text");
                     listBids.prepend("<p>"+noItemsText+"</p>");

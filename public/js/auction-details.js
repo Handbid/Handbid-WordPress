@@ -460,7 +460,6 @@
 
 
     $(window).load(function () {
-        console.log("Can be isotoped-----------------------------------");
         prepareIsotope();
         checkAndUpdateIsotope();
     });
