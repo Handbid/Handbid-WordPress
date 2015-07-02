@@ -40,7 +40,8 @@ if ($this->organization) {
             <div class="logo">
                 <img src="<?php
                 $image = $org->logo;
-                $image = ($image) ? $image : $org->organizationImages[0]->organizationImageUrl;
+                $imageUrlPath = parse_url($image);
+                $image = ($image and isset($imageUrlPath["scheme"])) ? $image : $org->organizationImages[0]->organizationImageUrl;
                 $imageUrlPath = parse_url($image);
                 $image = ($imageUrlPath["scheme"]) ? $image : "http://" . $image;
                 echo $image; ?>"/>
