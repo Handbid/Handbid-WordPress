@@ -261,3 +261,35 @@
 [data-handbid-bid-button]{
     text-decoration: none !important;
 }
+
+
+.notice-connection-title{
+    font-size: 17px;
+    margin-top: 5px;
+}
+
+.notice-connection-switch{
+    display: inline-block;
+    background-color: #a94442;
+    color: #ebccd1;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 15px;
+    line-height: 15px;
+    margin-left: 25px;
+    cursor: pointer;
+}
+
+.notice-connection-tip{
+    font-weight: bold;
+    text-align: center;
+    display: none;
+}
+
+.handbid-no-connection-notice.notice-collapsed:hover{
+    opacity: 0.7 !important;
+}
+
+.handbid-no-connection-notice.notice-collapsed .ui-pnotify-container{
+    padding: 0;
+}

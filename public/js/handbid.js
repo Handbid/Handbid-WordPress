@@ -1868,17 +1868,57 @@ var handbidMain, connectMessage;
 
 
             checkSocketConnection: function (handbid) {
-                console.log("connected to socket -- "+connectedToSocket);
                 if(!connectedToSocket){
-
+                    if(connectMessage == undefined){
+                        var stack_bar_top = {
+                            addpos2: 0,
+                            animation: true,
+                            dir1: "down",
+                            dir2: "right",
+                            firstpos1: 0,
+                            firstpos2: 0,
+                            nextpos1: 0,
+                            nextpos2: 0,
+                            push: "top",
+                            spacing1: 0,
+                            spacing2: 0
+                        };
+                        connectMessage = new PNotify({
+                            title: '<h3 class="notice-connection-title"><b>Unable to connect for real-time updates</b>' +
+                            '<span class="notice-connection-switch">?</span>' +
+                            '</h3>',
+                            type: 'error',
+                            text: '<div class="notice-connection-tip">Handbid uses a live connection to the server to update auction items, ' +
+                            'bids and stats. When it can\'t connect to this live connection, this message will appear. ' +
+                            'You can still bid on items, but you may need to refresh your browser page to see if any prices have changed. ' +
+                            'Please click on the chat/help tab below to let us know this message exists. ' +
+                            'It is likely that your Internet service provider is blocking our connection, ' +
+                            'but we will look into it! Happy Bidding!</div>',
+                            icon: '',
+                            addclass: 'handbid-message-notice handbid-no-connection-notice notice-collapsed stack-bar-top',
+                            cornerclass: "",
+                            width: "100%",
+                            stack: stack_bar_top,
+                            hide: false,
+                            buttons: {
+                                closer: false,
+                                sticker: false
+                            },
+                            history: {
+                                history: false
+                            }
+                        });
+                    }
                 }
                 else{
-
+                    if(connectMessage != undefined){
+                        connectMessage.remove();
+                        connectMessage = undefined;
+                    }
                 }
-
                     setTimeout(function () {
                         handbid.checkSocketConnection(handbid)
-                    }, 5000);
+                    }, 3000);
             }
         };
 
@@ -1891,7 +1931,7 @@ var handbidMain, connectMessage;
         handbid.makePaymentForReceipt();
         handbid.detectIfUserWantToBid();
         handbid.messageToAuctionManager();
-        //handbid.checkSocketConnection(handbid);
+        handbid.checkSocketConnection(handbid);
 
         if ($('[data-handbid-item-key], [data-no-bids], [data-tags]').length > 0) {
             $('body').addClass('enable-handbid-fatal-error');
@@ -1951,12 +1991,20 @@ var handbidMain, connectMessage;
                 });
         });
 
+
+
+        $(".notice-connection-switch").live("click", function(e){
+            e.preventDefault();
+            $(".notice-connection-tip").slideToggle("normal");
+            $(".handbid-no-connection-notice").toggleClass("notice-collapsed");
+        });
+
         $("[data-toggle-invoice-link]").live("click", function(e){
             e.preventDefault();
             var invoiceID = $(this).data("toggle-invoice-link");
             $(this).toggleClass("opened-invoice");
             $("[data-receipt-block-id="+invoiceID+"] .invoice-details-container").slideToggle("normal");
-        })
+        });
 
         $("[data-toggle-invoice-more-link]").live("click", function(e){
             e.preventDefault();
