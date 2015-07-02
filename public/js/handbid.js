@@ -674,14 +674,14 @@ var handbidMain, connectMessage;
                     var canBeUp = true;
 
                     var amountContainer = amount;
-
-                    if(! $(this).hasClass("isDirectPurchase")) {
-                        amountContainer = ($(this).hasClass("max-bid-up")) ? $('[data-handbid-maxbid-amount]') : $('[data-handbid-onlybid-amount]');
-                    }
+                    var amountDuplicate = null;
 
                     var value = parseInt(amountContainer[0].innerHTML) + increment;
 
-                    if($(this).hasClass("isDirectPurchase")) {
+                    var isMaxBidButton = $(this).hasClass("max-bid-up");
+                    var isDirectPurchaseButton = $(this).hasClass("isDirectPurchase");
+
+                    if(isDirectPurchaseButton) {
                         var inventoryRemaining = ($('[data-handbid-item-attribute="inventoryRemaining"]').length > 0 ) ? parseInt($('[data-handbid-item-attribute="inventoryRemaining"]')[0].innerHTML) : -1;
                         inventoryRemaining = (inventoryRemaining) ? inventoryRemaining : -1;
                         var totalSoldItems = ($('[data-handbid-item-attribute="totalSoldItems"]').length > 0 ) ? parseInt($('[data-handbid-item-attribute="totalSoldItems"]')[0].innerHTML) : 0;
@@ -691,13 +691,16 @@ var handbidMain, connectMessage;
                     }
                     else{
                         var buyNowPrice = ($('[data-handbid-buynow-price]').length > 0 ) ? parseInt($('[data-handbid-buynow-price]').eq(0).data("handbid-buynow-price")) : -1;
-                        var isMaxBidButton = $(this).hasClass("max-bid-up");
+
                         canBeUp = (!isMaxBidButton)? true : ((buyNowPrice == -1 ) || ((buyNowPrice != -1) && (value <= buyNowPrice)));
 
                         amountContainer = (isMaxBidButton) ? $('[data-handbid-maxbid-amount]') : $('[data-handbid-onlybid-amount]');
                     }
                     if(canBeUp) {
                         amountContainer.html(value);
+                        if(!isDirectPurchaseButton && !isMaxBidButton){
+                            $('[data-handbid-maxbid-amount]').html(value);
+                        }
                     }
 
                 });
@@ -712,14 +715,20 @@ var handbidMain, connectMessage;
 
                     var amountContainer = amount;
 
-                    if(! $(this).hasClass("isDirectPurchase")) {
-                        amountContainer = ($(this).hasClass("max-bid-down")) ? $('[data-handbid-maxbid-amount]') : $('[data-handbid-onlybid-amount]');
+                    var isMaxBidButton = $(this).hasClass("max-bid-down");
+                    var isDirectPurchaseButton = $(this).hasClass("isDirectPurchase");
+
+                    if(! isDirectPurchaseButton) {
+                        amountContainer = (isMaxBidButton) ? $('[data-handbid-maxbid-amount]') : $('[data-handbid-onlybid-amount]');
                     }
 
                         var value = parseInt(amountContainer[0].innerHTML) - increment;
 
                         if(value >= minimalBidAmount) {
                             amountContainer.html(value);
+                            if(!isDirectPurchaseButton && !isMaxBidButton){
+                                $('[data-handbid-maxbid-amount]').html(value);
+                            }
                         }
 
                 });
