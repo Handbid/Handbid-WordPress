@@ -74,7 +74,7 @@ foreach ($invoices as $i => $invoice) {
                             <td class="format-money"><?php echo $currency . "<em>" . number_format($invoice->taxRate / 100, $coinsCount, $coinsDivider, $groupDivider) . "</em>";?></td>
                         </tr>
                         <tr class="receipt-due">
-                            <th scope="row" class="total">Grand Total</th>
+                            <th scope="row" class="total">Balance Due</th>
                             <td class="receipt-total format-money text-red" data-attribute="grandTotal"><?php echo $currency . "<em>" . number_format($invoice->grandTotal / 100, $coinsCount, $coinsDivider, $groupDivider) . "</em>";?></td>
                         </tr>
                         </tbody>

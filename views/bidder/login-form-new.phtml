@@ -22,8 +22,11 @@ $countries = $this->get("countries");
         <div class="row">
             <div class="col-xs-12 signup-form">
                 <div class="handbid-form signup-form">
-                    <h3>LOGIN</h3>
-                    <h4>to your Handbid account</h4>
+                    <h3>Handbid Bidder Login</h3>
+                    <h4>Login with your bidder account information below.</h4>
+                    <h4>Not sure if you have an account?
+                        <a class="login-popup-link" data-target-tab="get-started">Click here</a> to get
+                        started.</h4>
 
                     <form id="hb-login-form" class="form" method="POST" action="<?php echo get_admin_url() . 'admin-post.php'; ?>"
                           enctype="multipart/form-data">
@@ -37,10 +40,6 @@ $countries = $this->get("countries");
 
                         <div class="row">
                             <div class="form-group col-md-12">
-                                <h2>Handbid Bidder Login</h2>
-                                <h5>Login with your bidder account information below. Not sure if you have an account?
-                                    <a class="login-popup-link" data-target-tab="get-started">Click here</a> to get
-                                    started.</h5>
                                 <input placeholder="Email or Phone Number" type="text" name="username" value=""
                                        class="form-control cleanable-input" id="hb-login-form-username">
                             </div>
@@ -58,10 +57,12 @@ $countries = $this->get("countries");
                             </div>
                         </div>
 
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-info signup" id="hb-login-form-submit"><span>Sign In</span></button>
+                        <div class="row">
+                            <div class="form-group col-md-12 buttons">
+                                <button type="submit" class="btn btn-info signup" id="hb-login-form-submit"><span>Sign In</span></button>
 
-                            <a class="btn btn-info signup login-popup-link" data-target-tab="tutorial-info-1">Tutorial</a>
+                                <a class="btn btn-info signup login-popup-link" data-target-tab="tutorial-info-1">Tutorial</a>
+                            </div>
                         </div>
 
                         <div class="row">
@@ -179,7 +180,7 @@ $countries = $this->get("countries");
                         <div class="row">
                             <div class="col-lg-4 center-aligned-text">
                                 <img class="img-circle"
-                                     src="<?php echo plugin_dir_url(__FILE__)."../../public/images/login-modal/icon-phone.png"; ?>"
+                                     src="<?php echo plugin_dir_url(__FILE__)."../../public/images/login-modal/phones.png"; ?>"
                                      alt="Generic placeholder image" width="140" height="140">
 
                                 <h2 class="center-aligned-text">YOUR PHONE</h2>
@@ -190,7 +191,7 @@ $countries = $this->get("countries");
                             </div>
                             <div class="col-lg-4 center-aligned-text">
                                 <img class="img-circle"
-                                     src="<?php echo plugin_dir_url(__FILE__)."../../public/images/login-modal/icon-tab.png"; ?>"
+                                     src="<?php echo plugin_dir_url(__FILE__)."../../public/images/login-modal/ipads.png"; ?>"
                                      alt="Generic placeholder image" width="140" height="140">
 
                                 <h2 class="center-aligned-text">IPADS</h2>
@@ -198,7 +199,7 @@ $countries = $this->get("countries");
                             </div>
                             <div class="col-lg-4 center-aligned-text">
                                 <img class="img-circle"
-                                     src="<?php echo plugin_dir_url(__FILE__)."../../public/images/login-modal/icon-comp.png"; ?>"
+                                     src="<?php echo plugin_dir_url(__FILE__)."../../public/images/login-modal/comp.png"; ?>"
                                      alt="Generic placeholder image" width="140" height="140">
 
                                 <h2 class="center-aligned-text">YOUR COMPUTER</h2>
@@ -318,59 +319,88 @@ $countries = $this->get("countries");
                 <div class="row">
                     <div class="form-group col-md-12">
                         <input id="reg-firstname" placeholder="First Name *" type="text" name="firstname" value=""
-                               class="col-md-6 has-question-icon has-popover cleanable-input copyable-field" data-copy-to="confirm-firstname" data-toggle="popover" data-trigger="focus"
-                               title="ENTER IN YOUR FIRST AND LAST NAME"
-                               data-content="We need your name so we know what to call you and for your receipt at the end. Your identity (by default) will be concealed using a Paddle Number or Alias."
-                            required
-                            data-required-message="First Name field is required">
+                               class="col-md-8 col-md-offset-2 col-xs-12 has-question-icon has-popover cleanable-input copyable-field"
+                               data-copy-to="confirm-firstname"
+                               required
+                               data-required-message="First Name field is required">
+                        <span class="has-question-icon has-popover"
+                              data-toggle="popover"
+                              data-placement="top"
+                              data-trigger="click"
+                              title="ENTER IN YOUR FIRST AND LAST NAME"
+                              data-content="We need your name so we know what to call you and for your receipt at the end. Your identity (by default) will be concealed using a Paddle Number or Alias.">
+                        </span>
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-md-12">
                         <input id="reg-lastname" placeholder="Last Name *" type="text" name="lastname" value=""
-                               class="col-md-6 has-question-icon has-popover cleanable-input copyable-field" data-copy-to="confirm-lastname" data-toggle="popover" data-trigger="focus"
-                               title="ENTER IN YOUR FIRST AND LAST NAME"
-                               data-content="We need your name so we know what to call you and for your receipt at the end. Your identity (by default) will be concealed using a Paddle Number or Alias."
+                               class="col-md-8 col-md-offset-2 col-xs-12 has-question-icon has-popover cleanable-input copyable-field"
+                               data-copy-to="confirm-lastname"
                                required
                                data-required-message="Last Name field is required">
+                        <span class="has-question-icon has-popover"
+                              data-toggle="popover"
+                              data-placement="top"
+                              data-trigger="click"
+                              title="ENTER IN YOUR FIRST AND LAST NAME"
+                              data-content="We need your name so we know what to call you and for your receipt at the end. Your identity (by default) will be concealed using a Paddle Number or Alias.">
+                        </span>
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-md-12">
                         <input id="reg-email" placeholder="eMail" type="text" name="email" value=""
-                               class="col-md-6 has-question-icon has-popover cleanable-input copyable-field is-email" data-copy-to="confirm-email" data-toggle="popover" data-trigger="focus"
-                               title="ENTER IN YOUR EMAIL ADDRESS"
-                               data-content="We will use your eMail to identify you and also to send you a receipt at the end of the auction. Don't worry, you won't end up on any list because of us. You can review our privacy policy for more details."
+                               class="col-md-8 col-md-offset-2 col-xs-12 has-question-icon has-popover cleanable-input copyable-field is-email"
+                               data-copy-to="confirm-email"
                                data-not-email-message="Please, provide valid email address"
                                required
                                data-required-message="Email field is required">
+                        <span class="has-question-icon has-popover"
+                              data-toggle="popover"
+                              data-placement="top"
+                              data-trigger="click"
+                              title="ENTER IN YOUR EMAIL ADDRESS"
+                              data-content="We will use your eMail to identify you and also to send you a receipt at the end of the auction. Don't worry, you won't end up on any list because of us. You can review our privacy policy for more details.">
+                        </span>
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-md-12">
                         <input id="reg-password" placeholder="Password (for use only on the webSite)" type="text"
                                name="password" value=""
-                               class="col-md-6 has-question-icon has-popover cleanable-input copyable-field" data-copy-to="confirm-password" data-toggle="popover" data-trigger="focus"
-                               title="CREATE A PASSWORD"
-                               data-content="You will need a password to login on from Handbid.com. You will not need to use this password to login from the mobile apps or from the iPads. Please, ceep this password secure."
-                               required
+                               class="col-md-8 col-md-offset-2 col-xs-12 has-question-icon has-popover cleanable-input copyable-field"
+                               data-copy-to="confirm-password"
+                              required
                                data-required-message="Password field is required">
+                        <span class="has-question-icon has-popover"
+                               data-toggle="popover"
+                               data-placement="top"
+                               data-trigger="click"
+                               title="CREATE A PASSWORD"
+                               data-content="You will need a password to login on from Handbid.com. You will not need to use this password to login from the mobile apps or from the iPads. Please, ceep this password secure.">
+                        </span>
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-md-12">
                         <input id="reg-password-confirm" placeholder="Confirm your Password" type="text"
                                name="password-confirm" value=""
-                               class="col-md-6 has-question-icon has-popover cleanable-input" data-toggle="popover" data-trigger="focus"
-                               title="CREATE A PASSWORD"
-                               data-content="You will need a password to login on from Handbid.com. You will not need to use this password to login from the mobile apps or from the iPads. Please, ceep this password secure."
+                               class="col-md-8 col-md-offset-2 col-xs-12 has-question-icon has-popover cleanable-input"
                                data-mismatch-message="Password mismatch">
+                        <span class="has-question-icon has-popover"
+                              data-toggle="popover"
+                              data-placement="top"
+                              data-trigger="click"
+                              title="CREATE A PASSWORD"
+                              data-content="You will need a password to login on from Handbid.com. You will not need to use this password to login from the mobile apps or from the iPads. Please, ceep this password secure.">
+                        </span>
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-md-12">
                         <select id="reg-phone-code" name="phone-code"
-                                class="col-md-2 copyable-field"  data-copy-to="confirm-phone-code">
+                                class="col-md-3 col-md-offset-2 col-xs-4 copyable-field"  data-copy-to="confirm-phone-code">
                             <?php
                             foreach($countries as $country){
                                 echo "<option value='" . $country["code"] . "' " . selected("US", $country["code"], false) . ">" . $country["name"] . "</option>";
@@ -378,18 +408,24 @@ $countries = $this->get("countries");
                             ?>
                         </select>
                         <input id="reg-phone-number" placeholder="Cell Phone *" type="text" name="phone-number" value=""
-                               class="col-md-4 has-question-icon has-popover cleanable-input copyable-field" data-copy-to="confirm-phone-number" data-toggle="popover" data-trigger="focus"
-                               title="PROVIDE YOUR CELL PHONE"
-                               data-content="If you intend to bid from your smartphone using the Handbid App, please provide number for that here and tell us what type of phone you have. We will send instructions to that phone on how to get setup."
+                               class="col-md-5 col-xs-8 has-question-icon has-popover cleanable-input copyable-field"
+                               data-copy-to="confirm-phone-number"
                                required
                                data-required-message="Phone field is required">
+                        <span class="has-question-icon has-popover"
+                              data-toggle="popover"
+                              data-placement="top"
+                              data-trigger="click"
+                              title="PROVIDE YOUR CELL PHONE"
+                              data-content="If you intend to bid from your smartphone using the Handbid App, please provide number for that here and tell us what type of phone you have. We will send instructions to that phone on how to get setup.">
+                        </span>
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-md-12">
                         <h5>What kind of phone do you have?</h5>
 
-                        <div class="col-md-6">
+                        <div class="col-md-6 col-md-offset-3 col-xs-12">
                             <label for="reg-phone-type-1" class="col-xs-4 radio-label">
                                 <input type="radio" id="reg-phone-type-1" name="phone-type" value="iphone" class="copyable-field" data-copy-to="confirm-phone-type" checked>
                                 iPhone</label>
@@ -570,7 +606,7 @@ $countries = $this->get("countries");
 
 <div class="container-fluid container-tab" style="display: none" data-tab-name="register-complete">
     <div class="row">
-        <div class="col-xs-12 col-md-6 col-md-offset-3 signup-form">
+        <div class="col-xs-12 col-md-10 col-md-offset-1 signup-form">
             <div class="handbid-form signup-form">
                 <h3>GETTING STARTED</h3>
                 <h4>with Handbid</h4>
@@ -608,7 +644,7 @@ $countries = $this->get("countries");
 
 <div class="container-fluid container-tab" style="display: none" data-tab-name="tutorial-info-1">
     <div class="row">
-        <div class="row col-xs-12 col-md-6 col-md-offset-3 signup-form">
+        <div class="row col-xs-12 col-md-8 col-md-offset-2 signup-form">
             <div class="handbid-form signup-form">
                 <h3>GETTING STARTED</h3>
                 <h4>with Handbid</h4>
@@ -653,10 +689,11 @@ $countries = $this->get("countries");
                         </p>
                         <div class="row">
                             <h4>TEXT INSTRUCTIONS TO MY PHONE</h4>
-                        <input id="reg-phone-number" placeholder="Cell Phone" type="text" name="phone-number" value=""
-                               class="col-xs-12 col-md-6 col-md-offset-3  cleanable-input"
-                               >
-                        <button class="btn btn-info signup">SEND TEXT</button>
+                            <input id="reg-phone-number" placeholder="Cell Phone" type="text" name="phone-number" value=""
+                                   class="col-xs-12 col-md-6 col-md-offset-3  cleanable-input">
+                        </div>
+                        <div class="row">
+                            <button class="btn btn-info signup">SEND TEXT</button>
                         </div>
                     </div>
 

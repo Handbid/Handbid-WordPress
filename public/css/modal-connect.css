@@ -258,34 +258,45 @@ span.underline {
     text-align: center !important;
 }
 
-.container-tab .popover{
-    top: 0 !important;
-    width: 50% !important;
-    max-width: 50%;
 
+/* ---Popover--- */
+.container-tab .popover{
+    width: 600px !important;
+    max-width: 600px;
+    margin-left: -300px;
+    padding: 0;
+    border-radius: 0;
     background: none;
     box-shadow: none;
-    border: none;
+    border-color: #2d84bc;
 }
-
-.container-tab .popover .arrow{
-    top: 20px !important;
-    left: -10px;
+@media (max-width: 992px) {
+    .container-tab .popover {
+        width: 80% !important;
+        max-width: 80%;
+        margin-left: -40%;
+    }
 }
-.container-tab .popover .arrow:after{
-    border-right-color: #2d84bc;
+.container-tab .popover.top .arrow {
+    left: auto !important;
+    right: 5px;
 }
-
+/*.container-tab .popover.left .arrow:after{*/
+/*border-left-color: #2d84bc;*/
+/*}*/
 .container-tab .popover .popover-title{
     background: #2d84bc;
     border: none;
     border-radius: 0;
     text-align: left;
 }
-
 .container-tab .popover .popover-content{
-
+    background: #fff;
+    border-radius: 0;
+    color: #000;
+    text-shadow: none;
 }
+
 
 .has-question-icon{
     position: relative;

@@ -10,7 +10,7 @@
 
 
 var socket = new YiiNodeSocket();
-
+socket.debug(true);
 /*
  ********************** BOOTSTRAP / CONNECT **********************
  */
@@ -18,7 +18,7 @@ var socket = new YiiNodeSocket();
 var connectedToSocket = false;
 
 socket.onConnect(function () {
-
+console.log("success connect");
     connectedToSocket = true;
 
     var $ = jQuery;
@@ -415,4 +415,14 @@ socket.onConnect(function () {
     // socket.channel('test').on('some_event', function (data) {
     //
     //
+});
+
+//socket.onDisconnect(function(){
+//    connectedToSocket = false;
+//    console.log("horrible disconnect");
+//});
+
+socket.onError(function(message){
+    console.log("socket connection error");
+    console.log(message);
 });

@@ -9,7 +9,7 @@
 
 
 
-var handbidMain;
+var handbidMain, connectMessage;
 (function ($) {
 
     var restEndpoint = $("#apiEndpointsAddress").val(),
@@ -433,6 +433,7 @@ var handbidMain;
                     type: 'info',
                     text: noticeText,
                     icon: 'glyphicon glyphicon-off',
+                    addclass: 'handbid-message-notice',
                     hide: hide,
                     confirm: confirm,
                     buttons: {
@@ -566,6 +567,7 @@ var handbidMain;
                         title: 'Send Email To Auction Manager',
                         text: '<br>',
                         icon: 'glyphicon glyphicon-question-sign',
+                        addclass: 'handbid-message-notice',
                         hide: false,
                         confirm: {
                             prompt: true,
@@ -1606,6 +1608,7 @@ var handbidMain;
                         text: msg,
                         type: type,
                         hide: hide,
+                        addclass: 'handbid-message-notice',
                         buttons: {
                             sticker: false
                         }
@@ -1633,9 +1636,10 @@ var handbidMain;
                 if(auctionID && profileID && paddleNumber == "N/A") {
                 //if(true) {
                     (new PNotify({
-                        title: 'Choose a Variant',
-                        text: 'Do you want to bid on this auction or just view it?',
+                        title: 'Register to Bid?',
+                        text: 'Do you want to bid in this auction or just browse for now?',
                         icon: 'glyphicon glyphicon-question-sign',
+                        addclass: 'handbid-message-notice',
                         hide: false,
                         confirm: {
                             confirm: true,
@@ -1726,7 +1730,7 @@ var handbidMain;
                                     );
                                 }
                             }, {
-                                text: 'Just View',
+                                text: 'Browse',
                                 addClass: 'btn-primarya',
                                 click: function (notice) {
                                     notice.remove();
@@ -1754,6 +1758,7 @@ var handbidMain;
                     type: 'error',
                     text: '<b>You must supply a credit card to bid in this auction.</b>',
                     icon: 'glyphicon glyphicon-exclamation-sign',
+                    addclass: 'handbid-message-notice',
                     hide: false,
                     confirm: {
                         confirm: true,
@@ -1816,6 +1821,7 @@ var handbidMain;
                     }, 1000);
                 }
             },
+
             setTimerRemaining: function(handbid){
                 var timerRemaining = $("#timerRemaining");
                 if(timerRemaining.val() != undefined) {
@@ -1825,6 +1831,7 @@ var handbidMain;
                 }
 
             },
+
             showTimerRemainingNotice: function(timerTime, timerTitle){
                 timerTitle = (timerTitle != undefined) ? " <b>"+timerTitle+"</b>" : "";
                 var timeH = Math.floor(timerTime / 3600),
@@ -1835,6 +1842,7 @@ var handbidMain;
                 (handbid.timerNotice) ? handbid.timerNotice.remove() : '';
                 handbid.timerNotice = handbid.notice("Auction "+timerTitle+"<br>closes after <b><div data-handbid-timer>" + timeFormatted + "</div></b>", "Closing Auction Timer");
             },
+
             reloadBidderProfile: function(){
                 var bidderInfo = jQuery("#bidder-info-load");
                 bidderInfo.hide();
@@ -1852,6 +1860,25 @@ var handbidMain;
                         handbid.loadAllToContainers();
 
                     });
+            },
+
+
+
+
+
+
+            checkSocketConnection: function (handbid) {
+                console.log("connected to socket -- "+connectedToSocket);
+                if(!connectedToSocket){
+
+                }
+                else{
+
+                }
+
+                    setTimeout(function () {
+                        handbid.checkSocketConnection(handbid)
+                    }, 5000);
             }
         };
 
@@ -1864,6 +1891,7 @@ var handbidMain;
         handbid.makePaymentForReceipt();
         handbid.detectIfUserWantToBid();
         handbid.messageToAuctionManager();
+        //handbid.checkSocketConnection(handbid);
 
         if ($('[data-handbid-item-key], [data-no-bids], [data-tags]').length > 0) {
             $('body').addClass('enable-handbid-fatal-error');
@@ -1904,6 +1932,7 @@ var handbidMain;
                 title: 'Logout Confirmation',
                 text: 'Are you sure want to logout?',
                 icon: 'glyphicon glyphicon-question-sign',
+                addclass: 'handbid-message-notice',
                 hide: false,
                 confirm: {
                     confirm: true
