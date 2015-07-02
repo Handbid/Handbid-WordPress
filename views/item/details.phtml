@@ -74,7 +74,10 @@ $hasManyImages = (count($item->images) > 1);
                     <div class="slider-content" data-slider-nav-id="item-image-slider" data-slider-progress>
                         <?php foreach ($item->images as $k => $v) { ?>
                             <div class="image" data-slider-nav-key="<?php echo 'item-image-' . $k; ?>">
-                                <div style="background-image: url('<?php echo "http://" . $v->itemImageUrl; ?>');" class="image-holder"></div>
+                                <div style="background-image: url('<?php
+                                $image = $v->itemImageUrl;
+                                $image = (strpos($image, "http://") === false and strpos($image, "https://") === false) ? "http://" . $image : $image;
+                                echo $image; ?>'); background-size: contain;" class="image-holder"></div>
                             </div>
                         <?php } ?>
                     </div>
@@ -84,7 +87,10 @@ $hasManyImages = (count($item->images) > 1);
                 else
                 {
                     ?>
-                    <div style="background-image: url('<?php echo "http://" . $item->images[0]->itemImageUrl; ?>');" class="image-holder"></div>
+                    <div style="background-image: url('<?php
+                    $image = $item->images[0]->itemImageUrl;
+                    $image = (strpos($image, "http://") === false and strpos($image, "https://") === false) ? "http://" . $image : $image;
+                    echo $image;?>'); background-size: contain;" class="image-holder"></div>
                 <?php
                 }
                 ?>
