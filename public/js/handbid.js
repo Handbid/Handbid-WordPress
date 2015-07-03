@@ -9,7 +9,7 @@
 
 
 
-var handbidMain, connectMessage;
+var handbidMain, connectMessage, modal_overlay;
 (function ($) {
 
     var restEndpoint = $("#apiEndpointsAddress").val(),
@@ -1719,6 +1719,7 @@ var handbidMain, connectMessage;
                                                 icon: icon,
                                                 hide: true,
                                                 type: type,
+                                                delay: 3000,
                                                 confirm: {
                                                     confirm: false
                                                 },
@@ -1745,6 +1746,29 @@ var handbidMain, connectMessage;
                                     notice.remove();
                                 }
                             }]
+                        },
+                        stack: false,
+                        before_open: function(PNotify) {
+                            PNotify.get().css({
+                                "top": ($(window).height() / 2) - (PNotify.get().height() / 2) - 80,
+                                "left": ($(window).width() / 2) - (PNotify.get().width() / 2)
+                            });
+                            if (modal_overlay) modal_overlay.fadeIn("fast");
+                            else modal_overlay = $("<div />", {
+                                "class": "ui-widget-overlay",
+                                "css": {
+                                    "display": "none",
+                                    "position": "fixed",
+                                    "background": "rgba(0, 0, 0, 0.7)",
+                                    "top": "0",
+                                    "bottom": "0",
+                                    "right": "0",
+                                    "left": "0"
+                                }
+                            }).appendTo("body").fadeIn("fast");
+                        },
+                        before_close: function() {
+                            modal_overlay.fadeOut("fast");
                         },
                         buttons: {
                             closer: false,

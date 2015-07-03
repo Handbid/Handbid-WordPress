@@ -75,7 +75,7 @@ $hasTicketItems = !!(count($tickets));
                     Mail to manager</a>
             <?php } ?>
 
-            <?php if ($auction->enableTicketSales) { ?>
+            <?php if ($auction->enableTicketSales and $profile) { ?>
                 <?php echo do_shortcode('[handbid_auction_ticket_list]'); ?>
             <?php } ?>
 
