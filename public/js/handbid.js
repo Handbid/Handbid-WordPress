@@ -612,7 +612,21 @@ var handbidMain, connectMessage, modal_overlay;
                                 },
                                 function (data) {
                                     console.log(data);
-                                    notice.remove();
+                                    notice.cancelRemove().update({
+                                        title: '<b>Message Sent</b>',
+                                        text: "<b>Thank you, your message has been sent</b>",
+                                        icon: true,
+                                        type: 'success',
+                                        hide: true,
+                                        delay: 3000,
+                                        confirm: {
+                                            prompt: false
+                                        },
+                                        buttons: {
+                                            closer: true,
+                                            sticker: false
+                                        }
+                                    });
                                 }
                             );
                         });
@@ -1617,6 +1631,7 @@ var handbidMain, connectMessage, modal_overlay;
                         text: msg,
                         type: type,
                         hide: hide,
+                        delay: 5000,
                         addclass: 'handbid-message-notice',
                         buttons: {
                             sticker: false
