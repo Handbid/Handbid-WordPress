@@ -1979,7 +1979,9 @@ var handbidMain, connectMessage, modal_overlay;
         handbid.makePaymentForReceipt();
         handbid.detectIfUserWantToBid();
         handbid.messageToAuctionManager();
-        handbid.checkSocketConnection(handbid);
+        setTimeout(function () {
+            handbid.checkSocketConnection(handbid)
+        }, 10000);
 
         if ($('[data-handbid-item-key], [data-no-bids], [data-tags]').length > 0) {
             $('body').addClass('enable-handbid-fatal-error');
