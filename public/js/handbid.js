@@ -198,7 +198,7 @@ var handbidMain, connectMessage, modal_overlay;
                 var pattern = '<li class="row open" data-list-bid-id="' + bidID + '">' +
                     '<div class="col-md-6">' +
                     '<h4>Bidder Pin</h4>' +
-                    '<span>' + bidderName + '</span>' +
+                    '<span>' + values.bidderName + '</span>' +
                     '</div>' +
                     '<div class="col-md-6">' +
                     '<span class="bid-amount winning">$<span>' + amount + '</span></span>' +
