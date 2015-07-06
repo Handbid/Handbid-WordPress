@@ -10,7 +10,7 @@
 
 
 var socket = new YiiNodeSocket();
-socket.debug(true);
+//socket.debug(true);
 /*
  ********************** BOOTSTRAP / CONNECT **********************
  */
@@ -417,12 +417,7 @@ console.log("success connect");
     //
 });
 
-//socket.onDisconnect(function(){
-//    connectedToSocket = false;
-//    console.log("horrible disconnect");
-//});
-
-socket.onError(function(message){
-    console.log("socket connection error");
-    console.log(message);
+socket.onDisconnect(function(){
+    connectedToSocket = false;
+    console.log("socket disconnect");
 });

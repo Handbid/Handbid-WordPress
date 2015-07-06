@@ -305,6 +305,7 @@ class Handbid
     function onRenderFooter()
     {
 
+
         //do we need to prompt for credit card?
         $bidder = $this->state()->currentBidder();
 
@@ -323,12 +324,40 @@ class Handbid
             }
 
         }
+
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        // Set Values
+        $hostName = 'manager.hand.bid';
+        $auctionGuid = $auction->auctionGuid;
+        $userGuid = $bidder->usersGuid;
+
+        $hostPort = '3002';
+        $isSecure = false;
+
+        // Determined Values
+        $protocol = $isSecure ? 'https' : 'http';
+        $jqueryUrl = sprintf('%s://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js', $protocol);
+        $hostUrl = sprintf('%s://%s', $protocol, $hostName);
+        $socketIoUrl = sprintf('%s:%s/socket.io/socket.io.js', $hostUrl, $hostPort);
+        $nodeClientUrl = sprintf('%s:%s/client', $hostUrl, $hostPort);
+        $params = json_encode(["secure" => $isSecure, "cookie" => $userGuid]);
+
+        ?>
+        <script>
+            var auctionChannelId = '<?php echo $auctionGuid; ?>', // Demo Auction GUID
+                userChannelId = '<?php echo $userGuid; ?>', // demo@handbid.com user GUID
+                url = '<?php echo $nodeClientUrl; ?>',
+                params = <?php echo $params; ?>;
+
+        </script>
+        <?php
+
         echo '<input type="hidden" data-dashboard-profile-id="'.$bidder->id.'">';
-        // echo '<script type="text/javascript">if(jQuery("[data-handbid-auction-guid]").length > 0) { var auctionChannelId = jQuery("[data-handbid-auction-guid]").attr("data-handbid-auction-guid"); } if(jQuery.cookie("handbid-auth")) { var userChannelId = jQuery.cookie("handbid-auth").split(": ")[1]; }</script>';
-        echo '<script type="text/javascript">if(jQuery("[data-handbid-auction-guid]").length > 0) { var auctionChannelId = jQuery("[data-handbid-auction-guid]").attr("data-handbid-auction-guid"); } if(jQuery.cookie("handbid-auth")) { var userChannelId = "'.$bidder->usersGuid.'"; }</script>';
-        echo '<script src="' . plugins_url("handbid/public/js/socket.io.js") .  '"></script>';
-//        echo '<script src="http://rest.hand.bid:3002/socket.io/socket.io.js"></script>';
-//        echo '<script src="//beta-yii.hand.bid:3002/socket.io/socket.io.js"></script>';
+
+        echo '<script src="'.$socketIoUrl.'"></script>';
         echo '<script type="text/javascript" src="' . plugins_url("handbid/public/js/yii-node-socket.js") .  '"></script>';
         echo '<script type="text/javascript" src="' . plugins_url("handbid/public/js/node-socket-manager.js") .  '"></script>';
     }

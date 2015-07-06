@@ -1,6 +1,4 @@
-//var url = 'http://beta-yii.hand.bid:3002/client';
-var url = 'https://rest.hand.bid:3002/client';
-var params = {"secure":false};
+
 
 function callOtherDomain(){
     if(invocation) {
@@ -752,12 +750,6 @@ function callOtherDomain(){
         this.onReconnect = function (fn) {
             if (fn) {
                 socket.on('reconnect', fn);
-            }
-        };
-
-        this.onError = function (fn) {
-            if (fn) {
-                socket.on('error', fn);
             }
         };
     }
