@@ -55,7 +55,7 @@ $hasManyImages = (count($item->images) > 1);
 
 ?>
 
-<div class="item-details item-<?php echo $item->status; ?>" data-handbid-item-key="<?php echo $item->key; ?>" data-handbid-auction-guid="<?php echo $auction->auctionGuid; ?>">
+<div class="item-details item-<?php echo $item->status; ?>" data-handbid-item-details-block="<?php echo $item->id; ?>" data-handbid-item-key="<?php echo $item->key; ?>" data-handbid-auction-guid="<?php echo $auction->auctionGuid; ?>">
 
     <div class="back-to-previous-container">
         <a class="back-to-previous" href="/auctions/<?php echo $auction->key; ?>/">View All Items</a>
@@ -114,17 +114,17 @@ $hasManyImages = (count($item->images) > 1);
         <div class="col-md-5">
             <h2 class="name" data-handbid-item-attribute="name" data-change-attribute="name"><?php echo $item->name; ?></h2>
             <?php if ($category) { ?>
-                <h3 class="category" data-handbid-item-attribute="meta.categoryName"><?php echo $category; ?></h3>
+                <h3 class="category" data-handbid-item-attribute="categoryName"><?php echo $category; ?></h3>
             <?php } ?>
             <ul class="horizontal-details row">
 
                 <?php if($isBiddable) { ?>
-                    <li class="bids col-md-4 col-xs-3"><em data-handbid-item-attribute="meta.totalBids"><?php echo $item->bidCount; ?></em>Bids</li>
+                    <li class="bids col-md-4 col-xs-3"><em data-handbid-item-attribute="bidCount"><?php echo $item->bidCount; ?></em>Bids</li>
                     <li class="increment col-md-4 col-xs-5"><em>$<span class="incrementSpan"><?php echo $item->bidIncrement; ?></span></em>Increment</li>
                     <li class="min col-md-4 col-xs-4"><em>$<span data-change-attribute="minimumBidAmount"><?php echo $item->minimumBidAmount; ?></span></em>Value</li>
                 <?php } else { ?>
-                    <li class="purchases col-md-4 col-xs-4" data-handbid-item-attribute="meta.totalSold"><em  data-handbid-item-attribute="totalSoldItems"><?php echo $item->quantitySold; ?></em>Sold</li>
-                    <li class="increment col-md-4 col-xs-4" data-handbid-item-attribute="buyNowPrice"><em>$<span id="singleItemPrice"><?php echo $item->buyNowPrice; ?></span></em>Price</li>
+                    <li class="purchases col-md-4 col-xs-4" data-handbid-item-attribute="totalSold"><em  data-handbid-item-attribute="totalSoldItems"><?php echo $item->quantitySold; ?></em>Sold</li>
+                    <li class="increment col-md-4 col-xs-4" ><em>$<span id="singleItemPrice"  data-handbid-item-attribute="buyNowPrice"><?php echo $item->buyNowPrice; ?></span></em>Price</li>
                     <li class="remaining col-md-4 col-xs-4"><em data-handbid-item-attribute="inventoryRemaining"><?php echo $item->inventoryRemaining; ?></em>Remaining</li>
                 <?php } ?>
             </ul>

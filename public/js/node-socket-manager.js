@@ -365,46 +365,7 @@ console.log("success connect");
      */
     $.effectNodeItemUpdate = function (data) {
 
-        var currentItemID = $("#bidItemId").val();
-        if(currentItemID != undefined && currentItemID == data.values.id){
-
-            var item = $('[data-guid=' + data.guid + ']');
-            $.map(data.attributes, function (attribute) {
-                var value = data.values[attribute];
-                if(attribute == "inventoryRemaining" && value == -1) {value = "∞"}
-                $('[data-change-attribute=' + attribute + ']').html(value);
-                $('[data-handbid-item-attribute=' + attribute + ']').html(value);
-            });
-
-        }
-
-        if(data.values.inventoryRemaining != undefined &&
-            data.values.inventoryRemaining != -1 &&
-            data.values.inventoryRemaining != "∞"){
-            $('[data-handbid-remaining-of-id=' + data.values.id + ']').html(data.values.inventoryRemaining);
-        }
-        $('[data-handbid-sold-of-id=' + data.values.id + ']').html(data.values.quantitySold);
-        $('[data-handbid-bids-of-id=' + data.values.id + ']').html(data.values.bidCount);
-        //var item = $('[data-guid=' + data.guid + ']');
-        //var attribute = item.children('[data-attribute=' + data.attribute + ']');
-        //var icon = ' <i class="fa fa-arrow-up" aria-hidden="true"></i> ';
-        //
-        //attribute.fadeOut("slow");
-        //if (data.attribute == 'currentPrice') {
-        //    attribute.html(data.values.currentPrice);
-        //}
-        //if (data.attribute == 'bidCount') {
-        //    attribute.html(data.values.bidCount);
-        //}
-        //
-        //attribute.css({
-        //    "background-color": "#cccccc",
-        //    "color": '#fff',
-        //    "font-weight": "bolder"
-        //}).fadeIn('slow');
-        //item.css({
-        //    "background-color": "#9EB84A"
-        //});
+        handbidMain.processItemChange(data.values);
 
         return true;
     };

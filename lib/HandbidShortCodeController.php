@@ -724,6 +724,7 @@ class HandbidShortCodeController {
             if(is_null($auction) and isset($attributes["auction"]) and (int) $attributes["auction"] ){
                 $auction = $this->auction = $this->handbid->store('Auction')->byId($attributes["auction"], false);
             }
+            $isInitialLoading = (isset($attributes["isinitialloading"]));
 
             $winning    = null;
             $losing     = null;
@@ -787,12 +788,12 @@ class HandbidShortCodeController {
 					'myAuctions' => $myAuctions,
 					'myInvoices' => $myInvoices,
 					'notifications' => $myMessages,
+					'isInitialLoading' => $isInitialLoading,
 				]
 			);
 		} catch ( Exception $e ) {
 			echo "Profile could not be loaded. Please try again later.";
 			$this->logException( $e );
-
 			return;
 		}
 	}
@@ -1284,7 +1285,8 @@ class HandbidShortCodeController {
         if(wp_verify_nonce($nonce, "bidder-".date("Y.m.d"))){
 
             $auction = (int) $_POST["auction"];
-            echo do_shortcode("[handbid_bidder_profile_bar ". (($auction) ? " auction='".$auction."' " : "" ) ."]");
+            $isInitialLoading = (bool) $_POST["isInitialLoading"];
+            echo do_shortcode("[handbid_bidder_profile_bar ". (($auction) ? " auction='".$auction."' " : "" ) ." ". (($isInitialLoading) ? " isInitialLoading='".$isInitialLoading."' " : "" ) ."]");
 
         }
 

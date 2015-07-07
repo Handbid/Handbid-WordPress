@@ -20,6 +20,7 @@ if (!is_null($this->get('profile'))) {
     $myAuctions = $this->get('myAuctions');
     $myInvoices = $this->get('myInvoices');
     $myMessages = $this->get('notifications');
+    $isInitialLoading = $this->get('isInitialLoading');
     $bidderName = strtoupper($profile->firstName[0]) . '. ' . $profile->lastName;
     $redirect   = $_SERVER['REQUEST_URI'];
     $bidderPage = is_page('bidder');
@@ -47,7 +48,7 @@ if (!is_null($this->get('profile'))) {
                 } ?>
             </div>
         </div>
-
+        <?php $loader = ($isInitialLoading)?" initial-loading-space ":"";?>
         <div class="row slider-nav slider-nav-mobile" data-slider-nav-id="bidder-dashboard">
 
             <div class="col-xs-9">
@@ -62,7 +63,7 @@ if (!is_null($this->get('profile'))) {
                 </a>
 
             </div>
-            <a class="col-xs-3 total-spent">
+            <a class="col-xs-3 total-spent <?php echo $loader;?>">
 
                 <span>$<span data-handbid-stats-grand-total><?php echo $total; ?></span></span>
                 <label>Total</label>
@@ -75,24 +76,25 @@ if (!is_null($this->get('profile'))) {
             <a class="col-md-<?php echo ($auction) ? '2' : '3'; ?> col-xs-8 profile-user-info" data-slider-nav-key="profile-user-info">
                 <span><?php echo $bidderName; ?></span>
             </a>
-            <?php if($auction) { ?>
-                <a class="col-md-2 col-sm-3 col-xs-3 profile-max-bids" data-slider-nav-key="profile-max-bids">
+            <?php if($auction) {
+                ?>
+                <a class="col-md-2 col-sm-3 col-xs-3 profile-max-bids <?php echo $loader;?>" data-slider-nav-key="profile-max-bids">
                     <label>Max Bids</label>
                     <span data-handbid-stats-num-proxies><?php echo ($maxBids) ? count($maxBids) : '0'; ?></span>
                 </a>
-                <a class="col-md-2 col-sm-3 col-xs-3 profile-winning" data-slider-nav-key="profile-winning">
+                <a class="col-md-2 col-sm-3 col-xs-3 profile-winning <?php echo $loader;?>" data-slider-nav-key="profile-winning">
                     <label>Winning</label>
                     <span data-handbid-stats-num-winning><?php echo ($winning) ? count($winning) : '0'; ?></span>
                 </a>
-                <a class="col-md-2 col-sm-3 col-xs-3 profile-losing" data-slider-nav-key="profile-losing">
+                <a class="col-md-2 col-sm-3 col-xs-3 profile-losing <?php echo $loader;?>" data-slider-nav-key="profile-losing">
                     <label>Losing</label>
                     <span data-handbid-stats-num-losing><?php echo ($losing) ? count($losing) : '0'; ?></span>
                 </a>
-                <a class="col-md-2 col-sm-3 col-xs-3 profile-purchases" data-slider-nav-key="profile-purchases">
+                <a class="col-md-2 col-sm-3 col-xs-3 profile-purchases <?php echo $loader;?>" data-slider-nav-key="profile-purchases">
                     <label>Purchases</label>
                     <span data-handbid-stats-num-purchases><?php echo ($purchases) ? count($purchases) : '0'; ?></span>
                 </a>
-                <a class="col-md-2 col-xs-12 total-spent">
+                <a class="col-md-2 col-xs-12 total-spent <?php echo $loader;?>">
                     <label>Total</label>
                     <span>$<span data-handbid-stats-grand-total><?php echo $total; ?></span></span>
                 </a>

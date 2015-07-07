@@ -22,7 +22,7 @@ if ($item->isDirectPurchaseItem) {
     $item->currentPrice = $item->buyNowPrice;
 }
 
-if (!$item->hasInventory) {
+if (!$item->hasInventory or ($item->inventoryRemaining == -1)) {
     $item->inventoryRemaining = '∞';
 }
 
@@ -93,7 +93,7 @@ $itemCanNotBeShownInPresale = (in_array($auction->status, ["presale","preview"])
             </h3>
 
             <?php if (trim($item->categoryName)) { ?>
-                <h4 data-handbid-item-attribute="meta.categoryName"><?php echo $item->categoryName ?></h4>
+                <h4 data-handbid-item-attribute="categoryName"><?php echo $item->categoryName ?></h4>
             <?php } ?>
 
             <ul class="horizontal-details">
@@ -102,7 +102,7 @@ $itemCanNotBeShownInPresale = (in_array($auction->status, ["presale","preview"])
 
                     <li class="bids col-md-6 col-xs-6">Sold <em
                             data-handbid-sold-of-id="<?php echo $item->id; ?>"
-                            data-handbid-item-attribute="meta.totalSold"><?php echo $item->quantitySold; ?></em></li>
+                            data-handbid-item-attribute="quantitySold"><?php echo $item->quantitySold; ?></em></li>
                     <li class="remaining col-md-6 col-xs-6"><em
                             data-handbid-remaining-of-id="<?php echo $item->id; ?>"
                             data-handbid-item-attribute="inventoryRemaining"><?php echo $item->inventoryRemaining; ?></em>

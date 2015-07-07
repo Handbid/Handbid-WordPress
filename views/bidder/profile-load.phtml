@@ -28,4 +28,8 @@ $profile = $this->get('profile');
      data-load="<?php echo wp_create_nonce("bidder-".date("Y.m.d"));?>"
      data-paddle-nonce="<?php echo apply_filters("handbid_create_nonce", date("d.m.Y") . "add_paddle");?>">
 
+    <?php
+    echo do_shortcode("[handbid_bidder_profile_bar  auction='".$auction->id."' isinitialloading='1']");
+    ?>
+
 </div>

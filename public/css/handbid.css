@@ -293,3 +293,10 @@
 .handbid-no-connection-notice.notice-collapsed .ui-pnotify-container{
     padding: 0;
 }
+
+.initial-loading-space{
+     background: url("../images/ajax-loader-round.gif") no-repeat center center !important;
+ }
+.initial-loading-space *{
+     visibility: hidden !important;
+ }

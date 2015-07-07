@@ -9,7 +9,7 @@
 
 
 
-var handbidMain, connectMessage, modal_overlay;
+var handbidMain, connectMessage, modal_overlay, timerNotice;
 (function ($) {
 
     var restEndpoint = $("#apiEndpointsAddress").val(),
@@ -21,7 +21,6 @@ var handbidMain, connectMessage, modal_overlay;
         handbid = {
 
             loggedIn : null,
-            timerNotice : null,
 
             number_format: function(number, decimals, dec_point, thousands_sep) {
                 number = (number + '').replace(/[^0-9+\-Ee.]/g, '');
@@ -252,6 +251,103 @@ var handbidMain, connectMessage, modal_overlay;
             },
 
 
+
+            addItemToTickets: function(values){
+
+                var ticket = values,
+                    itemID = ticket.id,
+                    buyNowPrice = ticket.buyNowPrice,
+                    remaining = ticket.inventoryRemaining,
+                    name = ticket.name,
+                    description = (ticket.description)? ticket.description: "",
+                    step = (parseInt(ticket.ticketQuantity)) ? parseInt(ticket.ticketQuantity) : 1,
+                    ticketsAreSoldStyle = (remaining == 0)? "":"display:none",
+                    ticketsAreAvailableStyle = (remaining == 0)? "display:none":"",
+                    ghostedButtonStyle = ((parseInt(remaining) > 0) && (remaining < step)) ? "ghosted-out" : "";
+
+                var pattern = '<div class="row ticket-row" data-handbid-ticket-row="'+itemID+'">' +
+                    '<div class="col-xs-12 ticket" data-handbid-ticket-id="'+itemID+'"' +
+                    'data-handbid-ticket-price="'+buyNowPrice+'"' +
+                    'data-handbid-ticket-step="'+step+'"' +
+                    '>' +
+                    '<div class="col-xs-5 ticket-part-container no-padding-left">' +
+                    '<h4 class="ticket-title"><span data-handbid-ticket-title>'+name+'</span>' +
+                    '</h4>' +
+                    '<p class="ticket-description">'+description+'</p>' +
+                    '</div>' +
+                    '<div class="col-md-3 ticket-part-container">' +
+                    '<strong class="ticket-price">$<span>'+buyNowPrice+'</span></strong>' +
+                    '</div>' +
+                    '<div class="col-md-4 ticket-part-container no-padding-right tickets-are-sold"' +
+                    'style="'+ticketsAreSoldStyle+'">' +
+                    '<h4>SOLD OUT</h4>' +
+                    '</div>' +
+                    '<div class="col-md-4 ticket-part-container no-padding-right tickets-are-available"' +
+                    'style="'+ticketsAreAvailableStyle+'">' +
+                    '<div class="col-md-4 col-xs-4 no-padding">' +
+                    '<a href="" class="bid-price-toggle bid-down green-button button ghosted-out"' +
+                    'data-handbid-ticket-button="down">-</a>' +
+                    '</div>' +
+                    '<div class="buy-quantity col-md-4 col-xs-4 no-padding">' +
+                    '<span data-handbid-ticket-quantity>0</span>' +
+                    '<input type="hidden" data-handbid-tickets-remaining value="'+remaining+'">' +
+                    '</div>' +
+                    '<div class="col-md-4 col-xs-4 ticket-quantity-up no-padding">' +
+                    '<a href=""' +
+                    'class="bid-price-toggle bid-up green-button button '+ghostedButtonStyle+'"' +
+                    'data-handbid-ticket-button="up">+</a>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>';
+
+                var listItemTickets = $(".tickets-container").eq(0);
+                listItemTickets.prepend(pattern);
+            },
+
+
+
+            updateItemTicket: function(values){
+
+                var ticket = values,
+                    itemID = ticket.id,
+                    buyNowPrice = ticket.buyNowPrice,
+                    remaining = ticket.inventoryRemaining,
+                    name = ticket.name,
+                    description = (ticket.description)? ticket.description: "",
+                    step = (parseInt(ticket.ticketQuantity)) ? parseInt(ticket.ticketQuantity) : 1,
+                    rowInTickets = $("[data-handbid-ticket-row='"+itemID+"']").eq(0),
+                    rowTicketBlock = $("[data-handbid-ticket-block]", rowInTickets).eq(0),
+                    ticketsSoldBlock = $(".tickets-are-sold", rowInTickets).eq(0),
+                    ticketsSoldAvailable = $(".tickets-are-available", rowInTickets).eq(0);
+
+                $("[data-handbid-ticket-title]", rowInTickets).html(name);
+                $("[data-handbid-ticket-description]", rowInTickets).html(description);
+                $("[data-handbid-ticket-buynow]", rowInTickets).html(buyNowPrice);
+                rowTicketBlock.data("handbid-ticket-price", buyNowPrice);
+                rowTicketBlock.data("handbid-ticket-step", step);
+                if(remaining == 0){
+                    ticketsSoldBlock.slideDown("fast");
+                    ticketsSoldAvailable.slideUp("fast");
+                    $("[data-handbid-ticket-quantity]", rowInTickets).html("0");
+                }
+                else{
+                    ticketsSoldBlock.slideUp("fast");
+                    ticketsSoldAvailable.slideDown("fast");
+                }
+
+            },
+
+
+
+            clickOnFiltersToReorder: function(){
+                var firstCatLink = $('ul.by-category li.selected a')[0];
+                if(firstCatLink != undefined){
+                    firstCatLink.click();
+                }
+            },
+
+
             processAuctionChange: function(values){
 
                 var listAuctions = $(".handbid-list-of-active-auctions").eq(0);
@@ -279,6 +375,81 @@ var handbidMain, connectMessage, modal_overlay;
                 var itemsOfAuctionCanBeToggled = $("[data-handbid-item-auction='"+auctionID+"']:not(.simple-box.status-available)");
                 (values.status == "preview" || values.status == "presale") ? itemsOfAuctionCanBeToggled.addClass("not-available-in-presale") : itemsOfAuctionCanBeToggled.removeClass("not-available-in-presale") ;
                 $(".filters .by-item-type li.selected a").eq(0).click();
+
+            },
+
+
+            processTicketChange: function(values){
+                var itemID = values.id,
+                    isTicketNow = (values.isTicket == "1"),
+                    inventoryRemaining = values.inventoryRemaining,
+                    inventoryZero = (inventoryRemaining == 0),
+                    rowsInTickets = $("[data-handbid-ticket-row='"+itemID+"']"),
+                    rowInTickets = rowsInTickets.eq(0),
+                    wasInTickets = (rowsInTickets.length != 0),
+                    removingTicket = (wasInTickets && !isTicketNow),
+                    addingTicket = (!wasInTickets && isTicketNow),
+                    updatingTicket = (wasInTickets && isTicketNow),
+                    itemSimpleBox = $("[data-handbid-item-box='"+itemID+"']");
+
+                if(removingTicket){
+                    rowInTickets.slideUp("normal");
+                    rowInTickets.remove();
+                    this.recalculateTotalTicketsPrice();
+                    itemSimpleBox.removeAttr("data-is-ticket");
+                }
+                if(addingTicket){
+                    this.addItemToTickets(values);
+                    this.recalculateTotalTicketsPrice();
+                    itemSimpleBox.attr("data-is-ticket", "1");
+                }
+                if(updatingTicket){
+                    this.updateItemTicket(values);
+                    this.recalculateTotalTicketsPrice();
+                }
+                if(removingTicket || addingTicket){
+                    this.clickOnFiltersToReorder();
+                }
+
+            },
+
+
+            processItemChange: function(values){
+
+                var itemID = values.id;
+
+                var parentElem = $("[data-handbid-item-box='"+itemID+"']").eq(0);
+
+                var currentItemID = $("#bidItemId").val();
+                if(currentItemID == itemID){
+                    parentElem = $("[data-handbid-item-details-block='"+itemID+"']").eq(0);
+                }
+
+                $.each( values, function(attribute, value){
+                    value = (value != undefined && value != null) ? value : 0;
+                    if(attribute == "inventoryRemaining" && value == -1) {value = "∞"}
+                    if(attribute == "categoryName") {
+                        parentElem.attr("data-tags", "|"+value.toLowerCase()+"|");
+                    }
+                    if(attribute == "quantitySold") {
+                        $('[data-handbid-sold-of-id=' + itemID + ']').html(value);
+                    }
+                    if(attribute == "bidCount") {
+                        $('[data-handbid-bids-of-id=' + itemID + ']').html(value);
+                    }
+                    $('[data-change-attribute=' + attribute + ']', parentElem).html(value);
+                    $('[data-handbid-item-attribute=' + attribute + ']', parentElem).html(value);
+                });
+
+                if(values.inventoryRemaining != undefined &&
+                    values.inventoryRemaining != -1 &&
+                    values.inventoryRemaining != "∞"){
+                    var value = values.inventoryRemaining;
+                    value = (value != undefined && value != null) ? value : 0;
+                    $('[data-handbid-remaining-of-id=' + itemID + ']').html(value);
+                }
+
+                this.processTicketChange(values);
 
             },
 
@@ -428,7 +599,8 @@ var handbidMain, connectMessage, modal_overlay;
                 }
 
 
-                (new PNotify({
+                (timerNotice != undefined) ? timerNotice.remove() : '';
+                timerNotice = new PNotify({
                     title: 'Auction Closed',
                     type: 'info',
                     text: noticeText,
@@ -443,7 +615,7 @@ var handbidMain, connectMessage, modal_overlay;
                     history: {
                         history: false
                     }
-                }));
+                });
 
             },
 
@@ -1887,13 +2059,13 @@ var handbidMain, connectMessage, modal_overlay;
                     timeS = timerTime - timeH*3600 - timeM*60,
                     timeFormatted = timeH + ":" + timeM + ":" + timeS;
                 console.log(timeFormatted);
-                (handbid.timerNotice) ? handbid.timerNotice.remove() : '';
-                handbid.timerNotice = handbid.notice("Auction "+timerTitle+"<br>closes after <b><div data-handbid-timer>" + timeFormatted + "</div></b>", "Closing Auction Timer");
+                (timerNotice != undefined) ? timerNotice.remove() : '';
+                timerNotice = handbid.notice("Auction "+timerTitle+"<br>closes after <b><div data-handbid-timer>" + timeFormatted + "</div></b>", "Closing Auction Timer");
             },
 
             reloadBidderProfile: function(){
                 var bidderInfo = jQuery("#bidder-info-load");
-                bidderInfo.hide();
+                //bidderInfo.hide();
                 $.post(ajaxurl, {
                         action: "handbid_profile_load",
                         auction: bidderInfo.data("auction"),

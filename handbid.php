@@ -325,10 +325,6 @@ class Handbid
 
         }
 
-        if (session_status() == PHP_SESSION_NONE) {
-            session_start();
-        }
-
         // Set Values
         $hostName = 'manager.hand.bid';
         $auctionGuid = $auction->auctionGuid;
