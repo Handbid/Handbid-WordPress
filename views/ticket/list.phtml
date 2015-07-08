@@ -48,7 +48,8 @@ if (!$auction->enableTicketSales) {
 
 
         <?php forEach ($tickets as $k => $ticket) {
-            $step = ((int)$ticket->ticketQuantity) ? (int)$ticket->ticketQuantity : 1;
+            //$step = ((int)$ticket->ticketQuantity) ? (int)$ticket->ticketQuantity : 1;
+            $step = 1;
             $remaining = $ticket->inventoryRemaining;
             ?>
             <div class="row ticket-row" data-handbid-ticket-row="<?php echo $ticket->id; ?>">

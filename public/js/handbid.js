@@ -260,7 +260,8 @@ var handbidMain, connectMessage, modal_overlay, timerNotice;
                     remaining = ticket.inventoryRemaining,
                     name = ticket.name,
                     description = (ticket.description)? ticket.description: "",
-                    step = (parseInt(ticket.ticketQuantity)) ? parseInt(ticket.ticketQuantity) : 1,
+                    //step = (parseInt(ticket.ticketQuantity)) ? parseInt(ticket.ticketQuantity) : 1,
+                    step = 1,
                     ticketsAreSoldStyle = (remaining == 0)? "":"display:none",
                     ticketsAreAvailableStyle = (remaining == 0)? "display:none":"",
                     ghostedButtonStyle = ((parseInt(remaining) > 0) && (remaining < step)) ? "ghosted-out" : "";
@@ -315,9 +316,11 @@ var handbidMain, connectMessage, modal_overlay, timerNotice;
                     remaining = ticket.inventoryRemaining,
                     name = ticket.name,
                     description = (ticket.description)? ticket.description: "",
-                    step = (parseInt(ticket.ticketQuantity)) ? parseInt(ticket.ticketQuantity) : 1,
+                    //step = (parseInt(ticket.ticketQuantity)) ? parseInt(ticket.ticketQuantity) : 1,
+                    step = 1,
                     rowInTickets = $("[data-handbid-ticket-row='"+itemID+"']").eq(0),
                     rowTicketBlock = $("[data-handbid-ticket-block]", rowInTickets).eq(0),
+                    remainingTicketBlock = $("[data-handbid-tickets-remaining]", rowInTickets).eq(0),
                     ticketsSoldBlock = $(".tickets-are-sold", rowInTickets).eq(0),
                     ticketsSoldAvailable = $(".tickets-are-available", rowInTickets).eq(0);
 
@@ -326,6 +329,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice;
                 $("[data-handbid-ticket-buynow]", rowInTickets).html(buyNowPrice);
                 rowTicketBlock.data("handbid-ticket-price", buyNowPrice);
                 rowTicketBlock.data("handbid-ticket-step", step);
+                remainingTicketBlock.val(remaining);
                 if(remaining == 0){
                     ticketsSoldBlock.slideDown("fast");
                     ticketsSoldAvailable.slideUp("fast");
@@ -1316,7 +1320,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice;
                                     remainingSymb = remainingBlock.val(),
                                     remaining = parseInt(remainingBlock.val());
                                 quantityBlock.html(0);
-                                if(remainingSymb != "-1" && remainingSymb != "∞" && handbid.in_array(data.successID, ticketID)){
+                                if(!connectedToSocket && remainingSymb != "-1" && remainingSymb != "∞" && handbid.in_array(data.successID, ticketID)){
                                     remainingBlock.val(remaining - quantity);
                                 }
                                 return null;
@@ -1793,16 +1797,18 @@ var handbidMain, connectMessage, modal_overlay, timerNotice;
                 type = (type != undefined) ? type : 'info';
                 type = (type == "failed") ? "error" : type;
 
-                console.log(msg);
+                //msg = "<a href='#'>" +
+                //"<img src='https://dl.pushbulletusercontent.com/m0bEeGMIF4WOjAFdcr7RFA6czmDLYsiW/Screenshot_2015-07-01-11-38-18.png'>" +
+                //"</a>" + title + "<br>" + msg;
 
                 try {
-
 
                     return new PNotify({
                         title: title,
                         text: msg,
                         type: type,
                         hide: hide,
+                        //icon: "",
                         delay: 5000,
                         addclass: 'handbid-message-notice',
                         buttons: {
