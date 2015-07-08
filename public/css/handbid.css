@@ -144,6 +144,7 @@
     margin-left: -25px;
 }
 .ticket-row h4.ticket-title,
+.ticket-row .ticket-quantity,
 .ticket-row .ticket-description{
     text-align: left !important;
 }
@@ -154,7 +155,11 @@
 }
 .ticket-row .ticket-description{
     color: #6D818B;
-    font-size: 14px;
+    font-size: 15px;
+}
+.ticket-row .ticket-quantity{
+    color: #6D818B;
+    font-size: 13px;
 }
 .ticket-row .ticket-part-container{
     padding: 15px;

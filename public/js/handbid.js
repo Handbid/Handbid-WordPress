@@ -329,6 +329,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage;
                     remaining = ticket.inventoryRemaining,
                     name = ticket.name,
                     description = (ticket.description)? ticket.description: "",
+                    ticketQuantity = parseInt(ticket.ticketQuantity),
                     //step = (parseInt(ticket.ticketQuantity)) ? parseInt(ticket.ticketQuantity) : 1,
                     step = 1,
                     rowInTickets = $("[data-handbid-ticket-row='"+itemID+"']").eq(0),
@@ -339,6 +340,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage;
 
                 $("[data-handbid-ticket-title]", rowInTickets).html(name);
                 $("[data-handbid-ticket-description]", rowInTickets).html(description);
+                $("[data-handbid-ticket-quant]", rowInTickets).html(ticketQuantity);
                 $("[data-handbid-ticket-buynow]", rowInTickets).html(buyNowPrice);
                 rowTicketBlock.data("handbid-ticket-price", buyNowPrice);
                 rowTicketBlock.data("handbid-ticket-step", step);
