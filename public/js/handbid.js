@@ -9,7 +9,7 @@
 
 
 
-var handbidMain, connectMessage, modal_overlay, timerNotice;
+var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage;
 (function ($) {
 
     var restEndpoint = $("#apiEndpointsAddress").val(),
@@ -17,6 +17,19 @@ var handbidMain, connectMessage, modal_overlay, timerNotice;
         statusReasons = {
             no_response : "Sorry, try again later",
             current_winner : "You are current winner of this item"
+        },
+        stack_bar_top = {
+            addpos2: 0,
+            animation: true,
+            dir1: "down",
+            dir2: "right",
+            firstpos1: 0,
+            firstpos2: 0,
+            nextpos1: 0,
+            nextpos2: 0,
+            push: "top",
+            spacing1: 0,
+            spacing2: 0
         },
         handbid = {
 
@@ -118,13 +131,13 @@ var handbidMain, connectMessage, modal_overlay, timerNotice;
             },
 
 
-            addDashboardBidWinning: function(itemID, itemName, itemKey, auctionKey, amount){
+            addDashboardBidWinning: function(itemID, itemName, itemLink, amount){
 
                 var pattern = '<li class="row"'+
                 ' data-dashboard-price="'+amount+'"'+
                 ' data-winning-item-id="'+itemID+'">'+
                 ' <div class="col-md-10 col-xs-10">'+
-                '     <a href="/auctions/'+auctionKey+'/item/'+itemKey+'"><h4>'+itemName+'</h4></a>'+
+                '     <a href="'+itemLink+'"><h4>'+itemName+'</h4></a>'+
                 ' </div>'+
                 ' <div class="col-md-2 col-xs-2">'+
                 ' <span class="bid-amount winning">$<span>'+amount+'</span></span>'+
@@ -143,12 +156,12 @@ var handbidMain, connectMessage, modal_overlay, timerNotice;
             },
 
 
-            addDashboardBidLosing: function(itemID, itemName, itemKey, auctionKey, amount){
+            addDashboardBidLosing: function(itemID, itemName, itemLink, amount){
 
                 var pattern = '<li class="row"' +
                     'data-losing-item-id="'+itemID+'">' +
                     '<div class="col-md-8 col-xs-8">' +
-                    '<a href="/auctions/'+auctionKey+'/item/'+itemKey+'"><h4>'+itemName+'</h4></a>' +
+                    '<a href="'+itemLink+'"><h4>'+itemName+'</h4></a>' +
                     '</div>' +
                     '<div class="col-md-4 col-xs-4">' +
                     '<span class="bid-amount losing">$<span>'+amount+'</span></span>' +
@@ -367,7 +380,6 @@ var handbidMain, connectMessage, modal_overlay, timerNotice;
                     }
 
                     if(values.status == "closed"){
-                        handbid.notifyUserAboutAuctionClosing(values);
                         var hiddenAuctionIds = $("[data-hidden-active-auction="+auctionID+"]");
 
                         (hiddenAuctionIds.length) ? hiddenAuctionIds.remove() : "" ;
@@ -642,29 +654,45 @@ var handbidMain, connectMessage, modal_overlay, timerNotice;
 
             addLosingItemRow: function(itemID, values, type){
 
-                var reasonStr = (type == "under_maxbid") ? " by MaxBid! " : " now!";
+                this.removeItemFromDashboardList(itemID, "losing");
 
-                this.addDashboardBidLosing(values.item.id, values.item.name, values.item.key, values.auctionKey, values.amount );
+                var reasonStr = (type == "under_maxbid") ? " by MaxBid " : "";
+
+                var itemLink = '/auctions/'+ values.auctionKey +'/item/' + values.item.key;
+
+                var itemImage = (values.item.image != undefined) ? values.item.image : values.item.imageUrl;
+
+                this.addDashboardBidLosing(values.item.id, values.item.name, itemLink, values.amount );
 
                 this.removeItemFromDashboardList(itemID, "winning");
 
                 this.recheckAndRecalculateBids();
 
-                this.notice('You are <br>outbid</b> the item <b>' + values.item.name + '</b>' + reasonStr, "Losing Item", "error");
+                var noticeFormatting = {isBidding : true, itemLink: itemLink, itemImage: itemImage};
+
+                this.notice('You are <br>outbid</b> the item <b>' + values.item.name + ' ('+values.item.itemCode+') </b> at $' + values.amount + "" + reasonStr, "Losing Item", "error", null, noticeFormatting);
 
             },
 
             addWinningItemRow: function(itemID, values, type){
 
-                var reasonStr = (type == "under_maxbid") ? " by MaxBid! " : " now!";
+                this.removeItemFromDashboardList(itemID, "winning");
 
-                this.addDashboardBidWinning(values.item.id, values.item.name, values.item.key, values.auctionKey, values.amount );
+                var reasonStr = (type == "under_maxbid") ? " by MaxBid " : "";
+
+                var itemLink = '/auctions/'+ values.auctionKey +'/item/'+values.item.key;
+
+                var itemImage = (values.item.image != undefined) ? values.item.image : values.item.imageUrl;
+
+                this.addDashboardBidWinning(values.item.id, values.item.name, itemLink, values.amount );
 
                 this.removeItemFromDashboardList(itemID, "losing");
 
                 this.recheckAndRecalculateBids();
 
-                this.notice('You are <br>winning</b> the item <b>' + values.item.name + '</b>'+reasonStr, "Winner Winner!", "success");
+                var noticeFormatting = {isBidding : true, itemLink: itemLink, itemImage: itemImage};
+
+                this.notice('You are <br>winning</b> the item <b>' + values.item.name + ' ('+values.item.itemCode+') </b> at $' + values.amount + ""+reasonStr, "Winner Winner", "success", null, noticeFormatting);
             },
 
             checkIfBidsExistsAndChange: function(values, type){
@@ -738,7 +766,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice;
                     var auctionOrg = $(this).data("handbid-auction-org");
                     var nonce = $(this).data("nonce");
                     e.preventDefault();
-                    (new PNotify({
+                    var messageNotice = new PNotify({
                         title: 'Send Email To Auction Manager',
                         text: '<br>',
                         icon: 'glyphicon glyphicon-question-sign',
@@ -756,7 +784,8 @@ var handbidMain, connectMessage, modal_overlay, timerNotice;
                         history: {
                             history: false
                         }
-                    })).get().on('pnotify.confirm', function(e, notice, val) {
+                    });
+                    messageNotice.get().on('pnotify.confirm', function(e, notice, val) {
                             notice.cancelRemove().update({
                                 title: 'Sending Your Message',
                                 text: $('<div/>').text(val).html() + '<br><br><div class="progress progress-striped active" style="margin:0">\
@@ -866,10 +895,12 @@ var handbidMain, connectMessage, modal_overlay, timerNotice;
                     var amountContainer = amount;
                     var amountDuplicate = null;
 
-                    var value = parseInt(amountContainer[0].innerHTML) + increment;
-
                     var isMaxBidButton = $(this).hasClass("max-bid-up");
                     var isDirectPurchaseButton = $(this).hasClass("isDirectPurchase");
+
+                    amountContainer = (isMaxBidButton) ? $('[data-handbid-maxbid-amount]') : $('[data-handbid-onlybid-amount]');
+
+                    var value = parseInt(amountContainer[0].innerHTML) + increment;
 
                     if(isDirectPurchaseButton) {
                         var inventoryRemaining = ($('[data-handbid-item-attribute="inventoryRemaining"]').length > 0 ) ? parseInt($('[data-handbid-item-attribute="inventoryRemaining"]')[0].innerHTML) : -1;
@@ -884,7 +915,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice;
 
                         canBeUp = (!isMaxBidButton)? true : ((buyNowPrice == -1 ) || ((buyNowPrice != -1) && (value <= buyNowPrice)));
 
-                        amountContainer = (isMaxBidButton) ? $('[data-handbid-maxbid-amount]') : $('[data-handbid-onlybid-amount]');
+
                     }
                     if(canBeUp) {
                         amountContainer.html(value);
@@ -1790,31 +1821,47 @@ var handbidMain, connectMessage, modal_overlay, timerNotice;
 
                 }, 5000);
             },
-            notice:  function (msg, title, type, hide) {
+            notice:  function (msg, title, type, hide, formatting) {
 
                 title = (title != undefined) ? title : 'Notice Message';
                 hide = (hide != undefined) ? hide : true;
                 type = (type != undefined) ? type : 'info';
                 type = (type == "failed") ? "error" : type;
 
-                //msg = "<a href='#'>" +
-                //"<img src='https://dl.pushbulletusercontent.com/m0bEeGMIF4WOjAFdcr7RFA6czmDLYsiW/Screenshot_2015-07-01-11-38-18.png'>" +
-                //"</a>" + title + "<br>" + msg;
+                var isBiddingNotice = (formatting != undefined && formatting.isBidding != undefined && formatting.isBidding);
+                if(isBiddingNotice){
+                    var itemLink = (formatting.itemLink != undefined) ? formatting.itemLink : "#";
+                    var itemImage = (formatting.itemImage != undefined) ? formatting.itemImage : $("[data-default-item-image]").eq(0).val() ;
+                    msg = "<div class='col-xs-4 handbid-notice-image-container'>" +
+                    "<a href='"+itemLink+"'>" +
+                    "<img src='"+itemImage+"'>" +
+                    "</a>" +
+                    "</div>" +
+                    "<div class='col-xs-8 handbid-notice-text-container'>" +
+                    "<h5 class='notice-text-title'>" + title + "</h5>" + msg +
+                    "</div>";
+                    title = "";
+                }
+                var params = {
+                    title: title,
+                    text: msg,
+                    type: type,
+                    hide: hide,
+                    delay: 1115000,
+                    addclass: 'handbid-message-notice',
+                    buttons: {
+                        sticker: false
+                    }
+                };
+                if(isBiddingNotice){
+                    params.icon = "";
+                    params.addclass += " handbid-bidding-notice";
+                }
+
 
                 try {
 
-                    return new PNotify({
-                        title: title,
-                        text: msg,
-                        type: type,
-                        hide: hide,
-                        //icon: "",
-                        delay: 5000,
-                        addclass: 'handbid-message-notice',
-                        buttons: {
-                            sticker: false
-                        }
-                    });
+                    return new PNotify(params);
 
                 } catch (err) {
 
@@ -1837,7 +1884,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice;
 
                 if(auctionID && profileID && paddleNumber == "N/A") {
                 //if(true) {
-                    (new PNotify({
+                    var bidNotice =  new PNotify({
                         title: 'Register to Bid?',
                         text: 'Do you want to bid in this auction or just browse for now?',
                         icon: 'glyphicon glyphicon-question-sign',
@@ -1970,7 +2017,8 @@ var handbidMain, connectMessage, modal_overlay, timerNotice;
                         history: {
                             history: false
                         }
-                    })).get().on('pnotify.cancel', function () {
+                    });
+                    bidNotice.get().on('pnotify.cancel', function () {
                             return false;
                         });
                 }
@@ -1979,7 +2027,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice;
 
 
             displayRequiredCardsMessage: function(){
-                (new PNotify({
+                new PNotify({
                     title: 'Credit cards required',
                     type: 'error',
                     text: '<b>You must supply a credit card to bid in this auction.</b>',
@@ -2005,7 +2053,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice;
                     history: {
                         history: false
                     }
-                }));
+                });
             },
 
 
@@ -2016,15 +2064,13 @@ var handbidMain, connectMessage, modal_overlay, timerNotice;
                     timer = $(timer);
                     var time = timer.html();
                     var arr = time.split(":");
-                    var h = arr[0];
-                    var m = arr[1];
-                    var s = arr[2];
+                    var h = parseInt(arr[0]);
+                    var m = parseInt(arr[1]);
+                    var s = parseInt(arr[2]);
                     if (s == 0) {
                         if (m == 0) {
                             if (h == 0) {
-                                handbidMain.notice("Auction closed!");
-                                continueTimer = false;
-                                //window.location.reload();
+                                handbidMain.changeAuctionTimer(0, false);
                                 return;
                             }
                             h--;
@@ -2037,6 +2083,10 @@ var handbidMain, connectMessage, modal_overlay, timerNotice;
                     }
                     else s--;
                     if (s < 10) s = "0" + s;
+                    if (m < 10) m = "0" + m;
+                    if (h < 10) h = "0" + h;
+                    if (h == "000") h = "00";
+                    if (m == "000") m = "00";
                     timer.html(h+":"+m+":"+s);
                 });
 
@@ -2053,20 +2103,87 @@ var handbidMain, connectMessage, modal_overlay, timerNotice;
                 if(timerRemaining.val() != undefined) {
                     var timerTime = parseInt(timerRemaining.val()),
                         timerTitle = timerRemaining.data("auction-name");
-                    handbid.showTimerRemainingNotice(timerTime, timerTitle)
+                    //handbid.showTimerRemainingNotice(timerTime, timerTitle);
+                    if(timerTime) {
+                        handbid.changeAuctionTimer(timerTime, true);
+                    }
                 }
 
             },
 
+            formatTimerTime: function(time){
+                var timeH = Math.floor(time / 3600),
+                    timeM = Math.floor((time - timeH*3600) / 60),
+                    timeS = time - timeH*3600 - timeM*60;
+                if (timeS < 10) timeS = "0" + timeS;
+                if (timeM < 10) timeM = "0" + timeM;
+                if (timeH < 10) timeH = "0" + timeH;
+                if (timeH == "000") timeH = "00";
+                if (timeM == "000") timeM = "00";
+                return timeH + ":" + timeM + ":" + timeS;
+            },
+
             showTimerRemainingNotice: function(timerTime, timerTitle){
                 timerTitle = (timerTitle != undefined) ? " <b>"+timerTitle+"</b>" : "";
-                var timeH = Math.floor(timerTime / 3600),
-                    timeM = Math.floor((timerTime - timeH*3600) / 60),
-                    timeS = timerTime - timeH*3600 - timeM*60,
-                    timeFormatted = timeH + ":" + timeM + ":" + timeS;
+                var timeFormatted = this.formatTimerTime(timerTime);
                 console.log(timeFormatted);
                 (timerNotice != undefined) ? timerNotice.remove() : '';
+                timerNotice = undefined;
                 timerNotice = handbid.notice("Auction "+timerTitle+"<br>closes after <b><div data-handbid-timer>" + timeFormatted + "</div></b>", "Closing Auction Timer");
+                this.changeAuctionTimer(timerTime, true);
+            },
+
+            changeAuctionTimer: function (time, timerIsRunning) {
+                if(timerMessage != undefined && timerMessage.animating == "out"){
+                    timerMessage = undefined;
+                }
+                if(timerIsRunning){
+                    var timeFormatted = this.formatTimerTime(time);
+                    if(timerMessage == undefined ){
+                        timerMessage = new PNotify({
+                            title: '<h3 class="notice-connection-title">' +
+                            '<b>Auction Closes After' +
+                            '&nbsp;&nbsp;&nbsp;&nbsp;<span data-handbid-timer>' + timeFormatted + '</span>' +
+                            '</b></h3>',
+                            type: 'error',
+                            text: '',
+                            icon: '',
+                            addclass: 'handbid-message-notice handbid-timer-top-notice  stack-bar-top',
+                            cornerclass: "",
+                            width: "100%",
+                            stack: stack_bar_top,
+                            hide: false,
+                            buttons: {
+                                closer: false,
+                                sticker: false
+                            },
+                            history: {
+                                history: false
+                            }
+                        });
+                    }
+                    else{
+                        timerMessage.update({
+                            title: '<h3 class="notice-connection-title">' +
+                            '<b>Auction Closes After ' +
+                            '&nbsp;&nbsp;&nbsp;&nbsp;<span data-handbid-timer>' + timeFormatted + '</span>' +
+                            '</b></h3>'
+                        });
+                    }
+                }
+                else{
+                    if(timerMessage != undefined){
+                        timerMessage.update({
+                            title: '<h3 class="notice-connection-title">' +
+                            '<b>Auction Closed</b></h3>',
+                            hide: true,
+                            delay: 5000,
+                            before_close: function() {
+                                handbidMain.loadAllToContainers();
+                            }
+                        });
+                    }
+                }
             },
 
             reloadBidderProfile: function(){
@@ -2088,27 +2205,9 @@ var handbidMain, connectMessage, modal_overlay, timerNotice;
                     });
             },
 
-
-
-
-
-
             checkSocketConnection: function (handbid) {
                 if(!connectedToSocket){
                     if(connectMessage == undefined){
-                        var stack_bar_top = {
-                            addpos2: 0,
-                            animation: true,
-                            dir1: "down",
-                            dir2: "right",
-                            firstpos1: 0,
-                            firstpos2: 0,
-                            nextpos1: 0,
-                            nextpos2: 0,
-                            push: "top",
-                            spacing1: 0,
-                            spacing2: 0
-                        };
                         connectMessage = new PNotify({
                             title: '<h3 class="notice-connection-title"><b>Unable to connect for real-time updates</b>' +
                             '<span class="notice-connection-switch">?</span>' +
@@ -2196,7 +2295,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice;
         $(".handbid-logout a").live("click", function(e){
             e.preventDefault();
             var path = $(this).attr("href");
-            (new PNotify({
+            var logoutNotice =  new PNotify({
                 title: 'Logout Confirmation',
                 text: 'Are you sure want to logout?',
                 icon: 'glyphicon glyphicon-question-sign',
@@ -2212,7 +2311,8 @@ var handbidMain, connectMessage, modal_overlay, timerNotice;
                 history: {
                     history: false
                 }
-            })).get().on('pnotify.confirm', function() {
+            });
+            logoutNotice.get().on('pnotify.confirm', function() {
                     window.location = path;
                 }).on('pnotify.cancel', function() {
                     return false;

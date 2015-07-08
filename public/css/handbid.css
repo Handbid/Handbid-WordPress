@@ -286,10 +286,12 @@
     display: none;
 }
 
+.handbid-timer-top-notice:hover,
 .handbid-no-connection-notice.notice-collapsed:hover{
     opacity: 0.7 !important;
 }
 
+.handbid-timer-top-notice .ui-pnotify-container,
 .handbid-no-connection-notice.notice-collapsed .ui-pnotify-container{
     padding: 0;
 }
@@ -300,3 +302,35 @@
 .initial-loading-space *{
      visibility: hidden !important;
  }
+
+.handbid-bidding-notice {}
+.handbid-bidding-notice .ui-pnotify-closer{
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    z-index: 99999;
+}
+.handbid-bidding-notice .ui-pnotify-title{
+    margin: 0;
+}
+.handbid-notice-image-container{
+    padding-left: 0;
+}
+.handbid-notice-image-container a{
+    width: 80px;
+}
+.handbid-notice-image-container a img{
+    width: 80px;
+    height: 80px;
+    border-radius: 40px;
+}
+.handbid-notice-text-container{
+    padding: 0;
+}
+.handbid-notice-text-container .notice-text-title{
+    text-align: left;
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 0;
+    margin-bottom: 2px;
+}

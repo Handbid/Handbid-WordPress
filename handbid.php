@@ -37,8 +37,6 @@ if ($handle = opendir($libFolder)) {
 
     closedir($handle);
 }
-//define images host for now, while it changes
-define("HANDBID_IMAGES_HOST", "beta.yii.handbid.com");
 
 require_once($libFolder . '/Handbid-Php/src/Handbid.php');
 require_once($libFolder . '/stripe-php/init.php');
@@ -352,6 +350,7 @@ class Handbid
         <?php
 
         echo '<input type="hidden" data-dashboard-profile-id="'.$bidder->id.'">';
+        echo '<input type="hidden" data-default-item-image="'.plugins_url("handbid/public/images/default-item-image.jpg").'">';
 
         echo '<script src="'.$socketIoUrl.'"></script>';
         echo '<script type="text/javascript" src="' . plugins_url("handbid/public/js/yii-node-socket.js") .  '"></script>';

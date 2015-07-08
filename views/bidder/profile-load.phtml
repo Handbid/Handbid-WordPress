@@ -21,7 +21,12 @@ $profile = $this->get('profile');
      data-auction-status="<?php echo $auction->status; ?>"
      data-auction-name="<?php echo esc_js($auction->name); ?>"
      data-auction-key="<?php echo $auction->key; ?>"
-     data-auction-image="<?php echo "http://" . HANDBID_IMAGES_HOST . $auction->imageUrl; ?>"
+     data-auction-image="<?php
+     $image = $auction->logo->medium;
+     $image = ($image) ? $image : $auction->imageUrl;
+     $imageUrlPath = parse_url($image);
+     $image = ($imageUrlPath["scheme"]) ? $image : "http://" . $image;
+     echo $image; ?>"
      data-auction-organization-key="<?php echo $auction->organization->key; ?>"
      data-auction-organization-name="<?php echo $auction->organization->name; ?>"
      data-profile-id="<?php echo (int) $profile->id; ?>"

@@ -181,7 +181,8 @@ console.log("success connect");
      */
     $.eventAuctionTimer = function (data) {
         var message = JSON.stringify(data, null, 2);
-        handbidMain.showTimerRemainingNotice(data.values.timerRemaining);
+        //handbidMain.showTimerRemainingNotice(data.values.timerRemaining);
+        handbidMain.changeAuctionTimer(data.values.timerRemaining, true);
         //handbidMain.notice(message);
     };
 
