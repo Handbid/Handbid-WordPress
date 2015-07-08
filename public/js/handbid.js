@@ -336,11 +336,13 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage;
                     rowTicketBlock = $("[data-handbid-ticket-block]", rowInTickets).eq(0),
                     remainingTicketBlock = $("[data-handbid-tickets-remaining]", rowInTickets).eq(0),
                     ticketsSoldBlock = $(".tickets-are-sold", rowInTickets).eq(0),
-                    ticketsSoldAvailable = $(".tickets-are-available", rowInTickets).eq(0);
+                    ticketsSoldAvailable = $(".tickets-are-available", rowInTickets).eq(0),
+                    availableOutput = (remaining != -1) ? remaining+" available": "Unlimited quantity";
 
                 $("[data-handbid-ticket-title]", rowInTickets).html(name);
                 $("[data-handbid-ticket-description]", rowInTickets).html(description);
                 $("[data-handbid-ticket-quant]", rowInTickets).html(ticketQuantity);
+                $("[data-handbid-ticket-quant-remaining]", rowInTickets).html(availableOutput);
                 $("[data-handbid-ticket-buynow]", rowInTickets).html(buyNowPrice);
                 rowTicketBlock.data("handbid-ticket-price", buyNowPrice);
                 rowTicketBlock.data("handbid-ticket-step", step);
@@ -353,6 +355,9 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage;
                 else{
                     ticketsSoldBlock.slideUp("fast");
                     ticketsSoldAvailable.slideDown("fast");
+                    if(remaining != -1 && (remaining < parseInt($("[data-handbid-ticket-quantity]", rowInTickets).html()))){
+                        $("[data-handbid-ticket-quantity]", rowInTickets).html(remaining);
+                    }
                 }
 
             },

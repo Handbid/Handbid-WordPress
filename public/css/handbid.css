@@ -339,3 +339,12 @@
     margin-top: 0;
     margin-bottom: 2px;
 }
+.tickets-are-sold h4{
+    font-weight: bold;
+    color: #c73936;
+    font-size: 23px;
+}
+.remaining-inventory{
+    margin-top: 15px;
+    display: inline-block;
+}

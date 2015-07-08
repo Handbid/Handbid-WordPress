@@ -92,6 +92,12 @@ if (!$auction->enableTicketSales) {
                                class="bid-price-toggle bid-up green-button button <?php echo (((int)$remaining > 0) and ($remaining < $step)) ? "ghosted-out" : ""; ?>"
                                data-handbid-ticket-button="up">+</a>
                         </div>
+
+                        <div class="col-md-12 col-xs-12 ticket-remaining-inventory-cont no-padding">
+                            <span class="remaining-inventory" data-handbid-ticket-quant-remaining><?php
+                                echo ($remaining != -1) ? $remaining." available": "Unlimited quantity";
+                                ?></span>
+                        </div>
                     </div>
 
                 </div>
