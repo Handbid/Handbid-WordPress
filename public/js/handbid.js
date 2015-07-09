@@ -1871,7 +1871,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                     text: msg,
                     type: type,
                     hide: hide,
-                    delay: 1115000,
+                    delay: 5000,
                     addclass: 'handbid-message-notice',
                     buttons: {
                         sticker: false
