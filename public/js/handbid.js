@@ -618,7 +618,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                     noticeText += "<br>You may have an unpaid invoices so you can check them.";
                     buttons.push({
                         text: 'View Invoices',
-                        addClass: 'btn-primary',
+                        addClass: 'view-invoices-button',
                         click: function (notice) {
                             var profileLinkVisible = $('a[data-slider-nav-key="profile-user-info"]:visible');
                             profileLinkVisible.click();
@@ -792,8 +792,8 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                     e.preventDefault();
                     var messageNotice = new PNotify({
                         title: 'Send Email To Auction Manager',
-                        text: '<br>',
-                        icon: 'glyphicon glyphicon-question-sign',
+                        text: '',
+                        icon: 'glyphicon glyphicon-envelope',
                         addclass: 'handbid-message-notice',
                         hide: false,
                         confirm: {
@@ -1871,12 +1871,16 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                     text: msg,
                     type: type,
                     hide: hide,
-                    delay: 1115000,
+                    delay: 5000,
                     addclass: 'handbid-message-notice',
                     buttons: {
                         sticker: false
                     }
                 };
+                if(title == "Broadcast Message"){
+                    params.icon = " glyphicon glyphicon-envelope ";
+                    params.addclass += " handbid-broadcast-notice";
+                }
                 if(isBiddingNotice){
                     params.icon = "";
                     params.addclass += " handbid-bidding-notice";
@@ -1912,13 +1916,14 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                         title: 'Register to Bid?',
                         text: 'Do you want to bid in this auction or just browse for now?',
                         icon: 'glyphicon glyphicon-question-sign',
+                        type: 'info',
                         addclass: 'handbid-message-notice',
                         hide: false,
                         confirm: {
                             confirm: true,
                             buttons: [{
                                 text: 'Bid',
-                                addClass: 'btn-primary',
+                                addClass: 'bid-here-button',
                                 click: function (notice) {
                                     notice.update({
                                         title: 'Receiving the Paddle Number for this Auction',
@@ -1928,6 +1933,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
 	                                            </div>\
                                                 </div>',
                                         icon: 'glyphicon glyphicon-refresh gly-spin',
+                                        addclass: "handbid-paddle-number-notice",
                                         hide: false,
                                         confirm: {
                                             confirm: false
@@ -2005,7 +2011,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                                 }
                             }, {
                                 text: 'Browse',
-                                addClass: 'btn-primarya',
+                                addClass: 'browse-here-button',
                                 click: function (notice) {
                                     notice.remove();
                                 }
@@ -2062,7 +2068,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                         confirm: true,
                         buttons: [{
                             text: 'Add a card',
-                            addClass: 'btn-primary',
+                            addClass: 'add-credit-card-button',
                             click: function (notice) {
                                 $(".credit-card-form-link").eq(0).click();
                                 notice.remove();
@@ -2367,6 +2373,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                 title: 'Logout Confirmation',
                 text: 'Are you sure want to logout?',
                 icon: 'glyphicon glyphicon-question-sign',
+                type: "info",
                 addclass: 'handbid-message-notice',
                 hide: false,
                 confirm: {

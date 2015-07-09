@@ -269,7 +269,7 @@ console.log("success connect");
      * @returns {Boolean}
      */
     $.effectNodeAuctionBroadcast = function (data) {
-        var msg = "<b>"+data.values.name + "</b><br>" + data.values.messageText;
+        var msg = "<b>at "+data.values.name + ":</b><br>" + data.values.messageText;
         handbidMain.notice(msg, "Broadcast Message", "info", false);
         return true;
     };
