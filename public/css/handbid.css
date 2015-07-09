@@ -415,3 +415,22 @@
 }
 
 
+.ui-pnotify-container.alert-danger{
+    background-color: #e94d70 !important;
+    color: #fff !important;
+    border: none;
+}
+
+.ui-pnotify-container.alert-success{
+    background-color: #9fb94a !important;
+    color: #fff !important;
+    border: none;
+}
+
+.ui-pnotify-container a{
+    font-weight: bold;
+    color: #fff !important;
+}
+
+
+/*#9fb94a*/

@@ -14,7 +14,7 @@ $notifications = array_reverse($notifications);
     <ul class="simple-list">
         <?php if ( count( $notifications ) > 0 ) {
             forEach ( $notifications as $notification ) {
-
+                //echo "<pre style='display: none'>".print_r($notification,true)."</pre>";
                 ?>
                 <li class="row message-row <?php echo $notification->messageType; ?>">
                     <div class="col-md-1">

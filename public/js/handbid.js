@@ -680,7 +680,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
 
                 this.removeItemFromDashboardList(itemID, "losing");
 
-                var reasonStr = (type == "under_maxbid") ? " by MaxBid " : "";
+                var reasonStr = (type == "under_maxbid") ? " by MaxBid. " : ".";
 
                 var itemLink = '/auctions/'+ values.auctionKey +'/item/' + values.item.key;
 
@@ -694,7 +694,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
 
                 var noticeFormatting = {isBidding : true, itemLink: itemLink, itemImage: itemImage};
 
-                this.notice('You are <br>outbid</b> the item <b>' + values.item.name + ' ('+values.item.itemCode+') </b> at $' + values.amount + "" + reasonStr, "Losing Item", "error", null, noticeFormatting);
+                this.notice('You are <br>outbid</b> the item <b>' + values.item.name + ' ('+values.item.itemCode+') </b> at $' + values.amount + "" + reasonStr + " <a href='"+itemLink+"'>GO TO ITEM</a>", "Losing Item", "error", null, noticeFormatting);
 
             },
 
@@ -702,7 +702,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
 
                 this.removeItemFromDashboardList(itemID, "winning");
 
-                var reasonStr = (type == "under_maxbid") ? " by MaxBid " : "";
+                var reasonStr = (type == "under_maxbid") ? " by MaxBid! " : " now!";
 
                 var itemLink = '/auctions/'+ values.auctionKey +'/item/'+values.item.key;
 
@@ -1871,7 +1871,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                     text: msg,
                     type: type,
                     hide: hide,
-                    delay: 5000,
+                    delay: 1115000,
                     addclass: 'handbid-message-notice',
                     buttons: {
                         sticker: false
@@ -2212,7 +2212,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                     if(timerMessage == undefined ){
                         timerMessage = new PNotify({
                             title: titleTimerPattern,
-                            type: 'info',
+                            type: 'error',
                             text: timerLayoutPattern,
                             icon: '',
                             addclass: 'handbid-message-notice handbid-timer-top-notice  stack-bar-top',
