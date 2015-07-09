@@ -359,6 +359,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage;
                         $("[data-handbid-ticket-quantity]", rowInTickets).html(remaining);
                     }
                 }
+                $("[data-is-hidden-item] [data-handbid-ticket-quantity]").html("0");
 
             },
 
@@ -471,6 +472,22 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage;
                     value = (value != undefined && value != null) ? value : 0;
                     $('[data-handbid-remaining-of-id=' + itemID + ']').html(value);
                 }
+
+
+                var paramsBoxes = $("[data-handbid-params-box='"+itemID+"']"),
+                    paramsBoxQuant = $("[data-is-hidden-item] [data-handbid-ticket-quantity]"),
+                    isHidden = (values.isHidden == "1"),
+                    isDirectPurchaseItem  = (values.isDirectPurchaseItem == "1"),
+                    disableMobileBidding = (values.disableMobileBidding == "1"),
+                    noBids = (!isDirectPurchaseItem && values.bidCount === 0);
+                $.map(paramsBoxes, function(val){
+                    var paramsBox = $(val);
+                    (isHidden) ? paramsBox.attr("data-is-hidden-item", "1") : paramsBox.removeAttr("data-is-hidden-item");
+                    (isDirectPurchaseItem) ? paramsBox.attr("data-for-sale", "1") : paramsBox.removeAttr("data-for-sale");
+                    (disableMobileBidding) ? paramsBox.attr("data-live", "1") : paramsBox.removeAttr("data-live");
+                    (noBids) ? paramsBox.attr("data-no-bids", "1") : paramsBox.removeAttr("data-no-bids");
+                });
+                paramsBoxQuant.html("0");
 
                 this.processTicketChange(values);
 

@@ -48,11 +48,14 @@ if (!$auction->enableTicketSales) {
 
 
         <?php forEach ($tickets as $k => $ticket) {
-            //$step = ((int)$ticket->ticketQuantity) ? (int)$ticket->ticketQuantity : 1;
+            echo "<pre style='text-align: left; display: none;'>".print_r($ticket,true)."</pre>";
             $step = 1;
             $remaining = $ticket->inventoryRemaining;
+            $isHidden = ($ticket->isHidden == "1");
             ?>
-            <div class="row ticket-row" data-handbid-ticket-row="<?php echo $ticket->id; ?>">
+            <div class="row ticket-row" data-handbid-ticket-row="<?php echo $ticket->id; ?>"
+                <?php echo ($isHidden)?" data-is-hidden-item ":""; ?>
+                 data-handbid-params-box="<?php echo $ticket->id; ?>">
                 <div class="col-xs-12 ticket"
                      data-handbid-ticket-block
                      data-handbid-ticket-id="<?php echo $ticket->id; ?>"
