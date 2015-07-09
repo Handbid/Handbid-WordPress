@@ -302,3 +302,9 @@ $hasTicketItems = !!(count($tickets));
 
 <?php //holy lazy piece of ...?>
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+
+<?php if($auction->timerRemaining > 0) {
+    ?>
+    <input type="hidden" id="timerRemaining" data-auction-name="<?php echo $auction->name; ?>" value="<?php echo $auction->timerRemaining; ?>">
+<?php
+}?>
