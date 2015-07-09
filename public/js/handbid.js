@@ -9,7 +9,7 @@
 
 
 
-var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage;
+var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circleTimer;
 (function ($) {
 
     var restEndpoint = $("#apiEndpointsAddress").val(),
@@ -2081,6 +2081,33 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage;
             },
 
 
+            setCircleTimer: function(time){
+
+                var timeMs = time * 1000;
+                var startColor = '#6FD57F';
+                var endColor = '#FC5B3F';
+
+                var element = document.getElementById('handbid-circle-timer-'+time);
+                element.innerHTML = "";
+                circleTimer = new ProgressBar.Circle(element, {
+                    color: startColor,
+                    trailColor: '#fff',
+                    trailWidth: 10,
+                    duration: timeMs,
+                    strokeWidth: 15,
+                    step: function(state, circle) {
+                        circle.path.setAttribute('stroke', state.color);
+                    }
+                });
+
+                circleTimer.animate(1.0, {
+                    from: {color: startColor},
+                    to: {color: endColor}
+                });
+
+            },
+
+
             startTimer: function (handbid) {
 
                 var continueTimer = true;
@@ -2112,6 +2139,9 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage;
                     if (h == "000") h = "00";
                     if (m == "000") m = "00";
                     timer.html(h+":"+m+":"+s);
+                    $(".timer-hours-number").html(h);
+                    $(".timer-mins-number").html(m);
+                    $(".timer-secs-number").html(s);
                 });
 
 
@@ -2158,19 +2188,32 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage;
             },
 
             changeAuctionTimer: function (time, timerIsRunning) {
+                var timeFormatted = this.formatTimerTime(time);
+                var timerLayoutPattern = '<div class="auction-timer-place">' +
+                    '<div class="circle-place col-xs-3"><div class="handbid-circle-timer" id="handbid-circle-timer-'+time+'"></div></div>' +
+                    '<div class="numbers-place col-xs-9" id="handbid-numbers-timer-'+time+'">' +
+                    '<div class="col-xs-4 number-cont"><em class="timer-hours-number">00</em><span>hours</span></div>' +
+                    '<div class="col-xs-4 number-cont"><em class="timer-mins-number">00</em><span>mins</span></div>' +
+                    '<div class="col-xs-4 number-cont secs-number-cont"><em class="timer-secs-number">00</em><span>secs</span></div>' +
+                    '</div>' +
+                    '</div>';
+                var toggleButtonPattern = '<span class="btn btn-small btn-default toggle-timer-notice">' +
+                    '<em class="glyphicon glyphicon-chevron-down"></em>' +
+                    '<em class="glyphicon glyphicon-chevron-up"></em>' +
+                    '</span>';
+                var titleTimerPattern = '<h3 class="notice-connection-title">' +
+                    '<b>Auction Closes After' +
+                    '&nbsp;&nbsp;&nbsp;&nbsp;<span data-handbid-timer>' + timeFormatted + '</span>' +
+                    '</b></h3>' + toggleButtonPattern;
                 if(timerMessage != undefined && timerMessage.animating == "out"){
                     timerMessage = undefined;
                 }
                 if(timerIsRunning){
-                    var timeFormatted = this.formatTimerTime(time);
                     if(timerMessage == undefined ){
                         timerMessage = new PNotify({
-                            title: '<h3 class="notice-connection-title">' +
-                            '<b>Auction Closes After' +
-                            '&nbsp;&nbsp;&nbsp;&nbsp;<span data-handbid-timer>' + timeFormatted + '</span>' +
-                            '</b></h3>',
-                            type: 'error',
-                            text: '',
+                            title: titleTimerPattern,
+                            type: 'info',
+                            text: timerLayoutPattern,
                             icon: '',
                             addclass: 'handbid-message-notice handbid-timer-top-notice  stack-bar-top',
                             cornerclass: "",
@@ -2185,14 +2228,14 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage;
                                 history: false
                             }
                         });
+                        this.setCircleTimer(time);
                     }
                     else{
                         timerMessage.update({
-                            title: '<h3 class="notice-connection-title">' +
-                            '<b>Auction Closes After ' +
-                            '&nbsp;&nbsp;&nbsp;&nbsp;<span data-handbid-timer>' + timeFormatted + '</span>' +
-                            '</b></h3>'
+                            title: titleTimerPattern,
+                            text: timerLayoutPattern
                         });
+                        this.setCircleTimer(time);
                     }
                 }
                 else{
@@ -2200,6 +2243,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage;
                         timerMessage.update({
                             title: '<h3 class="notice-connection-title">' +
                             '<b>Auction Closed</b></h3>',
+                            text: '',
                             hide: true,
                             delay: 5000,
                             before_close: function() {
@@ -2349,6 +2393,12 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage;
             e.preventDefault();
             $(".notice-connection-tip").slideToggle("normal");
             $(".handbid-no-connection-notice").toggleClass("notice-collapsed");
+        });
+
+
+        $(".toggle-timer-notice").live("click", function(e){
+            e.preventDefault();
+            $(".handbid-timer-top-notice").toggleClass("notice-collapsed");
         });
 
         $("[data-toggle-invoice-link]").live("click", function(e){

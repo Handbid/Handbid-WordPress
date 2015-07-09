@@ -291,14 +291,48 @@
     display: none;
 }
 
-.handbid-timer-top-notice:hover,
+.handbid-timer-top-notice.notice-collapsed:hover,
 .handbid-no-connection-notice.notice-collapsed:hover{
     opacity: 0.7 !important;
 }
 
-.handbid-timer-top-notice .ui-pnotify-container,
+.handbid-timer-top-notice.notice-collapsed .ui-pnotify-container,
 .handbid-no-connection-notice.notice-collapsed .ui-pnotify-container{
     padding: 0;
+}
+
+.handbid-timer-top-notice span[data-handbid-timer]{
+    display: none;
+}
+
+.handbid-timer-top-notice.notice-collapsed .auction-timer-place{
+    display: none;
+}
+
+.handbid-timer-top-notice.notice-collapsed span[data-handbid-timer]{
+    display: inline-block;
+}
+
+.handbid-timer-top-notice.notice-collapsed .toggle-timer-notice .glyphicon-chevron-up,
+.handbid-timer-top-notice .toggle-timer-notice .glyphicon-chevron-down{
+    display: none;
+}
+
+.handbid-timer-top-notice.notice-collapsed .toggle-timer-notice .glyphicon-chevron-down,
+.handbid-timer-top-notice .toggle-timer-notice .glyphicon-chevron-up{
+    display: block;
+}
+
+.toggle-timer-notice{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 2px 5px 5px;
+}
+
+.notice-collapsed .toggle-timer-notice{
+    top: 4px;
+    padding: 4px 5px;
 }
 
 .initial-loading-space{
@@ -351,3 +385,33 @@
 [data-is-hidden-item]{
     display: none !important;
 }
+
+.auction-timer-place{
+    width: 370px;
+    margin: 10px auto;
+    overflow: hidden;
+}
+.auction-timer-place .circle-place{}
+.auction-timer-place .circle-place .handbid-circle-timer{
+    width: 60px;
+    height: 60px;
+}
+.auction-timer-place .numbers-place{}
+.auction-timer-place .numbers-place .number-cont{
+    text-align: center;
+    border-right: 1px solid #aaa;
+}
+.auction-timer-place .numbers-place .number-cont.secs-number-cont{
+    border-right: none;
+}
+.auction-timer-place .numbers-place .number-cont em{
+    font-size: 30px;
+    display: block;
+    font-weight: bold;
+}
+.auction-timer-place .numbers-place .number-cont span{
+    text-transform: uppercase;
+    font-size: 14px;
+}
+
+

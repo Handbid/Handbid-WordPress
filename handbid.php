@@ -147,6 +147,7 @@ class Handbid
     {
 
         $scripts = array(
+            'progress-bar-js'          => 'public/js/progress-bar.js',
             'cookie-plugin-js'         => 'public/js/jquery.cookie.js',
             'handbid-isotope-js'       => 'public/js/isotope.pkgd.min.js',
             'handbid-unslider-js'      => 'public/js/unslider.min.js',
