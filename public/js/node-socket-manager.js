@@ -241,7 +241,7 @@ console.log("success connect");
     $.eventUserReceipt = function (data) {
         var message = JSON.stringify(data, null, 2);
         console.log(data);
-        //handbidMain.notice(message);
+        handbidMain.notifyUserAboutReceipt(data.values);
     };
 
     /**

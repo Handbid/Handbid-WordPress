@@ -74,7 +74,7 @@ foreach ($invoices as $i => $invoice) {
                             <td class="format-money"><?php echo $currency . "<em>" . number_format($invoice->taxRate / 100, $coinsCount, $coinsDivider, $groupDivider) . "</em>";?></td>
                         </tr>
                         <tr class="receipt-due">
-                            <th scope="row" class="total">Balance Due</th>
+                            <th scope="row" class="total">TOTAL</th>
                             <td class="receipt-total format-money text-red" data-attribute="grandTotal"><?php echo $currency . "<em>" . number_format($invoice->grandTotal / 100, $coinsCount, $coinsDivider, $groupDivider) . "</em>";?></td>
                         </tr>
                         </tbody>
@@ -82,7 +82,7 @@ foreach ($invoices as $i => $invoice) {
 
                     <?php if(!((bool) $invoice->paid)){?>
                         <div class="unpaidControls">
-                    <div class="col-md-12 margin-bottom">
+                    <div class="col-md-12 margin-bottom" style="display: none;">
                             <div class="col-md-3">
                                 <a class="buy-now green-solid-button receipt-action-button col-md-12 loading-span-button"
                                     ><span>Print Receipt</span></a> </div>

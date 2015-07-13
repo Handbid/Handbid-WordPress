@@ -442,7 +442,8 @@ class HandbidShortCodeController {
                 $losing = [];
             }
             $colsCount = $this->state->getGridColsCount(3, "Item");
-
+            $winning= (is_array($winning))?$winning:[];
+            $losing= (is_array($losing))?$losing:[];
 			return $this->viewRenderer->render(
 				$template,
 				[
@@ -511,7 +512,8 @@ class HandbidShortCodeController {
 			$template = $this->templateFromAttributes( $attributes, 'views/item/list' );
 
             $colsCount = $this->state->getGridColsCount(3, "Item");
-
+            $winning= (is_array($winning))?$winning:[];
+            $losing= (is_array($losing))?$losing:[];
 			return $this->viewRenderer->render(
 				$template,
 				[
@@ -563,7 +565,8 @@ class HandbidShortCodeController {
                 $winning = [];
                 $losing = [];
             }
-
+            $winning= (is_array($winning))?$winning:[];
+            $losing= (is_array($losing))?$losing:[];
 			return $this->viewRenderer->render(
 				$template,
 				[
@@ -748,6 +751,7 @@ class HandbidShortCodeController {
                 if ( $auction && $profile ) {
 
                     $myInventory = $this->state->currentInventory($auction->id);
+                    // echo "<pre>".print_r($myInventory,true)."</pre>";
 
                     // $winning   = $this->handbid->store( 'Bid' )->myWinning($auction->id );
                     // $losing    = $this->handbid->store( 'Bid' )->myLosing( $auction->id );
@@ -774,7 +778,8 @@ class HandbidShortCodeController {
                 }
 
 			}
-
+            $winning= (is_array($winning))?$winning:[];
+            $losing= (is_array($losing))?$losing:[];
 			return $this->viewRenderer->render(
 				$template,
 				[
@@ -864,7 +869,8 @@ class HandbidShortCodeController {
                 }
 
             }
-
+            $winning= (is_array($winning))?$winning:[];
+            $losing= (is_array($losing))?$losing:[];
             return $this->viewRenderer->render(
                 $template,
                 [
@@ -901,7 +907,8 @@ class HandbidShortCodeController {
 
             $winning   = $myInventory->winning;
             $losing    = $myInventory->losing;
-
+            $winning= (is_array($winning))?$winning:[];
+            $losing= (is_array($losing))?$losing:[];
 			return $this->viewRenderer->render(
 				$template,
 				[

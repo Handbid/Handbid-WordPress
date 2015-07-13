@@ -110,6 +110,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                 var pattern = '<li class="row bid-row-id-'+bidID+'" ' +
                     ' data-proxy-item-id="'+itemID+'" ' +
                     ' data-maxbid-item-id="'+itemID+'" ' +
+                    ' data-proxy-item-max-value="'+maxAmount+'" ' +
                     ' data-maxbid-bid-id="'+bidID+'">' +
                     ' <div class="col-md-8 col-xs-8">' +
                     ' <a href="/auctions/'+auctionKey+'/item/'+itemKey+'"><h4>'+itemName+'</h4></a>' +
@@ -605,6 +606,17 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
             },
 
 
+            scrollToInvoices: function(){
+                var profileLinkVisible = $('a[data-slider-nav-key="profile-user-info"]:visible');
+                profileLinkVisible.click();
+                $('a[data-slider-nav-key="see-my-receipt"]:visible').click();
+                $('html,body').animate({scrollTop: profileLinkVisible.offset().top},'normal');
+                notice.remove();
+
+                handbid.loadInvoicesToContainer();
+            },
+
+
 
 
             notifyUserAboutAuctionClosing: function(values, hasInvoices){
@@ -620,15 +632,8 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                         text: 'View Invoices',
                         addClass: 'view-invoices-button',
                         click: function (notice) {
-                            var profileLinkVisible = $('a[data-slider-nav-key="profile-user-info"]:visible');
-                            profileLinkVisible.click();
-                            $('a[data-slider-nav-key="see-my-receipt"]:visible').click();
-                            $('html,body').animate({scrollTop: profileLinkVisible.offset().top},'normal');
+                            handbid.scrollToInvoices();
                             notice.remove();
-
-                            handbid.loadInvoicesToContainer();
-
-
                         }
                     });
                     confirm = {
@@ -657,6 +662,43 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                     }
                 });
 
+            },
+
+
+            notifyUserAboutReceipt: function(values){
+
+                var auctionName = values.name;
+                var noticeText = values.name;
+                var buttons = [];
+                    buttons.push({
+                        text: 'View Invoice',
+                        addClass: 'view-invoices-button',
+                        click: function (notice) {
+                            handbid.scrollToInvoices();
+                            notice.remove();
+                        }
+                    });
+                    confirm = {
+                        confirm: true,
+                        buttons: buttons
+                    };
+                    hide = false;
+                new PNotify({
+                    title: 'Auction Invoices',
+                    type: 'info',
+                    text: noticeText,
+                    icon: '',
+                    addclass: 'handbid-message-notice',
+                    hide: false,
+                    confirm: confirm,
+                    buttons: {
+                        closer: true,
+                        sticker: false
+                    },
+                    history: {
+                        history: false
+                    }
+                });
             },
 
 
@@ -735,6 +777,8 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
 
                     this.addLosingItemRow(itemID, values);
 
+                    this.checkIfMaxBidIsNotAtual(values);
+
                     this.loadMessagesToContainer();
                 }
                 if(bidWinnerID == profileID){
@@ -743,16 +787,30 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
 
                     this.addWinningItemRow(itemID, values);
 
+                    this.checkIfMaxBidIsNotAtual(values);
+
                     this.loadMessagesToContainer();
                 }
 
 
             },
 
+            checkIfMaxBidIsNotAtual: function(values){
+                var itemID = values.item.id,
+                    itemBlock = $("[data-maxbid-item-id='"+itemID+"']").eq(0),
+                    itemBlockVal = parseInt(itemBlock.data("proxy-item-max-value"));
+                if(itemBlock != undefined && values.amount >= itemBlockVal ) {
+                    console.log(itemBlock != undefined && values.amount >= itemBlockVal);
+                    this.removeItemFromDashboardList(itemID, "proxy");
+                }
+                this.recheckAndRecalculateBids();
+            },
+
 
 
 
             addUserPurchase: function(values){
+                this.removeItemFromDashboardList(values.item.id, "winning");
                 this.addDashboardBidPurchased(values.item.id, values.name, values.item.key, values.auctionKey, values.pricePerItem, values.quantity );
                 this.loadMessagesToContainer();
             },
@@ -764,7 +822,8 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                 var attr = elem.attr('data-handbid-credit-cards-required');
 
                 var needCreditCard = (typeof attr !== typeof undefined && attr !== false);
-                if(needCreditCard){
+                var creditCardRows = $("[data-handbid-card-row]");
+                if(needCreditCard && creditCardRows.length == 0){
                     handbidMain.notice("Please add credit card to your profile for this action", "Credit Card Required", "error");
                 }
                 return needCreditCard;
