@@ -545,6 +545,7 @@ class HandbidActionController
                 'views/bidder/receipt',
                 [
                     'profile' => $profile,
+                    'auction' => $auction,
                     'myInvoices' => $myInvoices
                 ]
             );

@@ -469,3 +469,12 @@
 .handbid-send-message-notice .ui-pnotify-text {
     display: none !important;
 }
+
+
+.showIfNoCCAllowed,
+.invoiceNoCCAllowed .hideIfNoCCAllowed{
+    display: none !important;
+}
+.invoiceNoCCAllowed .showIfNoCCAllowed{
+    display: block !important;
+}

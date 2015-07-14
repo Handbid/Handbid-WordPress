@@ -401,6 +401,12 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                 (values.status == "preview" || values.status == "presale") ? itemsOfAuctionCanBeToggled.addClass("not-available-in-presale") : itemsOfAuctionCanBeToggled.removeClass("not-available-in-presale") ;
                 $(".filters .by-item-type li.selected a").eq(0).click();
 
+                var enableCreditCardSupport = (values.enableCreditCardSupport == "1"),
+                    receiptsOfAuction = $("[data-receipt-of-auction='"+auctionID+"']");
+                console.log(enableCreditCardSupport);
+                console.log(receiptsOfAuction);
+                (enableCreditCardSupport)?receiptsOfAuction.removeClass("invoiceNoCCAllowed"):receiptsOfAuction.addClass("invoiceNoCCAllowed");
+
             },
 
 

@@ -10,6 +10,7 @@
 
 
 $profile    = $this->get('profile');
+    $auctionCurrent    = $this->get('auction');
     $winning    = $this->get('winning');
     $losing     = $this->get('losing');
     $redirect   = $this->get('redirect');
@@ -66,7 +67,7 @@ if(count($myInvoices)){
 
         <div class="" data-slider-nav-key="see-my-auctions">
             <div class="active-auctions-list-area" data-nonce="<?php echo apply_filters("handbid_create_nonce", date("d.m.Y") . "get_active_auctions");?>">
-                <?php
+            <?php
                 echo $this->partial('active-auctions.phtml', [
                     'myAuctions' => $myAuctions,
                 ]);?>
@@ -86,6 +87,7 @@ if(count($myInvoices)){
                 <?php
                 echo $this->partial('receipt.phtml', [
                     'profile'    => $profile,
+                    'auction'    => $auctionCurrent,
                     'myInvoices' => $myInvoices,
                 ]);?>
             </div>

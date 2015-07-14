@@ -109,6 +109,7 @@ if (!is_null($this->get('profile'))) {
 
                     <?php echo $this->partial('user-info.phtml', [
                         'profile'    => $profile,
+                        'auction'    => $auction,
                         'winning'    => $winning,
                         'losing'     => $losing,
                         'redirect'   => $redirect,
