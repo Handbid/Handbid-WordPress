@@ -20,7 +20,16 @@ $needCreditCards = ($item->isTicket or $auction->requireCreditCard);
 $creditCardsRequired = ($needCreditCards) ? " data-handbid-credit-cards-need " : "";
 $creditCardsRequired .= (!count($profile->creditCards) and $needCreditCards) ? " data-handbid-credit-cards-required " : "";
 ?>
-<div data-handbid-bid data-handbid-item-key="<?php echo $item->key; ?>">
+<?php
+$itemCanNotBeShownInPresale = ((in_array($auction->status, ["presale","preview"]) and $item->status != "available") and $isBiddable);
+?>
+<div data-handbid-bid data-handbid-item-key="<?php echo $item->key; ?>" data-item-nobidding-id="<?php echo $item->id; ?>"
+     style="<?php echo ($itemCanNotBeShownInPresale)?"":" display:none; ";?>">
+    <div class="row"><h4 class="no-bidding-message">Item not open for bidding</h4></div>
+</div>
+<div data-handbid-bid data-handbid-item-key="<?php echo $item->key; ?>"  data-item-bidding-id="<?php echo $item->id; ?>"
+     style="<?php echo ($itemCanNotBeShownInPresale)?" display:none; ":"";?>">
+
 
     <div class="row bid-controls">
 
@@ -51,7 +60,8 @@ $creditCardsRequired .= (!count($profile->creditCards) and $needCreditCards) ? "
 
     <div class="row">
 
-        <?php if ($isBiddable) { ?>
+        <?php if ($isBiddable) {
+        ?>
 
         <?php if(!$itemSold)  { ?>
 
@@ -84,7 +94,8 @@ $creditCardsRequired .= (!count($profile->creditCards) and $needCreditCards) ? "
 
         <?php } ?>
 
-        <?php } else { ?>
+        <?php }
+        else { ?>
             <div class="col-md-12 col-xs-12">
                 <a class="buy-now green-solid-button  loading-span-button"
                    href=""
