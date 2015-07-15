@@ -914,7 +914,7 @@ body.handbid-logged-in {
 }
 
 .tickets-modal {
-    width: 625px;
+    width: 525px;
     text-align: center;
     h3 {
         margin: 25px 0;
@@ -960,7 +960,6 @@ body.handbid-logged-in {
     }
     .ticket-row {
         border-bottom: 1px solid @dropShadow;
-        padding: 0 20px;
     }
 
     .ticket-container {
@@ -1313,9 +1312,6 @@ select {
         width: 31%;
         margin-bottom: 20px;
         transition: none;
-
-      float: left;
-      margin-right: 22px;
 
     }
 
@@ -2266,8 +2262,7 @@ section.container.what-clients-say-nav {
         margin: 0;
     }
     .open,
-    li.winning,
-    li.was_winning {
+    li.winning {
         -webkit-box-shadow: inset 10px 0 0 0 @green;
         box-shadow: inset 10px 0 0 0 @green;
         padding-left: 15px;
@@ -2280,15 +2275,12 @@ section.container.what-clients-say-nav {
     }
 
     .closed,
-    li.outbid,
-    li.losing,
-    li.was_losing {
+    li.losing {
         -webkit-box-shadow: inset 10px 0 0 0 @pink;
         box-shadow: inset 10px 0 0 0 @pink;
         padding-left: 15px;
     }
 
-    li.purchased,
     li.purchase {
         -webkit-box-shadow: inset 10px 0 0 0 @lightBlue;
         box-shadow: inset 10px 0 0 0 @lightBlue;
@@ -3912,10 +3904,6 @@ div.handbid-modal[data-handbid-modal-key="credit-card-form"] {
 
     }
 
-  .sticky-for-sort-bar {
-    min-height: 200px;
-  }
-
 }
 
 @media (max-width: 700px) {
@@ -4059,164 +4047,427 @@ div.handbid-modal[data-handbid-modal-key="credit-card-form"] {
 
 // Handbid login dialogs styles fix
 .handbid-modal[data-handbid-modal-key="login-modal"] {
-  [data-tab-name="login-form"], [data-tab-name="forgot-pass"], [data-tab-name="use-invite-code"] {
-    h3 {
-      font-size: 46px;
-    }
-    h4 {
-      font-size: 30px;
-    }
-    h2 {
-      font-size: 30px;
-    }
-    h5 {
-      font-size: 18px;
-    }
-    .handbid-form {
-      .btn, .btn:hover {
-        margin-bottom: 60px;
-      }
-      input, select {
-        max-width: 350px;
-        margin: 3px auto;
-        height: 45px;
-        font-size: 16px;
-      }
-    }
-    .form-group {
-      text-align: center;
-      a.btn {
-        background-color: #e94d70;
-        border-color: rgb(230, 51, 90);
-      }
-    }
-  }
-
-
-  [data-tab-name="register-form"] {
-    .form-group {
-      text-align: center;
-      span.has-question-icon {
-        position: absolute;
-        right: 16.66666667%;
-        height: 40px;
-        width: 60px;
-        &:after {
-          content: "?";
-          color: #FFFFFF;
-          background: #2d84bc;
-          width: 20px;
-          height: 20px;
-          display: block;
-          position: absolute;
-          top: 10px;
-          left: 5px;
-          border-radius: 20px;
-          line-height: 20px;
-          text-align: center;
+    text-shadow: none;
+    text-transform: none;
+    a:not(.btn) {
+        color: #00ffff;
+        &:hover {
+            text-decoration: underline;
         }
-      }
     }
-    .go-back-button {
-      line-height: 45px;
+
+    h3 {
+        font-size: 36px;
+        text-transform: none;
     }
-  }
+    h4.sub-title {
+        font-size: 18px !important;
+        font-weight: 300;
+        span {
+            font-style: italic;
+            font-weight: bold;
+        }
+    }
+
+    [data-tab-name="login-form"], [data-tab-name="forgot-pass"], [data-tab-name="use-invite-code"] {
+        h4 {
+            font-size: 24px;
+        }
+        h2 {
+            font-size: 24px;
+        }
+        h5 {
+            font-size: 18px;
+        }
+        .handbid-form {
+            .btn, .btn:hover {
+                margin-bottom: 60px;
+            }
+            input, select {
+                max-width: 350px;
+                margin: 3px auto;
+                height: 45px;
+                font-size: 16px;
+            }
+        }
+        .form-group {
+            text-align: center;
+            a.btn, a.btn:hover {
+                background-color: #e94d70;
+                border-color: rgb(230, 51, 90);
+                color: #ffffff;
+                text-decoration: none;
+                &.inviteShortCodeButton {
+                    margin-bottom: 0;
+                }
+            }
+        }
+    }
 
 
-  h5 {
-    font-size: 16px;
-  }
-  .handbid-form.signup-form {
-    padding: 30px 60px 0;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-  .handbid-form .btn, .handbid-form .btn:hover {
-    padding: 10px 50px;
-    margin: 5px;
-    font-size: 16px;
-  }
-  .handbid-form input, .handbid-form select {
-    margin-bottom: 0;
-  }
-  .container-tab h2, .container-tab h5 {
-    text-align: center;
-  }
+    [data-tab-name="register-form"] {
+
+        input[type="checkbox"] {
+            width: 20px;
+            margin: 0;
+        }
+        .form-group {
+            margin-bottom: 10px;
+            padding: 0 5px;
+            text-align: center;
+            a.has-question-icon {
+                position: absolute;
+                right: 20px;
+                color: #FFFFFF;
+                background: #2d84bc;
+                width: 20px;
+                height: 20px;
+                display: block;
+                top: 10px;
+                border-radius: 20px;
+                line-height: 20px;
+                text-align: center;
+                text-decoration: none;
+                cursor: pointer;
+                &:after {
+                    content: none;
+                }
+                &:focus {
+                    outline: none;
+                }
+            }
+        }
+        .go-back-button {
+            line-height: 45px;
+        }
+    }
+
+    [data-tab-name=register-complete] {
+        a.btn, a.btn:hover {
+            width: 100%;
+            padding: 10px 0;
+            text-align: center;
+        }
+    }
+
+    h5 {
+        font-size: 16px;
+    }
+    .handbid-form.signup-form {
+        padding: 30px 60px 0;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    .handbid-form .btn, .handbid-form .btn:hover {
+        padding: 10px 50px;
+        margin: 5px;
+        font-size: 16px;
+    }
+    .handbid-form input, .handbid-form select {
+        margin-bottom: 0;
+    }
+    .container-tab h2, .container-tab h5 {
+        text-align: center;
+    }
+
+    .help-title {
+        font-weight: normal;
+    }
+    .step {
+        font-weight: bold;
+    }
+
+    [data-tab-name=tutorial-info-1] {
+        .tutorialTabsContainer {
+            padding: 10px;
+            min-height: 80px;
+            a {
+                display: block;
+            }
+            .img-circle {
+                width: 60px;
+                height: 60px;
+                display: inline-block;
+                vertical-align: middle;
+            }
+            h2 {
+                display: inline-block;
+                padding: 0;
+                vertical-align: middle;
+                font-size: 24px;
+                font-weight: normal;
+            }
+        }
+        .tab-pane {
+            min-height: 455px;
+            h4 {
+                margin-bottom: 0;
+                font-size: 24px;
+                font-weight: normal;
+            }
+            h5 {
+                margin-top: 0;
+                font-size: 18px;
+                font-weight: normal;
+            }
+            p {
+                margin-bottom: 10px;
+                font-size: 16px;
+                font-weight: bold;
+            }
+            button.btn, button.btn:hover {
+                padding: 8px 0;
+                margin: 0;
+            }
+            &#your-comp h4 {
+                margin-top: 100px;
+            }
+        }
+    }
+    [data-tab-name=tutorial-info-1], [data-tab-name=tutorial-info-2], [data-tab-name=tutorial-info-3] {
+        h3 {
+            text-transform: uppercase;
+        }
+        .handbid-tips {
+            margin: 20px 0 40px;
+            li {
+                padding-left: 35px;
+                margin-bottom: 20px;
+                h2 {
+                    margin-bottom: 10px;
+                    text-align: left;
+                    text-transform: uppercase;
+                    font-size: 18px;
+                    font-weight: bold;
+                }
+                p {
+                    padding: 0;
+                    font-size: 14px;
+                    font-weight: normal;
+                }
+                &:before {
+                    color: #ffffff;
+                    background: #A2BD4C;
+                    width: 22px;
+                    height: 22px;
+                    border-radius: 5px;
+                    line-height: 22px;
+                }
+            }
+        }
+        .modal-footer {
+            position: relative;
+            .action-link {
+                position: absolute;
+                width: 150px;
+                text-transform: uppercase;
+                color: #fff;
+                font-weight: normal;
+                font-size: 20px;
+                top: -12px;
+                display: block;
+                position: absolute;
+                filter: alpha(opacity = 50);
+                -moz-opacity: 0.5;
+                opacity: 0.5;
+                text-decoration: none;
+                &:hover {
+                    filter: alpha(opacity = 100);
+                    -moz-opacity: 1;
+                    opacity: 1;
+                }
+                &.go-back-button {
+                    left: -160px;
+                    text-align: right;
+                }
+                &.go-next-button {
+                    right: -160px;
+                    text-align: left;
+                }
+            }
+        }
+    }
+    [data-tab-name=tutorial-info-2] {
+        .handbid-tips {
+            li {
+                &:before {
+                    content: "\e013";
+                    display: inline-block;
+                    font-family: 'Glyphicons Halflings';
+                    font-style: normal;
+                    font-size: 12px;
+                    font-weight: 400;
+                    -webkit-font-smoothing: antialiased;
+                    -moz-osx-font-smoothing: grayscale;
+                }
+            }
+        }
+    }
+    [data-tab-name=tutorial-info-3] {
+        .handbid-tips {
+            li {
+                &:before {
+                    background: #E94F71;
+                    font-weight: bold;
+                    font-size: 20px;
+                }
+            }
+        }
+    }
 }
 
 @media (max-width: 992px) {
-  .handbid-modal[data-handbid-modal-key="login-modal"] [data-tab-name="register-form"] {
-    .form-group {
-      span.has-question-icon {
-        right: 0;
-      }
+    .handbid-modal[data-handbid-modal-key="login-modal"] {
+        [data-tab-name="register-form"] {
+            .form-group {
+                input.has-question-icon {
+                    position: static;
+                    float: none;
+                }
+            }
+            .go-back-button {
+                line-height: 45px;
+            }
+        }
+        [data-tab-name=tutorial-info-1] {
+            .modal-footer {
+                .action-link {
+                    top: 5px;
+                    &.go-back-button {
+                        left: 30px;
+                        text-align: left;
+                    }
+                    &.go-next-button {
+                        right: 30px;
+                        text-align: right;
+                    }
+                }
+            }
+        }
     }
-    .go-back-button {
-      line-height: 45px;
-    }
-  }
+
 }
 
 @media (max-width: 767px) {
-  .handbid-modal[data-handbid-modal-key="login-modal"] {
-    .handbid-form.signup-form {
-      padding: 0;
-    }
+    .handbid-modal[data-handbid-modal-key="login-modal"] {
+        .handbid-form.signup-form {
+            padding: 0;
+        }
 
-    [data-tab-name="login-form"], [data-tab-name="forgot-pass"], [data-tab-name="use-invite-code"] {
-      h3 {
-        font-size: 40px;
-      }
-      h4 {
-        font-size: 26px;
-      }
-      .handbid-form form {
-        margin-top: 20px;
-      }
+        [data-tab-name="login-form"], [data-tab-name="forgot-pass"], [data-tab-name="use-invite-code"] {
+            .handbid-form form {
+                margin-top: 20px;
+            }
+        }
     }
-  }
 }
 @media (max-width: 600px) {
-
-  .handbid-modal[data-handbid-modal-key="login-modal"] {
-    [data-tab-name="login-form"], [data-tab-name="forgot-pass"], [data-tab-name="use-invite-code"] {
-      h3 {
-        font-size: 36px;
-      }
-      h4 {
-        font-size: 24px;
-      }
-      h2 {
-        font-size: 20px;
-      }
-      h5 {
-        font-size: 16px;
-      }
-      .handbid-form form {
-        .btn, .btn:hover {
-          margin-right: auto;
-          margin-left: auto;
-          margin-bottom: 30px;
-          width: 100%;
-          max-width: 350px;
+    .handbid-modal[data-handbid-modal-key="login-modal"] {
+        [data-tab-name="login-form"], [data-tab-name="forgot-pass"], [data-tab-name="use-invite-code"] {
+            h5 {
+                font-size: 16px;
+            }
+            .handbid-form form {
+                .btn, .btn:hover {
+                    margin-right: auto;
+                    margin-left: auto;
+                    margin-bottom: 30px;
+                    width: 100%;
+                    max-width: 350px;
+                }
+                button.btn, button.btn:hover {
+                    margin-bottom: 10px;
+                }
+            }
         }
-        button.btn, button.btn:hover {
-          margin-bottom: 10px;
-        }
-      }
     }
-  }
 }
 @media (max-width: 450px) {
-  .handbid-modal[data-handbid-modal-key="login-modal"] {
-    [data-tab-name="login-form"], [data-tab-name="forgot-pass"], [data-tab-name="use-invite-code"] {
-      h4 {
-        font-size: 20px;
-        margin-top: 0;
-      }
-      .handbid-form form {
-        padding: 25px 0;
-      }
+    .handbid-modal[data-handbid-modal-key="login-modal"] {
+        [data-tab-name="login-form"], [data-tab-name="forgot-pass"], [data-tab-name="use-invite-code"] {
+            h4 {
+                margin-top: 0;
+            }
+            .handbid-form form {
+                padding: 25px 0;
+            }
+        }
     }
-  }
+}
+
+.handbid-modal[data-handbid-modal-key="login-modal"] [data-tab-name="get-started"] {
+    text-shadow: none;
+    h5 {
+        font-size: 18px;
+        font-weight: normal;
+        &.footer-message {
+            font-size: 24px;
+        }
+    }
+    .col-lg-4 {
+        h2 {
+            margin-bottom: 10px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        h4 {
+            margin-top: 15px;
+            font-size: 14px;
+            font-style: normal;
+            font-weight: normal;
+        }
+    }
+    .buttons {
+        h4 {
+            font-size: 18px;
+            font-weight: 300;
+            font-style: normal;
+        }
+        .btn, .btn:hover {
+            padding: 10px 0;
+            margin: 0 auto;
+            width: 190px;
+            font-size: 18px;
+            border: none;
+            color: #FFFFFF;
+            text-decoration: none;
+            &[data-target-tab=use-invite-code] {
+                background-color: #1571B3;
+            }
+            &[data-target-tab=register-form] {
+                background-color: #F78F1E;
+            }
+        }
+    }
+}
+
+.handbid-modal .modal-footer {
+    h4 {
+        font-size: 18px !important;
+        font-weight: normal;
+    }
+    .app-links {
+        margin-top: 20px;
+        li {
+            display: inline-block;
+            width: 148px;
+            height: 48px;
+            a{
+                display: block;
+                width: 100%;
+                height: 100%;
+                text-indent: -9999px;
+            }
+            &.app-store {
+                a {
+                    background: transparent url("../images/app_store_link.png") no-repeat;
+                }
+            }
+            &.google-play {
+                a {
+                    background: transparent url("../images/google_play_link.png") no-repeat;
+                }
+            }
+        }
+    }
 }
