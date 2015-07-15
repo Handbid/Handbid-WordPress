@@ -612,7 +612,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
             },
 
 
-            scrollToInvoices: function(){
+            scrollToInvoices: function(notice){
                 var profileLinkVisible = $('a[data-slider-nav-key="profile-user-info"]:visible');
                 profileLinkVisible.click();
                 $('a[data-slider-nav-key="see-my-receipt"]:visible').click();
@@ -638,7 +638,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                         text: 'View Invoices',
                         addClass: 'view-invoices-button',
                         click: function (notice) {
-                            handbid.scrollToInvoices();
+                            handbid.scrollToInvoices(notice);
                             notice.remove();
                         }
                     });
@@ -680,7 +680,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                         text: 'View Invoice',
                         addClass: 'view-invoices-button',
                         click: function (notice) {
-                            handbid.scrollToInvoices();
+                            handbid.scrollToInvoices(notice);
                             notice.remove();
                         }
                     });
@@ -987,7 +987,9 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                     var isMaxBidButton = $(this).hasClass("max-bid-up");
                     var isDirectPurchaseButton = $(this).hasClass("isDirectPurchase");
 
-                    amountContainer = (isMaxBidButton) ? $('[data-handbid-maxbid-amount]') : $('[data-handbid-onlybid-amount]');
+                    if(!isDirectPurchaseButton) {
+                        amountContainer = (isMaxBidButton) ? $('[data-handbid-maxbid-amount]') : $('[data-handbid-onlybid-amount]');
+                    }
 
                     var value = parseInt(amountContainer[0].innerHTML) + increment;
 
