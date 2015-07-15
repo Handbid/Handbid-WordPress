@@ -2151,6 +2151,18 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                 });
             },
 
+            lazyShowMoreMessages: function(button){
+                var currentChunk = parseInt(button.data("current-chunk")) + 1,
+                    chunksCount = parseInt(button.data("chunks-count")),
+                    messagesOfCurrentChunk = $(".messages-part-"+currentChunk);
+                messagesOfCurrentChunk.slideDown("normal");
+                button.data("current-chunk", currentChunk);
+                if(currentChunk >= chunksCount){
+                    button.hide();
+                }
+
+            },
+
 
             setCircleTimer: function(time){
 
@@ -2485,6 +2497,12 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
             var invoiceID = $(this).data("toggle-invoice-more-link");
             $(this).toggleClass("opened-invoice");
             $("[data-receipt-block-id="+invoiceID+"] .invoice-more-details-container").slideToggle("normal");
+        })
+
+        $(".load-more-messages").live("click", function(e){
+            e.preventDefault();
+            var button = $(this);
+            handbid.lazyShowMoreMessages(button);
         })
 
     });

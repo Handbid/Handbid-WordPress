@@ -12,11 +12,17 @@ $notifications = $this->get( 'notifications' );
 $notifications = array_reverse($notifications);
 ?>
     <ul class="simple-list">
-        <?php if ( count( $notifications ) > 0 ) {
-            forEach ( $notifications as $notification ) {
+        <?php
+        $chunksCount = 0;
+        $chunksSize = 10;
+        if ( count( $notifications ) > 0 ) {
+            $chunks = array_chunk($notifications, $chunksSize);
+            $chunksCount = count($chunks);
+            forEach ( $chunks as $chunkI => $chunk ) {
+            forEach ( $chunk as $notification ) {
                 //echo "<pre style='display: none'>".print_r($notification,true)."</pre>";
                 ?>
-                <li class="row message-row <?php echo $notification->messageType; ?>">
+                <li class="row message-row <?php echo $notification->messageType; ?> messages-part-<?php echo $chunkI;?>" style="<?php echo ($chunkI != 0)?" display:none; ":"";?>">
                     <div class="col-md-1">
                         <span class="message-status message-status-<?php echo $notification->messageType; ?>"></span>
                     </div>
@@ -29,6 +35,7 @@ $notifications = array_reverse($notifications);
                 </li>
             <?php
             }
+            }
         } else {
             ?>
             <p>You do not have any notifications.</p>
@@ -37,5 +44,10 @@ $notifications = array_reverse($notifications);
 
         ?>
     </ul>
+<?php
+if ( $chunksCount > 1 ) {
+  echo "<button class='btn green-button load-more-messages' data-current-chunk='0' data-chunks-count='".($chunksCount - 1)."'>More</button>";
+}
+?>
 
 <?php
