@@ -21,7 +21,7 @@ $creditCardsRequired = ($needCreditCards) ? " data-handbid-credit-cards-need " :
 $creditCardsRequired .= (!count($profile->creditCards) and $needCreditCards) ? " data-handbid-credit-cards-required " : "";
 ?>
 <?php
-$itemCanNotBeShownInPresale = ((in_array($auction->status, ["presale","preview"]) and $item->status != "available") and $isBiddable);
+$itemCanNotBeShownInPresale = ((in_array($auction->status, ["presale","preview"]) and $item->status != "available"));
 ?>
 <div data-handbid-bid data-handbid-item-key="<?php echo $item->key; ?>" data-item-nobidding-id="<?php echo $item->id; ?>"
      style="<?php echo ($itemCanNotBeShownInPresale)?"":" display:none; ";?>">
