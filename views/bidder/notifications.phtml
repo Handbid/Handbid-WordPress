@@ -10,11 +10,12 @@
 
 $notifications = $this->get( 'notifications' );
 $notifications = array_reverse($notifications);
+for($i = 1; $i <= 20; $i++){$notifications[$i] = $notifications[0];}
 ?>
     <ul class="simple-list">
         <?php
         $chunksCount = 0;
-        $chunksSize = 10;
+        $chunksSize = 5;
         if ( count( $notifications ) > 0 ) {
             $chunks = array_chunk($notifications, $chunksSize);
             $chunksCount = count($chunks);
@@ -46,7 +47,8 @@ $notifications = array_reverse($notifications);
     </ul>
 <?php
 if ( $chunksCount > 1 ) {
-  echo "<button class='btn green-button load-more-messages' data-current-chunk='0' data-chunks-count='".($chunksCount - 1)."'>More</button>";
+  echo "<button class='btn pull-left green-button load-more-messages' data-current-chunk='0' data-chunks-count='".($chunksCount - 1)."'>More</button>";
+  echo "<button class='btn pull-right green-button load-less-messages' style='display: none'>Collapse</button>";
 }
 ?>
 
