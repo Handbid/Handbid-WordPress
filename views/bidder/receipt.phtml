@@ -25,6 +25,21 @@ foreach ($invoices as $i => $invoice) {
 <ul class="simple-list">
     <?php if (count($invoices) > 0) {
         forEach ($invoices as $invoice) {
+            $currency = $invoice->currencySymbol;
+            $auctionItems = [];
+            $purchaseItems = [];
+            $auctionTotal = 0;
+            $purchaseTotal = 0;
+            foreach ($invoice->lineItems as $lineItem) {
+                if ($lineItem->item->isDirectPurchaseItem) {
+                    $purchaseItems[] = $lineItem;
+                    $purchaseTotal += (int)$lineItem->grandTotal;
+                } else {
+                    $auctionItems[] = $lineItem;
+                    $auctionTotal += (int)$lineItem->grandTotal;
+                }
+            }
+            echo "<pre style='display: none;'>".print_r($invoice,true)."</pre>";
             ?>
             <li class="row receiptRow margin-bottom <?php echo ($invoice->paid) ? "open" : "preview"; ?>
                 <?php echo ($invoice->enableCreditCardSupport == "1")?"":" invoiceNoCCAllowed "?>"
@@ -32,6 +47,7 @@ foreach ($invoices as $i => $invoice) {
                 data-receipt-block-id="<?php echo $invoice->id; ?>"
                 data-receipt-of-auction="<?php echo $invoice->auctionId; ?>"
                 data-receipt-block-guid="<?php echo $invoice->receiptsGuid; ?>"
+                data-receipt-total="<?php echo $auctionTotal + $purchaseTotal; ?>"
                 >
                 <div class="col-md-10">
                     <h4 class="invoice-title margin-bottom"><?php echo $invoice->name; ?></h4>
@@ -42,20 +58,7 @@ foreach ($invoices as $i => $invoice) {
                 <div class="col-md-12 invoice-details-container" style="display: none;">
 
                     <?php
-                    $currency = $invoice->currencySymbol;
-                    $auctionItems = [];
-                    $purchaseItems = [];
-                    $auctionTotal = 0;
-                    $purchaseTotal = 0;
-                    foreach ($invoice->lineItems as $lineItem) {
-                        if ($lineItem->item->isDirectPurchaseItem) {
-                            $purchaseItems[] = $lineItem;
-                            $purchaseTotal += (int)$lineItem->grandTotal;
-                        } else {
-                            $auctionItems[] = $lineItem;
-                            $auctionTotal += (int)$lineItem->grandTotal;
-                        }
-                    }?>
+                    ?>
                     <table class="table  table-receipt-summary ">
                         <tbody>
                         <tr>

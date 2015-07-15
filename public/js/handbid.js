@@ -526,7 +526,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
             },
 
 
-            loadInvoicesToContainer: function(){
+            loadInvoicesToContainer: function(scrolled){
 
                 var unpaidInvoicesCountContainer = $(".unpaidInvoicesCountContainer");
                 var invoicesContainer = $(".receipts-list-area");
@@ -546,6 +546,50 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                         unpaidInvoicesCountContainer.html(data.unpaid);
                         (data.unpaid) ? unpaidInvoicesCountContainer.show() : unpaidInvoicesCountContainer.hide() ;
                         invoicesContainer.html(data.invoices);
+
+                        if(!scrolled && data.unpaid > 0){
+                            var unpaidInvoices = $.map($(".receiptRow.preview"), function(val){
+                                var invoiceItem = $(val),
+                                    invoiceItemID = parseInt(invoiceItem.data("receipt-block-id")),
+                                    invoiceItemTotal = parseInt(invoiceItem.data("receipt-total")),
+                                    invoiceItemTitle = $(".invoice-title", invoiceItem).eq(0).html();
+                                return {
+                                    id: invoiceItemID,
+                                    total: invoiceItemTotal,
+                                    title: invoiceItemTitle
+                                };
+
+                            });
+                            $.map(unpaidInvoices, function(val){
+                                var message = "You have an unpaid invoice with a Balance of $"+val.total+" in "+val.title+".  Do you want to pay it?";
+                                new PNotify({
+                                    title: 'Unpaid Invoice',
+                                    type: 'info',
+                                    text: message,
+                                    icon: 'glyphicon glyphicon-off',
+                                    addclass: 'handbid-message-notice',
+                                    hide: false,
+                                    confirm: {
+                                        confirm: true,
+                                        buttons: [{
+                                            text: 'View Invoice',
+                                            addClass: 'view-invoices-button',
+                                            click: function (notice) {
+                                                handbid.scrollToInvoices(notice, val.id);
+                                                notice.remove();
+                                            }
+                                        }]
+                                    },
+                                    buttons: {
+                                        closer: true,
+                                        sticker: false
+                                    },
+                                    history: {
+                                        history: false
+                                    }
+                                });
+                            });
+                        }
 
                         return false;
                     }
@@ -612,14 +656,16 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
             },
 
 
-            scrollToInvoices: function(notice){
+            scrollToInvoices: function(notice, invoiceID){
+                if(invoiceID != undefined && $("rtg-"+invoiceID).is(":visible")){
+                    return false;
+                }
                 var profileLinkVisible = $('a[data-slider-nav-key="profile-user-info"]:visible');
                 profileLinkVisible.click();
                 $('a[data-slider-nav-key="see-my-receipt"]:visible').click();
                 $('html,body').animate({scrollTop: profileLinkVisible.offset().top},'normal');
-                notice.remove();
-
-                handbid.loadInvoicesToContainer();
+                handbid.loadInvoicesToContainer(true);
+                (notice != undefined) ? notice.remove() : "";
             },
 
 
