@@ -364,13 +364,22 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
 
             },
 
-
-
             clickOnFiltersToReorder: function(){
                 var firstCatLink = $('ul.by-category li.selected a')[0];
                 if(firstCatLink != undefined){
                     firstCatLink.click();
                 }
+            },
+
+            checkItemIsAvailableForPresale: function(){
+                var availableForPreSale = $("[data-item-check-available-item-id]").val(),
+                    auctionStatus = $("[data-item-check-status-auction-id]").val(),
+                    itemStatus = $("[data-item-check-status-item-id]").val(),
+                    biddingBlock = $("[data-item-bidding-id]"),
+                    noBiddingBlock = $("[data-item-nobidding-id]");
+                var itemCanNotBeShownInPreSale = ((auctionStatus == "preview" || auctionStatus == "presale") && (availableForPreSale != "1"));
+                (itemCanNotBeShownInPreSale) ? biddingBlock.hide(): biddingBlock.show();
+                (itemCanNotBeShownInPreSale) ? noBiddingBlock.show(): noBiddingBlock.hide();
             },
 
 
@@ -379,8 +388,9 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                 var listAuctions = $(".handbid-list-of-active-auctions").eq(0);
                 var listHiddenAuctions = $(".handbid-hidden-of-active-auctions").eq(0);
                 var auctionID = values.id;
+                var auctionStatus = values.status;
 
-                if(values.status != "open"){
+                if(auctionStatus != "open"){
                     $("[data-handbid-active-profile-auction="+auctionID+"]").remove();
 
                     if($("li", listAuctions).length == 0){
@@ -388,7 +398,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                         listAuctions.prepend("<p>"+noItemsText+"</p>");
                     }
 
-                    if(values.status == "closed"){
+                    if(auctionStatus == "closed"){
                         var hiddenAuctionIds = $("[data-hidden-active-auction="+auctionID+"]");
 
                         (hiddenAuctionIds.length) ? hiddenAuctionIds.remove() : "" ;
@@ -398,15 +408,16 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                 }
 
                 var itemsOfAuctionCanBeToggled = $("[data-handbid-item-auction='"+auctionID+"']:not(.simple-box.status-available)");
-                (values.status == "preview" || values.status == "presale") ? itemsOfAuctionCanBeToggled.addClass("not-available-in-presale") : itemsOfAuctionCanBeToggled.removeClass("not-available-in-presale") ;
+                (auctionStatus == "preview" || auctionStatus == "presale") ? itemsOfAuctionCanBeToggled.addClass("not-available-in-presale") : itemsOfAuctionCanBeToggled.removeClass("not-available-in-presale") ;
                 $(".filters .by-item-type li.selected a").eq(0).click();
 
                 var enableCreditCardSupport = (values.enableCreditCardSupport == "1"),
                     receiptsOfAuction = $("[data-receipt-of-auction='"+auctionID+"']");
-                console.log(enableCreditCardSupport);
-                console.log(receiptsOfAuction);
                 (enableCreditCardSupport)?receiptsOfAuction.removeClass("invoiceNoCCAllowed"):receiptsOfAuction.addClass("invoiceNoCCAllowed");
 
+
+                $("[data-item-check-status-auction-id='"+auctionID+"']").val(auctionStatus);
+                this.checkItemIsAvailableForPresale();
             },
 
 
@@ -447,7 +458,9 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
 
             processItemChange: function(values){
 
-                var itemID = values.id;
+                var itemID = values.id,
+                    itemStatus = values.status,
+                    availableForPreSale = values.availableForPreSale;
 
                 var parentElem = $("[data-handbid-item-box='"+itemID+"']").eq(0);
 
@@ -497,6 +510,10 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                 paramsBoxQuant.html("0");
 
                 this.processTicketChange(values);
+
+                $("[data-item-check-status-item-id='"+itemID+"']").val(itemStatus);
+                $("[data-item-check-available-item-id='"+itemID+"']").val(availableForPreSale);
+                this.checkItemIsAvailableForPresale();
 
             },
 
