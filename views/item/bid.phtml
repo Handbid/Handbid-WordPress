@@ -20,7 +20,21 @@ $needCreditCards = ($item->isTicket or $auction->requireCreditCard);
 $creditCardsRequired = ($needCreditCards) ? " data-handbid-credit-cards-need " : "";
 $creditCardsRequired .= (!count($profile->creditCards) and $needCreditCards) ? " data-handbid-credit-cards-required " : "";
 ?>
-<div data-handbid-bid data-handbid-item-key="<?php echo $item->key; ?>">
+<?php
+$availableForPreSale = ($item->availableForPreSale == "1");
+$itemCanNotBeShownInPresale = (in_array($auction->status, ["presale","preview"]) and !$availableForPreSale);
+?>
+<input type="hidden" data-item-check-status-auction-id="<?php echo $auction->id;?>" value="<?php echo $auction->status;?>">
+<input type="hidden" data-item-check-status-item-id="<?php echo $item->id;?>" value="<?php echo $item->status;?>">
+<input type="hidden" data-item-check-available-item-id="<?php echo $item->id;?>" value="<?php echo $item->availableForPreSale;?>">
+
+<div data-handbid-bid data-handbid-item-key="<?php echo $item->key; ?>" data-item-nobidding-id="<?php echo $item->id; ?>"
+     style="<?php echo ($itemCanNotBeShownInPresale)?"":" display:none; ";?>">
+    <div class="row"><h4 class="no-bidding-message"><?php echo ($isBiddable)?"Item is not open for bidding":"Item is not available to purchase";?></h4></div>
+</div>
+<div data-handbid-bid data-handbid-item-key="<?php echo $item->key; ?>"  data-item-bidding-id="<?php echo $item->id; ?>"
+     style="<?php echo ($itemCanNotBeShownInPresale)?" display:none; ":"";?>">
+
 
     <div class="row bid-controls">
 
@@ -51,7 +65,8 @@ $creditCardsRequired .= (!count($profile->creditCards) and $needCreditCards) ? "
 
     <div class="row">
 
-        <?php if ($isBiddable) { ?>
+        <?php if ($isBiddable) {
+        ?>
 
         <?php if(!$itemSold)  { ?>
 
@@ -84,7 +99,8 @@ $creditCardsRequired .= (!count($profile->creditCards) and $needCreditCards) ? "
 
         <?php } ?>
 
-        <?php } else { ?>
+        <?php }
+        else { ?>
             <div class="col-md-12 col-xs-12">
                 <a class="buy-now green-solid-button  loading-span-button"
                    href=""

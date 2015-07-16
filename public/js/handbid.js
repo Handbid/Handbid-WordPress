@@ -364,13 +364,22 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
 
             },
 
-
-
             clickOnFiltersToReorder: function(){
                 var firstCatLink = $('ul.by-category li.selected a')[0];
                 if(firstCatLink != undefined){
                     firstCatLink.click();
                 }
+            },
+
+            checkItemIsAvailableForPresale: function(){
+                var availableForPreSale = $("[data-item-check-available-item-id]").val(),
+                    auctionStatus = $("[data-item-check-status-auction-id]").val(),
+                    itemStatus = $("[data-item-check-status-item-id]").val(),
+                    biddingBlock = $("[data-item-bidding-id]"),
+                    noBiddingBlock = $("[data-item-nobidding-id]");
+                var itemCanNotBeShownInPreSale = ((auctionStatus == "preview" || auctionStatus == "presale") && (availableForPreSale != "1"));
+                (itemCanNotBeShownInPreSale) ? biddingBlock.hide(): biddingBlock.show();
+                (itemCanNotBeShownInPreSale) ? noBiddingBlock.show(): noBiddingBlock.hide();
             },
 
 
@@ -379,8 +388,9 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                 var listAuctions = $(".handbid-list-of-active-auctions").eq(0);
                 var listHiddenAuctions = $(".handbid-hidden-of-active-auctions").eq(0);
                 var auctionID = values.id;
+                var auctionStatus = values.status;
 
-                if(values.status != "open"){
+                if(auctionStatus != "open"){
                     $("[data-handbid-active-profile-auction="+auctionID+"]").remove();
 
                     if($("li", listAuctions).length == 0){
@@ -388,7 +398,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                         listAuctions.prepend("<p>"+noItemsText+"</p>");
                     }
 
-                    if(values.status == "closed"){
+                    if(auctionStatus == "closed"){
                         var hiddenAuctionIds = $("[data-hidden-active-auction="+auctionID+"]");
 
                         (hiddenAuctionIds.length) ? hiddenAuctionIds.remove() : "" ;
@@ -398,15 +408,16 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                 }
 
                 var itemsOfAuctionCanBeToggled = $("[data-handbid-item-auction='"+auctionID+"']:not(.simple-box.status-available)");
-                (values.status == "preview" || values.status == "presale") ? itemsOfAuctionCanBeToggled.addClass("not-available-in-presale") : itemsOfAuctionCanBeToggled.removeClass("not-available-in-presale") ;
+                (auctionStatus == "preview" || auctionStatus == "presale") ? itemsOfAuctionCanBeToggled.addClass("not-available-in-presale") : itemsOfAuctionCanBeToggled.removeClass("not-available-in-presale") ;
                 $(".filters .by-item-type li.selected a").eq(0).click();
 
                 var enableCreditCardSupport = (values.enableCreditCardSupport == "1"),
                     receiptsOfAuction = $("[data-receipt-of-auction='"+auctionID+"']");
-                console.log(enableCreditCardSupport);
-                console.log(receiptsOfAuction);
                 (enableCreditCardSupport)?receiptsOfAuction.removeClass("invoiceNoCCAllowed"):receiptsOfAuction.addClass("invoiceNoCCAllowed");
 
+
+                $("[data-item-check-status-auction-id='"+auctionID+"']").val(auctionStatus);
+                this.checkItemIsAvailableForPresale();
             },
 
 
@@ -447,7 +458,9 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
 
             processItemChange: function(values){
 
-                var itemID = values.id;
+                var itemID = values.id,
+                    itemStatus = values.status,
+                    availableForPreSale = values.availableForPreSale;
 
                 var parentElem = $("[data-handbid-item-box='"+itemID+"']").eq(0);
 
@@ -498,6 +511,10 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
 
                 this.processTicketChange(values);
 
+                $("[data-item-check-status-item-id='"+itemID+"']").val(itemStatus);
+                $("[data-item-check-available-item-id='"+itemID+"']").val(availableForPreSale);
+                this.checkItemIsAvailableForPresale();
+
             },
 
 
@@ -526,7 +543,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
             },
 
 
-            loadInvoicesToContainer: function(){
+            loadInvoicesToContainer: function(scrolled){
 
                 var unpaidInvoicesCountContainer = $(".unpaidInvoicesCountContainer");
                 var invoicesContainer = $(".receipts-list-area");
@@ -546,6 +563,50 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                         unpaidInvoicesCountContainer.html(data.unpaid);
                         (data.unpaid) ? unpaidInvoicesCountContainer.show() : unpaidInvoicesCountContainer.hide() ;
                         invoicesContainer.html(data.invoices);
+
+                        if(!scrolled && data.unpaid > 0){
+                            var unpaidInvoices = $.map($(".receiptRow.preview"), function(val){
+                                var invoiceItem = $(val),
+                                    invoiceItemID = parseInt(invoiceItem.data("receipt-block-id")),
+                                    invoiceItemTotal = parseInt(invoiceItem.data("receipt-total")),
+                                    invoiceItemTitle = $(".invoice-title", invoiceItem).eq(0).html();
+                                return {
+                                    id: invoiceItemID,
+                                    total: invoiceItemTotal,
+                                    title: invoiceItemTitle
+                                };
+
+                            });
+                            $.map(unpaidInvoices, function(val){
+                                var message = "You have an unpaid invoice with a Balance of $"+val.total+" in "+val.title+".  Do you want to pay it?";
+                                new PNotify({
+                                    title: 'Unpaid Invoice',
+                                    type: 'info',
+                                    text: message,
+                                    icon: 'glyphicon glyphicon-off',
+                                    addclass: 'handbid-message-notice',
+                                    hide: false,
+                                    confirm: {
+                                        confirm: true,
+                                        buttons: [{
+                                            text: 'View Invoice',
+                                            addClass: 'view-invoices-button',
+                                            click: function (notice) {
+                                                handbid.scrollToInvoices(notice, val.id);
+                                                notice.remove();
+                                            }
+                                        }]
+                                    },
+                                    buttons: {
+                                        closer: true,
+                                        sticker: false
+                                    },
+                                    history: {
+                                        history: false
+                                    }
+                                });
+                            });
+                        }
 
                         return false;
                     }
@@ -612,14 +673,16 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
             },
 
 
-            scrollToInvoices: function(){
+            scrollToInvoices: function(notice, invoiceID){
+                if(invoiceID != undefined && $("rtg-"+invoiceID).is(":visible")){
+                    return false;
+                }
                 var profileLinkVisible = $('a[data-slider-nav-key="profile-user-info"]:visible');
                 profileLinkVisible.click();
                 $('a[data-slider-nav-key="see-my-receipt"]:visible').click();
                 $('html,body').animate({scrollTop: profileLinkVisible.offset().top},'normal');
-                notice.remove();
-
-                handbid.loadInvoicesToContainer();
+                handbid.loadInvoicesToContainer(true);
+                (notice != undefined) ? notice.remove() : "";
             },
 
 
@@ -638,7 +701,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                         text: 'View Invoices',
                         addClass: 'view-invoices-button',
                         click: function (notice) {
-                            handbid.scrollToInvoices();
+                            handbid.scrollToInvoices(notice);
                             notice.remove();
                         }
                     });
@@ -673,14 +736,16 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
 
             notifyUserAboutReceipt: function(values){
 
-                var auctionName = values.name;
-                var noticeText = values.name;
-                var buttons = [];
+                var invoiceID = values.id;
+                if($("[data-receipt-block-id='"+invoiceID+"']").length == 0) {
+                    var auctionName = values.name;
+                    var noticeText = values.name;
+                    var buttons = [];
                     buttons.push({
                         text: 'View Invoice',
                         addClass: 'view-invoices-button',
                         click: function (notice) {
-                            handbid.scrollToInvoices();
+                            handbid.scrollToInvoices(notice);
                             notice.remove();
                         }
                     });
@@ -689,22 +754,23 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                         buttons: buttons
                     };
                     hide = false;
-                new PNotify({
-                    title: 'Auction Invoices',
-                    type: 'info',
-                    text: noticeText,
-                    icon: '',
-                    addclass: 'handbid-message-notice',
-                    hide: false,
-                    confirm: confirm,
-                    buttons: {
-                        closer: true,
-                        sticker: false
-                    },
-                    history: {
-                        history: false
-                    }
-                });
+                    new PNotify({
+                        title: 'Auction Invoices',
+                        type: 'info',
+                        text: noticeText,
+                        icon: '',
+                        addclass: 'handbid-message-notice',
+                        hide: false,
+                        confirm: confirm,
+                        buttons: {
+                            closer: true,
+                            sticker: false
+                        },
+                        history: {
+                            history: false
+                        }
+                    });
+                }
             },
 
 
@@ -987,7 +1053,9 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                     var isMaxBidButton = $(this).hasClass("max-bid-up");
                     var isDirectPurchaseButton = $(this).hasClass("isDirectPurchase");
 
-                    amountContainer = (isMaxBidButton) ? $('[data-handbid-maxbid-amount]') : $('[data-handbid-onlybid-amount]');
+                    if(!isDirectPurchaseButton) {
+                        amountContainer = (isMaxBidButton) ? $('[data-handbid-maxbid-amount]') : $('[data-handbid-onlybid-amount]');
+                    }
 
                     var value = parseInt(amountContainer[0].innerHTML) + increment;
 
@@ -1537,8 +1605,6 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                             data = JSON.parse(data);
                             console.log(data);
 
-                            handbidMain.notice("Payment success", "Info", "info");
-
                             if(data.result.paid){
                                 paidControls.slideDown();
                                 unpaidControls.remove();
@@ -1549,6 +1615,9 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                                 var unpaidInvoices = $(".receipts-list-area li.preview").length;
                                 (unpaidInvoices)?unpaidInvoicesCountContainer.show():unpaidInvoicesCountContainer.hide();
                                 unpaidInvoicesCountContainer.html(unpaidInvoices);
+                            }
+                            else{
+                                handbidMain.notice(data.result.description, "Payment Error", "error");
                             }
 
 
@@ -2151,6 +2220,31 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                 });
             },
 
+            lazyShowMoreMessages: function(button){
+                var currentChunk = parseInt(button.data("current-chunk")) + 1,
+                    chunksCount = parseInt(button.data("chunks-count")),
+                    messagesOfCurrentChunk = $(".messages-part-"+currentChunk);
+                messagesOfCurrentChunk.slideDown("normal");
+                $(".load-less-messages").show();
+                button.data("current-chunk", currentChunk);
+                if(currentChunk >= chunksCount){
+                    button.hide();
+                }
+
+            },
+
+            lazyShowLessMessages : function(button){
+                var allMessages = $(".message-row"),
+                    messagesOfCurrentChunk = $(".messages-part-0");
+                allMessages.hide();
+                messagesOfCurrentChunk.slideDown("normal");
+                var showButton = $(".load-more-messages");
+                showButton.data("current-chunk", 0);
+                showButton.show();
+                button.hide();
+
+            },
+
 
             setCircleTimer: function(time){
 
@@ -2485,7 +2579,19 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
             var invoiceID = $(this).data("toggle-invoice-more-link");
             $(this).toggleClass("opened-invoice");
             $("[data-receipt-block-id="+invoiceID+"] .invoice-more-details-container").slideToggle("normal");
-        })
+        });
+
+        $(".load-more-messages").live("click", function(e){
+            e.preventDefault();
+            var button = $(this);
+            handbid.lazyShowMoreMessages(button);
+        });
+
+        $(".load-less-messages").live("click", function(e){
+            e.preventDefault();
+            var button = $(this);
+            handbid.lazyShowLessMessages(button);
+        });
 
     });
 

@@ -260,7 +260,12 @@
 }
 
 .not-available-in-presale{
-    display: none !important;
+    /*display: none !important;*/
+}
+.no-bidding-message{
+    color: #4cb0ce;
+    font-size: 29px;
+    margin: 50px 0;
 }
 
 [data-handbid-bid-button]{

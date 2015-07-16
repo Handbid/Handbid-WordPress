@@ -42,7 +42,8 @@ $boxStatus = ($isWinning) ? "winning" : (($isLosing) ? "losing" : $item->status)
 
 $isHidden = ($item->isHidden == "1");
 
-$itemCanNotBeShownInPresale = (in_array($auction->status, ["presale","preview"]) and $item->status != "available");
+$availableForPreSale = ($item->availableForPreSale == "1");
+$itemCanNotBeShownInPresale = (in_array($auction->status, ["presale","preview"]) and !$availableForPreSale);
 ?>
 
 <div onclick="if(event.metaKey) { return; } window.location.href='<?php echo $url; ?>'"
