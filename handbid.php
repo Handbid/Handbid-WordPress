@@ -186,6 +186,7 @@ class Handbid
             'handbid-less-buttons-css'   => 'public/less/buttons.less',
             'handbid-less-modal-css'     => 'public/less/modal.less',
             'handbid-less-css'    => 'public/less/handbid.less',
+            'handbid-less-responsive-css'    => 'public/less/responsive-fix.less',
         );
 
         foreach ($styles as $key => $sc) {
