@@ -446,9 +446,9 @@ body.site-down {
         margin-top: 15px;
     }
 }
-@media (max-width: 600px) {
-    .btn {
-        display: block;
-        clear: both;
-    }
-}
+/*@media (max-width: 600px) {*/
+    /*.btn {*/
+        /*display: block;*/
+        /*clear: both;*/
+    /*}*/
+/*}*/

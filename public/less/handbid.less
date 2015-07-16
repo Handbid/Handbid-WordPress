@@ -166,7 +166,7 @@ body.handbid-logged-in {
             width: 240px;
             color: @gray;
             border: 1px solid @lightGray;
-            border-right: 0;
+//            border-right: 0;
             cursor: pointer;
             -webkit-transition: all 0.2s ease-in-out;
             -moz-transition: all 0.2s ease-in-out;
@@ -1520,6 +1520,7 @@ select {
 }
 
 
+
 #credit-card-required-banner {
 
     position: fixed;
@@ -2197,7 +2198,6 @@ section.container.what-clients-say-nav {
 
     .quick-links {
         padding-left:0;
-        margin-lef:0px;
         a {
             padding: 10px 0;
             color: @pink;
@@ -2318,7 +2318,21 @@ section.container.what-clients-say-nav {
     }
 
 }
-
+.simple-list.handbid-list-of-bids-winning {
+    li {
+        overflow: hidden;
+        padding: 15px;
+        h4.bid-name {
+            display: inline-block;
+            a {
+                color: #6e828a;
+            }
+        }
+        .bid-amount {
+            float: right;
+        }
+    }
+}
 .simple-list.bid-history {
     margin-bottom: 15px;
     h4 {
@@ -3750,7 +3764,7 @@ div.handbid-modal[data-handbid-modal-key="credit-card-form"] {
 
         .controls {
 
-            margin-top:70px;
+            margin-top: 100px;
 
             .handbid-share-bar {
                 width:100%;
@@ -3887,12 +3901,14 @@ div.handbid-modal[data-handbid-modal-key="credit-card-form"] {
             padding-right:0;
             margin-left:0;
             margin-right:0;
+            li {
+                vertical-align: middle;
+                a {
+                    width: 125px;
+                    height: 76px;
+                }
+            }
         }
-
-        .slider-nav li a {
-            width: 125px;
-        }
-
 
         #large-map {
             width: 100%;
@@ -3988,6 +4004,9 @@ div.handbid-modal[data-handbid-modal-key="credit-card-form"] {
     [data-handbid-item-key] [data-slider-nav-id] {
         li {
             display:block;
+            a {
+                height: auto;
+            }
         }
     }
 }
@@ -4013,6 +4032,18 @@ div.handbid-modal[data-handbid-modal-key="credit-card-form"] {
         height: 325px;
     }
 
+    .auction-details, .org-details, .item-details {
+
+        .slider-nav {
+            li {
+                display: block;
+                a {
+                    width: 100%;
+                    height: auto;
+                }
+            }
+        }
+    }
 
 }
 
@@ -4028,9 +4059,9 @@ div.handbid-modal[data-handbid-modal-key="credit-card-form"] {
             margin-right:0;
         }
 
-        .slider-nav li a {
-            width: 107px;
-        }
+//        .slider-nav li a {
+//            width: 107px;
+//        }
 
 
         #large-map {

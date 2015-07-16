@@ -161,15 +161,13 @@ if (!is_null($this->get('profile'))) {
                             if(count($winning) > 0 ) {
                                 forEach($winning as $bid) {
                                     ?>
-                                    <li class="row"
+                                    <li
                                         data-dashboard-price="<?php echo (int) $bid->amount; ?>"
                                         data-winning-item-id="<?php echo $bid->item->id; ?>">
-                                        <div class="col-md-10 col-xs-10">
-                                            <a href="/auctions/<?php echo $auction->key; ?>/item/<?php echo $bid->item->key; ?>"><h4><?php echo $bid->item->name; ?></h4></a>
-                                        </div>
-                                        <div class="col-md-2 col-xs-2">
-                                            <span class="bid-amount winning">$<span><?php echo (int) $bid->amount; ?></span></span>
-                                        </div>
+                                        <h4 class="bid-name">
+                                            <a href="/auctions/<?php echo $auction->key; ?>/item/<?php echo $bid->item->key; ?>"><?php echo $bid->item->name; ?></a>
+                                        </h4>
+                                        <span class="bid-amount winning">$<?php echo (int) $bid->amount; ?></span>
                                     </li>
                                 <?php
                                 }

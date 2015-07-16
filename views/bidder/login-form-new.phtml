@@ -514,7 +514,7 @@ $countries = $this->get("countries");
                         <div class="form-group col-md-12">
                             <h5>Add me as a bidder to this Auction</h5>
 
-                            <div class="loadAuctionsToAutoCompleteRegisterTextContainer col-md-12" style="display: none">
+                            <div class="loadAuctionsToAutoCompleteRegisterTextContainer col-xs-12" style="display: none">
                                 <div class=" col-md-8">
                                     <h2 class="loadAuctionsToAutoCompleteRegisterText"></h2>
                                 </div>
@@ -590,25 +590,25 @@ $countries = $this->get("countries");
                 <h4>Your Handbid Account is SETUP<br></h4>
 
                 <div class="row errorsRow" style="display: none;">
-                    <div class="col-md-12 errorsContainer">
+                    <div class="col-xs-12 errorsContainer">
 
                     </div>
                 </div>
 
                 <div class="row">
-                    <div class="form-group col-md-12">
+                    <div class="form-group col-xs-12">
                         <h4>please confirm your information below</h4>
                     </div>
                 </div>
 
                 <div class="row">
-                    <div class="form-group col-md-12">
+                    <div class="form-group col-xs-12">
                         <input id="confirm-firstname" placeholder="First Name" type="text" name="firstname" value=""
                                class="col-xs-12  cleanable-input"
                                required
                                data-required-message="First Name field is required">
                     </div>
-                    <div class="form-group col-md-12">
+                    <div class="form-group col-xs-12">
                         <input id="confirm-lastname" placeholder="Last Name" type="text" name="lastname" value=""
                                class="col-xs-12 cleanable-input"
                                required
@@ -616,16 +616,16 @@ $countries = $this->get("countries");
                     </div>
                 </div>
                 <div class="row">
-                    <div class="form-group col-md-12">
+                    <div class="form-group col-xs-12">
                         <input id="confirm-email" placeholder="eMail" type="text" name="email" value=""
-                               class="col-md-12 cleanable-input is-email"
+                               class="col-xs-12 cleanable-input is-email"
                                data-not-email-message="Please, provide valid email address" >
                     </div>
                 </div>
                 <div class="row">
-                    <div class="form-group col-md-12">
+                    <div class="form-group col-xs-12">
                         <select id="confirm-phone-code" name="phone-code"
-                                class="col-md-4">
+                                class="col-xs-4">
                             <?php
                             foreach($countries as $country){
                                 echo "<option value='" . $country["code"] . "' " . selected("US", $country["code"], false) . ">" . $country["name"] . "</option>";
@@ -634,8 +634,8 @@ $countries = $this->get("countries");
                         </select>
                         <input id="confirm-phone-number" placeholder="Cell Phone" type="text" name="phone-number"
                                value=""
-                               class="col-md-4 has-question-icon has-popover cleanable-input">
-                        <select class="col-md-4" id="confirm-phone-type">
+                               class="col-xs-4 has-question-icon has-popover cleanable-input">
+                        <select class="col-xs-4" id="confirm-phone-type">
                             <option name="phone-type" value="iphone" selected>iPhone</option>
                             <option name="phone-type" value="android">Android</option>
                             <option name="phone-type" value="other">Other</option>
@@ -644,11 +644,11 @@ $countries = $this->get("countries");
                 </div>
 
                 <div class="row">
-                    <div class="form-group col-md-12 center-aligned-text">
+                    <div class="form-group col-xs-12 center-aligned-text">
                         <h5>Add me as a bidder to this Auction</h5>
 <!--                        <input id="confirm-add-to-auction" placeholder="" type="text" name="add-to-auction" value=""-->
 <!--                               class="col-md-12 cleanable-input">-->
-                        <div class="loadAuctionsToAutoCompleteConfirmTextContainer col-md-12" style="display: none">
+                        <div class="loadAuctionsToAutoCompleteConfirmTextContainer col-xs-12" style="display: none">
                             <div class=" col-md-8">
                                 <h2 class="loadAuctionsToAutoCompleteConfirmText"></h2>
                             </div>
