@@ -494,6 +494,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                 }
 
 
+                var needToReSort = false;
                 var paramsBoxes = $("[data-handbid-params-box='"+itemID+"']"),
                     paramsBoxQuant = $("[data-is-hidden-item] [data-handbid-ticket-quantity]"),
                     isHidden = (values.isHidden == "1"),
@@ -502,6 +503,8 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                     noBids = (!isDirectPurchaseItem && values.bidCount === 0);
                 $.map(paramsBoxes, function(val){
                     var paramsBox = $(val);
+                    var isBoxHidden = (paramsBox.eq(0).attr("data-is-hidden-item") != undefined);
+                    needToReSort = ((isHidden && !isBoxHidden) || (!isHidden && isBoxHidden));
                     (isHidden) ? paramsBox.attr("data-is-hidden-item", "1") : paramsBox.removeAttr("data-is-hidden-item");
                     (isDirectPurchaseItem) ? paramsBox.attr("data-for-sale", "1") : paramsBox.removeAttr("data-for-sale");
                     (disableMobileBidding) ? paramsBox.attr("data-live", "1") : paramsBox.removeAttr("data-live");
@@ -515,6 +518,9 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                 $("[data-item-check-available-item-id='"+itemID+"']").val(availableForPreSale);
                 this.checkItemIsAvailableForPresale();
 
+                if(needToReSort){
+                    this.clickOnFiltersToReorder();
+                }
             },
 
 
@@ -760,7 +766,8 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                         text: noticeText,
                         icon: '',
                         addclass: 'handbid-message-notice',
-                        hide: false,
+                        hide: true,
+                        delay: 10000,
                         confirm: confirm,
                         buttons: {
                             closer: true,
@@ -2438,6 +2445,17 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                     });
             },
 
+            redirectFromResetedAuctions: function(data){
+                window.location = "/auctions/?auction-reset"
+            },
+
+
+            redirectFromResetedAuctionsCheck: function(){
+                if($("[data-auction-reset-sign]").length > 0){
+                    this.notice("<b>This auction has been reset, please select another one</b>", "Auction Reset", "info");
+                }
+            },
+
             checkSocketConnection: function (handbid) {
                 if(!connectedToSocket){
                     if(connectMessage == undefined){
@@ -2489,6 +2507,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
         handbid.makePaymentForReceipt();
         handbid.detectIfUserWantToBid();
         handbid.messageToAuctionManager();
+        handbid.redirectFromResetedAuctionsCheck();
         setTimeout(function () {
             handbid.checkSocketConnection(handbid)
         }, 10000);

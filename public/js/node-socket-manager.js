@@ -59,6 +59,12 @@ console.log("success connect");
                 $.eventAuctionTimer(data);
             });
 
+            this.on('event.reset', function (data) {
+                console.log(" ===== event.reset ====="+ $.getCurrentDateAndTime());
+                console.log(data);
+                $.eventAuctionReset(data);
+            });
+
         } else {
             console.log(" ===== ERROR ====="+ $.getCurrentDateAndTime());
             this.log(this.getError());
@@ -184,6 +190,17 @@ console.log("success connect");
         //handbidMain.showTimerRemainingNotice(data.values.timerRemaining);
         handbidMain.changeAuctionTimer(data.values.timerRemaining, true);
         //handbidMain.notice(message);
+    };
+
+    /**
+     * Auction Reset Event
+     * Notifies Client of Auction Reset
+     * Used when an auction has been extended
+     * @param Object data
+     * @returns boolean
+     */
+    $.eventAuctionReset = function (data) {
+        handbidMain.redirectFromResetedAuctions(data);
     };
 
     /*

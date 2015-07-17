@@ -326,7 +326,9 @@ class Handbid
         }
 
         // Set Values
-        $hostName = 'manager.hand.bid';
+        // $hostName = 'manager.hand.bid';
+        $endpoint = parse_url(get_option('handbidRestEndpoint'));
+        $hostName = $endpoint["host"];
         $auctionGuid = $auction->auctionGuid;
         $userGuid = $bidder->usersGuid;
 
@@ -357,6 +359,10 @@ class Handbid
         echo '<script src="'.$socketIoUrl.'"></script>';
         echo '<script type="text/javascript" src="' . plugins_url("handbid/public/js/yii-node-socket.js") .  '"></script>';
         echo '<script type="text/javascript" src="' . plugins_url("handbid/public/js/node-socket-manager.js") .  '"></script>';
+
+        if(isset($_GET["auction-reset"])){
+            echo '<input type="hidden" data-auction-reset-sign>';
+        }
     }
 
     function logout()
