@@ -2123,7 +2123,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                                                 icon: icon,
                                                 hide: true,
                                                 type: type,
-                                                delay: 3000,
+                                                delay: 1000,
                                                 confirm: {
                                                     confirm: false
                                                 },
