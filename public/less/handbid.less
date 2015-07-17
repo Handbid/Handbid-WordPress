@@ -751,6 +751,7 @@ body.handbid-logged-in {
         position: relative;
         height: 280px;
         background-size: cover;
+        background-position: center;
         overflow: visible;
     }
 
@@ -2324,6 +2325,7 @@ section.container.what-clients-say-nav {
         padding: 15px;
         h4.bid-name {
             display: inline-block;
+            max-width: 100%;
             a {
                 color: #6e828a;
             }
@@ -3887,7 +3889,6 @@ div.handbid-modal[data-handbid-modal-key="credit-card-form"] {
             float: none;
             margin: 0 auto;
         }
-
     }
 
     .auction-details, .org-details, .item-details {
@@ -3916,8 +3917,19 @@ div.handbid-modal[data-handbid-modal-key="credit-card-form"] {
         #small-map {
             display: none;
         }
-        
+    }
 
+    .auction-details {
+        .filter-wrapper {
+            display: none;
+        }
+
+        .item-list.isotope {
+
+            .simple-box {
+                width: 99%;
+            }
+        }
     }
 
 }
@@ -3927,7 +3939,6 @@ div.handbid-modal[data-handbid-modal-key="credit-card-form"] {
     .global-header {
 
         .menu {
-
             float: none;
             text-align: center;
 
@@ -3944,7 +3955,6 @@ div.handbid-modal[data-handbid-modal-key="credit-card-form"] {
         }
 
         .sort-bar {
-
             border:none;
 
             .sort-label, .select-wrapper {
@@ -3974,19 +3984,6 @@ div.handbid-modal[data-handbid-modal-key="credit-card-form"] {
             }
 
         }
-
-        .filter-wrapper {
-            display: none;
-        }
-
-        .item-list.isotope {
-
-            .simple-box {
-                width: 99%;
-            }
-
-        }
-
     }
 }
 
