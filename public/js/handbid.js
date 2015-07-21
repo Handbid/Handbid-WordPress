@@ -592,6 +592,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                                     icon: 'glyphicon glyphicon-off',
                                     addclass: 'handbid-message-notice',
                                     hide: false,
+                                    mouse_reset: false,
                                     confirm: {
                                         confirm: true,
                                         buttons: [{
@@ -727,6 +728,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                     icon: 'glyphicon glyphicon-off',
                     addclass: 'handbid-message-notice',
                     hide: hide,
+                    mouse_reset: false,
                     confirm: confirm,
                     buttons: {
                         closer: true,
@@ -768,6 +770,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                         addclass: 'handbid-message-notice',
                         hide: true,
                         delay: 10000,
+                        mouse_reset: false,
                         confirm: confirm,
                         buttons: {
                             closer: true,
@@ -934,6 +937,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                         icon: 'glyphicon glyphicon-envelope',
                         addclass: 'handbid-message-notice',
                         hide: false,
+                        mouse_reset: false,
                         confirm: {
                             prompt: true,
                             prompt_multi_line: true,
@@ -2012,6 +2016,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                     text: msg,
                     type: type,
                     hide: hide,
+                    mouse_reset: false,
                     delay: 5000,
                     addclass: 'handbid-message-notice',
                     buttons: {
@@ -2060,6 +2065,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                         type: 'info',
                         addclass: 'handbid-message-notice',
                         hide: false,
+                        mouse_reset: false,
                         confirm: {
                             confirm: true,
                             buttons: [{
@@ -2130,7 +2136,8 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                                                 icon: icon,
                                                 hide: true,
                                                 type: type,
-                                                delay: 1000,
+                                                delay: 3000,
+                                                mouse_reset: false,
                                                 confirm: {
                                                     confirm: false
                                                 },
@@ -2205,6 +2212,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                     icon: 'glyphicon glyphicon-exclamation-sign',
                     addclass: 'handbid-message-notice',
                     hide: false,
+                    mouse_reset: false,
                     confirm: {
                         confirm: true,
                         buttons: [{
@@ -2392,6 +2400,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                             width: "100%",
                             stack: stack_bar_top,
                             hide: false,
+                            mouse_reset: false,
                             buttons: {
                                 closer: false,
                                 sticker: false
@@ -2476,6 +2485,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                             width: "100%",
                             stack: stack_bar_top,
                             hide: false,
+                            mouse_reset: false,
                             buttons: {
                                 closer: false,
                                 sticker: false
@@ -2554,6 +2564,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                 type: "info",
                 addclass: 'handbid-message-notice',
                 hide: false,
+                mouse_reset: false,
                 confirm: {
                     confirm: true
                 },

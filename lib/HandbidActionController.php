@@ -147,7 +147,8 @@ class HandbidActionController
         }
 
         $postActions = [
-            "handbid_post_update_bidder"
+            "handbid_post_update_bidder",
+            "autologin",
         ];
         foreach($postActions as $postAction){
             add_action("admin_post_".$postAction, [$this, $postAction."_callback"]);
@@ -836,6 +837,16 @@ class HandbidActionController
             wp_redirect($_POST["redirect"]);
         }
 
+    }
+
+    //TODO: autologin
+    function autologin_callback(){
+//        $this->handbid->store( 'Bidder' )->setCookie($_REQUEST["id"]);
+        $uuid = $_REQUEST["uuid"];
+        $auid = $_REQUEST["auid"];
+//        $bidder = $this->handbid->store( 'Bidder' )->
+//        $auctionSlug = "";
+//        wp_redirect("/auctions/".$auctionSlug);
     }
 
 }
