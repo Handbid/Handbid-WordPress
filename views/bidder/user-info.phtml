@@ -31,6 +31,9 @@ if(count($myInvoices)){
     <?php
     $image = $profile->imageUrl;
     if(trim($image)){
+    if(strpos($image, "ucarecdn") !== false){
+        $image = str_replace("manager.hand.bid", "", $image);
+    }
     if(strpos($image, "http") === false){
         $image = "http://".$image;
     }

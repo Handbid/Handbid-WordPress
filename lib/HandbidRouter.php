@@ -30,6 +30,21 @@ class HandbidRouter
     {
         $this->rewriteRules();
 //        $this->checkPageState();
+
+        add_action(
+            'template_redirect',
+            function() {
+                if (strpos($_SERVER["REQUEST_URI"], "autologin") !== false) {
+                    wp_safe_redirect(add_query_arg(array(
+                        "action" => "autologin",
+                        "id" => $_REQUEST["id"],
+                        "auid" => $_REQUEST["auid"],
+                        "uuid" => $_REQUEST["uuid"],
+                    ), admin_url("admin-post.php")));
+                    exit;
+                }
+            }
+        );
     }
 
     function rewriteRules()
@@ -54,6 +69,10 @@ class HandbidRouter
 
         add_rewrite_rule('organizations/([^/]+)/?', 'index.php?pagename=organization&organization=$matches[1]', 'top');
         add_rewrite_rule('organization/([^/]+)/?', 'index.php?pagename=organization&organization=$matches[1]', 'top');
+
+        add_rewrite_rule('autologin/([^/]+)/?', 'index.php?action=autologin&organization=$matches[1]', 'top');
+
+//        add_rewrite_rule('autologin/([^/]+)/?', 'wp-admin/admin-post.php?action=autologin&matches=$matches[1]', 'top');
 
     }
 

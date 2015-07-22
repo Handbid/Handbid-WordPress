@@ -276,7 +276,7 @@ class HandbidActionController
                 $result["values"] = $values;
                 $result["profile"] = $profile;
                 if (!$result["success"]) {
-                    $result["error"] = str_replace("/auth/", "", $profile->data->status);
+                    $result["error"] = str_replace("/auth/", "", $profile->data->error->message);
                     $result["error"] = trim(strpos($result["error"], "use login") === false) ? $result["error"] : $result["error"] . '<a class="btn btn-info signup login-popup-link" data-target-tab="login-form">Sign In</a>';
                     $result["error"] = trim($result["error"]) ? $result["error"] : $baseError;
                 }
@@ -841,12 +841,23 @@ class HandbidActionController
 
     //TODO: autologin
     function autologin_callback(){
-//        $this->handbid->store( 'Bidder' )->setCookie($_REQUEST["id"]);
+         $this->handbid->store( 'Bidder' )->setCookie($_REQUEST["id"]);
         $uuid = $_REQUEST["uuid"];
         $auid = $_REQUEST["auid"];
-//        $bidder = $this->handbid->store( 'Bidder' )->
-//        $auctionSlug = "";
-//        wp_redirect("/auctions/".$auctionSlug);
+        $auctionSlug = "";
+        try {
+            $auctions = $this->handbid->store('Auction')->all($page = 0, $pageSize = 255, null, null, []);
+            if(count($auctions)) {
+                foreach($auctions as $auction) {
+                    if($auction->auctionGuid == $auid)
+                        $auctionSlug = $auction->key;
+                }
+            }
+        }
+        catch(Exception $e){
+
+        }
+        wp_redirect("/auctions/".$auctionSlug);
     }
 
 }
