@@ -79,7 +79,6 @@ class HandbidShortCodeController {
 			'handbid_bidder_credit_cards'   => 'myCreditCards',
 			'handbid_bidder_receipt'        => 'bidderReceipt',
 			'handbid_bidder_login_form'     => 'loginRegisterForm',
-			'handbid_autologin'             => 'autologinCallback',
 		];
 
 		forEach ( $shortCodes as $shortCode => $callback ) {
@@ -1311,12 +1310,6 @@ class HandbidShortCodeController {
             add_action("wp_ajax_".$action, [$this, $handler]);
             add_action("wp_ajax_nopriv_".$action, [$this, $handler]);
         }
-
-    }
-
-    public function autologinCallback(){
-
-        wp_redirect("/wp-admin/admin-post.php?action=autologin&id=4de00128ba3a209925000014&uuid=55DC400C-1598-4FBB-BBC0-D279F68AEA5D&auid=CE7E77F1-C85C-45AA-8736-E7A98FBB4DA1");
 
     }
 

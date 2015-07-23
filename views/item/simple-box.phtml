@@ -44,6 +44,8 @@ $isHidden = ($item->isHidden == "1");
 
 $availableForPreSale = ($item->availableForPreSale == "1");
 $itemCanNotBeShownInPresale = (in_array($auction->status, ["presale","preview"]) and !$availableForPreSale);
+
+$itemValueHidden = (isset($item->showValue) and ($item->showValue != 1));
 ?>
 
 <div onclick="if(event.metaKey) { return; } window.location.href='<?php echo $url; ?>'"
@@ -62,9 +64,9 @@ $itemCanNotBeShownInPresale = (in_array($auction->status, ["presale","preview"])
      data-tags="|<?php echo implode('|', array_map(function ($term) {
          return esc_html(sanitize_key($term));
      }, array($item->categoryName))); ?>|">
-
+<?php echo "<pre style='display: none;'>".print_r($item,true)."</pre>"; ?>
     <div class="header">
-        <div class="col-md-4 col-xs-4 price">$<span
+        <div class="col-md-4 col-xs-4 price itemValueBox<?php echo $item->id;?> <?php echo ($itemValueHidden)?" itemValueBoxHidden ":"";?>">$<span
                 class="currentItemPrice" data-handbid-item-attribute="currentPrice"><?php echo $item->currentPrice; ?></span></div>
         <?php if (trim($item->itemCode)) { ?>
             <div class="col-md-8 col-xs-8 code">#<span

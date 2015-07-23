@@ -483,3 +483,6 @@
 .invoiceNoCCAllowed .showIfNoCCAllowed{
     display: block !important;
 }
+.itemValueBoxHidden{
+    visibility: hidden !important;
+}

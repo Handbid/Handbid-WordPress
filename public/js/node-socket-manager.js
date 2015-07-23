@@ -366,10 +366,7 @@ console.log("success connect");
      * @returns {Boolean}
      */
     $.effectNodeBidUpdate = function (data) {
-        var winnerName = (data.values.winnerName != undefined) ? data.values.winnerName : data.values.bidderName ;
-        var message = data.values.item.name + ' <br>New Winner <b>' + winnerName + '</b> <br>Amount $<b>' + data.values.amount + '</b>';
-        //handbidMain.notice(message, "New Item Winner");
-        handbidMain.addItemBidsHistory(data.values.item.id, data.values.id, winnerName, data.values.amount);
+        handbidMain.addItemBidsHistory(data.values.item.id, data.values.id, data.values, data.values.amount);
         handbidMain.checkIfBidsExistsAndChange(data.values, data.type);
 
         return true;

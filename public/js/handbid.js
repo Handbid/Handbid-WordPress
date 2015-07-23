@@ -9,7 +9,7 @@
 
 
 
-var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circleTimer;
+var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circleTimer, auctionInvoices;
 (function ($) {
 
     var restEndpoint = $("#apiEndpointsAddress").val(),
@@ -460,6 +460,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
 
                 var itemID = values.id,
                     itemStatus = values.status,
+                    showValue = values.showValue,
                     availableForPreSale = values.availableForPreSale;
 
                 var parentElem = $("[data-handbid-item-box='"+itemID+"']").eq(0);
@@ -511,6 +512,10 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                     (noBids) ? paramsBox.attr("data-no-bids", "1") : paramsBox.removeAttr("data-no-bids");
                 });
                 paramsBoxQuant.html("0");
+
+                var itemValueBoxes = $(".itemValueBox"+itemID),
+                    itemValueHidden = (showValue != "1" && showValue != 1);
+                itemValueHidden ? itemValueBoxes.addClass("itemValueBoxHidden") : itemValueBoxes.removeClass("itemValueBoxHidden") ;
 
                 this.processTicketChange(values);
 
@@ -762,7 +767,8 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                         buttons: buttons
                     };
                     hide = false;
-                    new PNotify({
+
+                    var params = {
                         title: 'Auction Invoices',
                         type: 'info',
                         text: noticeText,
@@ -779,7 +785,16 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                         history: {
                             history: false
                         }
-                    });
+                    };
+                    if(auctionInvoices != undefined && auctionInvoices.animating == "out"){
+                        auctionInvoices = undefined;
+                    }
+                    if(auctionInvoices != undefined){
+                        auctionInvoices.update(params);
+                    }
+                    else{
+                        auctionInvoices = new PNotify(params);
+                    }
                 }
             },
 

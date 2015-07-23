@@ -52,7 +52,8 @@ if(!$item->hasInventory) {
 }
 
 $hasManyImages = (count($item->images) > 1);
-
+$itemValueHidden = (isset($item->showValue) and ($item->showValue != 1));
+//echo "<pre style='display: none;'>".print_r($item,true)."</pre>";
 ?>
 
 <div class="item-details item-<?php echo $item->status; ?>" data-handbid-item-details-block="<?php echo $item->id; ?>" data-handbid-item-key="<?php echo $item->key; ?>" data-handbid-auction-guid="<?php echo $auction->auctionGuid; ?>">
