@@ -1680,7 +1680,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
 
                         //loginModal.css('display', 'block');
                         //underlay.css('display', 'block');
-                        
+
                         window.location = "/log-in/";
                     });
 
