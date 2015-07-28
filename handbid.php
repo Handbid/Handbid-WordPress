@@ -94,6 +94,7 @@ class Handbid
         add_action('wp_enqueue_scripts', [$this, 'initScripts']);
         add_action('wp_head', [$this, 'addAjaxUrl']);
         add_action( 'template_redirect', [$this, 'redirectIfSingleOrganization'] );
+	    add_action( 'template_redirect', [$this, 'loginPageThemeRedirect']);
         // init controllers
         $this->router->init();
         $this->shortCodeController->init();
@@ -140,6 +141,24 @@ class Handbid
             }
         }
     }
+
+	function loginPageThemeRedirect() {
+		global $wp, $post, $wp_query;
+		$pluginDir = dirname( __FILE__ );
+		if ($wp->query_vars["pagename"] == 'log-in') {
+			$templateFileName = 'login-form-new.phtml';
+			$returnTemplate = $pluginDir . '/views/bidder/' . $templateFileName;
+			$returnTemplate = str_replace("\\","/",$returnTemplate);
+			if (have_posts()) {
+				get_header();
+				echo do_shortcode("[handbid_bidder_login_form in_page='1']");
+				get_footer();
+				die();
+			} else {
+				$wp_query->is_404 = true;
+			}
+		}
+	}
 
 
     // Javascript

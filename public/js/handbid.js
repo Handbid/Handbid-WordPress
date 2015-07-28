@@ -1678,8 +1678,10 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
 
                         e.preventDefault();
 
-                        loginModal.css('display', 'block');
-                        underlay.css('display', 'block');
+                        //loginModal.css('display', 'block');
+                        //underlay.css('display', 'block');
+                        
+                        window.location = "/log-in/";
                     });
 
                     $('.modal-close', loginModal).live('click', function () {
@@ -2569,7 +2571,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
 
 
 
-        $(".handbid-logout a").live("click", function(e){
+        $(".handbid-logout a, a.handbid-logout-link").live("click", function(e){
             e.preventDefault();
             var path = $(this).attr("href");
             var logoutNotice =  new PNotify({

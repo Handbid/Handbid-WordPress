@@ -1090,12 +1090,17 @@ class HandbidShortCodeController {
 		}
 	}
 
-    public function loginRegisterForm() {
-        // return $this->viewRenderer->render('views/bidder/login-form' []);
+    public function loginRegisterForm($atts) {
+	    $atts = shortcode_atts( array(
+		    'in_page'      => '',
+	    ), $atts );
         $countries  = $this->state->getCountriesWithCodes();
+	    $profile  = $this->state->currentBidder();
         return $this->viewRenderer->render('views/bidder/login-form-new',
             [
-                "countries" => $countries
+                "countries" => $countries,
+                "in_page" => !!(trim($atts["in_page"])),
+                "is_logged_in" => !!($profile)
             ]
         );
     }

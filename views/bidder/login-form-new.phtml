@@ -9,12 +9,21 @@
  */
 
 $countries = $this->get("countries");
-
+$in_page = $this->get("in_page");
+$is_logged_in = $this->get("is_logged_in");
+if($in_page){
+	$redirectLink = (isset($_SERVER["HTTP_REFERER"]) and $_SERVER["HTTP_REFERER"] != get_permalink()) ? $_SERVER["HTTP_REFERER"] : "/auctions/";
+}
+else{
+	$redirectLink = $_SERVER["REQUEST_URI"];
+}
 ?>
 
 
-<div class="handbid-modal user-modal contact-body login-modal-tab" data-handbid-modal-key="login-modal">
+<div class="handbid-modal <?php echo ($in_page) ? "handbid-modal-in-page" : "" ; ?> user-modal contact-body login-modal-tab" data-handbid-modal-key="login-modal">
+<?php if(!$in_page){?>
 <a href="#" class="modal-close">X</a>
+<?php }?>
 
 <div class="page-body connect-page">
 
@@ -25,10 +34,15 @@ $countries = $this->get("countries");
                     <div class="row">
                         <div class="col-md-8 col-md-offset-2 col-xs-12">
                             <h3>Handbid Bidder Login</h3>
+	                        <?php if($is_logged_in){?>
+		                        <h4>You are already logged in</h4>
+		                        <h4><a class="login-popup-link" href="/auctions/">Click here</a> to choose your auction!</h4>
+	                        <?php }else{ ?>
                             <h4>Login with your bidder account information below.</h4>
                             <h4>Not sure if you have an account?
                                 <a class="login-popup-link" data-target-tab="get-started">Click here</a> to get
                                 started.</h4>
+	                        <?php }?>
                         </div>
                     </div>
 
@@ -41,7 +55,7 @@ $countries = $this->get("countries");
                                 Specified combination not found.
                             </div>
                         </div>
-
+	                    <?php if(!$is_logged_in){?>
                         <div class="row">
                             <div class="form-group col-md-8 col-md-offset-2 col-xs-12">
                                 <input placeholder="Email or Phone Number" type="text" name="username" value=""
@@ -60,10 +74,15 @@ $countries = $this->get("countries");
 
                             </div>
                         </div>
+	                    <?php }?>
 
                         <div class="row">
                             <div class="form-group col-md-8 col-md-offset-2 col-xs-12 buttons">
-                                <button type="submit" class="btn btn-info signup" id="hb-login-form-submit"><span>Sign In</span></button>
+	                            <?php if($is_logged_in){?>
+		                            <a class="btn btn-info handbid-logout-link" href="/handbid-logout/">Logout</a>
+	                            <?php }else{ ?>
+		                            <button type="submit" class="btn btn-info signup" id="hb-login-form-submit"><span>Sign In</span></button>
+	                            <?php }?>
 
                                 <a class="btn btn-info signup login-popup-link" data-target-tab="tutorial-info-1">Tutorial</a>
                             </div>
@@ -88,7 +107,7 @@ $countries = $this->get("countries");
                             </div>
                         </div>
 
-                        <input type='hidden' name='redirect' value='<?php echo $_SERVER["REQUEST_URI"] ?>' id="hb-login-form-redirect"/>
+                        <input type='hidden' name='redirect' value='<?php echo $redirectLink; ?>' id="hb-login-form-redirect"/>
                         <input type='hidden' name='form-id' value='handbid-login'/>
                         <input type='hidden' name='nonce' value='<?php echo apply_filters("handbid_create_nonce", date("d.m.Y") . "login");?>' id="hb-login-form-nonce"/>
                         <input type='hidden' name='action' value='handbid_ajax_login' id="hb-login-form-action"/>
@@ -859,7 +878,7 @@ $countries = $this->get("countries");
         </div>
         <div class="row">
             <div class="modal-footer center-aligned-text col-xs-12 col-md-4 col-md-offset-4">
-                <a class="action-link go-back-button login-popup-link" data-target-tab="register-complete">< Go Back</a>
+				<!--   <a class="action-link go-back-button login-popup-link" data-target-tab="register-complete">< Go Back</a>-->
                 <a class="action-link go-next-button login-popup-link" data-target-tab="tutorial-info-2">Next ></a>
                 <h4>You can download the Handbid App for Android or iPhone.</h4>
                 <ul class="app-links">

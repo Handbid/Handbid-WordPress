@@ -102,6 +102,13 @@ class HandbidInstall
                 'post_name'    => 'organization',
                 'post_status'  => 'publish',
                 'post_content' => $organization
+            ],
+            'log-in'      => [
+                'post_type'    => 'page',
+                'post_title'   => 'Log In',
+                'post_name'    => 'log-in',
+                'post_status'  => 'publish',
+                'post_content' => ""
             ]
         ];
 
