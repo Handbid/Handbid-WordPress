@@ -16,12 +16,16 @@ if ($this->get('bids')) {
     $bids       = $this->get('bids');
 
 } else {
-    echo "No item history found.";
-    return;
+	$bids = [];
+	$item       = $this->get('item');
+	$itemID       = $this->get('itemID');
+//    echo "No item history found.";
+//    return;
 }
+$noBidsMessage = "No bids yet! You could be the first!";
 ?>
 
-<ul class="simple-list bid-history bid-history-item-<?php echo ($item) ? $item->id : $itemID ; ?>"  data-no-items-text="This item has no bids.">
+<ul class="simple-list bid-history bid-history-item-<?php echo ($item) ? $item->id : $itemID ; ?>"  data-no-items-text="<?php echo $noBidsMessage;?>">
 <?php
 //$bids = array_reverse($bids);
 if(count($bids) > 0) {
@@ -46,7 +50,7 @@ if(count($bids) > 0) {
 else
 {
     ?>
-    <p class="center-text">This item has no bids.</p>
+    <p class="center-text"><?php echo $noBidsMessage;?></p>
 <?php
 }
 ?>

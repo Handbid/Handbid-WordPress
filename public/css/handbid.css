@@ -486,3 +486,6 @@
 .itemValueBoxHidden{
     visibility: hidden !important;
 }
+.message-no-isotope-results{
+    text-transform: none;
+}

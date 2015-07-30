@@ -275,6 +275,14 @@
                     return selector ? matchesSelector(this, selector) : true;
                 }
             });
+
+            var numItems = $('[data-handbid-item-box]:visible').length;
+            if (numItems != 0) {
+                $('.message-no-isotope-results').fadeIn('slow');
+            }
+            else{
+                $('.message-no-isotope-results').fadeOut('fast');
+            }
         }
         return true;
     }
