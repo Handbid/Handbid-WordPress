@@ -7,6 +7,7 @@
  * @author Master of Code (worldclass@masterofcode.com)
  */
 
+var timerForSearch;
 (function ($) {
 
 
@@ -242,6 +243,23 @@
         return true;
     }
 
+    function showSearchPlaceholder(){
+        var numItems = $('[data-handbid-item-box]:visible').length;
+        if (numItems == 0) {
+            $('.message-no-isotope-results').fadeIn('slow');
+        }
+        else{
+            $('.message-no-isotope-results').fadeOut('fast');
+        }
+    }
+
+    function showSearchPlaceholderCallBack(){
+        if(timerForSearch != undefined){
+            timerForSearch = undefined;
+        }
+        timerForSearch = setTimeout(showSearchPlaceholder, 1000);
+    }
+
 
     function refreshSearchResults() {
 
@@ -276,13 +294,7 @@
                 }
             });
 
-            var numItems = $('[data-handbid-item-box]:visible').length;
-            if (numItems != 0) {
-                $('.message-no-isotope-results').fadeIn('slow');
-            }
-            else{
-                $('.message-no-isotope-results').fadeOut('fast');
-            }
+            showSearchPlaceholderCallBack();
         }
         return true;
     }

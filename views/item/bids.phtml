@@ -22,7 +22,7 @@ if ($this->get('bids')) {
 //    echo "No item history found.";
 //    return;
 }
-$noBidsMessage = "No bids yet! You could be the first!";
+$noBidsMessage = ($item->disableMobileBidding)?"Bids will be placed here during the Live Auction":"No bids yet! You could be the first!";
 ?>
 
 <ul class="simple-list bid-history bid-history-item-<?php echo ($item) ? $item->id : $itemID ; ?>"  data-no-items-text="<?php echo $noBidsMessage;?>">
