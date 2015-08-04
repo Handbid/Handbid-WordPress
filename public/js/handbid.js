@@ -908,7 +908,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
 
             addUserPurchase: function(values){
                 this.removeItemFromDashboardList(values.item.id, "winning");
-                this.addDashboardBidPurchased(values.item.id, values.name, values.item.key, values.auctionKey, values.pricePerItem, values.quantity );
+                this.addDashboardBidPurchased(values.item.id, values.item.name, values.item.key, values.auctionKey, values.pricePerItem, values.quantity );
                 this.loadMessagesToContainer();
             },
 

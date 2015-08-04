@@ -221,7 +221,7 @@ if (!is_null($this->get('profile'))) {
                                         data-dashboard-price="<?php echo (int) $purchase->grandTotal; ?>"
                                         data-purchased-item-id="<?php echo $purchase->item->id; ?>">
                                         <div class="col-md-4 col-xs-4">
-                                            <a href="/auctions/<?php echo $auction->key; ?>/item/<?php echo $purchase->item->key; ?>"><h4><?php echo explode(' x ', $purchase->name)[0]; ?></h4></a>
+                                            <a href="/auctions/<?php echo $auction->key; ?>/item/<?php echo $purchase->item->key; ?>"><h4><?php echo $purchase->item->name; ?></h4></a>
                                         </div>
                                         <div class="col-md-4 col-xs-4">
                                             <h4 class="quantity-total"><?php echo $purchase->quantity; ?> x $<?php echo $purchase->pricePerItem; ?></h4>
