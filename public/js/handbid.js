@@ -9,7 +9,7 @@
 
 
 
-var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circleTimer, auctionInvoices;
+var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circleTimer, auctionInvoices, currentPaddleNumber;
 (function ($) {
 
     var restEndpoint = $("#apiEndpointsAddress").val(),
@@ -2133,6 +2133,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
 
                                             if(data.paddleId != undefined){
                                                 $("[data-paddle-for-auction-"+auctionID+"]").html(data.paddleId);
+                                                currentPaddleNumber = data.paddleId;
                                                 text = 'Your paddle number for this auction is <b>'+data.paddleId+'</b>';
                                                 title = 'Done';
                                                 type = 'success';
@@ -2462,6 +2463,11 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                     },
                     function (resp) {
                         bidderInfo.html(resp);
+                        var auctionID = bidderInfo.data("auction");
+                        if(currentPaddleNumber != undefined && auctionID.trim() != ""){
+                            bidderInfo.data("profile-paddle-number", currentPaddleNumber);
+                            $("[data-paddle-for-auction-"+auctionID+"]").html(currentPaddleNumber);
+                        }
                         bidderInfo.slideDown("normal");
                         ($('.creditcard-template').length > 0) ? handbid.setupAddCreditCard() : '';
                         handbid.setupProvincesSelect();
@@ -2638,6 +2644,11 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
             e.preventDefault();
             var button = $(this);
             handbid.lazyShowLessMessages(button);
+        });
+        $(".global-footer").prepend("<span class='toggle-info'>Show Footer Info</span>");
+        $(".global-footer span.toggle-info").live("click", function(e){
+            e.preventDefault();
+            $(".global-footer").toggleClass("show-all");
         });
 
     });

@@ -70,14 +70,14 @@ $itemCanNotBeShownInPresale = (in_array($auction->status, ["presale","preview"])
 
         <?php if(!$itemSold)  { ?>
 
-        <div class="col-md-6 col-xs-12">
+        <div class="col-xs-6">
             <a class="proxy-bid gray-solid-button handbid-modal-link loading-span-button"
                href=""
                 <?php echo $creditCardsRequired; ?>
                data-handbid-modal-key="proxy"><span><?php echo __('Set Max Bid'); ?></span></a>
         </div>
 
-        <div class="col-md-6 col-xs-12">
+        <div class="col-xs-6">
             <a class="bid-now green-solid-button  loading-span-button"
                href=""
                <?php echo $creditCardsRequired; ?>
