@@ -501,11 +501,42 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                     isHidden = (values.isHidden == "1"),
                     isDirectPurchaseItem  = (values.isDirectPurchaseItem == "1"),
                     disableMobileBidding = (values.disableMobileBidding == "1"),
-                    noBids = (!isDirectPurchaseItem && values.bidCount === 0);
+                    noBids = (!isDirectPurchaseItem && values.bidCount === 0),
+                    newCatID = values.categoryId;
                 $.map(paramsBoxes, function(val){
-                    var paramsBox = $(val);
-                    var isBoxHidden = (paramsBox.eq(0).attr("data-is-hidden-item") != undefined);
-                    needToReSort = ((isHidden && !isBoxHidden) || (!isHidden && isBoxHidden));
+                    var paramsBox = $(val),
+                        oldCatID = parseInt(paramsBox.attr("data-handbid-item-cat-id")),
+                        isBoxHidden = (paramsBox.eq(0).attr("data-is-hidden-item") != undefined);
+
+                    console.log("oldCatID "+oldCatID);
+                    console.log("newCatID "+newCatID);
+
+                    var isShowing = (!isHidden && isBoxHidden),
+                        isHiding = (isHidden && !isBoxHidden),
+                        differentCat = (oldCatID != undefined && newCatID != undefined && oldCatID != newCatID);
+
+                    var oldCatIDContainer = $(".countAuctionItemsForCat"+oldCatID).eq(0);
+                    var newCatIDContainer = $(".countAuctionItemsForCat"+newCatID).eq(0);
+                    var allCatIDContainer = $(".countAuctionItemsForCatAll").eq(0);
+                    if(differentCat) {
+                        paramsBox.attr("data-handbid-item-cat-id", newCatID);
+
+                        isShowing ? handbid.utilChangeCountValue(newCatIDContainer, 1): "" ;
+                        isHiding ? handbid.utilChangeCountValue(oldCatIDContainer, -1): "";
+
+                        if (!isShowing && !isHiding && !isHidden) {
+                            handbid.utilChangeCountValue(newCatIDContainer, 1);
+                            handbid.utilChangeCountValue(oldCatIDContainer, -1);
+                        }
+                    }
+                    else{
+                        isShowing ? handbid.utilChangeCountValue(newCatIDContainer, 1): "" ;
+                        isHiding ? handbid.utilChangeCountValue(newCatIDContainer, -1): "";
+                    }
+                    isShowing ? handbid.utilChangeCountValue(allCatIDContainer, 1): "" ;
+                    isHiding ? handbid.utilChangeCountValue(allCatIDContainer, -1): "";
+
+                    needToReSort = (isHiding || isShowing);
                     (isHidden) ? paramsBox.attr("data-is-hidden-item", "1") : paramsBox.removeAttr("data-is-hidden-item");
                     (isDirectPurchaseItem) ? paramsBox.attr("data-for-sale", "1") : paramsBox.removeAttr("data-for-sale");
                     (disableMobileBidding) ? paramsBox.attr("data-live", "1") : paramsBox.removeAttr("data-live");
@@ -526,6 +557,10 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                 if(needToReSort){
                     this.clickOnFiltersToReorder();
                 }
+            },
+
+            utilChangeCountValue: function(container, val){
+                container.html(parseInt(container.html()) + val);
             },
 
 

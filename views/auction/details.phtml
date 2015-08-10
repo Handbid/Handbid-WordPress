@@ -217,9 +217,14 @@ $hasTicketItems = !!(count($tickets));
                             <?php
                             $allCount = 0;
                             foreach ($categories as $category) {
-                                $allCount += count($category->items);
+	                            $notHiddenCount = 0;
+	                            foreach ($category->items as $catItem) {
+		                            $notHiddenCount += ($catItem->isHidden == "1") ? 0 : 1;
+	                            }
+                                $allCount += $notHiddenCount;
+	                            $category->notHiddenCount = $notHiddenCount;
                             } ?>
-                            <li data-selector="*" class="selected"><a href="#">All (<?php echo $allCount; ?>)</a></li>
+                            <li data-selector="*" class="selected"><a href="#">All (<span class="countAuctionItemsForCatAll"><?php echo $allCount; ?></span>)</a></li>
 
                             <?php foreach ($categories as $category) {
 
@@ -228,7 +233,7 @@ $hasTicketItems = !!(count($tickets));
                                     <li data-selector="[data-tags~='|<?php echo esc_html(
                                         sanitize_key($category->name)
                                     ); ?>|']" data-legacy-category-id="<?php echo $category->id; ?>"><a
-                                            href="#"><?php echo $category->name . ' (' . count($category->items) . ')'; ?></a>
+                                            href="#"><?php echo $category->name . ' (<span class="countAuctionItemsForCat'.$category->id.'">' . $category->notHiddenCount . '</span>)'; ?></a>
                                     </li>
                                 <?php
                                 } //end if

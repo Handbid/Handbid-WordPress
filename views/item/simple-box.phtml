@@ -51,6 +51,7 @@ $itemValueHidden = (isset($item->showValue) and ($item->showValue != 1));
 <div onclick="if(event.metaKey) { return; } window.location.href='<?php echo $url; ?>'"
     <?php echo ($isHidden)?" data-is-hidden-item ":""; ?>
      data-handbid-item-key="<?php echo $item->key; ?>"
+     data-handbid-item-cat-id="<?php echo $item->categoryId; ?>"
      data-handbid-item-box="<?php echo $item->id; ?>"
      data-handbid-params-box="<?php echo $item->id; ?>"
      data-handbid-item-auction="<?php echo $auction->id; ?>"
