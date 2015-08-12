@@ -458,7 +458,8 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
 
             processItemChange: function(values){
 
-                var itemID = values.id,
+                var item = values,
+                    itemID = values.id,
                     itemStatus = values.status,
                     showValue = values.showValue,
                     availableForPreSale = values.availableForPreSale;
@@ -553,6 +554,19 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                 $("[data-item-check-status-item-id='"+itemID+"']").val(itemStatus);
                 $("[data-item-check-available-item-id='"+itemID+"']").val(availableForPreSale);
                 this.checkItemIsAvailableForPresale();
+
+
+                item.buyNowPrice = (item.buyNowPrice == null || item.buyNowPrice == undefined) ? 0: item.buyNowPrice;
+                var isBiddable = (!item.isDirectPurchaseItem);
+                var buyItNow   = (isBiddable && item.buyNowPrice > 0 && item.buyNowPrice > item.minimumBidAmount);
+                var BINContainer = $(".BINButton.BINItem"+itemID).eq(0),
+                    BINButton = $(".BINButton.BINItem"+itemID+" a.buy-now").eq(0);
+                (buyItNow) ? BINContainer.addClass("BINAvailable"): BINContainer.removeClass("BINAvailable");
+                BINButton.attr("data-handbid-buynow-price", item.buyNowPrice);
+                console.log(BINContainer);
+                console.log("buyItNow");
+                console.log(buyItNow);
+                console.log(BINButton);
 
                 if(needToReSort){
                     this.clickOnFiltersToReorder();
@@ -2489,27 +2503,35 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
             },
 
             reloadBidderProfile: function(){
-                var bidderInfo = jQuery("#bidder-info-load");
+                var bidderInfo = jQuery("#bidder-info-load"),
+                    bidderAuction = parseInt(bidderInfo.data("auction"));
                 //bidderInfo.hide();
-                $.post(ajaxurl, {
-                        action: "handbid_profile_load",
-                        auction: bidderInfo.data("auction"),
-                        nonce: bidderInfo.data("load")
-                    },
-                    function (resp) {
-                        bidderInfo.html(resp);
-                        var auctionID = bidderInfo.data("auction");
-                        if(currentPaddleNumber != undefined && auctionID.trim() != ""){
-                            bidderInfo.data("profile-paddle-number", currentPaddleNumber);
-                            $("[data-paddle-for-auction-"+auctionID+"]").html(currentPaddleNumber);
-                        }
-                        bidderInfo.slideDown("normal");
-                        ($('.creditcard-template').length > 0) ? handbid.setupAddCreditCard() : '';
-                        handbid.setupProvincesSelect();
+                if(bidderAuction) {
+                    $.post(ajaxurl, {
+                            action: "handbid_profile_load",
+                            auction: bidderInfo.data("auction"),
+                            nonce: bidderInfo.data("load")
+                        },
+                        function (resp) {
+                            bidderInfo.html(resp);
+                            var auctionID = bidderInfo.data("auction");
+                            if (currentPaddleNumber != undefined && auctionID.trim() != "") {
+                                bidderInfo.data("profile-paddle-number", currentPaddleNumber);
+                                $("[data-paddle-for-auction-" + auctionID + "]").html(currentPaddleNumber);
+                            }
+                            bidderInfo.slideDown("normal");
+                            ($('.creditcard-template').length > 0) ? handbid.setupAddCreditCard() : '';
+                            handbid.setupProvincesSelect();
 
-                        handbid.loadAllToContainers();
+                            handbid.loadAllToContainers();
 
-                    });
+                        });
+                }
+                else{
+                    ($('.creditcard-template').length > 0) ? handbid.setupAddCreditCard() : '';
+                    handbid.setupProvincesSelect();
+                    handbid.loadAllToContainers();
+                }
             },
 
             redirectFromResetedAuctions: function(data){

@@ -494,6 +494,14 @@
     display: none !important;
 }
 
+.BINButton{
+    display: none !important;
+}
+
+.BINButton.BINAvailable{
+    display: block !important;
+}
+
 @media (max-width: 767px) {
 
     .global-footer .toggle-info{

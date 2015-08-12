@@ -86,18 +86,15 @@ $itemCanNotBeShownInPresale = (in_array($auction->status, ["presale","preview"])
 
         <?php } ?>
 
-        <?php if($buyItNow)  { ?>
+
     </div>
     <div class="row">
-
-        <div class="col-md-12">
+        <div class="col-md-12 BINButton BINItem<?php echo $item->id; ?> <?php echo ($buyItNow)?" BINAvailable ":""; ?>">
             <a class="buy-now pink-solid-button loading-span-button"
                href=""
                 <?php echo $creditCardsRequired; ?>
-               data-handbid-bid-button="buyItNow" data-handbid-buynow-price="<?php echo $item->buyNowPrice?>"><span><?php echo __('Buy Now For $')  . $item->buyNowPrice; ?></span></a>
+               data-handbid-bid-button="buyItNow" data-handbid-buynow-price="<?php echo $item->buyNowPrice?>"><span><?php echo __('Buy Now For $')  . "<em data-change-attribute='buyNowPrice'>".$item->buyNowPrice ."</em>"; ?></span></a>
         </div>
-
-        <?php } ?>
 
         <?php }
         else { ?>
