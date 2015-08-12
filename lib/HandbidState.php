@@ -19,6 +19,7 @@ class HandbidState
 {
 
     private $stripeApiKey = "pk_Yidx0zkypJ6stL4BO6VnDfslNBYXF";
+    private $stripeApiKeyLive = "pk_hHpGKGGc39SSpUlP2TwghF4hONv1v";
 
     public $basePath;
     public $handbid;
@@ -35,7 +36,8 @@ class HandbidState
     }
 
     public function getStripeApiKey(){
-        return $this->stripeApiKey;
+	    $stripeMode = get_option('handbidStripeMode', 'test');
+        return ($stripeMode == "test")?$this->stripeApiKey:$this->stripeApiKeyLive;
     }
 
     public function currentOrg($attributes = null)

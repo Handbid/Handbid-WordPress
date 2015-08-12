@@ -66,6 +66,7 @@ class HandbidAdminActionController
             'handbidDefaultColCount',
             'handbidDefaultColCountItem',
             'handbidDefaultPageSize',
+            'handbidStripeMode',
         ];
 
         forEach ($settings as $setting) {
