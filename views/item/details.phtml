@@ -85,6 +85,7 @@ $itemValueHidden = ( isset( $item->showValue ) and ( $item->showValue != 1 ) );
 						?>
 						<div style="background-image: url('<?php
 						$image = $item->images[0]->itemImageUrl;
+						$image = (trim($image))?$image: HANDBID_PLUGIN_URL . 'public/images/simple-box/default_photo.png'  ;
 						$image = ( strpos( $image, "http://" ) === false and strpos( $image, "https://" ) === false ) ? "http://" . $image : $image;
 						echo $image;?>'); background-size: contain;" class="image-holder"></div>
 					<?php
@@ -199,11 +200,11 @@ $itemValueHidden = ( isset( $item->showValue ) and ( $item->showValue != 1 ) );
 					</li>
 				<?php } ?>
 
-				<?php if ( $isBiddable ) { ?>
+				<?php //if ( $isBiddable ) { ?>
 					<li>
-						<a data-slider-nav-key="bids">Bid History</a>
+						<a data-slider-nav-key="bids">History</a>
 					</li>
-				<?php } ?>
+				<?php //} ?>
 				<li>
 					<a data-slider-nav-key="comments">Comments</a>
 				</li>
@@ -248,7 +249,19 @@ $itemValueHidden = ( isset( $item->showValue ) and ( $item->showValue != 1 ) );
 					] );
 					?>
 				</div>
-			<?php } ?>
+			<?php }
+			else{
+				?>
+				<div class="additional big-content bid-history-container-<?php echo $item->id; ?>"
+				     data-slider-nav-key="bids"
+				     data-bids-nonce="<?php echo apply_filters( "handbid_create_nonce", date( "d.m.Y" ) . "get_bids_" . ( (int) $item->id ) ); ?>"
+					>
+					<ul class="simple-list bid-history bid-history-item-<?php echo $item->id ; ?>">
+						<p class="center-text">Purchase history not available on this item</p>
+					</ul>
+				</div>
+			<?php
+			}?>
 
 			<div class="additional comments" data-slider-nav-key="comments">
 				<?php echo do_shortcode( '[handbid_facebook_comments]' ) ?>

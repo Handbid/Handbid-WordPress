@@ -82,6 +82,7 @@ $itemHideIfSold = ($item->hideSales == 1);
     <div class="body">
         <?php
         $image = $item->images[0]->itemImageUrl;
+        $image = (trim($image))?$image: HANDBID_PLUGIN_URL . 'public/images/simple-box/default_photo.png'  ;
         $imageUrlPath = parse_url($image);
         $image = ($imageUrlPath["scheme"]) ? $image : ((trim($image)) ? "http://" . $image : "");
         $backImageStyle = trim($image) ? "background-image: url(" . $image . ")" : "";

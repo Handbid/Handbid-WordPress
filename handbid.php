@@ -41,6 +41,10 @@ if ($handle = opendir($libFolder)) {
 require_once($libFolder . '/Handbid-Php/src/Handbid.php');
 require_once($libFolder . '/stripe-php/init.php');
 
+if(!defined("HANDBID_PLUGIN_URL")){
+	define("HANDBID_PLUGIN_URL", plugin_dir_url( __FILE__ ));
+}
+
 class Handbid
 {
 

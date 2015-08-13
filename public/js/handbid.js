@@ -374,12 +374,25 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
             checkItemIsAvailableForPresale: function(){
                 var availableForPreSale = $("[data-item-check-available-item-id]").val(),
                     auctionStatus = $("[data-item-check-status-auction-id]").val(),
-                    itemStatus = $("[data-item-check-status-item-id]").val(),
-                    biddingBlock = $("[data-item-bidding-id]"),
-                    noBiddingBlock = $("[data-item-nobidding-id]");
-                var itemCanNotBeShownInPreSale = ((auctionStatus == "preview" || auctionStatus == "presale") && (availableForPreSale != "1"));
-                (itemCanNotBeShownInPreSale) ? biddingBlock.hide(): biddingBlock.show();
+                    itemStatus = $("[data-item-check-status-item-id]").val();
+                return ((auctionStatus == "preview" || auctionStatus == "presale") && (availableForPreSale != "1") && (itemStatus != "sold"));
+            },
+
+            checkItemIsAlreadySold: function(){
+                var itemStatus = $("[data-item-check-status-item-id]").val();
+                return (itemStatus == "sold");
+            },
+
+            checkItemIsAlreadySoldOrNotAvailable: function(){
+                var biddingBlock = $("[data-item-bidding-id]"),
+                    noBiddingBlock = $("[data-item-nobidding-id]"),
+                    isSoldBlock = $("[data-item-is-sold-id]"),
+                    itemCanNotBeShownInPreSale = this.checkItemIsAvailableForPresale(),
+                    itemIsAlreadySold = this.checkItemIsAlreadySold();
+
+                (itemCanNotBeShownInPreSale || itemIsAlreadySold) ? biddingBlock.hide(): biddingBlock.show();
                 (itemCanNotBeShownInPreSale) ? noBiddingBlock.show(): noBiddingBlock.hide();
+                (itemIsAlreadySold) ? isSoldBlock.show(): isSoldBlock.hide();
             },
 
 
@@ -417,7 +430,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
 
 
                 $("[data-item-check-status-auction-id='"+auctionID+"']").val(auctionStatus);
-                this.checkItemIsAvailableForPresale();
+                this.checkItemIsAlreadySoldOrNotAvailable();
             },
 
 
@@ -558,7 +571,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
 
                 $("[data-item-check-status-item-id='"+itemID+"']").val(itemStatus);
                 $("[data-item-check-available-item-id='"+itemID+"']").val(availableForPreSale);
-                this.checkItemIsAvailableForPresale();
+                this.checkItemIsAlreadySoldOrNotAvailable();
 
 
                 item.buyNowPrice = (item.buyNowPrice == null || item.buyNowPrice == undefined) ? 0: item.buyNowPrice;

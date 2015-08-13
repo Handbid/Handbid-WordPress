@@ -19,10 +19,16 @@ if ($this->get('bids')) {
 	$bids = [];
 	$item       = $this->get('item');
 	$itemID       = $this->get('itemID');
-//    echo "No item history found.";
-//    return;
 }
-$noBidsMessage = ($item->disableMobileBidding)?"Bids will be placed here during the Live Auction":"No bids yet! You could be the first!";
+if($item->isDirectPurchaseItem){
+	$noBidsMessage = "Purchase history not available on this item";
+}
+elseif($item->disableMobileBidding){
+	$noBidsMessage = "Bids will be placed here during the Live Auction";
+}
+else{
+	$noBidsMessage = "No bids yet! You could be the first!";
+}
 ?>
 
 <ul class="simple-list bid-history bid-history-item-<?php echo ($item) ? $item->id : $itemID ; ?>"  data-no-items-text="<?php echo $noBidsMessage;?>">

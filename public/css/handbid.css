@@ -506,6 +506,14 @@
     display:none !important;
 }
 
+.slider-content .simple-list-container{
+    padding: 0;
+}
+.slider-content .simple-list > li{
+    width: 100%;
+    margin: 0;
+}
+
 @media (max-width: 767px) {
 
     .global-footer .toggle-info{
