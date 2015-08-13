@@ -502,6 +502,10 @@
     display: block !important;
 }
 
+[data-handbid-item-box-status="sold"][data-hide-if-sold]{
+    display:none !important;
+}
+
 @media (max-width: 767px) {
 
     .global-footer .toggle-info{

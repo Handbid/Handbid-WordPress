@@ -219,7 +219,10 @@ $hasTicketItems = !!(count($tickets));
                             foreach ($categories as $category) {
 	                            $notHiddenCount = 0;
 	                            foreach ($category->items as $catItem) {
-		                            $notHiddenCount += ($catItem->isHidden == "1") ? 0 : 1;
+		                            $itemHideIfSold = ($catItem->hideSales == 1);
+		                            $isHidden = ($catItem->isHidden == "1");
+		                            $countItem = ($isHidden or ($itemHideIfSold and $catItem->status == "sold"));
+		                            $notHiddenCount += $countItem ? 0 : 1;
 	                            }
                                 $allCount += $notHiddenCount;
 	                            $category->notHiddenCount = $notHiddenCount;

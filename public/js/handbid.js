@@ -507,13 +507,16 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                 $.map(paramsBoxes, function(val){
                     var paramsBox = $(val),
                         oldCatID = parseInt(paramsBox.attr("data-handbid-item-cat-id")),
-                        isBoxHidden = (paramsBox.eq(0).attr("data-is-hidden-item") != undefined);
+                        isBoxHidden = (paramsBox.eq(0).attr("data-is-hidden-item") != undefined),
+                        oldHideIfSold = (paramsBox.eq(0).attr("data-hide-if-sold") != undefined),
+                        oldItemStatus = paramsBox.data("handbid-item-box-status");
 
-                    console.log("oldCatID "+oldCatID);
-                    console.log("newCatID "+newCatID);
 
-                    var isShowing = (!isHidden && isBoxHidden),
-                        isHiding = (isHidden && !isBoxHidden),
+                    var newHideIfSold = (item.hideSales == 1),
+                        oldHideSoldItem = (oldHideIfSold && oldItemStatus == "sold"),
+                        newHideSoldItem = (newHideIfSold && itemStatus == "sold"),
+                        isShowing = ((!isHidden && isBoxHidden) || (oldHideSoldItem && !newHideSoldItem)),
+                        isHiding = ((isHidden && !isBoxHidden) || (!oldHideSoldItem && newHideSoldItem)),
                         differentCat = (oldCatID != undefined && newCatID != undefined && oldCatID != newCatID);
 
                     var oldCatIDContainer = $(".countAuctionItemsForCat"+oldCatID).eq(0);
@@ -537,11 +540,13 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                     isShowing ? handbid.utilChangeCountValue(allCatIDContainer, 1): "" ;
                     isHiding ? handbid.utilChangeCountValue(allCatIDContainer, -1): "";
 
-                    needToReSort = (isHiding || isShowing);
+                    needToReSort = (isHiding || isShowing );
                     (isHidden) ? paramsBox.attr("data-is-hidden-item", "1") : paramsBox.removeAttr("data-is-hidden-item");
                     (isDirectPurchaseItem) ? paramsBox.attr("data-for-sale", "1") : paramsBox.removeAttr("data-for-sale");
                     (disableMobileBidding) ? paramsBox.attr("data-live", "1") : paramsBox.removeAttr("data-live");
                     (noBids) ? paramsBox.attr("data-no-bids", "1") : paramsBox.removeAttr("data-no-bids");
+                    (newHideIfSold) ? paramsBox.attr("data-hide-if-sold", "1") : paramsBox.removeAttr("data-hide-if-sold");
+                    paramsBox.attr("data-handbid-item-box-status", itemStatus);
                 });
                 paramsBoxQuant.html("0");
 
@@ -563,10 +568,6 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                     BINButton = $(".BINButton.BINItem"+itemID+" a.buy-now").eq(0);
                 (buyItNow) ? BINContainer.addClass("BINAvailable"): BINContainer.removeClass("BINAvailable");
                 BINButton.attr("data-handbid-buynow-price", item.buyNowPrice);
-                console.log(BINContainer);
-                console.log("buyItNow");
-                console.log(buyItNow);
-                console.log(BINButton);
 
                 if(needToReSort){
                     this.clickOnFiltersToReorder();
