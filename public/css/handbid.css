@@ -502,8 +502,9 @@
     display: block !important;
 }
 
-[data-handbid-item-box-status="sold"][data-hide-if-sold]{
-    display:none !important;
+[data-hide-if-sold] [data-handbid-item-attribute="quantitySold"],
+[data-hide-if-sold] [data-handbid-item-attribute="totalSoldItems"]{
+    visibility:hidden !important;
 }
 
 .slider-content .simple-list-container{

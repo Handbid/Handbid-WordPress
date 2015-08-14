@@ -475,7 +475,9 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                     itemID = values.id,
                     itemStatus = values.status,
                     showValue = values.showValue,
-                    availableForPreSale = values.availableForPreSale;
+                    availableForPreSale = values.availableForPreSale,
+                    newCatID = values.categoryId,
+                    newHideIfSold = (item.hideSales == 1);
 
                 var parentElem = $("[data-handbid-item-box='"+itemID+"']").eq(0);
 
@@ -515,8 +517,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                     isHidden = (values.isHidden == "1"),
                     isDirectPurchaseItem  = (values.isDirectPurchaseItem == "1"),
                     disableMobileBidding = (values.disableMobileBidding == "1"),
-                    noBids = (!isDirectPurchaseItem && values.bidCount === 0),
-                    newCatID = values.categoryId;
+                    noBids = (!isDirectPurchaseItem && values.bidCount === 0);
                 $.map(paramsBoxes, function(val){
                     var paramsBox = $(val),
                         oldCatID = parseInt(paramsBox.attr("data-handbid-item-cat-id")),
@@ -525,11 +526,10 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                         oldItemStatus = paramsBox.data("handbid-item-box-status");
 
 
-                    var newHideIfSold = (item.hideSales == 1),
-                        oldHideSoldItem = (oldHideIfSold && oldItemStatus == "sold"),
+                    var oldHideSoldItem = (oldHideIfSold && oldItemStatus == "sold"),
                         newHideSoldItem = (newHideIfSold && itemStatus == "sold"),
-                        isShowing = ((!isHidden && isBoxHidden) || (oldHideSoldItem && !newHideSoldItem)),
-                        isHiding = ((isHidden && !isBoxHidden) || (!oldHideSoldItem && newHideSoldItem)),
+                        isShowing = ((!isHidden && isBoxHidden)),
+                        isHiding = ((isHidden && !isBoxHidden)),
                         differentCat = (oldCatID != undefined && newCatID != undefined && oldCatID != newCatID);
 
                     var oldCatIDContainer = $(".countAuctionItemsForCat"+oldCatID).eq(0);
@@ -562,6 +562,9 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                     paramsBox.attr("data-handbid-item-box-status", itemStatus);
                 });
                 paramsBoxQuant.html("0");
+
+                var itemDetailsBlock = $("[data-handbid-item-details-block='"+itemID+"']").eq(0);
+                (newHideIfSold) ? itemDetailsBlock.attr("data-hide-if-sold", "1") : itemDetailsBlock.removeAttr("data-hide-if-sold");
 
                 var itemValueBoxes = $(".itemValueBox"+itemID),
                     itemValueHidden = (showValue != "1" && showValue != 1);
