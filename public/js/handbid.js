@@ -2291,10 +2291,13 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
 
 
             displayRequiredCardsMessage: function(){
-		var cards_exist = $("div.credit-card ul").children("li.row");
-		if (cards_exist.length) {
-			return true;
-		} 
+
+            // Woody added this to prevent the message showing when pages load in the wrong order
+               var cards_exist = $("div.credit-card ul").children("li.row");
+               if (cards_exist.length) {
+                       return true;
+               }
+
                 new PNotify({
                     title: 'Credit cards required',
                     type: 'error',
