@@ -227,18 +227,25 @@ $hasTicketItems = !!(count($tickets));
                                 $allCount += $notHiddenCount;
 	                            $category->notHiddenCount = $notHiddenCount;
                             } ?>
-                            <li data-selector="*" class="selected"><a href="#">All (<span class="countAuctionItemsForCatAll"><?php echo $allCount; ?></span>)</a></li>
+<!-- exclude "all" -->
+<!--
+                            <li data-selector="*" class=""><a href="#">All (<span class="countAuctionItemsForCatAll"><?php echo $allCount; ?></span>)</a></li>
+-->
 
+<?php
+$selected = 'selected';
+?>
                             <?php foreach ($categories as $category) {
 
                                 if (count($category->items) > 0) {
                                     ?>
-                                    <li data-selector="[data-tags~='|<?php echo esc_html(
+                                    <li class="<?php echo $selected;?>" data-selector="[data-tags~='|<?php echo esc_html(
                                         sanitize_key($category->name)
                                     ); ?>|']" data-legacy-category-id="<?php echo $category->id; ?>"><a
                                             href="#"><?php echo $category->name . ' (<span class="countAuctionItemsForCat'.$category->id.'">' . $category->notHiddenCount . '</span>)'; ?></a>
                                     </li>
                                 <?php
+$selected = '';
                                 } //end if
                             } ?>
 

@@ -18,6 +18,8 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
             no_response : "Sorry, try again later",
             current_winner : "You are current winner of this item"
         },
+	socket_retry = 0,
+	socket_retry_limit = 3,
         stack_bar_top = {
             addpos2: 0,
             animation: true,
@@ -2289,11 +2291,13 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
 
 
             displayRequiredCardsMessage: function(){
+
             // Woody added this to prevent the message showing when pages load in the wrong order
                var cards_exist = $("div.credit-card ul").children("li.row");
                if (cards_exist.length) {
                        return true;
                }
+
                 new PNotify({
                     title: 'Credit cards required',
                     type: 'error',
@@ -2568,7 +2572,8 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
             },
 
             checkSocketConnection: function (handbid) {
-                if(!connectedToSocket){
+               socket_retry += socket_retry;
+                if(!connectedToSocket && socket_retry >= socket_retry_limit){
                     if(connectMessage == undefined){
                         connectMessage = new PNotify({
                             title: '<h3 class="notice-connection-title"><b>Unable to connect for real-time updates</b>' +
@@ -2605,7 +2610,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                     }
                 }
                     setTimeout(function () {
-                        handbid.checkSocketConnection(handbid)
+                        handbid.checkSocketConnection(handbid,socket_retry)
                     }, 3000);
             }
         };
