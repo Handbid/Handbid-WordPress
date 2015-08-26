@@ -114,6 +114,9 @@ class Handbid
             [$this->actionController, '_handle_form_action']
         ); // If the user in not logged in
 
+        add_filter('handbid_cdn_image_thumbnail', [$this, 'cdnThumbImage'], 100, 1 );
+        add_filter('handbid_cdn_image_gallery', [$this, 'cdnGalleryImage'], 100, 1 );
+
 
     }
 
@@ -130,6 +133,32 @@ class Handbid
             var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
         </script>
     <?php
+    }
+
+    function cdnThumbImage($imageUrl) {
+        $wrongForThumbnail = "-/format/jpeg/-/quality/lightest/";
+        //too big..
+        //$rightForThumbnail = "-/preview/600x400/-/quality/lightest/-/scale_crop/600x400/center/";
+        $rightForThumbnail = "-/preview/300x200/-/quality/lightest/-/scale_crop/300x200/center/";
+        if(strpos($imageUrl, "ucarecdn.com") !== FALSE){
+            if(strpos($imageUrl, $wrongForThumbnail) !== FALSE){
+                $imageUrl = str_replace($wrongForThumbnail, "", $imageUrl);
+            }
+            $imageUrl = $imageUrl . $rightForThumbnail;
+        }
+        return $imageUrl;
+    }
+
+    function cdnGalleryImage($imageUrl) {
+        $wrongForGallery = "-/format/jpeg/-/quality/lightest/";
+        $rightForGallery = "-/preview/1300x1000/-/setfill/e7e7e7/-/crop/1300x1000/center/-/quality/lightest/";
+        if(strpos($imageUrl, "ucarecdn.com") !== FALSE){
+            if(strpos($imageUrl, $wrongForGallery) !== FALSE){
+                $imageUrl = str_replace($wrongForGallery, "", $imageUrl);
+            }
+            $imageUrl = $imageUrl . $rightForGallery;
+        }
+        return $imageUrl;
     }
 
     function redirectIfSingleOrganization()

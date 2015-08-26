@@ -75,7 +75,7 @@ $itemHideIfSold = ($item->hideSales == 1);
 							<?php foreach ( $item->images as $k => $v ) { ?>
 								<div class="image" data-slider-nav-key="<?php echo 'item-image-' . $k; ?>">
 									<div style="background-image: url('<?php
-									$image = $v->itemImageUrl;
+									$image = apply_filters("handbid_cdn_image_gallery", $v->itemImageUrl);
 									$image = ( strpos( $image, "http://" ) === false and strpos( $image, "https://" ) === false ) ? "http://" . $image : $image;
 									echo $image; ?>'); background-size: contain;" class="image-holder"></div>
 								</div>
@@ -86,7 +86,7 @@ $itemHideIfSold = ($item->hideSales == 1);
 					} else {
 						?>
 						<div style="background-image: url('<?php
-						$image = $item->images[0]->itemImageUrl;
+						$image = apply_filters("handbid_cdn_image_gallery", $item->images[0]->itemImageUrl);
 						$image = (trim($image))?$image: HANDBID_PLUGIN_URL . 'public/images/simple-box/default_photo.png'  ;
 						$image = ( strpos( $image, "http://" ) === false and strpos( $image, "https://" ) === false ) ? "http://" . $image : $image;
 						echo $image;?>'); background-size: contain;" class="image-holder"></div>
