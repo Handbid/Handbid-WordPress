@@ -138,8 +138,8 @@ class Handbid
     function cdnThumbImage($imageUrl) {
         $wrongForThumbnail = "-/format/jpeg/-/quality/lightest/";
         //too big..
-        //$rightForThumbnail = "-/preview/600x400/-/quality/lightest/-/scale_crop/600x400/center/";
-        $rightForThumbnail = "-/preview/300x200/-/quality/lightest/-/scale_crop/300x200/center/";
+        $rightForThumbnail = "-/preview/600x400/-/quality/lightest/-/scale_crop/600x400/center/";
+        //$rightForThumbnail = "-/preview/300x200/-/quality/lightest/-/scale_crop/300x200/center/";
         if(strpos($imageUrl, "ucarecdn.com") !== FALSE){
             if(strpos($imageUrl, $wrongForThumbnail) !== FALSE){
                 $imageUrl = str_replace($wrongForThumbnail, "", $imageUrl);
