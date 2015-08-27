@@ -2735,6 +2735,10 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
             $(".global-footer").toggleClass("show-all");
         });
 
+        $('[data-slider-nav-id="auction-details"]').live("click", function(e){
+            handbid.clickOnFiltersToReorder();
+        });
+
     });
 
 })(jQuery);

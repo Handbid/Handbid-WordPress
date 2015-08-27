@@ -385,15 +385,16 @@ class Handbid
         $userGuid = $bidder->usersGuid;
 
         $hostPort = '3002';
-        $isSecure = false;
+        $isSecure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443);
 
         // Determined Values
         $protocol = $isSecure ? 'https' : 'http';
         $jqueryUrl = sprintf('%s://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js', $protocol);
         $hostUrl = sprintf('%s://%s', $protocol, $hostName);
         $socketIoUrl = sprintf('%s:%s/socket.io/socket.io.js', $hostUrl, $hostPort);
+        //$socketIoUrl = plugins_url("handbid/public/js/socket.io.js");
         $nodeClientUrl = sprintf('%s:%s/client', $hostUrl, $hostPort);
-        $params = json_encode(["secure" => $isSecure, "cookie" => $userGuid]);
+        $params = json_encode(["secure" => false, "cookie" => $userGuid]);
 
         ?>
         <script>
