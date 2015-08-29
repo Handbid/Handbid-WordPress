@@ -1261,18 +1261,13 @@ class HandbidShortCodeController {
 	        $timeZone = (trim($auctionTimeZone)) ? $auctionTimeZone : 'America/Denver' ;
             if(trim($auctionTitle)){
 
-                $startMins = date(':i', $auctionStartTime);
-                $endMins = date(':i', $auctionEndTime);
-                $startMins = ($startMins == ':00') ? $startMins : "";
-                $endMins = ($endMins == ':00') ? $endMins : "";
-
                 date_default_timezone_set($timeZone);
 
-                $title = $auctionTitle . '<span class="under">' . date('M jS g' . $startMins . 'a', $auctionStartTime) . ' - ';
+                $title = $auctionTitle . '<span class="under">' . date('M jS g:i a', $auctionStartTime) . ' - ';
 
                 $title .= (date('mdY H:i', $auctionStartTime) == date('mdY H:i', $auctionEndTime))?
-                    date('g' . $endMins . 'a', $auctionEndTime):
-                    date('M jS g' . $endMins . 'a | Y', $auctionEndTime);
+                    date('g:i a', $auctionEndTime):
+                    date('M jS g:i a | Y', $auctionEndTime);
 
                 $title .= ' ' . $auctionTimeZone;
 								$title .= $auctionStartTime;
