@@ -1270,7 +1270,7 @@ class HandbidShortCodeController {
 
                 $title = $auctionTitle . '<span class="under">' . date('M jS g' . $startMins . 'a', $auctionStartTime) . ' - ';
 
-                $title .= (date('mdY', $auctionStartTime) == date('mdY', $auctionEndTime))?
+                $title .= (date('mdY H:i', $auctionStartTime) == date('mdY H:i', $auctionEndTime))?
                     date('g' . $endMins . 'a', $auctionEndTime):
                     date('M jS g' . $endMins . 'a | Y', $auctionEndTime);
 
