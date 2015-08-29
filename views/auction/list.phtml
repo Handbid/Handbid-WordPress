@@ -120,8 +120,9 @@ $selected = isset($_GET['auction_list']) ? $_GET['auction_list'] : 'current';
                                     echo 'Opens: ' . date($format, $auction->startTime);
 
                             }
-                            $timezone = $auction->timeZone;
-                            echo " " . $timezone->format('T');
+                            $TZ = new DateTime();
+							$TZ->setTimeZone(new DateTimeZone($auction->timeZone)); 
+                            echo " " . $TZ->format('T');
                             ?>
                         </li>
 
