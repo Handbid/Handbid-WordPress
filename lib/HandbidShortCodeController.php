@@ -1263,8 +1263,8 @@ class HandbidShortCodeController {
 
                 $startMins = date(':m', $auctionStartTime);
                 $endMins = date(':m', $auctionStartTime);
-//                $startMins = ($startMins == ':00') ? $startMins : "";
-//                $endMins = ($endMins == ':00') ? $endMins : "";
+                $startMins = ($startMins == ':00') ? $startMins : "30";
+                $endMins = ($endMins == ':00') ? $endMins : "30";
 
                 date_default_timezone_set($timeZone);
 
@@ -1275,6 +1275,7 @@ class HandbidShortCodeController {
                     date('M jS g' . $endMins . 'a | Y', $auctionEndTime);
 
                 $title .= ' ' . $auctionTimeZone;
+								$title .= $auctionStartTime;
                 $title .= '</span>';
 
                 return $title;
