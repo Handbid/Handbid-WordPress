@@ -1261,8 +1261,8 @@ class HandbidShortCodeController {
 	        $timeZone = (trim($auctionTimeZone)) ? $auctionTimeZone : 'America/Denver' ;
             if(trim($auctionTitle)){
 
-                $startMins = date(':m', $auctionStartTime);
-                $endMins = date(':m', $auctionStartTime);
+                $startMins = date(':i', $auctionStartTime);
+                $endMins = date(':i', $auctionStartTime);
                 $startMins = ($startMins == ':00') ? $startMins : "";
                 $endMins = ($endMins == ':00') ? $endMins : "";
 
