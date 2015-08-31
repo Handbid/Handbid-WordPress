@@ -406,7 +406,8 @@ class Handbid
         </script>
         <?php
 
-        echo '<input type="hidden" data-dashboard-profile-id="'.$bidder->id.'">';
+        $bidderID = (isset($bidder->id)) ? $bidder->id : 0;
+        echo '<input type="hidden" data-dashboard-profile-id="'.$bidderID.'">';
         echo '<input type="hidden" data-default-item-image="'.plugins_url("handbid/public/images/default-item-image.jpg").'">';
 
         echo '<script src="'.$socketIoUrl.'"></script>';

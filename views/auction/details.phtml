@@ -26,8 +26,8 @@ $locationStreet1 = ($hasLocation) ? $location->auctionLocationStreet1 : "";
 $locationStreet2 = ($hasLocation) ? $location->auctionLocationStreet2 : "";
 $locationPCode = ($hasLocation) ? $location->auctionLocationPostalCode : "";
 $locationCity = ($hasLocation) ? $location->auctionLocationCity : "";
-$locationProvince = ($hasLocation) ? $location->province->countriesRegionsName : "";
-$locationProvinceShort = ($hasLocation) ? $location->province->countriesRegionsShortName : "";
+$locationProvince = ($hasLocation) ? ((isset($location->province)) ? $location->province->countriesRegionsName : "" ) : "";
+$locationProvinceShort = ($hasLocation) ? ((isset($location->province)) ? $location->province->countriesRegionsShortName : "" ) : "";
 
 if ($hasLocation) {
 
