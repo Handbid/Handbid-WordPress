@@ -14,20 +14,20 @@ $losing      = $this->get('losing');
 $colsCount   = $this->get('cols_count');
 $tickets     = $this->get('tickets');
 $profile     = $this->get('profile');
-$location    = $auction->locations[0];
-$hasLocation = !!($location->auctionLocationStreet1);
+$location    = (isset($auction->locations) and is_array($auction->locations) and count($auction->locations))?$auction->locations[0]:[];
+$hasLocation = (isset($location->auctionLocationStreet1)) ? !!($location->auctionLocationStreet1): false;
 $address     = null;
 $mapsUrl     = null;
 $categories  = $this->get('categories');
 $categories  = $auction->categories;
 
 
-$locationStreet1 = $location->auctionLocationStreet1;
-$locationStreet2 = $location->auctionLocationStreet2;
-$locationPCode = $location->auctionLocationPostalCode;
-$locationCity = $location->auctionLocationCity;
-$locationProvince = $location->province->countriesRegionsName;
-$locationProvinceShort = $location->province->countriesRegionsShortName;
+$locationStreet1 = ($hasLocation) ? $location->auctionLocationStreet1 : "";
+$locationStreet2 = ($hasLocation) ? $location->auctionLocationStreet2 : "";
+$locationPCode = ($hasLocation) ? $location->auctionLocationPostalCode : "";
+$locationCity = ($hasLocation) ? $location->auctionLocationCity : "";
+$locationProvince = ($hasLocation) ? $location->province->countriesRegionsName : "";
+$locationProvinceShort = ($hasLocation) ? $location->province->countriesRegionsShortName : "";
 
 if ($hasLocation) {
 

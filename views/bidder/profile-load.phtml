@@ -14,10 +14,11 @@ if(!$this->get('profile'))
 
 $auction = $this->get('auction');
 $profile = $this->get('profile');
+$auctionID = (isset($auction->id))?$auction->id:"";
 ?>
 <div id="bidder-info-load" class="bidder-info-load"
      data-profile-paddle-number="<?php echo $auction->currentPaddleNumber; ?>"
-     data-auction="<?php echo (int) $auction->id; ?>"
+     data-auction="<?php echo (int) $auctionID; ?>"
      data-auction-status="<?php echo $auction->status; ?>"
      data-auction-name="<?php echo esc_js($auction->name); ?>"
      data-auction-key="<?php echo $auction->key; ?>"
@@ -34,7 +35,7 @@ $profile = $this->get('profile');
      data-paddle-nonce="<?php echo apply_filters("handbid_create_nonce", date("d.m.Y") . "add_paddle");?>">
 
     <?php
-    echo do_shortcode("[handbid_bidder_profile_bar  auction='".$auction->id."' isinitialloading='1']");
+    echo do_shortcode("[handbid_bidder_profile_bar  auction='".$auctionID."' isinitialloading='1']");
     ?>
 
 </div>

@@ -16,7 +16,8 @@ $isBiddable = !$item->isDirectPurchaseItem;
 $buyItNow   = $isBiddable && $item->buyNowPrice > 0 && $item->buyNowPrice > $item->minimumBidAmount;
 $itemSold   = ($item->status == "sold" || $item->status == "paid");
 
-$needCreditCards = ($item->isTicket or $auction->requireCreditCard);
+$itemIsTicket = (isset($item->isTicket)) ? (bool) $item->isTicket : false;
+$needCreditCards = ($itemIsTicket or $auction->requireCreditCard);
 $creditCardsRequired = ($needCreditCards) ? " data-handbid-credit-cards-need " : "";
 $creditCardsRequired .= (!count($profile->creditCards) and $needCreditCards) ? " data-handbid-credit-cards-required " : "";
 ?>

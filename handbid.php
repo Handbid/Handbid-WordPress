@@ -178,7 +178,7 @@ class Handbid
 	function loginPageThemeRedirect() {
 		global $wp, $post, $wp_query;
 		$pluginDir = dirname( __FILE__ );
-		if ($wp->query_vars["pagename"] == 'log-in') {
+		if (get_query_var("pagename","") == 'log-in') {
 			$templateFileName = 'login-form-new.phtml';
 			$returnTemplate = $pluginDir . '/views/bidder/' . $templateFileName;
 			$returnTemplate = str_replace("\\","/",$returnTemplate);
@@ -381,8 +381,8 @@ class Handbid
         // $hostName = 'manager.hand.bid';
         $endpoint = parse_url(get_option('handbidRestEndpoint'));
         $hostName = $endpoint["host"];
-        $auctionGuid = $auction->auctionGuid;
-        $userGuid = $bidder->usersGuid;
+        $auctionGuid = (isset($auction->auctionGuid))?trim($auction->auctionGuid):"";
+        $userGuid = (isset($bidder->usersGuid))?trim($bidder->usersGuid):"";
 
         $hostPort = '3002';
         $isSecure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443);

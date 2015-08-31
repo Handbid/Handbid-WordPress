@@ -28,7 +28,8 @@ $isLosing = count( array_filter( $losing, function ( $bid ) use ( $item ) {
 if ( ! $item ) {
 	return;
 }
-if ( $item->isTicket ) {
+$itemIsTicket = (isset($item->isTicket)) ? (bool) $item->isTicket : false;
+if ( $itemIsTicket ) {
 	$item->isDirectPurchaseItem = true;
 }
 $category    = $item->categoryName;
@@ -48,7 +49,7 @@ if ( ! $item->hasInventory ) {
 
 $hasManyImages   = ( count( $item->images ) > 1 );
 $itemValueHidden = ( isset( $item->showValue ) and ( $item->showValue != 1 ) );
-$itemHideIfSold = ($item->hideSales == 1);
+$itemHideIfSold = (isset($item->hideSales) and $item->hideSales == 1);
 ?>
 
 	<div class="item-details item-<?php echo $item->status; ?>"
