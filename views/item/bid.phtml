@@ -16,10 +16,11 @@ $isBiddable = !$item->isDirectPurchaseItem;
 $buyItNow   = $isBiddable && $item->buyNowPrice > 0 && $item->buyNowPrice > $item->minimumBidAmount;
 $itemSold   = ($item->status == "sold" || $item->status == "paid");
 
+$creditCards = (isset($profile->creditCards) and is_array($profile->creditCards)) ? $profile->creditCards : [];
 $itemIsTicket = (isset($item->isTicket)) ? (bool) $item->isTicket : false;
 $needCreditCards = ($itemIsTicket or $auction->requireCreditCard);
 $creditCardsRequired = ($needCreditCards) ? " data-handbid-credit-cards-need " : "";
-$creditCardsRequired .= (!count($profile->creditCards) and $needCreditCards) ? " data-handbid-credit-cards-required " : "";
+$creditCardsRequired .= (!count($creditCards) and $needCreditCards) ? " data-handbid-credit-cards-required " : "";
 ?>
 <?php
 $availableForPreSale = ($item->availableForPreSale == "1");

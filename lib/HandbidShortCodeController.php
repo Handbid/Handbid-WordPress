@@ -1261,14 +1261,28 @@ class HandbidShortCodeController {
 
                 date_default_timezone_set($timeZone);
 
-                $title = $auctionTitle . '<span class="under">' . date('M jS g:i a', $auctionStartTime) . ' - ';
+                $title = $auctionTitle . '<span class="under">';
+                $sep = ' &mdash; ';
 
-                $title .= (date('mdY H:i', $auctionStartTime) == date('mdY H:i', $auctionEndTime))?
-                    date('g:i a', $auctionEndTime):
-                    date('M jS g:i a | Y', $auctionEndTime);
+                if(date('Ymd', $auctionStartTime) == date('Ymd', $auctionEndTime)){
+                    //The same day of opening and closing
+                    $title .= date('M jS g:i a', $auctionStartTime) . $sep . date('g:i a | Y', $auctionEndTime);
+                }
+                elseif(date('Ym', $auctionStartTime) == date('Ym', $auctionEndTime)){
+                    //The same month
+                    $title .= date('M jS g:i a', $auctionStartTime) . $sep . date('jS g:i a | Y', $auctionEndTime);
+                }
+                elseif(date('Y', $auctionStartTime) == date('Y', $auctionEndTime)){
+                    //The same year
+                    $title .= date('M jS g:i a', $auctionStartTime) . $sep . date('M jS g:i a | Y', $auctionEndTime);
+                }
+                else{
+                    //Different years
+                    $title .= date('M jS g:i a | Y', $auctionStartTime) . $sep . date('M jS g:i a | Y', $auctionEndTime);
+                }
 
-                $title .= ' ' . $auctionTimeZone;
-								$title .= $auctionStartTime;
+                $title .= ' ' . date("T", $auctionEndTime);
+
                 $title .= '</span>';
 
                 return $title;
