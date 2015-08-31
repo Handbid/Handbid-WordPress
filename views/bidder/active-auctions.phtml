@@ -19,8 +19,8 @@ $myAuctions = $this->get( 'myAuctions' );
                     <li class="row <?php echo $auction->status; ?>" data-handbid-active-profile-auction="<?php echo $auction->id; ?>">
                         <div class="col-md-2"><img class="full-width-image"
                                                    src="<?php
-                                                   $image = $auction->logo->medium;
-                                                   $image = ($image) ? $image : $auction->imageUrl;
+                                                   $image = (isset($auction->logo) and isset($auction->logo->medium))?$auction->logo->medium:"";
+                                                   $image = ($image) ? $image : (isset($auction->imageUrl) ? $auction->imageUrl : "");
                                                    $imageUrlPath = parse_url($image);
                                                    $image = ($imageUrlPath["scheme"]) ? $image : "http://" . $image;
                                                    echo $image; ?>"/>
