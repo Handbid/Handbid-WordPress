@@ -1235,7 +1235,7 @@ class HandbidShortCodeController {
             $auctionStartTime = "";
             $auctionEndTime = "";
             $auctionTitle = "";
-	        $auctionTimeZone = "";
+	          $auctionTimeZone = "";
 
             if($post->post_name == 'auction-item'){
 
@@ -1252,26 +1252,22 @@ class HandbidShortCodeController {
                 $auctionStartTime = $auction->startTime;
                 $auctionEndTime = $auction->endTime;
                 $auctionTitle = $auction->name;
-	            $auctionTimeZone = $auction->timeZone;
+	             $auctionTimeZone = $auction->timeZone;
 
             }
 	        $timeZone = (trim($auctionTimeZone)) ? $auctionTimeZone : 'America/Denver' ;
             if(trim($auctionTitle)){
 
-                $startMins = date(':m', $auctionStartTime);
-                $endMins = date(':m', $auctionStartTime);
-                $startMins = ($startMins == ':00') ? $startMins : "";
-                $endMins = ($endMins == ':00') ? $endMins : "";
-
                 date_default_timezone_set($timeZone);
 
-                $title = $auctionTitle . '<span class="under">' . date('M jS g' . $startMins . 'a', $auctionStartTime) . ' - ';
+                $title = $auctionTitle . '<span class="under">' . date('M jS g:i a', $auctionStartTime) . ' - ';
 
-                $title .= (date('mdY', $auctionStartTime) == date('mdY', $auctionEndTime))?
-                    date('g' . $endMins . 'a', $auctionEndTime):
-                    date('M jS g' . $endMins . 'a | Y', $auctionEndTime);
+                $title .= (date('mdY H:i', $auctionStartTime) == date('mdY H:i', $auctionEndTime))?
+                    date('g:i a', $auctionEndTime):
+                    date('M jS g:i a | Y', $auctionEndTime);
 
                 $title .= ' ' . $auctionTimeZone;
+								$title .= $auctionStartTime;
                 $title .= '</span>';
 
                 return $title;

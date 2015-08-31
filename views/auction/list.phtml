@@ -107,7 +107,7 @@ $selected = isset($_GET['auction_list']) ? $_GET['auction_list'] : 'current';
                             <span class="icon"></span>
                             <?php
 
-                            $format = 'n.j.Y ga';
+                            $format = 'n.j g:i a';
                             switch($auction->status) {
 
                                 case 'open':
@@ -120,7 +120,11 @@ $selected = isset($_GET['auction_list']) ? $_GET['auction_list'] : 'current';
                                     echo 'Opens: ' . date($format, $auction->startTime);
 
                             }
-                            echo " " . $auction->timeZone;
+                            $TZ = new DateTime();
+							if ($auction->timeZone) {
+								$TZ->setTimeZone(new DateTimeZone($auction->timeZone)); 
+                            	echo " " . $TZ->format('T'); 
+                            	}
                             ?>
                         </li>
 
