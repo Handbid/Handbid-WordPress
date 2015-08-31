@@ -723,12 +723,11 @@ class HandbidShortCodeController {
             // $profile  = $this->handbid->store( 'Bidder' )->myProfile();
 
             $auction = $this->state->currentAuction();
-            $auctionID = (isset($auction->id))?$auction->id:0;
-            $profile  = $this->state->currentBidder($auctionID);
-
             if(is_null($auction) and isset($attributes["auction"]) and (int) $attributes["auction"] ){
                 $auction = $this->auction = $this->handbid->store('Auction')->byId($attributes["auction"], false);
             }
+            $auctionID = (isset($auction->id))?$auction->id:0;
+            $profile  = $this->state->currentBidder($auctionID);
             $isInitialLoading = (isset($attributes["isinitialloading"]));
 
             $winning    = [];
