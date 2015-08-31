@@ -427,9 +427,11 @@ class HandbidShortCodeController {
             $bidder   = $this->state->currentBidder( $auctionID );
 
             $items = [];
-            forEach($auction->categories as $category) {
-                forEach($category->items as $item) {
-                    $items[] = $item;
+            if(count($auction->categories)) {
+                forEach ($auction->categories as $category) {
+                    forEach ($category->items as $item) {
+                        $items[] = $item;
+                    }
                 }
             }
 

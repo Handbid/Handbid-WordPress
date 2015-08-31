@@ -216,6 +216,7 @@ $hasTicketItems = !!(count($tickets));
                         <ul class="by-category">
                             <?php
                             $allCount = 0;
+                            if(count($categories)){
                             foreach ($categories as $category) {
 	                            $notHiddenCount = 0;
 	                            foreach ($category->items as $catItem) {
@@ -226,6 +227,7 @@ $hasTicketItems = !!(count($tickets));
 	                            }
                                 $allCount += $notHiddenCount;
 	                            $category->notHiddenCount = $notHiddenCount;
+                            }
                             } ?>
 <!-- exclude "all" -->
 <!--
@@ -235,7 +237,9 @@ $hasTicketItems = !!(count($tickets));
 <?php
 $selected = 'selected';
 ?>
-                            <?php foreach ($categories as $category) {
+                            <?php
+                            if(count($categories)){
+                            foreach ($categories as $category) {
 
                                 if (count($category->items) > 0) {
                                     ?>
@@ -247,6 +251,7 @@ $selected = 'selected';
                                 <?php
 $selected = '';
                                 } //end if
+                            }
                             } ?>
 
                         </ul>
