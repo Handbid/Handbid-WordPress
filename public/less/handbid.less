@@ -2509,6 +2509,30 @@ body .container a.back-to-previous {
         outline: 0;
         background: #fff;
     }
+
+
+  .credit-card-status{
+    display: none;
+  }
+  .credit-card-status.card-error,
+  .credit-card-status.card-success{
+    display: block;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    padding: 5px;
+    border-radius: 12px;
+    text-align: center;
+  }
+  .credit-card-status.card-error{
+    color: #e94d70 !important;
+    background-color: rgba(233, 77, 112, 0.2) !important;
+  }
+  .credit-card-status.card-success{
+    color: #4cb0ce !important;
+    background-color: rgba(76, 176, 206, 0.2) !important;
+  }
+
 }
 
 .handbid-modal {

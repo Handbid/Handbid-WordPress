@@ -151,7 +151,7 @@ class Handbid
 
     function cdnGalleryImage($imageUrl) {
         $wrongForGallery = "-/format/jpeg/-/quality/lightest/";
-        $rightForGallery = "-/preview/800x600/-/setfill/e7e7e7/-/crop/800x600/center/-/quality/lightest/";
+        $rightForGallery = "-/preview/650x500/-/setfill/e7e7e7/-/crop/650x500/center/-/quality/lightest/";
         if(strpos($imageUrl, "ucarecdn.com") !== FALSE){
             if(strpos($imageUrl, $wrongForGallery) !== FALSE){
                 $imageUrl = str_replace($wrongForGallery, "", $imageUrl);
@@ -198,6 +198,15 @@ class Handbid
     function initScripts()
     {
 
+        $outerScripts = array(
+            'stripe-api-js'          => 'https://js.stripe.com/v2/',
+        );
+
+        foreach ($outerScripts as $key => $sc) {
+            wp_register_script($key, $sc);
+            wp_enqueue_script($key);
+        }
+
         $scripts = array(
             'progress-bar-js'          => 'public/js/progress-bar.js',
             'cookie-plugin-js'         => 'public/js/jquery.cookie.js',
@@ -216,6 +225,10 @@ class Handbid
             'handbid-modal-js'         => 'public/js/modal.js',
         );
 
+        foreach ($scripts as $key => $sc) {
+            wp_register_script($key, plugins_url($sc, __FILE__));
+            wp_enqueue_script($key);
+        }
 //        //make this a settings
 //        wp_register_script(
 //            'handbidCore',
@@ -223,10 +236,6 @@ class Handbid
 //        );
 //        wp_enqueue_script('handbidCore');
 
-        foreach ($scripts as $key => $sc) {
-            wp_register_script($key, plugins_url($sc, __FILE__));
-            wp_enqueue_script($key);
-        }
 
         $styles = array(
             'handid-bootstrap-css'       => 'public/css/bootstrap.min.css',
@@ -359,13 +368,15 @@ class Handbid
 
 
         //do we need to prompt for credit card?
+        $auction = $this->state()->currentAuction();
+        $auctionID =
         $bidder = $this->state()->currentBidder();
 
         if(!$bidder) {
             echo do_shortcode('[handbid_bidder_login_form]');
         }
 
-        if ($auction = $this->state()->currentAuction()) {
+        if ($auction) {
 
             if($bidder && !!$auction->requireCreditCard && count($bidder->creditCards) > 0 && ($auction->spendingThreshold == 0 || $auction->spendingThreshold <= $bidder->totalSpent)) {
 
@@ -389,7 +400,6 @@ class Handbid
 
         // Determined Values
         $protocol = $isSecure ? 'https' : 'http';
-        $jqueryUrl = sprintf('%s://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js', $protocol);
         $hostUrl = sprintf('%s://%s', $protocol, $hostName);
         $socketIoUrl = sprintf('%s:%s/socket.io/socket.io.js', $hostUrl, $hostPort);
         //$socketIoUrl = plugins_url("handbid/public/js/socket.io.js");
@@ -398,11 +408,14 @@ class Handbid
 
         ?>
         <script>
-            var auctionChannelId = '<?php echo $auctionGuid; ?>', // Demo Auction GUID
-                userChannelId = '<?php echo $userGuid; ?>', // demo@handbid.com user GUID
+            var auctionChannelId = '<?php echo $auctionGuid; ?>',
+                userChannelId = '<?php echo $userGuid; ?>',
                 url = '<?php echo $nodeClientUrl; ?>',
                 params = <?php echo $params; ?>;
 
+        </script>
+        <script type="text/javascript">
+            Stripe.setPublishableKey('<?php echo $this->state->getStripeApiKey();?>');
         </script>
         <?php
 

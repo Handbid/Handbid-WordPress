@@ -9,7 +9,9 @@
 
 
 
-var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circleTimer, auctionInvoices, currentPaddleNumber, currentElemNeedsCard;
+var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage,
+    circleTimer, auctionInvoices, currentPaddleNumber, currentElemNeedsCard,
+    currentCCForm;
 (function ($) {
 
     var restEndpoint = $("#apiEndpointsAddress").val(),
@@ -1850,102 +1852,135 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                     return false;
                 });
             },
-            setupAddCreditCard : function() {
-                var form = $('.creditcard-template'),
+            setupAddCreditCardCallback : function(status, response) {
+                var $form = currentCCForm,
                     container = $('.bidder-info-container.credit-card ul'),
-                    modalClose = $('[data-handbid-modal-key="credit-card-form"] .modal-close');
+                    modalClose = $('[data-handbid-modal-key="credit-card-form"] .modal-close'),
+                    statusPlace = $form.find('.credit-card-status').eq(0);
 
-                form.live('submit', function(e) {
+                var isAddingError = false;
+                var isAddingErrorMessage = "";
+                var isAddingSuccess = false;
+                var isAddingSuccessMessage = "";
+                var simpleErrorMessage = "Something wrong. Please, try again later";
 
+                if(response.error != undefined){
+                    isAddingError = true;
+                    if(response.error.message != undefined){
+                        isAddingErrorMessage = response.error.message;
+                        handbid.notice(isAddingErrorMessage, "Card Error", "error");
+                    }
+                    else{
+                        isAddingErrorMessage = simpleErrorMessage;
+                        handbid.notice(simpleErrorMessage, "Card Error", "error");
+                    }
+                }
+                else{
+                    if(response.card == undefined){
+                        isAddingError = true;
+                        isAddingErrorMessage = simpleErrorMessage;
+                        handbid.notice(simpleErrorMessage, "Card Error", "error");
+                    }
+                    else{
 
-                    var _data = form.serialize();
-                    var data = {
-                        action: "handbid_ajax_add_credit_card",
-                        data: _data
-                    };
-                    modalClose.click();
+                        var dataPost = {
+                            action: "handbid_ajax_add_credit_card",
+                            stripeId: response.id,
+                            creditCardHandle: response.card.id,
+                            nameOnCard: $form.find('.ccNameOnCard').val(),
+                            nonce: $("#hb-credit-card-nonce").val()
+                        };
+                        var addingCardMessage = 'Card was created successfully.<br> Adding it to your profile';
+                        handbid.notice(addingCardMessage);
+                        isAddingSuccess = true;
+                        isAddingSuccessMessage = addingCardMessage;
 
-                    handbid.notice('Adding your card');
+                        $.post(
+                            ajaxurl,
+                            dataPost,
+                            function (resp) {
 
-                    $.post(
-                        ajaxurl,
-                        data,
-                        function (data) {
-
-                            console.log("-------------------------------");
-                            console.log("----Add Credit Card Success----");
-                            console.log(data);
-                            try{
-                                data = JSON.parse(data);
-                                console.log(data);
-                            }
-                            catch(e){}
-
-                            if(data.error != undefined){
-                                if(data.error.message != undefined){
-                                    handbid.notice(data.error.message, "Card Error", "error");
+                                try{
+                                    resp = JSON.parse(resp);
                                 }
-                                else{
-                                    handbid.notice("Something wrong. Please, try again later", "Card Error", "error");
-                                }
-                            }
-                            else{
-                                if(data.resp == undefined){
-                                    handbid.notice("Something wrong. Please, try again later", "Card Error", "error");
-                                }
-                                else{
-                                    if(data.resp.success != undefined && !data.resp.success && data.resp.data.error != undefined){
-                                        var messageParts = $.map(data.resp.data.error, function(val, i){
-                                            return val.join("<br>");
-                                        });
+                                catch(e){}
+                                resp = resp.resp;
 
-                                        handbid.notice("<b>"+messageParts.join("<br>")+"</b>", "Card Error", "error");
+
+                                handbid.notice("Your card has been added successfully", "Card Success", "success");
+                                var template = $(' <li class="row" data-handbid-card-row="' + resp.id + '"> <div class="col-md-3 col-xs-3"> <h4>Name</h4>' + resp.nameOnCard + '</div> <div class="col-md-3 col-xs-3"> <h4>Card Number</h4> xxxx xxxx xxxx ' + resp.lastFour + '</div> <div class="col-md-3 col-xs-3"> <h4>Exp. Date</h4>' + resp.expMonth + '/' + resp.expYear + '</div> <div class="col-md-3 col-xs-3"> <a class="button pink-solid-button  loading-span-button" data-handbid-delete-credit-card="' + resp.id + '"><em>Delete</em></a></div></li>'),
+                                    hasCards = $('.credit-card .no-results-row').length > 0;
+
+                                var cardSelects = $(".select-payment-card");
+                                cardSelects.show();
+                                cardSelects.append("<option data-option-val='" + resp.id + "' value='" + resp.id + "'>" + resp.nameOnCard + " (xxxx xxxx xxxx " + resp.lastFour + ")</option>");
+
+                                if (!hasCards) {
+                                    template.appendTo(container);
+                                }
+                                else {
+                                    $('.credit-card .no-results-row').remove();
+
+                                    var list = null;
+
+                                    if ($('.credit-card .simple-list').length > 0) {
+                                        list = $('.credit-card .simple-list');
                                     }
                                     else {
-                                        handbid.notice("Your card has been added successfully", "Card Success", "success");
-                                        var template = $(' <li class="row" data-handbid-card-row="' + data.resp.id + '"> <div class="col-md-3 col-xs-3"> <h4>Name</h4>' + data.resp.nameOnCard + '</div> <div class="col-md-3 col-xs-3"> <h4>Card Number</h4> xxxx xxxx xxxx ' + data.resp.lastFour + '</div> <div class="col-md-3 col-xs-3"> <h4>Exp. Date</h4>' + data.resp.expMonth + '/' + data.resp.expYear + '</div> <div class="col-md-3 col-xs-3"> <a class="button pink-solid-button  loading-span-button" data-handbid-delete-credit-card="' + data.resp.id + '"><em>Delete</em></a></div></li>'),
-                                            hasCards = $('.credit-card .no-results-row').length > 0;
-
-                                        var cardSelects = $(".select-payment-card");
-                                        cardSelects.show();
-                                        cardSelects.append("<option data-option-val='" + data.resp.id + "' value='" + data.resp.id + "'>" + data.resp.nameOnCard + " (xxxx xxxx xxxx " + data.resp.lastFour + ")</option>");
-
-                                        if (!hasCards) {
-                                            template.appendTo(container);
-                                        }
-                                        else {
-                                            $('.credit-card .no-results-row').remove();
-
-                                            var list = null;
-
-                                            if ($('.credit-card .simple-list').length > 0) {
-                                                console.log("1");
-                                                list = $('.credit-card .simple-list');
-                                            }
-                                            else {
-                                                console.log("2");
-                                                list = $('<ul class="simple-list"></ul>');
-                                            }
-                                            console.log(list);
-                                            list.prependTo($('.credit-card'));
-                                            template.appendTo(list);
-
-                                        }
-
-                                        jQuery("[data-handbid-credit-cards-need]").removeAttr("data-handbid-credit-cards-required");
-                                        //(currentElemNeedsCard != undefined) ? currentElemNeedsCard.click() : "";
+                                        list = $('<ul class="simple-list"></ul>');
                                     }
+                                    list.prependTo($('.credit-card'));
+                                    template.appendTo(list);
+
                                 }
-                            }
+
+                                $("[data-handbid-credit-cards-need]").removeAttr("data-handbid-credit-cards-required");
+                                $('[data-handbid-modal-key="credit-card-form"] .modal-close').click();
+                                statusPlace.removeClass("card-error").removeClass("card-success");
+                                statusPlace.html("");
+                            });
 
 
-                        }
-                    );
+
+                    }
+                }
 
 
+                $form.find('.submit-cc-button').prop('disabled', false);
+                $form.parent().parent().removeClass("processing");
+
+                if(isAddingError){
+                    statusPlace.removeClass("card-success").addClass("card-error");
+                    statusPlace.html(isAddingErrorMessage);
+                }
+                else{
+                    if(isAddingSuccess){
+                        statusPlace.removeClass("card-error").addClass("card-success");
+                        statusPlace.html(isAddingSuccessMessage);
+                    }
+                    else {
+                        statusPlace.removeClass("card-error").removeClass("card-success");
+                        statusPlace.html("");
+                    }
+                }
+
+
+            },
+            setupAddCreditCard : function() {
+                var form = $('.creditcard-template');
+
+                form.live('submit', function(event) {
+                    var $form = $(this);
+                    currentCCForm = $form;
+
+                    $form.find('.submit-cc-button').prop('disabled', true);
+                    $form.parent().parent().addClass("processing");
+
+                    Stripe.card.createToken($form, handbidMain.setupAddCreditCardCallback);
 
                     return false;
                 });
+
             },
             setupProvincesSelect : function() {
 

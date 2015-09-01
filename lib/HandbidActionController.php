@@ -461,6 +461,37 @@ class HandbidActionController
 
     function handbid_ajax_add_credit_card_callback(){
 
+        $nonce = $_POST["nonce"];
+        $stripeId = $_POST["stripeId"];
+        $creditCardHandle = $_POST["creditCardHandle"];
+        $nameOnCard = $_POST["nameOnCard"];
+        $params = [
+            "stripeId" => $stripeId,
+            "creditCardHandle" => $creditCardHandle,
+            "nameOnCard" => $nameOnCard,
+        ];
+        $result = [
+            "opts" => $params,
+        ];
+
+        if($this->handbid_verify_nonce($nonce, date("d.m.Y") . "credit_card")){
+
+                try {
+                    $resp    = $this->handbid->store( 'CreditCard' )->add( $params );
+                    $result["resp"] = $resp;
+                }
+                catch(Exception $e){
+                    $result["error"] = $e;
+                }
+        }
+        echo json_encode($result);
+        exit;
+    }
+
+
+
+    function handbid_ajax_add_credit_card_old_callback(){
+
         $postData = urldecode($_POST["data"]);
         parse_str($postData, $opts);
         $nonce = $opts["nonce"];

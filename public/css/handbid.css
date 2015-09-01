@@ -242,6 +242,13 @@
     }
 }
 
+.handbid-modal.processing input[type=submit]{
+    background-image: url("../images/ajax-loader.gif") !important;
+    background-repeat: no-repeat;
+    background-position: center;
+    text-indent: -9999px;
+}
+
 .active-auctions-list-area.loading-messages,
 .messages-list-area.loading-messages,
 .receipts-list-area.loading-messages{

@@ -62,8 +62,18 @@
         overlay.live('click', function(e) {
             e.preventDefault();
             var modals = $('.handbid-modal');
-            modals.css('display', 'none');
-            overlay.css('display', 'none');
+            var modalsOpened = false;
+            $.map(modals, function(val){
+                if(! $(val).hasClass("processing")){
+                    $(val).css('display', 'none');
+                }
+                if($(val).is(":visible")){
+                    modalsOpened = true;
+                }
+            });
+            if(!modalsOpened) {
+                overlay.css('display', 'none');
+            }
         });
     });
 }(jQuery));
