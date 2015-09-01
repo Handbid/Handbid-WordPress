@@ -28,7 +28,7 @@ if (!$auction->enableTicketSales) {
 
 <a class="button pink-button handbid-modal-link purchase-tickets"
     <?php if (!count($profile->creditCards)) {
-        echo " data-handbid-credit-cards-required ";
+        //echo " data-handbid-credit-cards-required ";
     } ?> data-handbid-credit-cards-need
    data-handbid-modal-key="tickets-form" data-handbid-tickets>Buy Tickets</a>
 
@@ -40,7 +40,8 @@ if (!$auction->enableTicketSales) {
     <?php
 
     if ($profile) {
-    if ($auction->requireCreditCard && !count($cards) > 0) {
+        $needToCheckIfCreditCardsRequired = false;
+    if ($needToCheckIfCreditCardsRequired && $auction->requireCreditCard && !count($cards) > 0) {
         echo "You need to add a credit card to buy tickets";
     } else {
     ?>

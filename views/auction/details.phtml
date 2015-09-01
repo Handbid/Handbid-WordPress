@@ -230,12 +230,12 @@ $hasTicketItems = !!(count($tickets));
                             }
                             } ?>
 <!-- exclude "all" -->
-<!--
-                            <li data-selector="*" class=""><a href="#">All (<span class="countAuctionItemsForCatAll"><?php echo $allCount; ?></span>)</a></li>
--->
+
+                            <li data-selector="*" class="selected"><a href="#">All (<span class="countAuctionItemsForCatAll"><?php echo $allCount; ?></span>)</a></li>
+
 
 <?php
-$selected = 'selected';
+$selected = '';
 ?>
                             <?php
                             if(count($categories)){

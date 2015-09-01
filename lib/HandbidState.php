@@ -27,6 +27,8 @@ class HandbidState
     public $auction;
     public $item;
     public $inventory;
+    public $bidder;
+    public $bidderAuctionID = null;
     public $countriesAndProvinces;
 
     public function __construct($basePath, $handbid)
@@ -177,7 +179,13 @@ class HandbidState
     public function currentBidder($auction_id = null)
     {
         try {
-            return $this->handbid->store('Bidder')->myProfile($auction_id);
+            if (($this->bidder and $auction_id == null) or ($this->bidder and $auction_id == $this->bidderAuctionID) ) {
+                return $this->bidder;
+            }
+            $this->bidder =  $this->handbid->store('Bidder')->myProfile($auction_id);
+            $this->bidderAuctionID = $auction_id;
+            return $this->bidder;
+
         } catch (Exception $e) {
 
             return null;

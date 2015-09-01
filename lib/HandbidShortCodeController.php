@@ -393,7 +393,7 @@ class HandbidShortCodeController {
 
 		try {
 			$template = $this->templateFromAttributes( $attributes, 'views/connect' );
-			$bidder   = $this->state->currentBidder( $attributes );
+			$bidder   = $this->state->currentBidder( );
 			$protocol = ( ! empty( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443 ) ? "https://" : "http://";
 
 			$default = $protocol . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
@@ -601,8 +601,9 @@ class HandbidShortCodeController {
 
 			$template = $this->templateFromAttributes( $attributes, 'views/item/bids' );
 
+			$auction    = $this->state->currentAuction( );
 			$item    = $this->state->currentItem( $attributes );
-			$profile = $this->state->currentBidder();
+			$profile = $this->state->currentBidder($auction->id);
 			$bids    = null;
 
 			if ( $item ) {
@@ -1010,7 +1011,9 @@ class HandbidShortCodeController {
 
 			$template = $this->templateFromAttributes( $attributes, 'views/bidder/profile-form' );
 			//$profile  = $this->handbid->store( 'Bidder' )->myProfile();
-			$profile  = $this->state->currentBidder();
+            $auction = $this->state->currentAuction();
+            $auctionID = (isset($auction->id))?$auction->id:0;
+			$profile  = $this->state->currentBidder($auctionID);
 
             $countries                     = $this->state->getCountriesWithCodes();
             $countryIDs                    = $this->state->getCountriesAndProvinces();
@@ -1045,7 +1048,9 @@ class HandbidShortCodeController {
 		try {
 			$template = $this->templateFromAttributes( $attributes, 'views/bidder/credit-cards' );
 			//$profile  = $this->handbid->store( 'Bidder' )->myProfile();
-			$profile  = $this->state->currentBidder();
+            $auction = $this->state->currentAuction();
+            $auctionID = (isset($auction->id))?$auction->id:0;
+			$profile  = $this->state->currentBidder($auctionID);
 
 			$cards = (isset($profile->creditCards)) ?
 				$profile->creditCards :
@@ -1093,7 +1098,9 @@ class HandbidShortCodeController {
 		    'in_page'      => '',
 	    ), $atts );
         $countries  = $this->state->getCountriesWithCodes();
-	    $profile  = $this->state->currentBidder();
+        $auction = $this->state->currentAuction();
+        $auctionID = (isset($auction->id))?$auction->id:0;
+	    $profile  = $this->state->currentBidder($auctionID);
         return $this->viewRenderer->render('views/bidder/login-form-new',
             [
                 "countries" => $countries,
@@ -1109,7 +1116,8 @@ class HandbidShortCodeController {
 		try {
 			$auction = $this->state->currentAuction( $attributes );
             $tickets = $this->state->getCurrentAuctionTickets();
-            $profile   = $this->state->currentBidder( );
+            $auctionID = (isset($auction->id))?$auction->id:0;
+            $profile   = $this->state->currentBidder($auctionID );
             $cards = $profile->creditCards;
 			$query = [ ];//@todo: find out hwo to pass query through attributes. then merge it with our defaults. array_merge([], $query)
 
@@ -1143,18 +1151,24 @@ class HandbidShortCodeController {
 	}
 
 	// Control flow
-	public function isLoggedIn( $attributes, $content ) {
+	public function isLoggedCheck() {
+        $auction = $this->state->currentAuction( );
+        $auctionID = (isset($auction->id))?$auction->id:0;
 		//$profile = $this->handbid->store( 'Bidder' )->myProfile();
-		$profile = $this->state->currentBidder();
-		if ( $profile ) {
+		$profile = $this->state->currentBidder($auctionID);
+		return $profile;
+	}
+
+	public function isLoggedIn( $attributes, $content ) {
+		$isLogged = $this->isLoggedCheck();
+		if ( $isLogged ) {
 			echo do_shortcode( $content );
 		}
 	}
 
 	public function isLoggedOut( $attributes, $content ) {
-		//$profile = $this->handbid->store( 'Bidder' )->myProfile();
-		$profile = $this->state->currentBidder();
-		if ( ! $profile ) {
+        $isLogged = $this->isLoggedCheck();
+        if ( ! $isLogged ) {
 			echo do_shortcode( $content );
 		}
 	}

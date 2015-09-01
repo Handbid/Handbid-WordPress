@@ -9,7 +9,7 @@
 
 
 
-var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circleTimer, auctionInvoices, currentPaddleNumber;
+var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circleTimer, auctionInvoices, currentPaddleNumber, currentElemNeedsCard;
 (function ($) {
 
     var restEndpoint = $("#apiEndpointsAddress").val(),
@@ -989,7 +989,10 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                 var needCreditCard = (typeof attr !== typeof undefined && attr !== false);
                 var creditCardRows = $("[data-handbid-card-row]");
                 if(needCreditCard && creditCardRows.length == 0){
-                    handbidMain.notice("Please add credit card to your profile for this action", "Credit Card Required", "error");
+                    currentElemNeedsCard = elem;
+                    $(".credit-card-form-link").eq(0).click();
+                    //handbidMain.displayRequiredCardsMessage("You must supply a credit card to do this action.");
+                    //handbidMain.notice("Please add credit card to your profile for this action", "Credit Card Required", "error");
                 }
                 return needCreditCard;
             },
@@ -1930,6 +1933,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
                                         }
 
                                         jQuery("[data-handbid-credit-cards-need]").removeAttr("data-handbid-credit-cards-required");
+                                        //(currentElemNeedsCard != undefined) ? currentElemNeedsCard.click() : "";
                                     }
                                 }
                             }
@@ -2035,7 +2039,9 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
             },
             setupAuthorizationStatus: function () {
 
-                var authorized = $.cookie('handbid-auth') ? true : false;
+                var bidderDashboardPlace = $("#bidder-info-load"),
+                    hasBidderDashboard = (bidderDashboardPlace.is(":visible") && bidderDashboardPlace.html().trim() != "" );
+                var authorized = ($.cookie('handbid-auth') && hasBidderDashboard) ? true : false;
 
                 if (authorized === true) {
                     $('.handbid-logout').css('display', 'inline-block');
@@ -2290,18 +2296,19 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage, circl
             },
 
 
-            displayRequiredCardsMessage: function(){
+            displayRequiredCardsMessage: function(msg){
 
             // Woody added this to prevent the message showing when pages load in the wrong order
                var cards_exist = $("div.credit-card ul").children("li.row");
                if (cards_exist.length) {
                        return true;
                }
+                msg = (msg != undefined) ? msg : "You must supply a credit card to bid in this auction.";
 
                 new PNotify({
                     title: 'Credit cards required',
                     type: 'error',
-                    text: '<b>You must supply a credit card to bid in this auction.</b>',
+                    text: '<b>'+msg+'</b>',
                     icon: 'glyphicon glyphicon-exclamation-sign',
                     addclass: 'handbid-message-notice',
                     hide: false,

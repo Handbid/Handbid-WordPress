@@ -46,7 +46,23 @@
 
         $('.modal-close').live('click', function(e) {
             e.preventDefault();
-            $('.handbid-modal').css('display', 'none');
+            var modals = $('.handbid-modal');
+            $(this).parent().css('display', 'none');
+            var modalsOpened = false;
+            $.map(modals, function(val){
+                if($(val).is(":visible")){
+                    modalsOpened = true;
+                }
+            });
+            if(!modalsOpened) {
+                overlay.css('display', 'none');
+            }
+        });
+
+        overlay.live('click', function(e) {
+            e.preventDefault();
+            var modals = $('.handbid-modal');
+            modals.css('display', 'none');
             overlay.css('display', 'none');
         });
     });

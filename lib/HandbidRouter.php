@@ -95,6 +95,13 @@ class HandbidRouter
             return;
         }
 
+        $auctionID = 0;
+
+        if(in_array($post->post_name, ['auction', 'auction-item'])) {
+            $currentAuction = $this->state->currentAuction();
+            $auctionID = $currentAuction->id;
+        }
+
         if($post->post_name == 'auction' && !$this->state->currentAuction()) {
             $this->throw404();
         }
@@ -104,6 +111,8 @@ class HandbidRouter
         else if($post->post_name == 'auction-item' && !$this->state->currentItem()) {
             $this->throw404();
         }
+
+        $currentBidder = $this->state->currentBidder($auctionID);
 
     }
 
