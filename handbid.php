@@ -151,7 +151,7 @@ class Handbid
 
     function cdnGalleryImage($imageUrl) {
         $wrongForGallery = "-/format/jpeg/-/quality/lightest/";
-        $rightForGallery = "-/preview/1300x1000/-/setfill/e7e7e7/-/crop/1300x1000/center/-/quality/lightest/";
+        $rightForGallery = "-/preview/800x600/-/setfill/e7e7e7/-/crop/800x600/center/-/quality/lightest/";
         if(strpos($imageUrl, "ucarecdn.com") !== FALSE){
             if(strpos($imageUrl, $wrongForGallery) !== FALSE){
                 $imageUrl = str_replace($wrongForGallery, "", $imageUrl);
