@@ -1,4 +1,4 @@
-:13<?php
+<?php
 /**
  * Plugin Name: Handbid
  * Author: Handbid
