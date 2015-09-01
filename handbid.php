@@ -413,6 +413,8 @@ class Handbid
                 url = '<?php echo $nodeClientUrl; ?>',
                 params = <?php echo $params; ?>;
 
+            var forcePageRefreshAfterBids = <?php echo (get_option('handbidForceRefresh', 'no') == "yes") ? "true" : "false" ;?>;
+
         </script>
         <script type="text/javascript">
             Stripe.setPublishableKey('<?php echo $this->state->getStripeApiKey();?>');

@@ -1169,7 +1169,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage,
                     else{
                         var buyNowPrice = ($('[data-handbid-buynow-price]').length > 0 ) ? parseInt($('[data-handbid-buynow-price]').eq(0).data("handbid-buynow-price")) : -1;
 
-                        canBeUp = (!isMaxBidButton)? true : ((buyNowPrice == -1 ) || ((buyNowPrice != -1) && (value <= buyNowPrice)));
+                        canBeUp = (!isMaxBidButton)? true : ((buyNowPrice <=0 ) || ((buyNowPrice > 0) && (value <= buyNowPrice)));
 
 
                     }
@@ -1253,11 +1253,10 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage,
                                     handbid.addLosingItemRow(data.item.id, data, data.statusReason);
                                     handbid.loadBidsHistoryToContainer(data.item.id);
                                 }
+
+                                handbid.reloadPageIfForceRefresh();
                             }
 
-                            if(!connectedToSocket){
-                                console.log("CONNECTED TO SOCKET");
-                            }
                             button.removeClass("active");
                             return false;
                         }
@@ -1318,6 +1317,10 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage,
                                         handbid.loadBidsHistoryToContainer(data.item.id);
                                     }
                                 }
+
+                                handbid.reloadPageIfForceRefresh();
+
+
                             }
 
 
@@ -1391,6 +1394,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage,
                                 handbidMain.removeItemFromDashboardList(itemId, "proxy");
                                 handbidMain.recheckAndRecalculateBids();
 
+                                handbid.reloadPageIfForceRefresh();
                             }
 
 
@@ -1435,6 +1439,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage,
                             $('[data-handbid-item-banner="sold"]').show();
                             handbid.disableAllBiddingButtonsIfSold();
                             button.removeClass("active");
+                            handbid.reloadPageIfForceRefresh();
                             return false;
                         }
                     );
@@ -1486,7 +1491,11 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage,
 
                 });
             },
-
+            reloadPageIfForceRefresh: function(){
+                if(forcePageRefreshAfterBids){
+                    location.reload();
+                }
+            },
             recalculateTotalTicketsPrice: function(){
                 var totalPrice = 0;
                 var prices = $.map($("[data-handbid-ticket-id]"), function(val, i){

@@ -90,6 +90,14 @@ $is_local = $this->get("is_local");
                 <td><input type="number" name="handbidDefaultPageSize"
                            value="<?php $count = (int) get_option('handbidDefaultPageSize') ; echo ($count) ? $count : 25 ; ?>"/></td>
             </tr>
+            <tr valign="top">
+                <?php $forceRefresh = get_option('handbidForceRefresh', 'no');?>
+                <th scope="row"><?php echo('Force page refresh after each Bid and MaxBid'); ?></th>
+                <td>
+                    <label for="handbidForceRefresh1"><input type="radio" id="handbidForceRefresh1" name="handbidForceRefresh" value="no" <?php checked($forceRefresh, "no");?>/> no</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <label for="handbidForceRefresh2"><input type="radio" id="handbidForceRefresh2" name="handbidForceRefresh" value="yes" <?php checked($forceRefresh, "yes");?>/> yes</label>
+                </td>
+            </tr>
 
         </table>
         <?php submit_button(); ?>

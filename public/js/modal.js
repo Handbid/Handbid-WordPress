@@ -47,7 +47,7 @@
         $('.modal-close').live('click', function(e) {
             e.preventDefault();
             var modals = $('.handbid-modal');
-            $(this).parent().css('display', 'none');
+            $(this).parents(".handbid-modal").eq(0).css('display', 'none');
             var modalsOpened = false;
             $.map(modals, function(val){
                 if($(val).is(":visible")){
