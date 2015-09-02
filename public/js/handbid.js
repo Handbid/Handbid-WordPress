@@ -1916,37 +1916,48 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage,
                                 resp = resp.resp;
                                 console.log(resp);
 
-                                handbid.notice("Your card has been added successfully", "Card Success", "success");
-                                var template = $(' <li class="row" data-handbid-card-row="' + resp.id + '"> <div class="col-md-3 col-xs-3"> <h4>Name</h4>' + resp.nameOnCard + '</div> <div class="col-md-3 col-xs-3"> <h4>Card Number</h4> xxxx xxxx xxxx ' + resp.lastFour + '</div> <div class="col-md-3 col-xs-3"> <h4>Exp. Date</h4>' + resp.expMonth + '/' + resp.expYear + '</div> <div class="col-md-3 col-xs-3"> <a class="button pink-solid-button  loading-span-button" data-handbid-delete-credit-card="' + resp.id + '"><em>Delete</em></a></div></li>'),
-                                    hasCards = $('.credit-card .no-results-row').length > 0;
-
-                                var cardSelects = $(".select-payment-card");
-                                cardSelects.show();
-                                cardSelects.append("<option data-option-val='" + resp.id + "' value='" + resp.id + "'>" + resp.nameOnCard + " (xxxx xxxx xxxx " + resp.lastFour + ")</option>");
-
-                                if (!hasCards) {
-                                    template.appendTo(container);
+                                if(resp.success != undefined && !resp.success && resp.data != undefined && resp.data.error != undefined) {
+                                   var messageParts = $.map(resp.data.error, function (val, i) {
+                                        return val.join("<br>");
+                                    });
+                                    isAddingSuccess = false;
+                                    isAddingError = true;
+                                    isAddingErrorMessage = "<b>" + messageParts.join("<br>") + "</b>";
+                                    handbid.notice(isAddingErrorMessage, "Card Error", "error");
                                 }
                                 else {
-                                    $('.credit-card .no-results-row').remove();
+                                    handbid.notice("Your card has been added successfully", "Card Success", "success");
+                                    var template = $(' <li class="row" data-handbid-card-row="' + resp.id + '"> <div class="col-md-3 col-xs-3"> <h4>Name</h4>' + resp.nameOnCard + '</div> <div class="col-md-3 col-xs-3"> <h4>Card Number</h4> xxxx xxxx xxxx ' + resp.lastFour + '</div> <div class="col-md-3 col-xs-3"> <h4>Exp. Date</h4>' + resp.expMonth + '/' + resp.expYear + '</div> <div class="col-md-3 col-xs-3"> <a class="button pink-solid-button  loading-span-button" data-handbid-delete-credit-card="' + resp.id + '"><em>Delete</em></a></div></li>'),
+                                        hasCards = $('.credit-card .no-results-row').length > 0;
 
-                                    var list = null;
+                                    var cardSelects = $(".select-payment-card");
+                                    cardSelects.show();
+                                    cardSelects.append("<option data-option-val='" + resp.id + "' value='" + resp.id + "'>" + resp.nameOnCard + " (xxxx xxxx xxxx " + resp.lastFour + ")</option>");
 
-                                    if ($('.credit-card .simple-list').length > 0) {
-                                        list = $('.credit-card .simple-list');
+                                    if (!hasCards) {
+                                        template.appendTo(container);
                                     }
                                     else {
-                                        list = $('<ul class="simple-list"></ul>');
+                                        $('.credit-card .no-results-row').remove();
+
+                                        var list = null;
+
+                                        if ($('.credit-card .simple-list').length > 0) {
+                                            list = $('.credit-card .simple-list');
+                                        }
+                                        else {
+                                            list = $('<ul class="simple-list"></ul>');
+                                        }
+                                        list.prependTo($('.credit-card'));
+                                        template.appendTo(list);
+
                                     }
-                                    list.prependTo($('.credit-card'));
-                                    template.appendTo(list);
 
+                                    $("[data-handbid-credit-cards-need]").removeAttr("data-handbid-credit-cards-required");
+                                    $('[data-handbid-modal-key="credit-card-form"] .modal-close').click();
+                                    statusPlace.removeClass("card-error").removeClass("card-success");
+                                    statusPlace.html("");
                                 }
-
-                                $("[data-handbid-credit-cards-need]").removeAttr("data-handbid-credit-cards-required");
-                                $('[data-handbid-modal-key="credit-card-form"] .modal-close').click();
-                                statusPlace.removeClass("card-error").removeClass("card-success");
-                                statusPlace.html("");
                             });
 
 

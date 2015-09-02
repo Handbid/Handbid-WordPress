@@ -369,8 +369,8 @@ class Handbid
 
         //do we need to prompt for credit card?
         $auction = $this->state()->currentAuction();
-        $auctionID =
-        $bidder = $this->state()->currentBidder();
+        $auctionID = isset($auction->id)?$auction->id:0;
+        $bidder = $this->state()->currentBidder($auctionID);
 
         if(!$bidder) {
             echo do_shortcode('[handbid_bidder_login_form]');
