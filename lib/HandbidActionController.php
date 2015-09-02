@@ -39,7 +39,7 @@ class HandbidActionController
 
                 $item = $this->state->currentItem();
                 if ($item) {
-                    $post->post_title = $item->name;
+                    $post->post_title = (isset($item->name))?$item->name:get_the_title();
                     if ($sep) {
                         $title = ' ' . $sep . ' ' . $post->post_title;
                     } else {
@@ -112,6 +112,7 @@ class HandbidActionController
 
                 $item = $this->state->currentItem();
                 if ($item) {
+                    $item->imageUrl = (isset($item->imageUrl))?$item->imageUrl:"";
                     echo '<meta property="og:image" content="' . get_option('handbidCdnEndpoint') . $item->imageUrl . '" />';
                     echo '<link rel=”image_src” href=”' . get_option('handbidCdnEndpoint') . $item->imageUrl . '” />';
                 }

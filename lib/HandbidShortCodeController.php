@@ -544,12 +544,13 @@ class HandbidShortCodeController {
 			//$item    = $this->state->currentItem( $attributes );
 			$item    = $this->state->currentItem();
 			$auction = $this->state->currentAuction();
-            $bids = $this->handbid->store( 'Bid' )->itemBids( $item->id );
+            $itemID = (isset($item->id))?$item->id:0;
+            $bids = $this->handbid->store( 'Bid' )->itemBids( $itemID );
             $related = false;
 
 			if ( $attributes !== '' && $item && in_array( 'include_related', $attributes ) ) {
 
-				$related = $this->handbid->store( 'Item' )->related( $item->id, [
+				$related = $this->handbid->store( 'Item' )->related( $itemID, [
 					'config' => [
 						'skip'  => isset( $attributes['related_skip'] ) ? $attributes['related_skip'] : 0,
 						'limit' => isset( $attributes['related_limit'] ) ? $attributes['related_limit'] : 3,
@@ -1250,24 +1251,24 @@ class HandbidShortCodeController {
             $auctionStartTime = "";
             $auctionEndTime = "";
             $auctionTitle = "";
-	          $auctionTimeZone = "";
+            $auctionTimeZone = "";
 
             if($post->post_name == 'auction-item'){
 
                 $item       = $hb->state()->currentItem();
-                $auctionStartTime = $item->auctionStartTime;
-                $auctionEndTime = $item->auctionEndTime;
-                $auctionTitle = $item->auctionName;
-                $auctionTimeZone = $item->auctionTimeZone;
+                $auctionStartTime = (isset($item->auctionStartTime))?$item->auctionStartTime:"";
+                $auctionEndTime = (isset($item->auctionEndTime))?$item->auctionEndTime:"";
+                $auctionTitle = (isset($item->auctionName))?$item->auctionName:"";
+                $auctionTimeZone = (isset($item->auctionTimeZone))?$item->auctionTimeZone:"";
 
             }
             if($post->post_name == 'auction' or trim($auctionTitle) == ""){
 
                 $auction    = $hb->state()->currentAuction();
-                $auctionStartTime = $auction->startTime;
-                $auctionEndTime = $auction->endTime;
-                $auctionTitle = $auction->name;
-	             $auctionTimeZone = $auction->timeZone;
+                $auctionStartTime = (isset($auction->startTime))?$auction->startTime:"";
+                $auctionEndTime = (isset($auction->endTime))?$auction->endTime:"";
+                $auctionTitle = (isset($auction->name))?$auction->name:"";
+	            $auctionTimeZone = (isset($auction->timeZone))?$auction->timeZone:"";
 
             }
 	        $timeZone = (trim($auctionTimeZone)) ? $auctionTimeZone : 'America/Denver' ;

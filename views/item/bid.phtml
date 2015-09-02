@@ -21,13 +21,13 @@ $itemIsTicket = (isset($item->isTicket)) ? (bool) $item->isTicket : false;
 $needCreditCards = ($itemIsTicket or $auction->requireCreditCard);
 $creditCardsRequired = ($needCreditCards) ? " data-handbid-credit-cards-need " : "";
 $creditCardsRequired .= (!count($creditCards) and $needCreditCards) ? " data-handbid-credit-cards-required " : "";
-?>
-<?php
+$isLiveItem  = $item->disableMobileBidding;
 $availableForPreSale = ($item->availableForPreSale == "1");
 $itemCanNotBeShownInPresale = (in_array($auction->status, ["presale","preview"]) and !$availableForPreSale);
 ?>
 <input type="hidden" data-item-check-status-auction-id="<?php echo $auction->id;?>" value="<?php echo $auction->status;?>">
 <input type="hidden" data-item-check-status-item-id="<?php echo $item->id;?>" value="<?php echo $item->status;?>">
+<input type="hidden" data-item-check-is-live-item-id="<?php echo $item->id;?>" value="<?php echo ($isLiveItem)?"yes":"no";?>">
 <input type="hidden" data-item-check-available-item-id="<?php echo $item->id;?>" value="<?php echo $item->availableForPreSale;?>">
 
 <div data-handbid-bid data-handbid-item-key="<?php echo $item->key; ?>" data-item-nobidding-id="<?php echo $item->id; ?>"
@@ -38,8 +38,12 @@ $itemCanNotBeShownInPresale = (in_array($auction->status, ["presale","preview"])
      style="<?php echo ($itemSold)?"":" display:none; ";?>">
     <div class="row"><h4 class="no-bidding-message"><?php echo "This item has already been SOLD!";?></h4></div>
 </div>
+<div data-handbid-bid data-handbid-item-key="<?php echo $item->key; ?>" data-item-is-live-id="<?php echo $item->id; ?>"
+     style="<?php echo ($isLiveItem)?"":" display:none; ";?>">
+    <div class="row"><h4 class="no-bidding-message only-live-auctions"><?php echo "<b>Live Auction Item</b><br>This item is only available in the live auction at the event. Contact the auction manager on when and where this will happen";?></h4></div>
+</div>
 <div data-handbid-bid data-handbid-item-key="<?php echo $item->key; ?>"  data-item-bidding-id="<?php echo $item->id; ?>"
-     style="<?php echo ($itemCanNotBeShownInPresale or $itemSold)?" display:none; ":"";?>">
+     style="<?php echo ($itemCanNotBeShownInPresale or $itemSold or $isLiveItem)?" display:none; ":"";?>">
 
 
     <div class="row bid-controls">

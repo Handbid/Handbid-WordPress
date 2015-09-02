@@ -387,16 +387,24 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage,
                 return (itemStatus == "sold");
             },
 
+            checkItemIsLiveOnly: function(){
+                var itemStatus = $("[data-item-check-is-live-item-id]").val();
+                return (itemStatus == "yes");
+            },
+
             checkItemIsAlreadySoldOrNotAvailable: function(){
                 var biddingBlock = $("[data-item-bidding-id]"),
                     noBiddingBlock = $("[data-item-nobidding-id]"),
                     isSoldBlock = $("[data-item-is-sold-id]"),
+                    isLiveBlock = $("[data-item-is-live-id]"),
                     itemCanNotBeShownInPreSale = this.checkItemIsAvailableForPresale(),
-                    itemIsAlreadySold = this.checkItemIsAlreadySold();
+                    itemIsAlreadySold = this.checkItemIsAlreadySold(),
+                    itemIsLiveOnly = this.checkItemIsLiveOnly();
 
-                (itemCanNotBeShownInPreSale || itemIsAlreadySold) ? biddingBlock.hide(): biddingBlock.show();
+                (itemCanNotBeShownInPreSale || itemIsAlreadySold || itemIsLiveOnly) ? biddingBlock.hide(): biddingBlock.show();
                 (itemCanNotBeShownInPreSale) ? noBiddingBlock.show(): noBiddingBlock.hide();
                 (itemIsAlreadySold) ? isSoldBlock.show(): isSoldBlock.hide();
+                (itemIsLiveOnly) ? isLiveBlock.show(): isLiveBlock.hide();
             },
 
 
@@ -577,6 +585,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage,
                 this.processTicketChange(values);
 
                 $("[data-item-check-status-item-id='"+itemID+"']").val(itemStatus);
+                $("[data-item-check-is-live-item-id='"+itemID+"']").val((disableMobileBidding)?"yes":"no");
                 $("[data-item-check-available-item-id='"+itemID+"']").val(availableForPreSale);
                 this.checkItemIsAlreadySoldOrNotAvailable();
 
