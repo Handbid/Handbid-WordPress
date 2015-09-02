@@ -52,6 +52,7 @@
             if(parentModal.hasClass("credit-card-form-modal")){
                 parentModal.find('.credit-card-status').eq(0).html("")
                     .removeClass("card-success").removeClass("card-error");
+                parentModal.find('input[type=text]').val("");
             }
             var modalsOpened = false;
             $.map(modals, function(val){

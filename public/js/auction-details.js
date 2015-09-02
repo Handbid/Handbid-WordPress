@@ -173,14 +173,14 @@ var timerForSearch;
         sortAscending,
         sortBy,
         sortData = {
-            name: 'h3 .nameLowerCase',
+            name: function (elem) {
+                return $('h3 .nameLowerCase', elem).html();
+            },
             price: function (elem) {
-                var price = parseInt($('.currentItemPrice', elem).html().replace('$', ''));
-                return price;
+                return parseInt($('.currentItemPrice', elem).html().replace('$', ''));
             },
             bids: function (elem) {
-                var bids = parseInt($('.bids em', elem).html());
-                return bids;
+                return parseInt($('.bids em', elem).html());
             }
         },
         iso;
