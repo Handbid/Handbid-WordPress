@@ -44,7 +44,9 @@ if (!is_null($this->get('profile'))) {
         </li>
         <li class="row">
             <div class="col-md-12">
-                <input type="email" name="email" value="<?php echo $profile->email; ?>" id="profileEmail" placeholder="Email" title="Email"/>
+                <span title="Email" style="text-transform: uppercase;"><?php echo $profile->email; ?></span>
+<!--                <input type="email" name="email" value="--><?php //echo $profile->email; ?><!--" id="profileEmail" placeholder="Email" title="Email"/>-->
+                <input type="hidden" value="<?php echo $profile->email; ?>" id="profileEmail"/>
                 <input type="hidden" value="<?php echo $profile->email; ?>" id="profileEmailOld"/>
             </div>
         </li>

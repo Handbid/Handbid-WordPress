@@ -2707,7 +2707,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage,
             ($('.bidder-info-container').length > 0) ? handbid.setupBidderDashboard() : '';
             handbid.setupDeleteCreditCard();
             //handbid.setupAddCreditCard();
-            ($('.edit-profile').length > 0) ? handbid.setupEditProfile() : '';
+            //($('.edit-profile').length > 0) ? handbid.setupEditProfile() : '';
         //}
         //else {
             ($('[data-handbid-connect]').length > 0) ? handbid.setupConnect() : '';
