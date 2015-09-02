@@ -1920,9 +1920,9 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage,
                                    var messageParts = $.map(resp.data.error, function (val, i) {
                                         return val.join("<br>");
                                     });
-                                    isAddingSuccess = false;
-                                    isAddingError = true;
                                     isAddingErrorMessage = "<b>" + messageParts.join("<br>") + "</b>";
+                                    statusPlace.removeClass("card-success").addClass("card-error");
+                                    statusPlace.html(isAddingErrorMessage);
                                     handbid.notice(isAddingErrorMessage, "Card Error", "error");
                                 }
                                 else {

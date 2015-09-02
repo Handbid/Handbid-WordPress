@@ -47,7 +47,12 @@
         $('.modal-close').live('click', function(e) {
             e.preventDefault();
             var modals = $('.handbid-modal');
-            $(this).parents(".handbid-modal").eq(0).css('display', 'none');
+            var parentModal = $(this).parents(".handbid-modal").eq(0);
+            parentModal.css('display', 'none');
+            if(parentModal.hasClass("credit-card-form-modal")){
+                parentModal.find('.credit-card-status').eq(0).html("")
+                    .removeClass("card-success").removeClass("card-error");
+            }
             var modalsOpened = false;
             $.map(modals, function(val){
                 if($(val).is(":visible")){
@@ -66,6 +71,10 @@
             $.map(modals, function(val){
                 if(! $(val).hasClass("processing")){
                     $(val).css('display', 'none');
+                    if($(val).hasClass("credit-card-form-modal")){
+                        $(val).find('.credit-card-status').eq(0).html("")
+                            .removeClass("card-success").removeClass("card-error");
+                    }
                 }
                 if($(val).is(":visible")){
                     modalsOpened = true;
