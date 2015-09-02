@@ -1914,7 +1914,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage,
                                 }
                                 catch(e){}
                                 resp = resp.resp;
-
+                                console.log(resp);
 
                                 handbid.notice("Your card has been added successfully", "Card Success", "success");
                                 var template = $(' <li class="row" data-handbid-card-row="' + resp.id + '"> <div class="col-md-3 col-xs-3"> <h4>Name</h4>' + resp.nameOnCard + '</div> <div class="col-md-3 col-xs-3"> <h4>Card Number</h4> xxxx xxxx xxxx ' + resp.lastFour + '</div> <div class="col-md-3 col-xs-3"> <h4>Exp. Date</h4>' + resp.expMonth + '/' + resp.expYear + '</div> <div class="col-md-3 col-xs-3"> <a class="button pink-solid-button  loading-span-button" data-handbid-delete-credit-card="' + resp.id + '"><em>Delete</em></a></div></li>'),

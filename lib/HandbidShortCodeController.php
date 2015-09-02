@@ -1018,7 +1018,7 @@ class HandbidShortCodeController {
             $countries                     = $this->state->getCountriesWithCodes();
             $countryIDs                    = $this->state->getCountriesAndProvinces();
 			$redirect                      = isset( $attributes['redirect'] ) ? $attributes['redirect'] : null;
-			$redirect                      = $_SERVER["HTTP_REFERER"];
+			$redirect                      = isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : $redirect ;
 			$showCreditCardRequiredMessage = isset( $attributes['show_credit_card_required_message'] ) ? $attributes['show_credit_card_required_message'] == 'true' : false;
 
 			return $this->viewRenderer->render(
