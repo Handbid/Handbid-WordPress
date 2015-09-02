@@ -437,8 +437,8 @@ class HandbidShortCodeController {
 
             if($bidder){
                 $myInventory = $this->state->currentInventory($auctionID);
-                $winning   = (isset($myInventory->winning) and is_array(isset($myInventory->winning))) ? $myInventory->winning : [];
-                $losing    = (isset($myInventory->losing) and is_array(isset($myInventory->losing))) ? $myInventory->losing : [];;
+                $winning   = (isset($myInventory->winning) and is_array($myInventory->winning)) ? $myInventory->winning : [];
+                $losing    = (isset($myInventory->losing) and is_array($myInventory->losing)) ? $myInventory->losing : [];;
 
             }
             else{
@@ -505,8 +505,8 @@ class HandbidShortCodeController {
             $profile = $this->state->currentBidder($auction->id);
             if($profile){
                 $myInventory = $this->state->currentInventory($auction->id);
-                $winning   = (isset($myInventory->winning) and is_array(isset($myInventory->winning))) ? $myInventory->winning : [];
-                $losing    = (isset($myInventory->losing) and is_array(isset($myInventory->losing))) ? $myInventory->losing : [];;
+                $winning   = (isset($myInventory->winning) and is_array($myInventory->winning)) ? $myInventory->winning : [];
+                $losing    = (isset($myInventory->losing) and is_array($myInventory->losing)) ? $myInventory->losing : [];;
 
             }
             else{
@@ -562,8 +562,8 @@ class HandbidShortCodeController {
             $profile = $this->state->currentBidder($auction->id);
             if($profile){
                 $myInventory = $this->state->currentInventory($auction->id);
-                $winning   = (isset($myInventory->winning) and is_array(isset($myInventory->winning))) ? $myInventory->winning : [];
-                $losing    = (isset($myInventory->losing) and is_array(isset($myInventory->losing))) ? $myInventory->losing : [];;
+                $winning   = (isset($myInventory->winning) and is_array($myInventory->winning)) ? $myInventory->winning : [];
+                $losing    = (isset($myInventory->losing) and is_array($myInventory->losing)) ? $myInventory->losing : [];;
 
             }
             else{
@@ -763,8 +763,8 @@ class HandbidShortCodeController {
                     // $purchases = $this->handbid->store( 'Bid' )->myPurchases( $auction->id );
                     // $proxyBids = $this->handbid->store( 'Bid' )->myProxyBids( $auction->id );
 
-                    $winning   = (isset($myInventory->winning) and is_array(isset($myInventory->winning))) ? $myInventory->winning : [];
-                    $losing    = (isset($myInventory->losing) and is_array(isset($myInventory->losing))) ? $myInventory->losing : [];;
+                    $winning   = (isset($myInventory->winning) and is_array($myInventory->winning)) ? $myInventory->winning : [];
+                    $losing    = (isset($myInventory->losing) and is_array($myInventory->losing)) ? $myInventory->losing : [];;
                     $purchases = $myInventory->purchases;
                     $proxyBids = $myInventory->max_bids;
 
@@ -852,8 +852,8 @@ class HandbidShortCodeController {
                     // $purchases = $this->handbid->store( 'Bid' )->myPurchases( $auction->id );
                     // $proxyBids = $this->handbid->store( 'Bid' )->myProxyBids( $auction->id );
 
-                    $winning   = (isset($myInventory->winning) and is_array(isset($myInventory->winning))) ? $myInventory->winning : [];
-                    $losing    = (isset($myInventory->losing) and is_array(isset($myInventory->losing))) ? $myInventory->losing : [];;
+                    $winning   = (isset($myInventory->winning) and is_array($myInventory->winning)) ? $myInventory->winning : [];
+                    $losing    = (isset($myInventory->losing) and is_array($myInventory->losing)) ? $myInventory->losing : [];;
                     $purchases = $myInventory->purchases;
                     $proxyBids = $myInventory->max_bids;
 
@@ -906,8 +906,8 @@ class HandbidShortCodeController {
             // $winning   = $this->handbid->store( 'Bid' )->myWinning($auction->id );
             // $losing    = $this->handbid->store( 'Bid' )->myLosing( $auction->id );
 
-            $winning   = (isset($myInventory->winning) and is_array(isset($myInventory->winning))) ? $myInventory->winning : [];
-            $losing    = (isset($myInventory->losing) and is_array(isset($myInventory->losing))) ? $myInventory->losing : [];;
+            $winning   = (isset($myInventory->winning) and is_array($myInventory->winning)) ? $myInventory->winning : [];
+            $losing    = (isset($myInventory->losing) and is_array($myInventory->losing)) ? $myInventory->losing : [];;
 
 			return $this->viewRenderer->render(
 				$template,

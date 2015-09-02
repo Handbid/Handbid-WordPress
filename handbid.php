@@ -376,7 +376,7 @@ class Handbid
             echo do_shortcode('[handbid_bidder_login_form]');
         }
 
-        if ($auction) {
+        if (false) {
 
             if($bidder && !!$auction->requireCreditCard && count($bidder->creditCards) > 0 && ($auction->spendingThreshold == 0 || $auction->spendingThreshold <= $bidder->totalSpent)) {
 
@@ -393,6 +393,7 @@ class Handbid
         $endpoint = parse_url(get_option('handbidRestEndpoint'));
         $hostName = $endpoint["host"];
         $auctionGuid = (isset($auction->auctionGuid))?trim($auction->auctionGuid):"";
+        $auctionKey = (isset($auction->key))?trim($auction->key):"";
         $userGuid = (isset($bidder->usersGuid))?trim($bidder->usersGuid):"";
 
         $hostPort = '3002';
@@ -409,6 +410,7 @@ class Handbid
         ?>
         <script>
             var auctionChannelId = '<?php echo $auctionGuid; ?>',
+                currentAuctionKey = '<?php echo $auctionKey; ?>',
                 userChannelId = '<?php echo $userGuid; ?>',
                 url = '<?php echo $nodeClientUrl; ?>',
                 params = <?php echo $params; ?>;
@@ -423,7 +425,7 @@ class Handbid
 
         $bidderID = (isset($bidder->id)) ? $bidder->id : 0;
         echo '<input type="hidden" data-dashboard-profile-id="'.$bidderID.'">';
-        echo '<input type="hidden" data-default-item-image="'.plugins_url("handbid/public/images/default-item-image.jpg").'">';
+        echo '<input type="hidden" data-default-item-image value="'.plugins_url("handbid/public/images/default-item-image.jpg").'">';
 
         echo '<script src="'.$socketIoUrl.'"></script>';
         echo '<script type="text/javascript" src="' . plugins_url("handbid/public/js/yii-node-socket.js") .  '"></script>';

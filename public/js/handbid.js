@@ -900,7 +900,9 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage,
 
                 var reasonStr = (type == "under_maxbid") ? " by MaxBid. " : ".";
 
-                var itemLink = '/auctions/'+ values.auctionKey +'/item/' + values.item.key;
+                var auctionKey = (values.auctionKey != undefined)? values.auctionKey: currentAuctionKey;
+
+                var itemLink = '/auctions/'+ auctionKey +'/item/' + values.item.key;
 
                 var itemImage = (values.item.image != undefined) ? values.item.image : values.item.imageUrl;
 
@@ -922,7 +924,9 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage,
 
                 var reasonStr = (type == "under_maxbid") ? " by MaxBid! " : " now!";
 
-                var itemLink = '/auctions/'+ values.auctionKey +'/item/'+values.item.key;
+                var auctionKey = (values.auctionKey != undefined)? values.auctionKey: currentAuctionKey;
+
+                var itemLink = '/auctions/'+ auctionKey +'/item/'+values.item.key;
 
                 var itemImage = (values.item.image != undefined) ? values.item.image : values.item.imageUrl;
 
@@ -987,7 +991,8 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage,
 
             addUserPurchase: function(values){
                 this.removeItemFromDashboardList(values.item.id, "winning");
-                this.addDashboardBidPurchased(values.item.id, values.item.name, values.item.key, values.auctionKey, values.pricePerItem, values.quantity );
+                var auctionKey = (values.auctionKey != undefined)? values.auctionKey: currentAuctionKey;
+                this.addDashboardBidPurchased(values.item.id, values.item.name, values.item.key, auctionKey, values.pricePerItem, values.quantity );
                 this.loadMessagesToContainer();
             },
 
@@ -1845,18 +1850,21 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage,
 
                             if(data.error == undefined){
 
-                                $('[data-handbid-card-row="' + cardID + '"]').remove();
-                                handbid.notice('Your card has been deleted', "Card Success", "success");
-
-                                $(".select-payment-card option[data-option-val="+cardID+"]").remove();
-
-                                if($(".credit-card ul.simple-list li").length == 0){
-                                    var list = $(".credit-card ul.simple-list");
-                                    list.after('<div class="row no-results-row"> <p style="text-align: left;">Note: Not all auctions use credit cards</p>  <label class="no-results"> You have no cards on file. </label> </div>');
-                                    list.remove();
-
-                                    $("[data-handbid-credit-cards-need]").attr("data-handbid-credit-cards-required", "" );
-                                    $(".select-payment-card").hide();
+                                if(data.resp != undefined && data.resp.data != undefined && data.resp.data.message != undefined
+                                    && data.resp.success != undefined && !data.resp.success){
+                                    handbid.notice(data.resp.data.message, "Card Error", "error");
+                                }
+                                else {
+                                    $('[data-handbid-card-row="' + cardID + '"]').remove();
+                                    handbid.notice('Your card has been deleted', "Card Success", "success");
+                                    $(".select-payment-card option[data-option-val=" + cardID + "]").remove();
+                                    if ($(".credit-card ul.simple-list li").length == 0) {
+                                        var list = $(".credit-card ul.simple-list");
+                                        list.after('<div class="row no-results-row"> <p style="text-align: left;">Note: Not all auctions use credit cards</p>  <label class="no-results"> You have no cards on file. </label> </div>');
+                                        list.remove();
+                                        $("[data-handbid-credit-cards-need]").attr("data-handbid-credit-cards-required", "");
+                                        $(".select-payment-card").hide();
+                                    }
                                 }
                             }
                             else{
@@ -2155,7 +2163,9 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage,
                 var isBiddingNotice = (formatting != undefined && formatting.isBidding != undefined && formatting.isBidding);
                 if(isBiddingNotice){
                     var itemLink = (formatting.itemLink != undefined) ? formatting.itemLink : "#";
-                    var itemImage = (formatting.itemImage != undefined) ? formatting.itemImage : $("[data-default-item-image]").eq(0).val() ;
+                    var itemImage = (formatting.itemImage != undefined && formatting.itemImage != "/images/default_photo-75px-white.png")
+                        ? formatting.itemImage
+                        : $("[data-default-item-image]").eq(0).val() ;
                     msg = "<div class='col-xs-4 handbid-notice-image-container'>" +
                     "<a href='"+itemLink+"'>" +
                     "<img src='"+itemImage+"'>" +
