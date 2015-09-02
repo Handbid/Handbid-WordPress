@@ -58,12 +58,12 @@ if (!is_null($this->get('profile'))) {
                     <?php echo $profile->pin; ?>
                 </div>
 
-                <a class="col-xs-12 profile-user-info" data-slider-nav-key="profile-user-info">
+                <a class="col-xs-12 profile-user-info profile-opener" data-slider-nav-key="profile-user-info">
                     <span><?php echo $bidderName; ?></span>
                 </a>
 
             </div>
-            <a class="col-xs-3 total-spent <?php echo $loader;?>">
+            <a class="col-xs-3 total-spent">
 
                 <span>$<span data-handbid-stats-grand-total><?php echo $total; ?></span></span>
                 <label>Total</label>
@@ -73,7 +73,7 @@ if (!is_null($this->get('profile'))) {
         </div>
 
         <div class="row slider-nav slider-nav-desktop stats-bar <?php echo ($bidderPage) ? 'auto-open' : ''; ?>" data-slider-nav-id="bidder-dashboard" data-toggle-mode="true">
-            <a class="col-md-<?php echo ($auction) ? '2' : '3'; ?> col-xs-8 profile-user-info" data-slider-nav-key="profile-user-info">
+            <a class="col-md-<?php echo ($auction) ? '2' : '3'; ?> col-xs-8 profile-user-info profile-opener" data-slider-nav-key="profile-user-info">
                 <span><?php echo $bidderName; ?></span>
             </a>
             <?php if($auction) {

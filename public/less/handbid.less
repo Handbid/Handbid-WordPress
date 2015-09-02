@@ -2133,6 +2133,30 @@ section.container.what-clients-say-nav {
         &.total-spent::after {
             background: none
         }
+
+      &.profile-opener::after {
+        content: "profile";
+        .rotateDeg(0deg);
+        background: none;
+        text-transform: uppercase;
+        color: #4cb0ce;
+        font-size: 11px;
+        border: 1px solid #4cb0ce;
+        width: auto;
+        height: auto;
+        padding: 0px 4px;
+        border-radius: 5px;
+      }
+
+      &.profile-opener:hover::after,
+      &.profile-opener.active-slide::after {
+        background-color: #4cb0ce;
+        color: #fff;
+      }
+
+      &.profile-opener {
+        padding-right: 52px;
+      }
     }
 
     a.profile-user-info span {
