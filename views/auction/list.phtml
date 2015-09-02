@@ -106,7 +106,8 @@ $selected = isset($_GET['auction_list']) ? $_GET['auction_list'] : 'current';
                         <li class="timer">
                             <span class="icon"></span>
                             <?php
-
+                            $timeZone = (trim($auction->timeZone)) ? $auction->timeZone : 'America/Denver' ;
+                            date_default_timezone_set($timeZone);
                             $format = 'n.j g:i a';
                             switch($auction->status) {
 
@@ -120,11 +121,9 @@ $selected = isset($_GET['auction_list']) ? $_GET['auction_list'] : 'current';
                                     echo 'Opens: ' . date($format, $auction->startTime);
 
                             }
-                            $TZ = new DateTime();
 							if ($auction->timeZone) {
-								$TZ->setTimeZone(new DateTimeZone($auction->timeZone)); 
-                            	echo " " . $TZ->format('T'); 
-                            	}
+                            	echo " " . date("T");
+                            }
                             ?>
                         </li>
 
