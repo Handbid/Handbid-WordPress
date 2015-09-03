@@ -649,7 +649,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage,
                         nonce: nonce
                     },
                     function (data) {
-
+                        console.log(data);
                         data = JSON.parse(data);
 
                         invoicesContainer.removeClass("loading-messages");
