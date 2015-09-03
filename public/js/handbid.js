@@ -14,6 +14,9 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage,
     currentCCForm;
 (function ($) {
 
+    attentionAboutTickets = false;
+    attentionAboutBidding = false;
+
     var restEndpoint = $("#apiEndpointsAddress").val(),
         currencySymbol = '$',
         statusReasons = {
@@ -786,7 +789,8 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage,
                 var buttons = [];
                 var confirm = false;
                 var hide = true;
-                if(hasInvoices){
+                var hasBidderPanel = ($("#bidder-info-load").length && $("#bidder-info-load").html() != "");
+                if(hasInvoices && hasBidderPanel){
                     noticeText += "<br>You may have an unpaid invoices so you can check them.";
                     buttons.push({
                         text: 'View Invoices',
@@ -829,12 +833,14 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage,
             notifyUserAboutReceipt: function(values){
 
                 var invoiceID = values.id;
-                if($("[data-receipt-block-id='"+invoiceID+"']").length == 0) {
+                var hasBidderPanel = ($("#bidder-info-load").length && $("#bidder-info-load").html() != "");
+                if($("[data-receipt-block-id='"+invoiceID+"']").length == 0 && hasBidderPanel) {
                     var auctionName = values.name;
                     var noticeText = values.name;
                     var buttons = [];
                     buttons.push({
-                        text: 'View Invoice',
+                        text: '' +
+                        'voice',
                         addClass: 'view-invoices-button',
                         click: function (notice) {
                             handbid.scrollToInvoices(notice);
@@ -1755,12 +1761,13 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage,
             submitBid : function(data) {},
             setupConnect:             function () {
 
-                var body = $('body'),
-                    underlayContainer = '<div id="handbid-confirmation-underlay" ' +
+                var body = $('body');
+
+                if(! $('#handbid-confirmation-underlay').length) {
+                    var underlayContainer = '<div id="handbid-confirmation-underlay" ' +
                         'style="position: fixed; top:0px; bottom:0px; left: 0px; right: 0px; z-index: 1; display: none;"> ';
-
-
-                body.append(underlayContainer);
+                    body.append(underlayContainer);
+                }
 
                 if (body.hasClass('handbid-logged-out')) {
 
@@ -1774,10 +1781,10 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage,
 
                         e.preventDefault();
 
-                        //loginModal.css('display', 'block');
-                        //underlay.css('display', 'block');
+                        loginModal.css('display', 'block');
+                        underlay.css('display', 'block');
 
-                        window.location = "/log-in/";
+                        //window.location = "/log-in/";
                     });
 
                     $('.modal-close', loginModal).live('click', function () {
@@ -1790,6 +1797,36 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage,
                     $('[data-handbid-connect]').css('display', 'none');
 
                 }
+            },
+            setupTutorialPopup:             function () {
+
+                var body = $('body');
+
+                if(! $('#handbid-confirmation-underlay').length) {
+                    var underlayContainer = '<div id="handbid-confirmation-underlay" ' +
+                        'style="position: fixed; top:0px; bottom:0px; left: 0px; right: 0px; z-index: 1; display: none;"> ';
+                    body.append(underlayContainer);
+                }
+                    var loginModal = $('[data-handbid-modal-key="login-modal"]');
+
+                    var underlay = $('#handbid-confirmation-underlay');
+
+                    $('[data-handbid-tutorial]').live('click', function (e) {
+                        e.preventDefault();
+                        if(handbidLoginMain != undefined){
+                            handbidLoginMain.changeToTutorialTabState();
+                        }
+                        loginModal.css('display', 'block');
+                        underlay.css('display', 'block');
+                    });
+
+                $('.modal-close', loginModal).live('click', function () {
+                    underlay.css('display', 'none');
+                });
+
+                    //$('.modal-close', loginModal).live('click', function () {
+                    //    underlay.css('display', 'none');
+                    //});
             },
             setupBidderDashboard: function() {
                 $('.bidder-info-container .stats-bar').live('click.ajax-load', function() {
@@ -2221,8 +2258,10 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage,
                     paddleNumber = bidderDashboardPlace.data("profile-paddle-number"),
                     nonce = bidderDashboardPlace.data("paddle-nonce");
 
-                if(auctionID && profileID && paddleNumber == "N/A") {
-                //if(true) {
+                var viewCookie = $.cookie("bidder-"+profileID+"-just-view-auction-"+auctionID);
+
+                if(auctionID && profileID && paddleNumber == "N/A" && viewCookie != "yes") {
+                    attentionAboutBidding = true;
                     var bidNotice =  new PNotify({
                         title: 'Register to Bid?',
                         text: 'Do you want to bid in this auction or just browse for now?',
@@ -2295,7 +2334,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage,
                                             }
 
 
-
+                                            attentionAboutBidding = false;
                                             notice.update({
                                                 title: title,
                                                 text: text,
@@ -2327,6 +2366,8 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage,
                                 text: 'Browse',
                                 addClass: 'browse-here-button',
                                 click: function (notice) {
+                                    attentionAboutBidding = false;
+                                    $.cookie("bidder-"+profileID+"-just-view-auction-"+auctionID, "yes", { expires: 0.0833333, path: '/' });
                                     notice.remove();
                                 }
                             }]
@@ -2352,7 +2393,91 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage,
                             }).appendTo("body").fadeIn("fast");
                         },
                         before_close: function() {
-                            modal_overlay.fadeOut("fast");
+                            if(!attentionAboutBidding && !attentionAboutTickets) {
+                                modal_overlay.fadeOut("fast");
+                            }
+                        },
+                        buttons: {
+                            closer: false,
+                            sticker: false
+                        },
+                        history: {
+                            history: false
+                        }
+                    });
+                    bidNotice.get().on('pnotify.cancel', function () {
+                            return false;
+                        });
+                }
+
+            },
+
+
+
+
+            detectIfUserWantToBuyTickets: function(){
+
+                var bidderDashboardPlace = $("#bidder-info-load"),
+                    haveTickets = $("[data-handbid-tickets]").length,
+                    auctionID = parseInt(bidderDashboardPlace.data("auction")),
+                    profileID = parseInt(bidderDashboardPlace.data("profile-id"));
+
+                var viewCookie = $.cookie("bidder-"+profileID+"-want-no-tickets-"+auctionID);
+
+                if(auctionID && profileID && haveTickets && viewCookie != "yes") {
+                    attentionAboutTickets = true;
+                    var bidNotice =  new PNotify({
+                        title: 'Auction Tickets',
+                        text: 'Current Auction has tickets. Do you want to purchase one of them?',
+                        icon: 'glyphicon glyphicon-question-sign',
+                        type: 'info',
+                        addclass: 'handbid-message-notice',
+                        hide: false,
+                        mouse_reset: false,
+                        confirm: {
+                            confirm: true,
+                            buttons: [{
+                                text: 'Yes',
+                                addClass: 'bid-here-button',
+                                click: function (notice) {
+                                    attentionAboutTickets = false;
+                                    notice.remove();
+                                    $("[data-handbid-tickets]").eq(0).click();
+                                }
+                            }, {
+                                text: 'No, thanks',
+                                addClass: 'browse-here-button',
+                                click: function (notice) {
+                                    attentionAboutTickets = false;
+                                    $.cookie("bidder-"+profileID+"-want-no-tickets-"+auctionID, "yes", { expires: 0.0833333, path: '/' });
+                                    notice.remove();
+                                }
+                            }]
+                        },
+                        stack: false,
+                        before_open: function(PNotify) {
+                            PNotify.get().css({
+                                "top": ($(window).height() / 2) - (PNotify.get().height() / 2) - 80,
+                                "left": ($(window).width() / 2) - (PNotify.get().width() / 2)
+                            });
+                            if (modal_overlay) modal_overlay.fadeIn("fast");
+                            else modal_overlay = $("<div />", {
+                                "class": "ui-widget-overlay",
+                                "css": {
+                                    "display": "none",
+                                    "position": "fixed",
+                                    "background": "rgba(0, 0, 0, 0.7)",
+                                    "top": "0",
+                                    "bottom": "0",
+                                    "right": "0",
+                                    "left": "0"
+                                }
+                            }).appendTo("body").fadeIn("fast");
+                        },
+                        before_close: function() {
+                            if(!attentionAboutBidding && !attentionAboutTickets) {
+                                modal_overlay.fadeOut("fast");
+                            }
                         },
                         buttons: {
                             closer: false,
@@ -2704,6 +2829,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage,
         handbid.setupAuthorizationStatus();
         handbid.makePaymentForReceipt();
         handbid.detectIfUserWantToBid();
+        handbid.detectIfUserWantToBuyTickets();
         handbid.messageToAuctionManager();
         handbid.redirectFromResetedAuctionsCheck();
         setTimeout(function () {
@@ -2731,6 +2857,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage,
         //else {
             ($('[data-handbid-connect]').length > 0) ? handbid.setupConnect() : '';
         //}
+        handbid.setupTutorialPopup();
 
         ($('[data-handbid-bid]').length > 0) ? handbid.setupBidding(handbid) : '';
         ($('[data-handbid-timer]').length > 0) ? handbid.startTimer(handbid) : '';

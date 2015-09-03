@@ -1102,7 +1102,9 @@ class HandbidShortCodeController {
         $auction = $this->state->currentAuction();
         $auctionID = (isset($auction->id))?$auction->id:0;
 	    $profile  = $this->state->currentBidder($auctionID);
-        return $this->viewRenderer->render('views/bidder/login-form-new',
+        return $this->viewRenderer->render(
+            //'views/bidder/login-form-new',
+            'views/bidder/login-form-simple',
             [
                 "countries" => $countries,
                 "in_page" => !!(trim($atts["in_page"])),

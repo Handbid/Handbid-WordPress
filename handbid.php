@@ -372,9 +372,9 @@ class Handbid
         $auctionID = isset($auction->id)?$auction->id:0;
         $bidder = $this->state()->currentBidder($auctionID);
 
-        if(!$bidder) {
+        //if(!$bidder) {
             echo do_shortcode('[handbid_bidder_login_form]');
-        }
+        //}
 
         if (false) {
 

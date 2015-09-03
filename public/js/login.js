@@ -6,7 +6,7 @@
  * @link http://www.handbid.com/
  * @author Master of Code (worldclass@masterofcode.com)
  */
-
+var handbidLoginMain;
 (function ($) {
 
     var handbidLogin = {
@@ -81,6 +81,12 @@
 
         restoreInitialTabState: function () {
             this.displaySpecifiedTabOfLoginPopup("login-form");
+            $(".cleanable-input").val("");
+            $(".to-hide-block").hide();
+        },
+
+        changeToTutorialTabState: function () {
+            this.displaySpecifiedTabOfLoginPopup("tutorial-info-1");
             $(".cleanable-input").val("");
             $(".to-hide-block").hide();
         },
@@ -294,6 +300,10 @@
                         var closeButton = $(".handbid-modal.user-modal.login-modal-tab .modal-close").eq(0);
                         var startBiddingButton = $("#start-bidding-button");
                         nameContainer.html(data.values.firstname + " " + data.values.lastname);
+                        if((auctionSlug == undefined || auctionSlug.trim() == "") && currentAuctionKey != undefined){
+                            auctionSlug = currentAuctionKey;
+                        }
+
                         var auctionUrl = "/auctions/" + auctionSlug;
                         if(data.profile.data.currentPaddleNumber){
                             startBiddingButton.attr("href", auctionUrl);
@@ -303,8 +313,8 @@
                             paddleContainer.show();
                         }
                         else{
-                            startBiddingButton.attr("href", "/auctions/");
-                            closeButton.attr("data-reload-href", "/auctions/");
+                            startBiddingButton.attr("href", auctionUrl);
+                            closeButton.attr("data-reload-href", auctionUrl);
                             paddleContainer.hide();
                         }
                         handbidLogin.displaySpecifiedTabOfLoginPopup("register-complete");
@@ -420,6 +430,10 @@
             handbidLogin.resendPasswordLink($(this));
         });
 
+        $('.exit-tutorial-link').on('click', function (e) {
+            $(".handbid-simplified-login-modal .modal-close").click();
+        });
+
         $('.change-auto-complete-auction').on('click', function (e) {
             e.preventDefault();
             $(".loadAuctionsToAutoCompleteConfirmTextContainer").hide();
@@ -431,6 +445,7 @@
             $(".loadAuctionsToAutoCompleteRegisterSelectContainer").show();
             $(".autoCompleteHiddenRegister").val("");
         });
+        handbidLoginMain = handbidLogin;
 
     });
 

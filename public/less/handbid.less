@@ -4185,6 +4185,49 @@ div.handbid-modal[data-handbid-modal-key="credit-card-form"] {
             }
         }
     }
+    &.handbid-simplified-login-modal{
+      [data-tab-name="login-form"], [data-tab-name="forgot-pass"], [data-tab-name="use-invite-code"] {
+        .handbid-form {
+          .btn, .btn:hover {
+            margin-bottom: 5px;
+          }
+        }
+      }
+      h3{
+        margin: 0;
+      }
+      .col-xs-12 {
+        margin-bottom: 5px;
+      }
+      .handbid-form form {
+        padding: 5px;
+      }
+      .handbid-form input[type=text],
+      .handbid-form input[type=email],
+      .handbid-form select {
+        height: 35px;
+      }
+      [data-tab-name="register-form"] {
+        .go-back-button {
+          line-height: initial;
+        }
+        .form-group {
+          margin-bottom: 5px;
+        }
+        .form-group a.has-question-icon {
+          right: 17px;
+          width: 17px;
+          height: 17px;
+          border-radius: 17px;
+          line-height: 17px;
+        }
+      }
+      .errorsContainer {
+        font-size: 17px;
+        padding: 7px 15px;
+      }
+    }
+
 
 
     [data-tab-name="register-form"] {
@@ -4397,6 +4440,29 @@ div.handbid-modal[data-handbid-modal-key="credit-card-form"] {
         }
     }
 }
+
+.handbid-simplified-login-modal{
+  height: initial !important;
+  width: 50% !important;
+  left: 25% !important;
+  box-shadow: none !important;
+  top: 3% !important;
+
+  .signup-form{
+    padding: 0 !important;
+  }
+  .tab-pane#your-comp h4 {
+    margin-top: 30px;
+  }
+  .tutorialTabs h2.center-aligned-text {
+    display: block !important;
+    font-size: 18px !important;
+  }
+  .tab-pane.center-aligned-text{
+
+  }
+}
+
 
 @media (max-width: 992px) {
     .handbid-modal[data-handbid-modal-key="login-modal"] {
