@@ -561,7 +561,8 @@ class HandbidActionController
         if($this->handbid_verify_nonce($nonce, date("d.m.Y") . "get_invoices")) {
 
             $auction = $this->state->currentAuction();
-            $profile = $this->state->currentBidder($auction->id);
+            $auctionID = (isset($auction->id))?$auction->id:0;
+            $profile = $this->state->currentBidder($auctionID);
 
             $myInvoices = $this->handbid->store('Receipt')->allReceipts();
 
