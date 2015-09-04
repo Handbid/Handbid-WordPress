@@ -60,7 +60,7 @@ class HandbidAdminActionController
             'handbidFacebookAppId',
             'handbidDefaultAuctionKey',
             'handbidDefaultOrganizationKey',
-            'handbidJs',
+            'handbidSocketUrl',
             'handbidShowOnlyMyOrganization',
             'handbidCdnEndpoint',
             'handbidDefaultColCount',

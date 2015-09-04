@@ -31,6 +31,20 @@ $is_local = $this->get("is_local");
             </tr>
 
             <tr valign="top">
+                <th scope="row"><?php echo('Handbid Sockets URL'); ?></th>
+                <td><input type="text" name="handbidSocketUrl"
+                           value="<?php echo get_option('handbidSocketUrl', 'https://socket.hand.bid'); ?>"/></td>
+            </tr>
+            <tr valign="top">
+                <?php $forceRefresh = get_option('handbidForceRefresh', 'no');?>
+                <th scope="row"><?php echo('Force page refresh after each Bid and MaxBid'); ?></th>
+                <td>
+                    <label for="handbidForceRefresh1"><input type="radio" id="handbidForceRefresh1" name="handbidForceRefresh" value="no" <?php checked($forceRefresh, "no");?>/> No</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <label for="handbidForceRefresh2"><input type="radio" id="handbidForceRefresh2" name="handbidForceRefresh" value="yes" <?php checked($forceRefresh, "yes");?>/> Yes</label>
+                </td>
+            </tr>
+
+            <tr valign="top">
                 <th scope="row"><?php echo('Facebook App Id ( For Comments )'); ?></th>
                 <td><input type="text" name="handbidFacebookAppId"
                            value="<?php echo get_option('handbidFacebookAppId'); ?>"/></td>
@@ -44,12 +58,6 @@ $is_local = $this->get("is_local");
                 <th scope="row"><?php echo('Default Organization Key'); ?></th>
                 <td><input type="text" name="handbidDefaultOrganizationKey"
                            value="<?php echo get_option('handbidDefaultOrganizationKey'); ?>"/></td>
-            </tr>
-
-            <tr valign="top">
-                <th scope="row"><?php echo('HandbidJS'); ?></th>
-                <td><input type="text" name="handbidJs"
-                           value="<?php echo get_option('handbidJs', 'https://handbid-js-handbid.netdna-ssl.com/handbid.js?cachebuster=234234'); ?>"/></td>
             </tr>
             <?php if($is_local){ ?>
             <tr valign="top">
@@ -89,14 +97,6 @@ $is_local = $this->get("is_local");
                 <th scope="row"><?php echo('Auctions and Organizations per page'); ?></th>
                 <td><input type="number" name="handbidDefaultPageSize"
                            value="<?php $count = (int) get_option('handbidDefaultPageSize') ; echo ($count) ? $count : 25 ; ?>"/></td>
-            </tr>
-            <tr valign="top">
-                <?php $forceRefresh = get_option('handbidForceRefresh', 'no');?>
-                <th scope="row"><?php echo('Force page refresh after each Bid and MaxBid'); ?></th>
-                <td>
-                    <label for="handbidForceRefresh1"><input type="radio" id="handbidForceRefresh1" name="handbidForceRefresh" value="no" <?php checked($forceRefresh, "no");?>/> no</label>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <label for="handbidForceRefresh2"><input type="radio" id="handbidForceRefresh2" name="handbidForceRefresh" value="yes" <?php checked($forceRefresh, "yes");?>/> yes</label>
-                </td>
             </tr>
 
         </table>

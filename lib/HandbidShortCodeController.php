@@ -1254,14 +1254,17 @@ class HandbidShortCodeController {
             $auctionEndTime = "";
             $auctionTitle = "";
             $auctionTimeZone = "";
+            $auctionStatus = "";
 
             if($post->post_name == 'auction-item'){
 
                 $item       = $hb->state()->currentItem();
+                $auction    = $hb->state()->currentAuction();
                 $auctionStartTime = (isset($item->auctionStartTime))?$item->auctionStartTime:"";
                 $auctionEndTime = (isset($item->auctionEndTime))?$item->auctionEndTime:"";
                 $auctionTitle = (isset($item->auctionName))?$item->auctionName:"";
                 $auctionTimeZone = (isset($item->auctionTimeZone))?$item->auctionTimeZone:"";
+                $auctionStatus = (isset($auction->status))?$auction->status:"";
 
             }
             if($post->post_name == 'auction' or trim($auctionTitle) == ""){
@@ -1271,6 +1274,7 @@ class HandbidShortCodeController {
                 $auctionEndTime = (isset($auction->endTime))?$auction->endTime:"";
                 $auctionTitle = (isset($auction->name))?$auction->name:"";
 	            $auctionTimeZone = (isset($auction->timeZone))?$auction->timeZone:"";
+                $auctionStatus = (isset($auction->status))?$auction->status:"";
 
             }
 	        $timeZone = (trim($auctionTimeZone)) ? $auctionTimeZone : 'America/Denver' ;
@@ -1278,7 +1282,9 @@ class HandbidShortCodeController {
 
                 date_default_timezone_set($timeZone);
 
-                $title = $auctionTitle . '<span class="under">';
+                $title = $auctionTitle;
+                $title .=  ($auctionStatus == "setup" ) ? '<span class="auction-unavailable">auction is currently not available</span>':"";
+                $title .=  '<span class="under">';
                 $sep = ' &mdash; ';
 
                 if(date('Ymd', $auctionStartTime) == date('Ymd', $auctionEndTime)){

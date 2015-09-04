@@ -11,7 +11,7 @@
 $invoices = $this->get("myInvoices");
 $profile = $this->get("profile");
 $creditCards = $profile->creditCards;
-$coinsCount = 0;
+$coinsCount = 2;
 $groupDivider = ",";
 $coinsDivider = ".";
 
@@ -30,6 +30,7 @@ foreach ($invoices as $i => $invoice) {
             $purchaseItems = [];
             $auctionTotal = 0;
             $purchaseTotal = 0;
+            $itemTax = 0;
             foreach ($invoice->lineItems as $lineItem) {
                 if ($lineItem->item->isDirectPurchaseItem) {
                     $purchaseItems[] = $lineItem;
@@ -38,6 +39,7 @@ foreach ($invoices as $i => $invoice) {
                     $auctionItems[] = $lineItem;
                     $auctionTotal += (int)$lineItem->grandTotal;
                 }
+                $itemTax += ($lineItem->tax)?$lineItem->tax:0;
             }
             echo "<pre style='display: none;'>".print_r($invoice,true)."</pre>";
             ?>
@@ -47,7 +49,7 @@ foreach ($invoices as $i => $invoice) {
                 data-receipt-block-id="<?php echo $invoice->id; ?>"
                 data-receipt-of-auction="<?php echo $invoice->auctionId; ?>"
                 data-receipt-block-guid="<?php echo $invoice->receiptsGuid; ?>"
-                data-receipt-total="<?php echo $auctionTotal + $purchaseTotal; ?>"
+                data-receipt-total="<?php echo number_format($invoice->grandTotal / 100, $coinsCount, $coinsDivider, $groupDivider); ?>"
                 >
                 <div class="col-md-10">
                     <h4 class="invoice-title margin-bottom"><?php echo $invoice->name; ?></h4>
@@ -75,8 +77,14 @@ foreach ($invoices as $i => $invoice) {
                         </tr>
                         <tr>
                             <th scope="row"><?php echo $invoice->taxLabel; ?></th>
-                            <td class="format-money"><?php echo $currency . "<em>" . number_format($invoice->taxRate / 100, $coinsCount, $coinsDivider, $groupDivider) . "</em>"; ?></td>
+                            <td class="format-money"><?php echo $currency . "<em>" . number_format($invoice->tax / 100, $coinsCount, $coinsDivider, $groupDivider) . "</em>"; ?></td>
                         </tr>
+                        <?php if($itemTax){?>
+                        <tr>
+                            <th scope="row">Item Tax</th>
+                            <td class="format-money"><?php echo $currency . "<em>" . number_format($itemTax / 100, $coinsCount, $coinsDivider, $groupDivider) . "</em>"; ?></td>
+                        </tr>
+                        <?php }?>
                         <tr class="receipt-due">
                             <th scope="row" class="total">TOTAL</th>
                             <td class="receipt-total format-money text-red"
@@ -161,6 +169,7 @@ foreach ($invoices as $i => $invoice) {
                                             <th>Market Value</th>
                                             <th>Category</th>
                                             <th>Bid</th>
+                                            <th>Tax</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -172,6 +181,7 @@ foreach ($invoices as $i => $invoice) {
                                         <td class="format-money">' . (($auctionItem->item->value) ? $currency . "<em>" . number_format($auctionItem->item->value, $coinsCount, $coinsDivider, $groupDivider) : "--") . "</em>" . '</td>
                                         <td>' . $auctionItem->item->categoryName . '</td>
                                         <td class="format-money">' . $currency . "<em>" . number_format($auctionItem->grandTotal, $coinsCount, $coinsDivider, $groupDivider) . "</em>" . '</td>
+                                        <td class="format-money">' . $currency . "<em>" . number_format($auctionItem->tax / 100, $coinsCount, $coinsDivider, $groupDivider) . "</em>" . '</td>
                                     </tr>';
                                         }
                                         ?>
@@ -206,6 +216,7 @@ foreach ($invoices as $i => $invoice) {
                                         <td>' . $purchaseItem->quantity . '</td>
                                         <td class="format-money">' . $currency . "<em>" . number_format($purchaseItem->pricePerItem, $coinsCount, $coinsDivider, $groupDivider) . "</em>" . '</td>
                                         <td class="format-money">' . $currency . "<em>" . number_format($purchaseItem->grandTotal, $coinsCount, $coinsDivider, $groupDivider) . "</em>" . '</td>
+                                        <td class="format-money">' . $currency . "<em>" . number_format($purchaseItem->tax / 100, $coinsCount, $coinsDivider, $groupDivider) . "</em>" . '</td>
                                     </tr>';
                                         }
                                         ?>

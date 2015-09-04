@@ -9,7 +9,7 @@
 
 
 
-var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage,
+var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, timerMessage,
     circleTimer, auctionInvoices, currentPaddleNumber, currentElemNeedsCard,
     currentCCForm;
 (function ($) {
@@ -660,7 +660,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage,
                             var unpaidInvoices = $.map($(".receiptRow.preview"), function(val){
                                 var invoiceItem = $(val),
                                     invoiceItemID = parseInt(invoiceItem.data("receipt-block-id")),
-                                    invoiceItemTotal = parseInt(invoiceItem.data("receipt-total")),
+                                    invoiceItemTotal = invoiceItem.data("receipt-total"),
                                     invoiceItemTitle = $(".invoice-title", invoiceItem).eq(0).html();
                                 return {
                                     id: invoiceItemID,
@@ -1764,7 +1764,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage,
 
                 if(! $('#handbid-confirmation-underlay').length) {
                     var underlayContainer = '<div id="handbid-confirmation-underlay" ' +
-                        'style="position: fixed; top:0px; bottom:0px; left: 0px; right: 0px; z-index: 1; display: none;"> ';
+                        'style="position: fixed; top:0px; bottom:0px; left: 0px; right: 0px; z-index: 8; display: none;"> ';
                     body.append(underlayContainer);
                 }
 
@@ -1803,7 +1803,7 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage,
 
                 if(! $('#handbid-confirmation-underlay').length) {
                     var underlayContainer = '<div id="handbid-confirmation-underlay" ' +
-                        'style="position: fixed; top:0px; bottom:0px; left: 0px; right: 0px; z-index: 1; display: none;"> ';
+                        'style="position: fixed; top:0px; bottom:0px; left: 0px; right: 0px; z-index: 8; display: none;"> ';
                     body.append(underlayContainer);
                 }
                     var loginModal = $('[data-handbid-modal-key="login-modal"]');
@@ -2733,10 +2733,62 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage,
                 }
             },
 
+            showExpiredNotice: function(){
+
+                var bidNotice =  new PNotify({
+                    title: 'Session Expired',
+                    text: 'Your user session has expired. Please, relogin.',
+                    icon: 'glyphicon glyphicon-off',
+                    type: 'info',
+                    addclass: 'handbid-message-notice',
+                    hide: false,
+                    mouse_reset: false,
+                    delay: 3000,
+                    confirm: false,
+                    stack: false,
+                    before_open: function(PNotify) {
+                        PNotify.get().css({
+                            "top": ($(window).height() / 2) - (PNotify.get().height() / 2) - 80,
+                            "left": ($(window).width() / 2) - (PNotify.get().width() / 2)
+                        });
+                        if (reload_overlay) reload_overlay.fadeIn("fast");
+                        else reload_overlay = $("<div />", {
+                            "class": "ui-widget-overlay",
+                            "css": {
+                                "display": "none",
+                                "position": "fixed",
+                                "background": "rgba(0, 0, 0, 0.7)",
+                                "top": "0",
+                                "bottom": "0",
+                                "right": "0",
+                                "left": "0"
+                            }
+                        }).appendTo("body").fadeIn("fast");
+                        //setTimeout(function(){
+                        //    location.reload();
+                        //},3000);
+                    },
+                    before_close: function() {
+                        reload_overlay.fadeOut("fast");
+                        location.reload();
+                    },
+                    buttons: {
+                        closer: true,
+                        sticker: false
+                    },
+                    history: {
+                        history: false
+                    }
+                });
+                bidNotice.get().on('pnotify.cancel', function () {
+                    return false;
+                });
+
+            },
+
             reloadBidderProfile: function(){
                 var bidderInfo = jQuery("#bidder-info-load"),
                     bidderAuction = parseInt(bidderInfo.data("auction"));
-                //bidderInfo.hide();
                 if(bidderAuction) {
                     $.post(ajaxurl, {
                             action: "handbid_profile_load",
@@ -2744,18 +2796,23 @@ var handbidMain, connectMessage, modal_overlay, timerNotice, timerMessage,
                             nonce: bidderInfo.data("load")
                         },
                         function (resp) {
-                            bidderInfo.html(resp);
-                            var auctionID = bidderInfo.data("auction");
-                            if (currentPaddleNumber != undefined && auctionID.trim() != "") {
-                                bidderInfo.data("profile-paddle-number", currentPaddleNumber);
-                                $("[data-paddle-for-auction-" + auctionID + "]").html(currentPaddleNumber);
+                            if(bidderInfo.html().trim() != "" && resp.trim() == ""){
+                                handbid.showExpiredNotice();
                             }
-                            bidderInfo.slideDown("normal");
-                            ($('.creditcard-template').length > 0) ? handbid.setupAddCreditCard() : '';
-                            handbid.setupProvincesSelect();
+                            else {
+                                bidderInfo.html(resp);
 
-                            handbid.loadAllToContainers();
+                                var auctionID = bidderInfo.data("auction");
+                                if (currentPaddleNumber != undefined && auctionID.trim() != "") {
+                                    bidderInfo.data("profile-paddle-number", currentPaddleNumber);
+                                    $("[data-paddle-for-auction-" + auctionID + "]").html(currentPaddleNumber);
+                                }
+                                bidderInfo.slideDown("normal");
+                                ($('.creditcard-template').length > 0) ? handbid.setupAddCreditCard() : '';
+                                handbid.setupProvincesSelect();
 
+                                handbid.loadAllToContainers();
+                            }
                         });
                 }
                 else{

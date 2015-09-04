@@ -44,6 +44,9 @@ require_once($libFolder . '/stripe-php/init.php');
 if(!defined("HANDBID_PLUGIN_URL")){
 	define("HANDBID_PLUGIN_URL", plugin_dir_url( __FILE__ ));
 }
+if(!defined("HANDBID_PLUGIN_PATH")){
+	define("HANDBID_PLUGIN_PATH", plugin_dir_path( __FILE__ ));
+}
 
 class Handbid
 {
@@ -229,12 +232,6 @@ class Handbid
             wp_register_script($key, plugins_url($sc, __FILE__));
             wp_enqueue_script($key);
         }
-//        //make this a settings
-//        wp_register_script(
-//            'handbidCore',
-//            get_option('handbidJs', 'https://handbid-js-handbid.netdna-ssl.com/handbid.js?cachebuster=234234')
-//        );
-//        wp_enqueue_script('handbidCore');
 
 
         $styles = array(
@@ -391,20 +388,24 @@ class Handbid
         // Set Values
         // $hostName = 'manager.hand.bid';
         $endpoint = parse_url(get_option('handbidRestEndpoint'));
+        $socketUrl = get_option('handbidSocketUrl', 'https://socket.hand.bid');
+        $socketUrl = (substr($socketUrl, -1) != "/")? $socketUrl."/":$socketUrl;
+
         $hostName = $endpoint["host"];
         $auctionGuid = (isset($auction->auctionGuid))?trim($auction->auctionGuid):"";
         $auctionKey = (isset($auction->key))?trim($auction->key):"";
         $userGuid = (isset($bidder->usersGuid))?trim($bidder->usersGuid):"";
 
-        $hostPort = '3002';
+        //$hostPort = '3002';
         $isSecure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443);
 
         // Determined Values
         $protocol = $isSecure ? 'https' : 'http';
         $hostUrl = sprintf('%s://%s', $protocol, $hostName);
-        $socketIoUrl = sprintf('%s:%s/socket.io/socket.io.js', $hostUrl, $hostPort);
-        //$socketIoUrl = plugins_url("handbid/public/js/socket.io.js");
-        $nodeClientUrl = sprintf('%s:%s/client', $hostUrl, $hostPort);
+        //$socketIoUrl = sprintf('%s:%s/socket.io/socket.io.js', $hostUrl, $hostPort);
+        //$nodeClientUrl = sprintf('%s:%s/client', $hostUrl, $hostPort);
+        $socketIoUrl = sprintf('%ssocket.io/socket.io.js', $socketUrl);
+        $nodeClientUrl = sprintf('%sclient', $socketUrl);
         $params = json_encode(["secure" => false, "cookie" => $userGuid]);
 
         ?>

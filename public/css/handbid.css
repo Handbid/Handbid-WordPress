@@ -529,6 +529,11 @@
     margin: 0 !important;
 }
 
+.global-header h1.entry-title span.auction-unavailable{
+    font-size: 60%;
+    font-weight: bold;
+}
+
 @media (max-width: 767px) {
 
     .global-footer .toggle-info{

@@ -28,6 +28,7 @@ class HandbidState
     public $item;
     public $inventory;
     public $bidder;
+    public $bidderNotAvailable = false;
     public $bidderAuctionID = null;
     public $countriesAndProvinces;
 
@@ -179,11 +180,16 @@ class HandbidState
     public function currentBidder($auction_id = null)
     {
         try {
-            if (($this->bidder and $auction_id == null) or ($this->bidder and $auction_id == $this->bidderAuctionID) ) {
+            if (($this->bidder and $auction_id == null) or ($this->bidder and $auction_id == $this->bidderAuctionID) or $this->bidderNotAvailable) {
                 return $this->bidder;
             }
             $this->bidder =  $this->handbid->store('Bidder')->myProfile($auction_id);
             $this->bidderAuctionID = $auction_id;
+
+            if(!$this->bidder){
+                $this->bidderNotAvailable = true;
+                setcookie('handbid-auth', null, -1, COOKIEPATH, COOKIE_DOMAIN);
+            }
             return $this->bidder;
 
         } catch (Exception $e) {
@@ -483,10 +489,23 @@ class HandbidState
     }
 
     function getCountriesAndProvinces(){
+        $countriesFileName = str_replace("\\","/",HANDBID_PLUGIN_PATH . "public/js/countriesAndProvinces.json");
         if($this->countriesAndProvinces){
             return $this->countriesAndProvinces;
         }
         else{
+
+            if(is_file($countriesFileName) and is_readable($countriesFileName)){
+                try{
+                    $countriesAndProvinces = json_decode(file_get_contents($countriesFileName));
+                    if(is_array($countriesAndProvinces)){
+                        $this->countriesAndProvinces = $countriesAndProvinces;
+                        return $this->countriesAndProvinces;
+                    }
+                }
+                catch(Exception $e){ }
+            }
+
             $countryIDs   = $this->handbid->store( 'Bidder' )->getCountries();
             $provinceIDs  = $this->handbid->store( 'Bidder' )->getProvinces();
             $provincesByCountry = [];
@@ -501,6 +520,9 @@ class HandbidState
                         $countryIDs[$i]->provinces = $provincesByCountry[$countryId];
                     }
                 }
+            }
+            if(is_array($countryIDs)){
+                file_put_contents($countriesFileName, json_encode($countryIDs));
             }
             $this->countriesAndProvinces = $countryIDs;
             return $this->countriesAndProvinces;
