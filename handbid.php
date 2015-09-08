@@ -406,7 +406,7 @@ class Handbid
         //$nodeClientUrl = sprintf('%s:%s/client', $hostUrl, $hostPort);
         $socketIoUrl = sprintf('%ssocket.io/socket.io.js', $socketUrl);
         $nodeClientUrl = sprintf('%sclient', $socketUrl);
-        $params = json_encode(["secure" => false, "cookie" => $userGuid]);
+        $params = json_encode(["secure" => true, "cookie" => $userGuid]);
 
         ?>
         <script>
