@@ -2811,36 +2811,41 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
             reloadBidderProfile: function(){
                 var bidderInfo = jQuery("#bidder-info-load"),
                     bidderAuction = parseInt(bidderInfo.data("auction"));
-                if(bidderAuction) {
-                    $.post(ajaxurl, {
-                            action: "handbid_profile_load",
-                            auction: bidderInfo.data("auction"),
-                            nonce: bidderInfo.data("load")
-                        },
-                        function (resp) {
-                            if(bidderInfo.html().trim() != "" && resp.trim() == ""){
-                                handbid.showExpiredNotice();
-                            }
-                            else {
-                                bidderInfo.html(resp);
 
-                                var auctionID = bidderInfo.data("auction");
-                                if (currentPaddleNumber != undefined && auctionID.trim() != "") {
-                                    bidderInfo.data("profile-paddle-number", currentPaddleNumber);
-                                    $("[data-paddle-for-auction-" + auctionID + "]").html(currentPaddleNumber);
+                if(bidderInfo.html().trim() != "") {
+                    if (bidderAuction) {
+                        $.post(ajaxurl, {
+                                action: "handbid_profile_load",
+                                auction: bidderInfo.data("auction"),
+                                nonce: bidderInfo.data("load")
+                            },
+                            function (resp) {
+                                if (bidderInfo.html().trim() != "" && resp.trim() == "") {
+                                    handbid.showExpiredNotice();
                                 }
-                                bidderInfo.slideDown("normal");
-                                ($('.creditcard-template').length > 0) ? handbid.setupAddCreditCard() : '';
-                                handbid.setupProvincesSelect();
+                                else {
+                                    bidderInfo.html(resp);
 
-                                handbid.loadAllToContainers();
-                            }
-                        });
-                }
-                else{
-                    ($('.creditcard-template').length > 0) ? handbid.setupAddCreditCard() : '';
-                    handbid.setupProvincesSelect();
-                    handbid.loadAllToContainers();
+                                    var auctionID = bidderInfo.data("auction");
+                                    if (currentPaddleNumber != undefined && auctionID.trim() != "") {
+                                        bidderInfo.data("profile-paddle-number", currentPaddleNumber);
+                                        $("[data-paddle-for-auction-" + auctionID + "]").html(currentPaddleNumber);
+                                    }
+                                    bidderInfo.slideDown("normal");
+                                    ($('.creditcard-template').length > 0) ? handbid.setupAddCreditCard() : '';
+                                    handbid.setupProvincesSelect();
+
+                                    handbid.loadAllToContainers();
+                                }
+
+                            });
+
+                    }
+                    else {
+                        ($('.creditcard-template').length > 0) ? handbid.setupAddCreditCard() : '';
+                        handbid.setupProvincesSelect();
+                        handbid.loadAllToContainers();
+                    }
                 }
             },
 

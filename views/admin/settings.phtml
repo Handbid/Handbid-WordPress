@@ -43,6 +43,16 @@ $is_local = $this->get("is_local");
                     <label for="handbidForceRefresh2"><input type="radio" id="handbidForceRefresh2" name="handbidForceRefresh" value="yes" <?php checked($forceRefresh, "yes");?>/> Yes</label>
                 </td>
             </tr>
+            <tr valign="top">
+                <?php $profileDashboardOn = get_option('handbidDisplayProfileDashboardOn', array("other", "auction", "auction-item"));
+                ?>
+                <th scope="row"><?php echo('Display Profile Dashboard On'); ?>:</th>
+                <td>
+	                <label for="handbidDisplayProfileDashboardOn2"><input type="checkbox" id="handbidDisplayProfileDashboardOn2" name="handbidDisplayProfileDashboardOn[]" value="auction" <?php checked(in_array("auction", $profileDashboardOn), true);?>/> Auction Page</label>&nbsp;&nbsp;&nbsp;&nbsp;
+	                <label for="handbidDisplayProfileDashboardOn3"><input type="checkbox" id="handbidDisplayProfileDashboardOn3" name="handbidDisplayProfileDashboardOn[]" value="auction-item" <?php checked(in_array("auction-item", $profileDashboardOn), true);?>/> Auction Item Page</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <label for="handbidDisplayProfileDashboardOn1"><input type="checkbox" id="handbidDisplayProfileDashboardOn1" name="handbidDisplayProfileDashboardOn[]" value="other" <?php checked(in_array("other", $profileDashboardOn), true);?>/> All Other Pages</label>
+                </td>
+            </tr>
 
             <tr valign="top">
                 <th scope="row"><?php echo('Facebook App Id ( For Comments )'); ?></th>

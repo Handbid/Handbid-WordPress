@@ -68,6 +68,7 @@ class HandbidAdminActionController
             'handbidDefaultPageSize',
             'handbidStripeMode',
             'handbidForceRefresh',
+            'handbidDisplayProfileDashboardOn',
         ];
 
         forEach ($settings as $setting) {
