@@ -656,6 +656,9 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
                         (data.unpaid) ? unpaidInvoicesCountContainer.show() : unpaidInvoicesCountContainer.hide() ;
                         invoicesContainer.html(data.invoices);
 
+                        var bidderDashboardPlace = $("#bidder-info-load"),
+                            profileID = parseInt(bidderDashboardPlace.data("profile-id"));
+
                         if(!scrolled && data.unpaid > 0){
                             var unpaidInvoices = $.map($(".receiptRow.preview"), function(val){
                                 var invoiceItem = $(val),
@@ -670,34 +673,53 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
 
                             });
                             $.map(unpaidInvoices, function(val){
-                                var message = "You have an unpaid invoice with a Balance of $"+val.total+" in "+val.title+".  Do you want to pay it?";
-                                new PNotify({
-                                    title: 'Unpaid Invoice',
-                                    type: 'info',
-                                    text: message,
-                                    icon: 'glyphicon glyphicon-off',
-                                    addclass: 'handbid-message-notice',
-                                    hide: false,
-                                    mouse_reset: false,
-                                    confirm: {
-                                        confirm: true,
-                                        buttons: [{
-                                            text: 'View Invoice',
-                                            addClass: 'view-invoices-button',
-                                            click: function (notice) {
-                                                handbid.scrollToInvoices(notice, val.id);
-                                                notice.remove();
-                                            }
-                                        }]
-                                    },
-                                    buttons: {
-                                        closer: true,
-                                        sticker: false
-                                    },
-                                    history: {
-                                        history: false
-                                    }
-                                });
+
+                                var viewCookie = $.cookie("bidder-"+profileID+"-want-no-invoice-"+val.id);
+
+                                if(profileID && val.id && viewCookie != "yes") {
+
+                                    var message = "You have an unpaid invoice with a Balance of $" + val.total + " in " + val.title + ".  Do you want to pay it?";
+                                    new PNotify({
+                                        title: 'Unpaid Invoice',
+                                        type: 'info',
+                                        text: message,
+                                        icon: 'glyphicon glyphicon-off',
+                                        addclass: 'handbid-message-notice',
+                                        hide: true,
+                                        delay: 10000,
+                                        mouse_reset: false,
+                                        confirm: {
+                                            confirm: true,
+                                            buttons: [{
+                                                text: 'View Invoice',
+                                                addClass: 'view-invoices-button',
+                                                click: function (notice) {
+                                                    handbid.scrollToInvoices(notice, val.id);
+                                                    notice.remove();
+                                                }
+                                            }, {
+                                                text: 'Cancel',
+                                                addClass: 'browse-here-button',
+                                                click: function (notice) {
+                                                    attentionAboutBidding = false;
+                                                    $.cookie("bidder-" + profileID + "-want-no-invoice-" + val.id, "yes", {
+                                                        expires: 0.0833333,
+                                                        path: '/'
+                                                    });
+                                                    notice.remove();
+                                                }
+                                            }]
+                                        },
+                                        buttons: {
+                                            closer: false,
+                                            sticker: false
+                                        },
+                                        history: {
+                                            history: false
+                                        }
+                                    });
+                                }
+
                             });
                         }
 
@@ -839,7 +861,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
                     var buttons = [];
                     buttons.push({
                         text: '' +
-                        'voice',
+                        'invoice',
                         addClass: 'view-invoices-button',
                         click: function (notice) {
                             handbid.scrollToInvoices(notice);

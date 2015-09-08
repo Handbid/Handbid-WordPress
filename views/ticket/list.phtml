@@ -63,17 +63,15 @@ if (!$auction->enableTicketSales) {
                      data-handbid-ticket-price="<?php echo $ticket->buyNowPrice; ?>"
                      data-handbid-ticket-step="<?php echo $step; ?>"
                     >
-                    <div class="col-xs-5 ticket-part-container no-padding-left">
+                    <div class="col-xs-8 ticket-part-container no-padding-left">
                         <h4 class="ticket-title"><span data-handbid-ticket-title><?php echo $ticket->name; ?></span>
+	                        &nbsp;&nbsp;<strong class="ticket-price">$<span data-handbid-ticket-buynow><?php echo $ticket->buyNowPrice; ?></span></strong>
                         </h4>
 
                         <p class="ticket-quantity" >(admits <span data-handbid-ticket-quant><?php echo $ticket->ticketQuantity; ?></span> people)</p>
                         <p class="ticket-description" data-handbid-ticket-description><?php echo $ticket->description; ?></p>
 
 
-                    </div>
-                    <div class="col-md-3 ticket-part-container">
-                        <strong class="ticket-price">$<span data-handbid-ticket-buynow><?php echo $ticket->buyNowPrice; ?></span></strong>
                     </div>
                     <div class="col-md-4 ticket-part-container no-padding-right tickets-are-sold"
                          style="<?php echo ($remaining == 0) ? "" : "display:none"; ?>">

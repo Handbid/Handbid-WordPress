@@ -204,6 +204,7 @@ foreach ($invoices as $i => $invoice) {
                                             <th>Item Name</th>
                                             <th>Quantity</th>
                                             <th>Unit Price</th>
+	                                        <th>ItemTax</th>
                                             <th>Total</th>
                                         </tr>
                                         </thead>
@@ -215,8 +216,8 @@ foreach ($invoices as $i => $invoice) {
                                         <td>' . $purchaseItem->item->name . '</td>
                                         <td>' . $purchaseItem->quantity . '</td>
                                         <td class="format-money">' . $currency . "<em>" . number_format($purchaseItem->pricePerItem, $coinsCount, $coinsDivider, $groupDivider) . "</em>" . '</td>
-                                        <td class="format-money">' . $currency . "<em>" . number_format($purchaseItem->grandTotal, $coinsCount, $coinsDivider, $groupDivider) . "</em>" . '</td>
                                         <td class="format-money">' . $currency . "<em>" . number_format($purchaseItem->tax / 100, $coinsCount, $coinsDivider, $groupDivider) . "</em>" . '</td>
+                                        <td class="format-money">' . $currency . "<em>" . number_format($purchaseItem->grandTotal, $coinsCount, $coinsDivider, $groupDivider) . "</em>" . '</td>
                                     </tr>';
                                         }
                                         ?>
