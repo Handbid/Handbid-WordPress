@@ -16,6 +16,34 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
 
     attentionAboutTickets = false;
     attentionAboutBidding = false;
+    attentionAboutMobiles = false;
+
+    var isMobile = {
+        getUserAgent: function(){
+            return navigator.userAgent || navigator.vendor || window.opera;
+        },
+        Android: function() {
+            return /Android/i.test(this.getUserAgent());
+        },
+        BlackBerry: function() {
+            return /BlackBerry/i.test(this.getUserAgent());
+        },
+        iPhone: function() {
+            return /iPhone/i.test(this.getUserAgent());
+        },
+        iPad: function() {
+            return /iPad/i.test(this.getUserAgent());
+        },
+        iOS: function() {
+            return /iPad|iPod|iPhone/i.test(this.getUserAgent());
+        },
+        Windows: function() {
+            return /IEMobile/i.test(this.getUserAgent());
+        },
+        any: function() {
+            return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Windows());
+        }
+    };
 
     var restEndpoint = $("#apiEndpointsAddress").val(),
         currencySymbol = '$',
@@ -1801,7 +1829,6 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
                     $('[data-handbid-connect]').live('click', function (e) {
 
                         e.preventDefault();
-
                         loginModal.css('display', 'block');
                         underlay.css('display', 'block');
 
@@ -1809,8 +1836,9 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
                     });
 
                     $('.modal-close', loginModal).live('click', function () {
-
+                        loginModal.css('display', 'none');
                         underlay.css('display', 'none');
+                        handbidLoginMain.restoreInitialTabState();
                     });
                 }
                 else {
@@ -2414,7 +2442,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
                             }).appendTo("body").fadeIn("fast");
                         },
                         before_close: function() {
-                            if(!attentionAboutBidding && !attentionAboutTickets) {
+                            if(!attentionAboutBidding && !attentionAboutTickets && !attentionAboutMobiles) {
                                 modal_overlay.fadeOut("fast");
                             }
                         },
@@ -2496,7 +2524,92 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
                             }).appendTo("body").fadeIn("fast");
                         },
                         before_close: function() {
-                            if(!attentionAboutBidding && !attentionAboutTickets) {
+                            if(!attentionAboutBidding && !attentionAboutTickets && !attentionAboutMobiles) {
+                                modal_overlay.fadeOut("fast");
+                            }
+                        },
+                        buttons: {
+                            closer: false,
+                            sticker: false
+                        },
+                        history: {
+                            history: false
+                        }
+                    });
+                    bidNotice.get().on('pnotify.cancel', function () {
+                            return false;
+                        });
+                }
+
+            },
+
+            detectIfUserCanDownloadApps: function(){
+
+                var bidderDashboardPlace = $("#bidder-info-load"),
+                    profileID = parseInt(bidderDashboardPlace.data("profile-id")),
+                    cookieName = "bidder-"+profileID+"-want-no-apps",
+                    viewCookie = $.cookie(cookieName),
+                    isIPhone = isMobile.iPhone(),
+                    isIPad = isMobile.iPad(),
+                    isAndroid = isMobile.Android(),
+                    mobileDeviceName = (isAndroid) ? "Android" : ((isIPhone) ? "iPhone" : "iPad"),
+                    mobileDeviceLinkContainer = (isAndroid) ? "data-handbid-app-googleplay" : ((isIPhone) ? "data-handbid-app-appstore" : "data-handbid-app-appstore-ipad"),
+                    mobileDeviceLink = $("["+mobileDeviceLinkContainer+"]").eq(0).val();
+
+
+                if((isIPhone || isIPad || isAndroid) && viewCookie != "yes") {
+                    attentionAboutMobiles = true;
+                    var bidNotice =  new PNotify({
+                        title: 'Download Handbid App?',
+                        text: mobileDeviceName + ' detected. Do you want to download our app special for your device?',
+                        icon: 'glyphicon glyphicon-phone',
+                        type: 'info',
+                        addclass: 'handbid-message-notice',
+                        hide: false,
+                        mouse_reset: false,
+                        confirm: {
+                            confirm: true,
+                            buttons: [{
+                                text: 'Download',
+                                addClass: 'bid-here-button',
+                                click: function (notice) {
+                                    attentionAboutMobiles = false;
+                                    $.cookie(cookieName, "yes", { expires: 0.0833333, path: '/' });
+                                    notice.remove();
+                                    window.location = mobileDeviceLink;
+                                }
+                            }, {
+                                text: 'No, thanks',
+                                addClass: 'browse-here-button',
+                                click: function (notice) {
+                                    attentionAboutMobiles = false;
+                                    $.cookie(cookieName, "yes", { expires: 0.0833333, path: '/' });
+                                    notice.remove();
+                                }
+                            }]
+                        },
+                        stack: false,
+                        before_open: function(PNotify) {
+                            PNotify.get().css({
+                                "top": ($(window).height() / 2) - (PNotify.get().height() / 2) - 80,
+                                "left": ($(window).width() / 2) - (PNotify.get().width() / 2)
+                            });
+                            if (modal_overlay) modal_overlay.fadeIn("fast");
+                            else modal_overlay = $("<div />", {
+                                "class": "ui-widget-overlay",
+                                "css": {
+                                    "display": "none",
+                                    "position": "fixed",
+                                    "background": "rgba(0, 0, 0, 0.7)",
+                                    "top": "0",
+                                    "bottom": "0",
+                                    "right": "0",
+                                    "left": "0"
+                                }
+                            }).appendTo("body").fadeIn("fast");
+                        },
+                        before_close: function() {
+                            if(!attentionAboutBidding && !attentionAboutTickets && !attentionAboutMobiles) {
                                 modal_overlay.fadeOut("fast");
                             }
                         },
@@ -2911,8 +3024,9 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
         restEndpoint = $("#apiEndpointsAddress").val();
         handbid.setupAuthorizationStatus();
         handbid.makePaymentForReceipt();
-        handbid.detectIfUserWantToBid();
         handbid.detectIfUserWantToBuyTickets();
+        handbid.detectIfUserWantToBid();
+        handbid.detectIfUserCanDownloadApps();
         handbid.messageToAuctionManager();
         handbid.redirectFromResetedAuctionsCheck();
         setTimeout(function () {

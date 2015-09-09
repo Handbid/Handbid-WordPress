@@ -97,7 +97,13 @@ class HandbidRouter
 
         $auctionID = 0;
 
-        if(in_array($post->post_name, ['auction', 'auction-item'])) {
+        if($post->post_name == 'auction') {
+            $currentAuction = $this->state->currentAuction();
+            $auctionID = $currentAuction->id;
+        }
+
+        if($post->post_name == 'auction-item') {
+	        $currentItem = $this->state->currentItem();
             $currentAuction = $this->state->currentAuction();
             $auctionID = $currentAuction->id;
         }

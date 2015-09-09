@@ -47,6 +47,15 @@ if(!defined("HANDBID_PLUGIN_URL")){
 if(!defined("HANDBID_PLUGIN_PATH")){
 	define("HANDBID_PLUGIN_PATH", plugin_dir_path( __FILE__ ));
 }
+if(!defined("HANDBID_APP_APPSTORE")){
+	define("HANDBID_APP_APPSTORE", "https://itunes.apple.com/us/app/handbid/id433831139?l=ru&ls=1&mt=8");
+}
+if(!defined("HANDBID_APP_APPSTORE_IPAD")){
+	define("HANDBID_APP_APPSTORE_IPAD", "https://itunes.apple.com/us/app/bidpad/id476689122?l=ru&ls=1&mt=8");
+}
+if(!defined("HANDBID_APP_GOOGLEPLAY")){
+	define("HANDBID_APP_GOOGLEPLAY", "https://play.google.com/store/apps/details?id=com.handbid.android");
+}
 
 class Handbid
 {
@@ -427,6 +436,9 @@ class Handbid
         $bidderID = (isset($bidder->id)) ? $bidder->id : 0;
         echo '<input type="hidden" data-dashboard-profile-id="'.$bidderID.'">';
         echo '<input type="hidden" data-default-item-image value="'.plugins_url("handbid/public/images/default-item-image.jpg").'">';
+        echo '<input type="hidden" data-handbid-app-appstore value="'.HANDBID_APP_APPSTORE.'">';
+        echo '<input type="hidden" data-handbid-app-appstore-ipad value="'.HANDBID_APP_APPSTORE_IPAD.'">';
+        echo '<input type="hidden" data-handbid-app-googleplay value="'.HANDBID_APP_GOOGLEPLAY.'">';
 
         echo '<script src="'.$socketIoUrl.'"></script>';
         echo '<script type="text/javascript" src="' . plugins_url("handbid/public/js/yii-node-socket.js") .  '"></script>';

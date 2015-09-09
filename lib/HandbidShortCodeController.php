@@ -545,7 +545,7 @@ class HandbidShortCodeController {
 			$item    = $this->state->currentItem();
 			$auction = $this->state->currentAuction();
             $itemID = (isset($item->id))?$item->id:0;
-            $bids = $this->handbid->store( 'Bid' )->itemBids( $itemID );
+            $bids = $this->state->currentItemBids($itemID);
             $related = false;
 
 			if ( $attributes !== '' && $item && in_array( 'include_related', $attributes ) ) {
@@ -608,7 +608,8 @@ class HandbidShortCodeController {
 			$bids    = null;
 
 			if ( $item ) {
-				$bids = $this->handbid->store( 'Bid' )->itemBids( $item->id );
+				$itemID = (isset($item->id))?$item->id:0;
+				$bids = $this->state->currentItemBids($itemID);
 
                 usort($bids, [$this, "sortBidsByTime"]);
 			}
@@ -636,7 +637,8 @@ class HandbidShortCodeController {
 			$item    = $this->state->currentItem();
 			$auction = $this->state->currentAuction();
 
-			$bids    = $this->handbid->store( 'Bid' )->itemBids( $item->id );
+			$itemID = (isset($item->id))?$item->id:0;
+			$bids = $this->state->currentItemBids($itemID);
 			$profile = $this->handbid->store( 'Bidder' )->myProfile();
 
 			return $this->viewRenderer->render(

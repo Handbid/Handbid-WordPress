@@ -83,6 +83,7 @@ var handbidLoginMain;
             this.displaySpecifiedTabOfLoginPopup("login-form");
             $(".cleanable-input").val("");
             $(".to-hide-block").hide();
+            $(".validation-error").removeClass("validation-error");
         },
 
         changeToTutorialTabState: function () {

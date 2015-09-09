@@ -26,6 +26,7 @@ class HandbidState
     public $org;
     public $auction;
     public $item;
+    public $itemBids;
     public $inventory;
     public $bidder;
     public $bidderNotAvailable = false;
@@ -165,6 +166,13 @@ class HandbidState
                     }
 
                     $this->item = $this->handbid->store('Item')->byKey($itemKey, $query);
+
+	                if(isset($this->item->auction)){
+		                $this->auction = $this->item->auction;
+	                }
+	                if(isset($this->item->bids)){
+		                $this->itemBids = $this->item->bids;
+	                }
                 }
             }
 
@@ -176,6 +184,14 @@ class HandbidState
         }
 
     }
+
+    public function currentItemBids($itemID = null){
+	    if(!is_array($this->itemBids)){
+		    $this->itemBids = $this->handbid->store( 'Bid' )->itemBids( $itemID );
+	    }
+	    return $this->itemBids;
+    }
+
 
     public function currentBidder($auction_id = null)
     {
