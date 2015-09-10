@@ -54,7 +54,7 @@ $hasTicketItems = !!(count($tickets));
             <img src="<?php
             $image = ($auction->imageUrl) ? $auction->imageUrl : $auction->sponsorImage;
             $imageUrlPath = parse_url($image);
-            $image = ($imageUrlPath["scheme"]) ? $image : "http://" . $image;
+            $image = ($imageUrlPath["scheme"]) ? $image : "https://" . $image;
             echo $image;
             ?>"/>
         </div>
