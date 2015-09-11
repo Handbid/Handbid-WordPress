@@ -2934,7 +2934,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
                             },
                             function (resp) {
                                 if (bidderInfo.html().trim() != "" && resp.trim() == "") {
-                                    handbid.showExpiredNotice();
+                                  //  handbid.showExpiredNotice();
                                 }
                                 else {
                                     bidderInfo.html(resp);
