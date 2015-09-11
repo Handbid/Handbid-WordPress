@@ -1187,11 +1187,8 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
             },
 
             cannotDoIfUnauthorized: function(){
-                var bidderDashboardPlace = $("#bidder-info-load"),
-                    profileID = parseInt(bidderDashboardPlace.data("profile-id")),
-                    sessionCookieKey = "bidder-"+profileID+"-session",
-                    sessionCookie = $.cookie(sessionCookieKey);
-                if(sessionCookie != "yes"){
+                var sessionCookie = $.cookie("handbid-auth");
+                if(sessionCookie){
                     $("[data-handbid-connect]").eq(0).click();
                     //this.notice("You should register or login to bid", "Unauthorized", "error");
 
@@ -1830,15 +1827,6 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
 
                 if (body.hasClass('handbid-logged-out')) {
 
-                    var bidderDashboardPlace = $("#bidder-info-load"),
-                        profileID = parseInt(bidderDashboardPlace.data("profile-id")),
-                        sessionCookieKey = "bidder-"+profileID+"-session",
-                        sessionCookie = $.cookie(sessionCookieKey);
-
-                    if (sessionCookie == 'yes') {
-                        $.removeCookie(sessionCookieKey);
-                    }
-
                     this.loggedIn = false;
 
                     var loginModal = $('[data-handbid-modal-key="login-modal"]');
@@ -1863,7 +1851,6 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
                 }
                 else {
                     this.loggedIn = true;
-                    $.cookie(sessionCookieKey, "yes", { expires: cookieExpire, path: '/' });
                     $('[data-handbid-connect]').css('display', 'none');
 
                 }
