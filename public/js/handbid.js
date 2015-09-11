@@ -11,7 +11,7 @@
 
 var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, timerMessage,
     circleTimer, auctionInvoices, currentPaddleNumber, currentElemNeedsCard,
-    currentCCForm;
+    currentCCForm, cookieExpire = 4;
 (function ($) {
 
     attentionAboutTickets = false;
@@ -731,7 +731,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
                                                 click: function (notice) {
                                                     attentionAboutBidding = false;
                                                     $.cookie("bidder-" + profileID + "-want-no-invoice-" + val.id, "yes", {
-                                                        expires: 0.0833333,
+                                                        expires: cookieExpire,
                                                         path: '/'
                                                     });
                                                     notice.remove();
@@ -1187,11 +1187,20 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
             },
 
             cannotDoIfUnauthorized: function(){
-                if(! this.loggedIn){
+                var bidderDashboardPlace = $("#bidder-info-load"),
+                    profileID = parseInt(bidderDashboardPlace.data("profile-id")),
+                    sessionCookieKey = "bidder-"+profileID+"-session",
+                    sessionCookie = $.cookie(sessionCookieKey);
+                if(sessionCookie != "yes"){
                     $("[data-handbid-connect]").eq(0).click();
                     //this.notice("You should register or login to bid", "Unauthorized", "error");
+
+                    this.loggedIn = false;
+                } else {
+                    this.loggedIn = true;
                 }
-                return ! this.loggedIn;
+
+                return this.loggedIn;
             },
 
             // Setup bidding
@@ -1821,6 +1830,15 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
 
                 if (body.hasClass('handbid-logged-out')) {
 
+                    var bidderDashboardPlace = $("#bidder-info-load"),
+                        profileID = parseInt(bidderDashboardPlace.data("profile-id")),
+                        sessionCookieKey = "bidder-"+profileID+"-session",
+                        sessionCookie = $.cookie(sessionCookieKey);
+
+                    if (sessionCookie == 'yes') {
+                        $.removeCookie(sessionCookieKey);
+                    }
+
                     this.loggedIn = false;
 
                     var loginModal = $('[data-handbid-modal-key="login-modal"]');
@@ -1845,6 +1863,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
                 }
                 else {
                     this.loggedIn = true;
+                    $.cookie(sessionCookieKey, "yes", { expires: cookieExpire, path: '/' });
                     $('[data-handbid-connect]').css('display', 'none');
 
                 }
@@ -2309,7 +2328,8 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
                     paddleNumber = bidderDashboardPlace.data("profile-paddle-number"),
                     nonce = bidderDashboardPlace.data("paddle-nonce");
 
-                var viewCookie = $.cookie("bidder-"+profileID+"-just-view-auction-"+auctionID);
+                var viewCookieKey = "bidder-"+profileID+"-just-view-auction-"+auctionID,
+                    viewCookie = $.cookie(viewCookieKey);
 
                 if(auctionID && profileID && paddleNumber == "N/A" && viewCookie != "yes") {
                     attentionAboutBidding = true;
@@ -2376,6 +2396,10 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
                                                 title = 'Done';
                                                 type = 'success';
                                                 icon = 'glyphicon glyphicon-ok';
+
+                                                // Remove the Cookie
+                                                $.removeCookie(viewCookieKey);
+
                                             }
                                             else{
                                                 text = data.errors.join("<br>");
@@ -2418,7 +2442,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
                                 addClass: 'browse-here-button',
                                 click: function (notice) {
                                     attentionAboutBidding = false;
-                                    $.cookie("bidder-"+profileID+"-just-view-auction-"+auctionID, "yes", { expires: 0.0833333, path: '/' });
+                                    $.cookie(viewCookieKey, "yes", { expires: cookieExpire, path: '/' });
                                     notice.remove();
                                 }
                             }]
@@ -2500,7 +2524,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
                                 addClass: 'browse-here-button',
                                 click: function (notice) {
                                     attentionAboutTickets = false;
-                                    $.cookie("bidder-"+profileID+"-want-no-tickets-"+auctionID, "yes", { expires: 0.0833333, path: '/' });
+                                    $.cookie("bidder-"+profileID+"-want-no-tickets-"+auctionID, "yes", { expires: cookieExpire, path: '/' });
                                     notice.remove();
                                 }
                             }]
@@ -2576,7 +2600,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
                                 addClass: 'bid-here-button',
                                 click: function (notice) {
                                     attentionAboutMobiles = false;
-                                    $.cookie(cookieName, "yes", { expires: 0.0833333, path: '/' });
+                                    $.cookie(cookieName, "yes", { expires: cookieExpire, path: '/' });
                                     notice.remove();
                                     window.location = mobileDeviceLink;
                                 }
@@ -2585,7 +2609,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
                                 addClass: 'browse-here-button',
                                 click: function (notice) {
                                     attentionAboutMobiles = false;
-                                    $.cookie(cookieName, "yes", { expires: 0.0833333, path: '/' });
+                                    $.cookie(cookieName, "yes", { expires: cookieExpire, path: '/' });
                                     notice.remove();
                                 }
                             }]
