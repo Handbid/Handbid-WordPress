@@ -216,6 +216,8 @@ class HandbidShortCodeController {
 			} else if ( isset( $attributes['page'] ) ) {
 				$page = $attributes['page'];
 			}
+            $page = (int) $page;
+            $currentAuctionsPage = $page + 1;
 
 			//paging and sort
             $pageSize = $this->state->getPageSize((int) $attributes['page_size']);
@@ -226,8 +228,13 @@ class HandbidShortCodeController {
             //$profile = $this->handbid->store( 'Bidder' )->myProfile();
             $profile = $this->state->currentBidder();
             $this->handbid->store('Auction')->setBasePublicity(! $profile);
-            $auctions = $this->handbid->store('Auction')->byStatus($attributes['type'], (int) $page + 1, $pageSize);
+            $auctions = $this->handbid->store('Auction')->byStatus($attributes['type'], $currentAuctionsPage, $pageSize);
             $total = $this->handbid->store('Auction')->count($attributes['type']);
+
+            $auctions = (is_array($auctions))?$auctions:[];
+            if(count($auctions) > $pageSize){
+                $auctions = array_slice($auctions, $page * $pageSize, $pageSize);
+            }
 
             $colsCount = $this->state->getGridColsCount();
 
@@ -271,6 +278,7 @@ class HandbidShortCodeController {
 			} else if ( isset( $attributes['page'] ) ) {
 				$page = $attributes['page'];
 			}
+            $page = (int) $page;
 
 			//paging and sort
 			$pageSize = $this->state->getPageSize((int) $attributes['page_size']);
@@ -299,6 +307,13 @@ class HandbidShortCodeController {
 			);
 
 			$total = $this->handbid->store( 'Organization' )->count( $query );
+
+
+            $organizations = (is_array($organizations))?$organizations:[];
+            if(count($organizations) > $pageSize){
+                $organizations = array_slice($organizations, $page * $pageSize, $pageSize);
+            }
+
 
             $colsCount = $this->state->getGridColsCount();
 

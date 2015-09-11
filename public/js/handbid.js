@@ -1188,7 +1188,8 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
 
             cannotDoIfUnauthorized: function(){
                 if(! this.loggedIn){
-                    this.notice("You should register or login to bid", "Unauthorized", "error");
+                    $("[data-handbid-connect]").eq(0).click();
+                    //this.notice("You should register or login to bid", "Unauthorized", "error");
                 }
                 return ! this.loggedIn;
             },
@@ -1835,7 +1836,8 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
                         //window.location = "/log-in/";
                     });
 
-                    $('.modal-close', loginModal).live('click', function () {
+                    $('.modal-close', loginModal).live('click', function (e) {
+                        e.preventDefault();
                         loginModal.css('display', 'none');
                         underlay.css('display', 'none');
                         handbidLoginMain.restoreInitialTabState();

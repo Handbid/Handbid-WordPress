@@ -247,10 +247,10 @@ class HandbidState
 
     public function getPageSize($default = 0, $type = "")
     {
-        $colCount = (int)get_option('handbidDefaultPageSize');
-        if (!$colCount) {
-            $colCount = ($default) ? $default : 25;
-        }
+	    if($default){
+		    return $default;
+	    }
+        $colCount = (int) get_option('handbidDefaultPageSize', 25);
         return $colCount;
     }
 
