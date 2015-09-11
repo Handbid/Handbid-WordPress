@@ -54,7 +54,7 @@ $hasTicketItems = !!(count($tickets));
             <img src="<?php
             $image = ($auction->imageUrl) ? $auction->imageUrl : $auction->sponsorImage;
             $imageUrlPath = parse_url($image);
-            $image = ($imageUrlPath["scheme"]) ? $image : "http://" . $image;
+            $image = ($imageUrlPath["scheme"]) ? $image : "https://" . $image;
             echo $image;
             ?>"/>
         </div>
@@ -66,11 +66,6 @@ $hasTicketItems = !!(count($tickets));
         <span class="buttons">
             <a href="#" class="button pink-button register" data-handbid-connect>Register</a>
 
-
-            <?php if ($profile) { ?>
-                <a href="#" class="button pink-button tutorial-link register" data-handbid-tutorial>
-                    Tutorial</a>
-            <?php } ?>
             <?php
             $managerEmail = $auction->organization->email;
             if(trim($managerEmail) and $profile){?>
