@@ -2200,7 +2200,8 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
             setupAuthorizationStatus: function () {
 
                 var bidderDashboardPlace = $("#bidder-info-load"),
-                    hasBidderDashboard = (bidderDashboardPlace.is(":visible") && bidderDashboardPlace.html().trim() != "" );
+                    hasBidderDashboard = (bidderDashboardPlace.is(":visible") &&
+                    (bidderDashboardPlace.html().trim() != "" || bidderDashboardPlace.hasClass("hidden-page-dashboard") ) );
                 var authorized = ($.cookie('handbid-auth') && hasBidderDashboard) ? true : false;
 
                 if (authorized === true) {

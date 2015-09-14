@@ -20,7 +20,7 @@ $pageNameForProfile = get_query_var('name');
 $pageNameForProfile = (in_array($pageNameForProfile, array("auction", "auction-item")))?$pageNameForProfile:"other";
 $displayBidderProfile = in_array($pageNameForProfile, $profileDashboardOn);
 ?>
-<div id="bidder-info-load" class="bidder-info-load"
+<div id="bidder-info-load" class="bidder-info-load <?php echo (!$displayBidderProfile)?"hidden-page-dashboard":"";?>"
      data-profile-paddle-number="<?php echo $auction->currentPaddleNumber; ?>"
      data-auction="<?php echo (int) $auctionID; ?>"
      data-auction-status="<?php echo $auction->status; ?>"
