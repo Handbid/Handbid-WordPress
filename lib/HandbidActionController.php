@@ -261,7 +261,7 @@ class HandbidActionController
                 'mobile'    => $_POST['mobile'],
                 'password'  => $_POST['password'],
                 'email'     => $_POST['email'],
-                'deviceType'=> $_POST['deviceType'],
+                'deviceType'=> (isset($_POST['deviceType']))? $_POST['deviceType'] : "other",
                 'countryCode' => $_POST['countryCode'],
                 'auctionGuid' => $_POST['auctionGuid'],
             ];
