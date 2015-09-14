@@ -1188,7 +1188,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
 
             cannotDoIfUnauthorized: function(){
                 var sessionCookie = $.cookie("handbid-auth");
-                if(sessionCookie){
+                if(! sessionCookie){
                     $("[data-handbid-connect]").eq(0).click();
                     //this.notice("You should register or login to bid", "Unauthorized", "error");
 
@@ -1196,8 +1196,9 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
                 } else {
                     this.loggedIn = true;
                 }
-
-                return this.loggedIn;
+                // we cannot return this.loggedIn because of this function returns 'true' only in you canNOT press
+                //button if you are logged out.
+                return !this.loggedIn;
             },
 
             // Setup bidding
