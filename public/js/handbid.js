@@ -11,7 +11,7 @@
 
 var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, timerMessage,
     circleTimer, auctionInvoices, currentPaddleNumber, currentElemNeedsCard,
-    currentCCForm, cookieExpire = 4;
+    currentCCForm, cookieExpire = 7;
 (function ($) {
 
     attentionAboutTickets = false;
@@ -2315,12 +2315,18 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
                     auctionID = parseInt(bidderDashboardPlace.data("auction")),
                     profileID = parseInt(bidderDashboardPlace.data("profile-id")),
                     paddleNumber = bidderDashboardPlace.data("profile-paddle-number"),
-                    nonce = bidderDashboardPlace.data("paddle-nonce");
+                    nonce = bidderDashboardPlace.data("paddle-nonce"),
+                    viewCookieKey = "bidder-"+profileID+"-just-view-auction-"+auctionID,
+                    viewCookie = $.cookie(viewCookieKey),
+                    bidCookieKey = "bidder-"+profileID+"-bidding-in-auction-"+auctionID,
+                    bidCookie = $.cookie(bidCookieKey),
+                    paddleNumberIsUndefined = (paddleNumber == "N/A" && bidCookie == undefined);
 
-                var viewCookieKey = "bidder-"+profileID+"-just-view-auction-"+auctionID,
-                    viewCookie = $.cookie(viewCookieKey);
+                if(paddleNumber != "N/A" && bidCookie == undefined){
+                    $.cookie(bidCookieKey, paddleNumber, { expires: cookieExpire, path: '/' });
+                }
 
-                if(auctionID && profileID && paddleNumber == "N/A" && viewCookie != "yes") {
+                if(auctionID && profileID && paddleNumberIsUndefined && viewCookie != "yes") {
                     attentionAboutBidding = true;
                     var bidNotice =  new PNotify({
                         title: 'Register to Bid?',
@@ -2381,6 +2387,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
                                             if(data.paddleId != undefined){
                                                 $("[data-paddle-for-auction-"+auctionID+"]").html(data.paddleId);
                                                 currentPaddleNumber = data.paddleId;
+                                                $.cookie(bidCookieKey, currentPaddleNumber, { expires: cookieExpire, path: '/' });
                                                 text = 'Your paddle number for this auction is <b>'+data.paddleId+'</b>';
                                                 title = 'Done';
                                                 type = 'success';
