@@ -1,0 +1,400 @@
+<?php
+/**
+ * @copyright Copyright (c) 2014-2015 Handbid Inc.
+ * @category handbid
+ * @package Handbid2-WordPress
+ * @license Proprietary
+ * @link http://www.handbid.com/
+ * @author Master of Code (worldclass@masterofcode.com)
+ */
+$options = get_option("handbid_theme_options");
+if(is_array($options)) {
+
+//==========================================================
+//================  GENERAL SETTINGS   =====================
+//==========================================================
+    if(isset($options["main_settings"]) and is_array($options["main_settings"])) {
+
+        $main_settings = $options["main_settings"];
+
+
+        if(isset($main_settings["main_text_color"])) {
+            $main_text_color = $main_settings["main_text_color"];
+            echo "
+            body{
+                color: ".$main_text_color." !important;
+            }
+            ";
+        }
+
+        if(isset($main_settings["default_font"])) {
+            $default_font = apply_filters("handbid_customizer_font_face", $main_settings["default_font"]);
+            echo "
+            body{
+                font-family: ".$default_font." !important;
+            }
+            ";
+        }
+
+
+    }
+
+//==========================================================
+//================  Auction List Page  =====================
+//==========================================================
+    if(isset($options["auction_list"]) and is_array($options["auction_list"])) {
+
+        $auction_list = $options["auction_list"];
+
+
+        if(isset($auction_list["open_color"])) {
+            $open_color = $auction_list["open_color"];
+            echo "
+            .simple-auction-box.status-open .header,
+            .auction-details.open .status .status-box,
+            .sort-bar .legend .open .box{
+                background-color: ".$open_color." !important;
+            }
+            .sort-bar .legend .open,
+            .auction-details.open .status .status-label{
+                color: ".$open_color." !important;
+            }
+            ";
+        }
+
+        if(isset($auction_list["presale_color"])) {
+            $presale_color = $auction_list["presale_color"];
+            echo "
+            .simple-auction-box.status-presale .header,
+            .auction-details.presale .status .status-box,
+            .sort-bar .legend .presale .box{
+                background-color: ".$presale_color." !important;
+            }
+            .sort-bar .legend .presale,
+            .auction-details.presale .status .status-label{
+                color: ".$presale_color." !important;
+            }
+            ";
+        }
+
+        if(isset($auction_list["preview_color"])) {
+            $preview_color = $auction_list["preview_color"];
+            echo "
+            .simple-auction-box.status-preview .header,
+            .auction-details.preview .status .status-box,
+            .sort-bar .legend .preview .box{
+                background-color: ".$preview_color." !important;
+            }
+            .sort-bar .legend .preview,
+            .auction-details.preview .status .status-label{
+                color: ".$preview_color." !important;
+            }
+            ";
+        }
+
+        if(isset($auction_list["closed_color"])) {
+            $closed_color = $auction_list["closed_color"];
+            echo "
+            .simple-auction-box.status-closed .header,
+            .auction-details.closed .status .status-box,
+            .sort-bar .legend .closed .box{
+                background-color: ".$closed_color." !important;
+            }
+            .sort-bar .legend .closed,
+            .auction-details.closed .status .status-label{
+                color: ".$closed_color." !important;
+            }
+            ";
+        }
+    }
+
+//==========================================================
+//================  Single Auction Page  =====================
+//==========================================================
+    if(isset($options["auction_page"]) and is_array($options["auction_page"])) {
+
+        $auction_page = $options["auction_page"];
+
+
+        if(isset($auction_page["default_color"])) {
+            $default_color = $auction_page["default_color"];
+            echo "
+            .simple-item-box .header{
+                background-color: ".$default_color." !important;
+            }
+            ";
+        }
+
+        if(isset($auction_page["open_color"])) {
+            $open_color = $auction_page["open_color"];
+            echo "
+            .simple-item-box.status-open .header{
+                background-color: ".$open_color." !important;
+            }
+            ";
+        }
+
+        if(isset($auction_page["live_color"])) {
+            $live_color = $auction_page["live_color"];
+            echo "
+            .simple-box[data-live] .box-flag,
+            .item-details .images .item-banner,
+            .proxy-bid-dialog .images .item-banner{
+                background-color: ".$live_color." !important;
+            }
+            ";
+        }
+
+        if(isset($auction_page["sold_color"])) {
+            $sold_color = $auction_page["sold_color"];
+            echo "
+            .simple-box.status-sold .box-flag{
+                background-color: ".$sold_color." !important;
+            }
+            ";
+        }
+
+        if(isset($auction_page["winning_color"])) {
+            $winning_color = $auction_page["winning_color"];
+            echo "
+            .simple-box[data-handbid-item-box-status='winning'] .box-flag,
+            .item-details .images .winning, .proxy-bid-dialog .images .winning
+                background-color: ".$winning_color." !important;
+            }
+            ";
+        }
+
+        if(isset($auction_page["subheading_color"])) {
+            $subheading_color = $auction_page["subheading_color"];
+            echo "
+            .auction-details .filters h4{
+                color: ".$subheading_color." !important;
+            }
+            ";
+        }
+
+        if(isset($auction_page["sold_bids_color"])) {
+            $sold_bids_color = $auction_page["sold_bids_color"];
+            echo "
+            .item-list .simple-box .horizontal-details li em{
+                color: ".$sold_bids_color." !important;
+            }
+            ";
+        }
+
+        if(isset($auction_page["tab_bg_color"])) {
+            $tab_bg_color = $auction_page["tab_bg_color"];
+            echo "
+            .slider-nav li a{
+                color: ".$tab_bg_color." !important;
+                border-color: ".$tab_bg_color." !important;
+            }
+            .slider-nav li a:hover,
+            .slider-nav li .active-slide{
+                background-color: ".$tab_bg_color." !important;
+                color: white !important;
+            }
+            ";
+        }
+
+    }
+
+
+//==========================================================
+//==============  Notifications Settings  ==================
+//==========================================================
+    if(isset($options["notifications"]) and is_array($options["notifications"])) {
+
+
+        $notifications = $options["notifications"];
+
+        if(isset($notifications["general_color"])) {
+            $general_color = $notifications["general_color"];
+            echo "
+            .ui-pnotify-container.alert-info{
+                background-color: ".$general_color." !important;
+                border-color: ".$general_color." !important;
+            }
+            ";
+        }
+
+        if(isset($notifications["winning_color"])) {
+            $winning_color = $notifications["winning_color"];
+            echo "
+            .ui-pnotify-container.alert-success{
+                background-color: ".$winning_color." !important;
+                border-color: ".$winning_color." !important;
+            }
+            ";
+        }
+
+        if(isset($notifications["losing_color"])) {
+            $losing_color = $notifications["losing_color"];
+            echo "
+            .ui-pnotify-container.alert-warning,
+            .ui-pnotify-container.alert-danger{
+                background-color: ".$losing_color." !important;
+                border-color: ".$losing_color." !important;
+            }
+            ";
+        }
+
+        if(isset($notifications["broadcast_color"])) {
+            $broadcast_color = $notifications["broadcast_color"];
+            echo "
+            .handbid-broadcast-notice .ui-pnotify-container.alert-info{
+                background-color: ".$broadcast_color." !important;
+                border-color: ".$broadcast_color." !important;
+            }
+            ";
+        }
+
+        if(isset($notifications["message_text_color"])) {
+            $message_text_color = $notifications["message_text_color"];
+            echo "
+            .ui-pnotify-container.alert-warning,
+            .ui-pnotify-container.alert-danger,
+            .ui-pnotify-container.alert-success,
+            .ui-pnotify-container.alert-info{
+                color: ".$message_text_color." !important;
+            }
+            ";
+        }
+
+        if(isset($notifications["messages_font"])) {
+            $messages_font = apply_filters("handbid_customizer_font_face", $notifications["messages_font"]);
+            echo "
+            .ui-pnotify-container.alert-warning,
+            .ui-pnotify-container.alert-danger,
+            .ui-pnotify-container.alert-success,
+            .ui-pnotify-container.alert-info{
+                font-family: ".$messages_font." !important;
+            }
+            ";
+        }
+
+
+        if(isset($notifications["timer_color"])) {
+            $timer_color = $notifications["timer_color"];
+            echo "
+            .handbid-timer-top-notice .ui-pnotify-container.alert-warning,
+            .handbid-timer-top-notice .ui-pnotify-container.alert-danger{
+                background-color: ".$timer_color." !important;
+                border-color: ".$timer_color." !important;
+            }
+            ";
+        }
+
+
+        if(isset($notifications["unable_connect_color"])) {
+            $unable_connect_color = $notifications["unable_connect_color"];
+            echo "
+            .handbid-no-connection-notice .ui-pnotify-container.alert-warning,
+            .handbid-no-connection-notice .ui-pnotify-container.alert-danger{
+                background-color: ".$unable_connect_color." !important;
+                border-color: ".$unable_connect_color." !important;
+            }
+            ";
+        }
+
+    }
+//==========================================================
+//================  Item Detail Page  ======================
+//==========================================================
+    if(isset($options["item_detail_page"]) and is_array($options["item_detail_page"])) {
+
+        $item_detail_page = $options["item_detail_page"];
+
+
+
+        if(isset($item_detail_page["item_name_font"])) {
+            $item_name_font = apply_filters("handbid_customizer_font_face", $item_detail_page["item_name_font"]);
+            echo "
+            .item-details h2.name, .proxy-bid-dialog h2.name{
+                font-family: " . $item_name_font . "
+            }";
+        }
+        if(isset($item_detail_page["category_name_font"])) {
+            $category_name_font = apply_filters("handbid_customizer_font_face", $item_detail_page["category_name_font"]);
+            echo "
+            .item-details h3.category, .proxy-bid-dialog h3.category{
+                font-family: " . $category_name_font . "
+            }";
+        }
+
+        if(isset($item_detail_page["bid_controls_color"])) {
+            $bid_controls_color = $item_detail_page["bid_controls_color"];
+            echo "
+            .bid-controls .green-button,
+            .bid-controls .bid-amount{
+                color: " . $bid_controls_color . " !important;
+                border-color: " . $bid_controls_color . " !important;
+            }
+            .bid-controls .green-button:hover{
+                background-color: " . $bid_controls_color . " !important;
+                color: white !important;
+            }";
+        }
+
+        if(isset($item_detail_page["bid_button_color"])) {
+            $bid_button_color = $item_detail_page["bid_button_color"];
+            echo "
+            [data-handbid-bid-button='bid']{
+                background-color: " . $bid_button_color . " !important;
+                border-color: " . $bid_button_color . " !important;
+                color: white !important;
+            }
+            [data-handbid-bid-button='bid']:hover{
+                color: " . $bid_button_color . " !important;
+                border-color: " . $bid_button_color . " !important;
+                background-color: white !important;
+            }
+            [data-handbid-bid-button='proxy']{
+                background-color: " . $bid_button_color . " !important;
+                border-color: " . $bid_button_color . " !important;
+                color: white !important;
+            }
+            [data-handbid-bid-button='proxy']:hover{
+                color: " . $bid_button_color . " !important;
+                border-color: " . $bid_button_color . " !important;
+                background-color: white !important;
+            }
+            ";
+        }
+
+        if(isset($item_detail_page["maxbid_color"])) {
+            $maxbid_color = $item_detail_page["maxbid_color"];
+            echo "
+            [data-handbid-modal-key='proxy'].gray-solid-button{
+                background-color: " . $maxbid_color . " !important;
+                border-color: " . $maxbid_color . " !important;
+                color: white !important;
+            }
+            [data-handbid-modal-key='proxy'].gray-solid-button:hover{
+                color: " . $maxbid_color . " !important;
+                border-color: " . $maxbid_color . " !important;
+                background-color: white !important;
+            }
+            ";
+        }
+
+        if(isset($item_detail_page["buy_it_now_color"])) {
+            $buy_it_now_color = $item_detail_page["buy_it_now_color"];
+            echo "
+            .buttons-and-titles [data-handbid-modal-key='purchase'],
+            .buttons-and-titles [data-handbid-modal-key='buyItNow']{
+                background-color: " . $buy_it_now_color . " !important;
+                border-color: " . $buy_it_now_color . " !important;
+                color: white !important;
+            }
+            .buttons-and-titles [data-handbid-modal-key='purchase']:hover,
+            .buttons-and-titles [data-handbid-modal-key='buyItNow']:hover{
+                color: " . $buy_it_now_color . " !important;
+                border-color: " . $buy_it_now_color . " !important;
+                background-color: white !important;
+            }
+            ";
+        }
+    }
+}
+?>

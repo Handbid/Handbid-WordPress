@@ -58,7 +58,7 @@ $itemHideIfSold = ($item->hideSales == 1);
      data-handbid-params-box="<?php echo $item->id; ?>"
      data-handbid-item-auction="<?php echo $auction->id; ?>"
      data-handbid-item-box-status="<?php echo $boxStatus; ?>"
-     class="simple-box status-<?php echo $item->status; ?>
+     class="simple-item-box simple-box status-<?php echo $item->status; ?>
      <?php echo ($itemCanNotBeShownInPresale)?" not-available-in-presale ":"";?>"
      <?php if ($item->isDirectPurchaseItem) { ?>data-for-sale<?php } ?>
      <?php if ($item->disableMobileBidding) { ?>data-live<?php } ?>

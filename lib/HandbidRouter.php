@@ -108,10 +108,10 @@ class HandbidRouter
             $auctionID = $currentAuction->id;
         }
 
-        if($post->post_name == 'auction' && $currentAuction && $currentAuction->status == "setup") {
+        if($post->post_name == 'auction' && is_object($currentAuction) && $currentAuction->status == "setup") {
             $this->throw404();
         }
-        else if($post->post_name == 'auction' && !$currentAuction) {
+        else if($post->post_name == 'auction' && !is_object($currentAuction)) {
             $this->throw404();
         }
         else if($post->post_name == 'organization' && !$this->state->currentOrg()) {

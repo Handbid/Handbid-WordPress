@@ -72,7 +72,7 @@ $selected = isset($_GET['auction_list']) ? $_GET['auction_list'] : 'current';
     <?php // ended up having to give the boostrap column its own div, was not meant to be flexible ?>
     <div class="<?php echo $mdClass; ?>">
 
-        <div onclick="if(event.metaKey) { return; } window.location.href='<?php echo $url; ?>'" class="simple-box status-<?php echo $auction->status; ?>">
+        <div onclick="if(event.metaKey) { return; } window.location.href='<?php echo $url; ?>'" class="simple-auction-box simple-box status-<?php echo $auction->status; ?>">
 
             <div class="header">
                 <?php echo sprintf('%d items', $auction->totalItems); ?>

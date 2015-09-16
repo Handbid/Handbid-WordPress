@@ -41,7 +41,6 @@ foreach ($invoices as $i => $invoice) {
                 }
                 $itemTax += ($lineItem->tax)?$lineItem->tax:0;
             }
-            echo "<pre style='display: none;'>".print_r($invoice,true)."</pre>";
             ?>
             <li class="row receiptRow margin-bottom <?php echo ($invoice->paid) ? "open" : "preview"; ?>
                 <?php echo ($invoice->enableCreditCardSupport == "1")?"":" invoiceNoCCAllowed "?>"

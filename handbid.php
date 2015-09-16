@@ -444,6 +444,14 @@ class Handbid
         echo '<script type="text/javascript" src="' . plugins_url("handbid/public/js/yii-node-socket.js") .  '"></script>';
         echo '<script type="text/javascript" src="' . plugins_url("handbid/public/js/node-socket-manager.js") .  '"></script>';
 
+        $isCustomizerPage = (isset($_SERVER["HTTP_REFERER"]) and (explode("?",basename($_SERVER["HTTP_REFERER"]))[0] == "customize.php"));
+        if($isCustomizerPage){
+            echo do_shortcode("[handbid_customizer_styles]");
+        }
+        else{
+            echo '<link rel="stylesheet" href="' . add_query_arg(array("action"=>"handbid_ajax_customizer_css"), admin_url("admin-ajax.php")) .  '" media="all"/>';
+        }
+
         if(isset($_GET["auction-reset"])){
             echo '<input type="hidden" data-auction-reset-sign>';
         }

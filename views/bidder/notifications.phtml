@@ -20,7 +20,6 @@ $notifications = array_reverse($notifications);
             $chunksCount = count($chunks);
             forEach ( $chunks as $chunkI => $chunk ) {
             forEach ( $chunk as $notification ) {
-                //echo "<pre style='display: none'>".print_r($notification,true)."</pre>";
                 ?>
                 <li class="row message-row <?php echo $notification->messageType; ?> messages-part-<?php echo $chunkI;?>" style="<?php echo ($chunkI != 0)?" display:none; ":"";?>">
                     <div class="col-md-1">

@@ -52,7 +52,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
             current_winner : "You are current winner of this item"
         },
 	socket_retry = 0,
-	socket_retry_limit = 3,
+	socket_retry_limit = 9,
         stack_bar_top = {
             addpos2: 0,
             animation: true,
@@ -1246,7 +1246,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
                     else{
                         var buyNowPrice = ($('[data-handbid-buynow-price]').length > 0 ) ? parseInt($('[data-handbid-buynow-price]').eq(0).data("handbid-buynow-price")) : -1;
 
-                        canBeUp = (!isMaxBidButton)? true : ((buyNowPrice <=0 ) || ((buyNowPrice > 0) && (value <= buyNowPrice)));
+                        canBeUp = ((buyNowPrice <=0 ) || ((buyNowPrice > 0) && (value <= buyNowPrice)));
 
 
                     }
@@ -2990,7 +2990,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
 
             checkSocketConnection: function (handbid) {
                socket_retry += socket_retry;
-                if(!connectedToSocket && socket_retry >= socket_retry_limit){
+                if(!connectedToSocket && socket_retry <= socket_retry_limit){
                     if(connectMessage == undefined){
                         connectMessage = new PNotify({
                             title: '<h3 class="notice-connection-title"><b>Unable to connect for real-time updates</b>' +

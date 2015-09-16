@@ -141,6 +141,7 @@ class HandbidActionController
             "handbid_ajax_get_countries_provinces",
             "handbid_load_auto_complete_auctions",
             "handbid_load_shortcode_auctions",
+            "handbid_ajax_customizer_css",
         ];
         foreach($ajaxActions as $ajaxAction){
             add_action("wp_ajax_".$ajaxAction, [$this, $ajaxAction."_callback"]);
@@ -893,4 +894,13 @@ class HandbidActionController
         wp_redirect("/auctions/".$auctionSlug);
     }
 
+
+
+    function handbid_ajax_customizer_css_callback(){
+        header("Content-type: text/css");
+        echo $this->viewRenderer->render(
+            'views/admin/customizer', []
+        );
+        exit;
+    }
 }

@@ -79,6 +79,7 @@ class HandbidShortCodeController {
 			'handbid_bidder_credit_cards'   => 'myCreditCards',
 			'handbid_bidder_receipt'        => 'bidderReceipt',
 			'handbid_bidder_login_form'     => 'loginRegisterForm',
+			'handbid_customizer_styles'     => 'customizerStyles',
 		];
 
 		forEach ( $shortCodes as $shortCode => $callback ) {
@@ -1332,6 +1333,12 @@ class HandbidShortCodeController {
 		return get_the_title();
 
 	}
+
+    public function customizerStyles(){
+        return  "<style type='text/css'>".$this->viewRenderer->render(
+            'views/admin/customizer', []
+        )."</style>";
+    }
 
 	public function logException( $e ) {
 
