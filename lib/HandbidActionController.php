@@ -225,7 +225,7 @@ class HandbidActionController
     // ---------------- AJAX CALLBACKS ------------------
 
     function handbid_ajax_login_callback(){
-        $nonce = $_POST["nonce"];
+        $nonce = isset($_POST['nonce']) ? $_POST['nonce'] : 'nonce';
         $result = [
             "success" => 0,
             "error" => "no",
@@ -248,7 +248,7 @@ class HandbidActionController
     }
 
     function handbid_ajax_registration_callback(){
-        $nonce = $_POST["nonce"];
+        $nonce = isset($_POST['nonce']) ? $_POST['nonce'] : 'nonce';
         $result = [
             "success" => 0,
             "error" => "no",
@@ -291,7 +291,7 @@ class HandbidActionController
 
 
     function handbid_ajax_reset_password_callback(){
-        $nonce = $_POST["nonce"];
+        $nonce = isset($_POST['nonce']) ? $_POST['nonce'] : 'nonce';
         $emailOrPhone = $_POST["emailOrPhone"];
         $result = [];
 
@@ -310,8 +310,8 @@ class HandbidActionController
     function handbid_ajax_get_paddle_number_callback(){
         $result = [];
 
-        $nonce = $_POST["nonce"];
-        $auctionID = $_POST["auctionID"];
+        $nonce = isset($_POST['nonce']) ? $_POST['nonce'] : 'nonce';
+        $auctionID = isset($_POST['auctionID']) ? $_POST['auctionID'] : 0;
 
 //        if($this->handbid_verify_nonce($nonce, date("d.m.Y") . "add_paddle")){
 
@@ -326,7 +326,7 @@ class HandbidActionController
     }
 
     function handbid_ajax_createbid_callback(){
-        $nonce = $_POST["nonce"];
+        $nonce = isset($_POST['nonce']) ? $_POST['nonce'] : 'nonce';
         $result = [
             "status" => "failed",
             "statusReason" => "no_response",
@@ -370,7 +370,7 @@ class HandbidActionController
     }
 
     function handbid_ajax_buy_tickets_callback(){
-        $nonce = $_POST["nonce"];
+        $nonce = isset($_POST['nonce']) ? $_POST['nonce'] : 'nonce';
         $result = [
             "success" => [],
             "fail" => [],
@@ -409,7 +409,7 @@ class HandbidActionController
     }
 
     function handbid_ajax_make_receipt_payment_callback(){
-        $nonce = $_POST["nonce"];
+        $nonce = isset($_POST['nonce']) ? $_POST['nonce'] : 'nonce';
         $response = [];
         $values = [
             "cardId" => (int) $_POST["cardId"],
@@ -440,7 +440,7 @@ class HandbidActionController
 
 
     function handbid_ajax_removebid_callback(){
-        $nonce = $_POST["nonce"];
+        $nonce = isset($_POST['nonce']) ? $_POST['nonce'] : 'nonce';
         $result = [
             "status" => "failed",
             "statusReason" => "no_response",
@@ -463,10 +463,11 @@ class HandbidActionController
 
     function handbid_ajax_add_credit_card_callback(){
 
-        $nonce = $_POST["nonce"];
-        $stripeId = $_POST["stripeId"];
-        $creditCardHandle = $_POST["creditCardHandle"];
-        $nameOnCard = $_POST["nameOnCard"];
+        $nonce = isset($_POST['nonce']) ? $_POST['nonce'] : 'nonce';
+        $stripeId = isset($_POST['stripeId']) ? $_POST['stripeId'] : '';
+        $creditCardHandle = isset($_POST['creditCardHandle']) ? $_POST['creditCardHandle'] : '';
+        $nameOnCard = isset($_POST['nameOnCard']) ? $_POST['nameOnCard'] : '';
+        
         $params = [
             "stripeId" => $stripeId,
             "creditCardHandle" => $creditCardHandle,
@@ -497,6 +498,7 @@ class HandbidActionController
         $postData = urldecode($_POST["data"]);
         parse_str($postData, $opts);
         $nonce = $opts["nonce"];
+        $nonce = isset($opts['nonce']) ? $opts['nonce'] : 'nonce';
         $result = [
             "opts" => $opts,
         ];
@@ -557,7 +559,7 @@ class HandbidActionController
             "invoices" => "",
         ];
 
-        $nonce = $_POST["nonce"];
+        $nonce = isset($_POST['nonce']) ? $_POST['nonce'] : 'nonce';
 
         if($this->handbid_verify_nonce($nonce, date("d.m.Y") . "get_invoices")) {
 
@@ -599,7 +601,7 @@ class HandbidActionController
             "messages" => "",
         ];
 
-        $nonce = $_POST["nonce"];
+        $nonce = isset($_POST['nonce']) ? $_POST['nonce'] : 'nonce';
 
         if($this->handbid_verify_nonce($nonce, date("d.m.Y") . "get_messages")) {
 
@@ -627,7 +629,7 @@ class HandbidActionController
             "auctions" => "",
         ];
 
-        $nonce = $_POST["nonce"];
+        $nonce = isset($_POST['nonce']) ? $_POST['nonce'] : 'nonce';
 
         if($this->handbid_verify_nonce($nonce, date("d.m.Y") . "get_active_auctions")) {
 
@@ -654,7 +656,7 @@ class HandbidActionController
             "history" => "",
         ];
 
-        $nonce = $_POST["nonce"];
+        $nonce = isset($_POST['nonce']) ? $_POST['nonce'] : 'nonce';
 
         $itemID = (int) $_REQUEST["itemID"];
 
@@ -683,7 +685,7 @@ class HandbidActionController
     function handbid_ajax_send_message_callback(){
 
         $body = $_POST["text"];
-        $nonce = $_POST["nonce"];
+        $nonce = isset($_POST['nonce']) ? $_POST['nonce'] : 'nonce';
         $auctionOrg = $_POST["auctionOrg"];
         $bidder   = $this->state->currentBidder();
         $result = "";
@@ -718,7 +720,7 @@ class HandbidActionController
 
     function handbid_ajax_remove_credit_card_callback(){
 
-        $nonce = $_POST["nonce"];
+        $nonce = isset($_POST['nonce']) ? $_POST['nonce'] : 'nonce';
         $cardID = $_POST["cardID"];
         $result = [
             "id" => $cardID,
@@ -742,7 +744,7 @@ class HandbidActionController
 
     function handbid_load_auto_complete_auctions_callback(){
 
-        $nonce = $_REQUEST["nonce"];
+        $nonce = isset($_REQUEST['nonce']) ? $_REQUEST['nonce'] : 'nonce';
         $inputIt = $_REQUEST["inputIt"];
         $selectIt = $_REQUEST["selectIt"];
         $search = $_REQUEST["q"];
@@ -780,7 +782,7 @@ class HandbidActionController
 
     function handbid_load_shortcode_auctions_callback(){
 
-        $nonce = $_REQUEST["nonce"];
+        $nonce = isset($_REQUEST['nonce']) ? $_REQUEST['nonce'] : 'nonce';
         $inviteCode = $_REQUEST["inviteCode"];
         $result = [];
         if($this->handbid_verify_nonce($nonce, date("d.m.Y") . "check_invite_code") and trim($inviteCode)){
@@ -815,7 +817,7 @@ class HandbidActionController
     function handbid_ajax_get_countries_provinces_callback(){
 
         $countryID = $_REQUEST["countryID"];
-        $nonce = $_REQUEST["nonce"];
+        $nonce = isset($_REQUEST['nonce']) ? $_REQUEST['nonce'] : 'nonce';
         $result = [];
         if($this->handbid_verify_nonce($nonce, date("d.m.Y") . "country_provinces")){
                 try {
