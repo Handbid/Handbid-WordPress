@@ -594,6 +594,7 @@ if(!function_exists("handbid_app_links")){
                         <input type="hidden" name="phone-type" value="other">
                     </div>
 
+                    <input type="hidden" class="" id="confirm-add-to-auction-id" name="add-to-auction-id" value="<?php echo (isset($auction->id))?trim($auction->id):"";?>">
                     <input type="hidden" class="" id="confirm-add-to-auction" name="add-to-auction" value="<?php echo (isset($auction->auctionGuid))?trim($auction->auctionGuid):"";?>">
                     <input type="hidden" class="" id="confirm-add-to-auction-slug" name="add-to-auction-slug" value="<?php echo (isset($auction->key))?trim($auction->key):"";?>">
                     <input type="hidden" class="" id="confirm-add-to-auction-name" name="add-to-auction-name" value="<?php echo (isset($auction->name))?esc_attr(trim($auction->name)):"";?>">

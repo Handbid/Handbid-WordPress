@@ -6,7 +6,7 @@
  * @link http://www.handbid.com/
  * @author Master of Code (worldclass@masterofcode.com)
  */
-var handbidLoginMain;
+var handbidLoginMain, cookieExpire = 7;
 (function ($) {
 
     var handbidLogin = {
@@ -261,6 +261,7 @@ var handbidLoginMain;
             var countryCode = $("#confirm-phone-code").val();
             var mobile = handbidLogin.getPhoneNumber($("#confirm-phone-number").val());
             var deviceType = $("#confirm-phone-type").val();
+            var auctionID = $("#confirm-add-to-auction-id").val();
             var auctionGuid = $("#confirm-add-to-auction").val();
             var auctionSlug = $("#confirm-add-to-auction-slug").val();
             var auctionName = $("#confirm-add-to-auction-name").val();
@@ -307,11 +308,17 @@ var handbidLoginMain;
 
                         var auctionUrl = "/auctions/" + auctionSlug;
                         if(data.profile.data.currentPaddleNumber){
+                            var paddleNumber = data.profile.data.currentPaddleNumber,
+                                profileID = data.profile.data.identity,
+                                bidCookieKey = "bidder-"+profileID+"-bidding-in-auction-"+auctionID;
+
                             startBiddingButton.attr("href", auctionUrl);
                             closeButton.attr("data-reload-href", auctionUrl);
                             auctionNameContainer.html(auctionName);
-                            paddleNumberContainer.html(data.profile.data.currentPaddleNumber);
+                            paddleNumberContainer.html(paddleNumber);
                             paddleContainer.show();
+                            $.cookie(bidCookieKey, paddleNumber, { expires: cookieExpire, path: '/' });
+
                         }
                         else{
                             startBiddingButton.attr("href", auctionUrl);
