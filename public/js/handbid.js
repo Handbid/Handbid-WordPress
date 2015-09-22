@@ -2947,7 +2947,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
                 var bidderInfo = jQuery("#bidder-info-load"),
                     bidderAuction = parseInt(bidderInfo.data("auction"));
 
-                if(bidderInfo.html().trim() != "") {
+                if(bidderInfo.html() != undefined && bidderInfo.html().trim() != "") {
                     if (bidderAuction) {
                         $.post(ajaxurl, {
                                 action: "handbid_profile_load",

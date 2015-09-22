@@ -1124,6 +1124,7 @@ class HandbidShortCodeController {
             //'views/bidder/login-form-new',
             'views/bidder/login-form-simple',
             [
+                "auction" => $auction,
                 "countries" => $countries,
                 "in_page" => !!(trim($atts["in_page"])),
                 "is_logged_in" => !!($profile)

@@ -11,6 +11,7 @@
 $countries = $this->get("countries");
 $in_page = $this->get("in_page");
 $is_logged_in = $this->get("is_logged_in");
+$auction = $this->get("auction");
 if($in_page){
 	$redirectLink = (isset($_SERVER["HTTP_REFERER"]) and $_SERVER["HTTP_REFERER"] != get_permalink()) ? $_SERVER["HTTP_REFERER"] : "/auctions/";
 }
@@ -507,7 +508,7 @@ if(!function_exists("handbid_app_links")){
                         </div>
 
                         <input type="hidden" name="phone-type" value="other" class="copyable-field" data-copy-to="confirm-phone-type">
-                        <input type="hidden" class="autoCompleteHiddenRegister cleanable-input" id="confirm-add-to-auction" name="add-to-auction">
+                        <input type="hidden" class="" id="confirm-add-to-auction" name="add-to-auction" value="<?php echo (isset($auction->auctionGuid))?trim($auction->auctionGuid):"";?>">
                     </div>
 
                     <div class="row">
@@ -593,9 +594,9 @@ if(!function_exists("handbid_app_links")){
                         <input type="hidden" name="phone-type" value="other">
                     </div>
 
-                    <input type="hidden" class="autoCompleteHiddenConfirm cleanable-input" id="confirm-add-to-auction" name="add-to-auction">
-                    <input type="hidden" class="autoCompleteHiddenConfirmSlug cleanable-input" id="confirm-add-to-auction-slug" name="add-to-auction-slug">
-                    <input type="hidden" class="autoCompleteHiddenConfirmName cleanable-input" id="confirm-add-to-auction-name" name="add-to-auction-name">
+                    <input type="hidden" class="" id="confirm-add-to-auction" name="add-to-auction" value="<?php echo (isset($auction->auctionGuid))?trim($auction->auctionGuid):"";?>">
+                    <input type="hidden" class="" id="confirm-add-to-auction-slug" name="add-to-auction-slug" value="<?php echo (isset($auction->key))?trim($auction->key):"";?>">
+                    <input type="hidden" class="" id="confirm-add-to-auction-name" name="add-to-auction-name" value="<?php echo (isset($auction->name))?esc_attr(trim($auction->name)):"";?>">
                 </div>
 
                 <input type="hidden" id="confirm-password" name="password">

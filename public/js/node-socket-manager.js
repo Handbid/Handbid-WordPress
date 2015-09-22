@@ -22,90 +22,93 @@ console.log("success connect");
     connectedToSocket = true;
 
     var $ = jQuery;
+    if(auctionChannelId != undefined && auctionChannelId.trim() != "") {
+        var auctionChannel = socket.room(auctionChannelId).join(function (success) {
+            // success - boolean
+            if (success) {
 
-    var auctionChannel = socket.room(auctionChannelId).join(function (success) {
-        // success - boolean
-        if (success) {
+                console.log(" ===== SUCCESS =====" + $.getCurrentDateAndTime());
 
-            console.log(" ===== SUCCESS ====="+ $.getCurrentDateAndTime());
+                this.on('event.bid', function (data) {
+                    console.log(" ===== event.bid =====" + $.getCurrentDateAndTime());
+                    console.log(data);
+                    $.eventAuctionBid(data);
+                });
 
-            this.on('event.bid', function (data) {
-                console.log(" ===== event.bid ====="+ $.getCurrentDateAndTime());
-                console.log(data);
-                $.eventAuctionBid(data);
-            });
+                this.on('event.auction', function (data) {
+                    console.log(" ===== event.auction =====" + $.getCurrentDateAndTime());
+                    console.log(data);
+                    $.eventAuction(data);
+                });
 
-            this.on('event.auction', function (data) {
-                console.log(" ===== event.auction ====="+ $.getCurrentDateAndTime());
-                console.log(data);
-                $.eventAuction(data);
-            });
+                this.on('event.broadcast', function (data) {
+                    console.log(" ===== event.broadcast =====" + $.getCurrentDateAndTime());
+                    console.log(data);
+                    $.eventAuctionBroadcast(data);
+                });
 
-            this.on('event.broadcast', function (data) {
-                console.log(" ===== event.broadcast ====="+ $.getCurrentDateAndTime());
-                console.log(data);
-                $.eventAuctionBroadcast(data);
-            });
+                this.on('event.item', function (data) {
+                    console.log(" ===== event.item =====" + $.getCurrentDateAndTime());
+                    console.log(data.values);
+                    $.eventAuctionItem(data);
+                });
 
-            this.on('event.item', function (data) {
-                console.log(" ===== event.item ====="+ $.getCurrentDateAndTime());
-                console.log(data.values);
-                $.eventAuctionItem(data);
-            });
+                this.on('event.timer', function (data) {
+                    console.log(" ===== event.timer =====" + $.getCurrentDateAndTime());
+                    console.log(data);
+                    $.eventAuctionTimer(data);
+                });
 
-            this.on('event.timer', function (data) {
-                console.log(" ===== event.timer ====="+ $.getCurrentDateAndTime());
-                console.log(data);
-                $.eventAuctionTimer(data);
-            });
+                this.on('event.reset', function (data) {
+                    console.log(" ===== event.reset =====" + $.getCurrentDateAndTime());
+                    console.log(data);
+                    $.eventAuctionReset(data);
+                });
 
-            this.on('event.reset', function (data) {
-                console.log(" ===== event.reset ====="+ $.getCurrentDateAndTime());
-                console.log(data);
-                $.eventAuctionReset(data);
-            });
+            } else {
+                console.log(" ===== ERROR =====" + $.getCurrentDateAndTime());
+                this.log(this.getError());
+            }
+            return true;
+        });
+    }
 
-        } else {
-            console.log(" ===== ERROR ====="+ $.getCurrentDateAndTime());
-            this.log(this.getError());
-        }
-        return true;
-    });
+    if(userChannelId != undefined && userChannelId.trim() != "") {
+        var userChannel = socket.room(userChannelId).join(function (success) {
+            if (success) {
 
-    var userChannel = socket.room(userChannelId).join(function (success) {
-        if (success) {
+                this.on('event.bid', function (data) {
+                    console.log(" ===== user event.bid =====" + $.getCurrentDateAndTime());
+                    $.eventUserBid(data);
+                });
 
-            this.on('event.bid', function (data) {
-                console.log(" ===== user event.bid ====="+ $.getCurrentDateAndTime());
-                $.eventUserBid(data);
-            });
+                this.on('event.broadcast', function (data) {
+                    console.log(" ===== user event.broadcast =====" + $.getCurrentDateAndTime());
+                    $.eventUserBroadcast(data);
+                });
 
-            this.on('event.broadcast', function (data) {
-                console.log(" ===== user event.broadcast ====="+ $.getCurrentDateAndTime());
-                $.eventUserBroadcast(data);
-            });
+                this.on('event.purchase', function (data) {
+                    console.log(" ===== user event.purchase =====" + $.getCurrentDateAndTime());
+                    $.eventUserPurchase(data);
+                });
 
-            this.on('event.purchase', function (data) {
-                console.log(" ===== user event.purchase ====="+ $.getCurrentDateAndTime());
-                $.eventUserPurchase(data);
-            });
+                this.on('event.receipt', function (data) {
+                    console.log(" ===== user event.receipt =====" + $.getCurrentDateAndTime());
+                    $.eventUserReceipt(data);
+                });
 
-            this.on('event.receipt', function (data) {
-                console.log(" ===== user event.receipt ====="+ $.getCurrentDateAndTime());
-                $.eventUserReceipt(data);
-            });
+                this.on('event.user', function (data) {
+                    console.log(" ===== user event.user =====" + $.getCurrentDateAndTime());
+                    $.eventUser(data);
+                });
 
-            this.on('event.user', function (data) {
-                console.log(" ===== user event.user ====="+ $.getCurrentDateAndTime());
-                $.eventUser(data);
-            });
-
-        } else {
-            console.log(" ===== USER CHANNEL ERROR ====="+ $.getCurrentDateAndTime());
-            this.log(this.getError());
-        }
-        return true;
-    });
+            } else {
+                console.log(" ===== USER CHANNEL ERROR =====" + $.getCurrentDateAndTime());
+                this.log(this.getError());
+            }
+            return true;
+        });
+    }
 
     /*
      ********************** TEMP CUSTOM FUNCTIONS **********************
