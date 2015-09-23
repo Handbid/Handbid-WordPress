@@ -42,7 +42,7 @@ $selected = isset($_GET['auction_list']) ? $_GET['auction_list'] : 'current';
         and count($organization->organizationImages)
         and isset($organization->organizationImages[0]->organizationImageUrl))?$organization->organizationImages[0]->organizationImageUrl : "" );
     $imageUrlPath = parse_url($image);
-    $image = (isset($imageUrlPath["scheme"])) ? $image : "http://" . $image;
+    $image = (isset($imageUrlPath["scheme"])) ? $image : "https://" . $image;
     ?>
 
     <?php // ended up having to give the bootsrap column its own div, was not meant to be flexible ?>

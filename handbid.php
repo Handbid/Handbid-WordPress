@@ -372,6 +372,7 @@ class Handbid
     function onRenderFooter()
     {
 
+        global $displayBidderProfile;
 
         //do we need to prompt for credit card?
         $auction = $this->state()->currentAuction();
@@ -392,6 +393,13 @@ class Handbid
 
             }
 
+        }
+
+        if (!$displayBidderProfile) {
+                echo "<div class='handbid-credit-card-footer-form'>";
+                echo "<input type='hidden' id='footer-credit-cards-count' value='".count($bidder->creditCards)."'>";
+                echo do_shortcode('[handbid_bidder_profile_form template="views/bidder/credit-card-form" show_credit_card_required_message=true]');
+                echo "</div>";
         }
 
         // Set Values

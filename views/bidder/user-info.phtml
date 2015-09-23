@@ -35,7 +35,7 @@ if(count($myInvoices)){
         $image = str_replace("manager.hand.bid", "", $image);
     }
     if(strpos($image, "http") === false){
-        $image = "http://".$image;
+        $image = "https://".$image;
     }
     ?>
     <img src="<?php echo $image; ?>" class="bidder-image"/>

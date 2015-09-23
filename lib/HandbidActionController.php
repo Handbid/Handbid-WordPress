@@ -156,6 +156,9 @@ class HandbidActionController
             add_action("admin_post_".$postAction, [$this, $postAction."_callback"]);
             add_action("admin_post_nopriv_".$postAction, [$this, $postAction."_callback"]);
         }
+
+        add_action("admin_post_handbid_ajax_add_credit_card", [$this, "handbid_ajax_add_credit_card_post_callback"]);
+        add_action("admin_post_nopriv_handbid_ajax_add_credit_card", [$this, "handbid_ajax_add_credit_card_post_callback"]);
     }
 
     function _handle_form_action()
@@ -493,10 +496,10 @@ class HandbidActionController
 
 
 
-    function handbid_ajax_add_credit_card_old_callback(){
+    function handbid_ajax_add_credit_card_post_callback(){
 
-        $postData = urldecode($_POST["data"]);
-        parse_str($postData, $opts);
+        echo "<pre>".print_r($_POST,true)."</pre>";
+        $opts = $_POST;
         $nonce = $opts["nonce"];
         $nonce = isset($opts['nonce']) ? $opts['nonce'] : 'nonce';
         $result = [
@@ -546,8 +549,18 @@ class HandbidActionController
                 }
             }
         }
-        echo json_encode($result);
-        exit;
+        $cookieLifeTime = time() + 3600;
+        if(isset($result["error"]["message"])){
+            setcookie("handbid-cc-error", $result["error"]["message"], $cookieLifeTime, COOKIEPATH, COOKIE_DOMAIN );
+        }
+        elseif(isset($result["error"])){
+            setcookie("handbid-cc-error", "Something wrong. Please, try again later", $cookieLifeTime, COOKIEPATH, COOKIE_DOMAIN );
+        }
+        else{
+            setcookie("handbid-cc-success", "Your card has been added successfully", $cookieLifeTime, COOKIEPATH, COOKIE_DOMAIN );
+        }
+        $redirect = (!empty($_POST["redirect"])) ? $_POST["redirect"] : get_permalink(get_page_by_title("Auctions"));
+        wp_redirect($redirect);
     }
 
 

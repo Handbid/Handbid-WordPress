@@ -1059,7 +1059,8 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
 
                 var needCreditCard = (typeof attr !== typeof undefined && attr !== false);
                 var creditCardRows = $("[data-handbid-card-row]");
-                if(needCreditCard && creditCardRows.length == 0){
+                var creditCardFooterNumber = parseInt($("#footer-credit-cards-count").val());
+                if(needCreditCard && creditCardRows.length == 0 && creditCardFooterNumber == 0){
                     currentElemNeedsCard = elem;
                     $(".credit-card-form-link").eq(0).click();
                     //handbidMain.displayRequiredCardsMessage("You must supply a credit card to do this action.");
@@ -1952,6 +1953,11 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
                                 else {
                                     $('[data-handbid-card-row="' + cardID + '"]').remove();
                                     handbid.notice('Your card has been deleted', "Card Success", "success");
+                                    var footerCardsCountHolder = $("#footer-credit-cards-count");
+                                    if(footerCardsCountHolder != undefined) {
+                                        var creditCardFooterNumber = parseInt(footerCardsCountHolder.val()) + 1;
+                                        footerCardsCountHolder.val(creditCardFooterNumber);
+                                    }
                                     $(".select-payment-card option[data-option-val=" + cardID + "]").remove();
                                     if ($(".credit-card ul.simple-list li").length == 0) {
                                         var list = $(".credit-card ul.simple-list");
@@ -2039,6 +2045,13 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
                                 }
                                 else {
                                     handbid.notice("Your card has been added successfully", "Card Success", "success");
+
+                                    var footerCardsCountHolder = $("#footer-credit-cards-count");
+                                    if(footerCardsCountHolder != undefined) {
+                                        var creditCardFooterNumber = parseInt(footerCardsCountHolder.val()) + 1;
+                                        footerCardsCountHolder.val(creditCardFooterNumber);
+                                    }
+
                                     var template = $(' <li class="row" data-handbid-card-row="' + resp.id + '"> <div class="col-md-3 col-xs-3"> <h4>Name</h4>' + resp.nameOnCard + '</div> <div class="col-md-3 col-xs-3"> <h4>Card Number</h4> xxxx xxxx xxxx ' + resp.lastFour + '</div> <div class="col-md-3 col-xs-3"> <h4>Exp. Date</h4>' + resp.expMonth + '/' + resp.expYear + '</div> <div class="col-md-3 col-xs-3"> <a class="button pink-solid-button  loading-span-button" data-handbid-delete-credit-card="' + resp.id + '"><em>Delete</em></a></div></li>'),
                                         hasCards = $('.credit-card .no-results-row').length > 0;
 
@@ -2114,6 +2127,23 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
                 });
 
             },
+            showCardErrorsIfExists : function() {
+
+                var ccErrorCookieKey = "handbid-cc-error",
+                    ccErrorCookie = $.cookie(ccErrorCookieKey);
+                if(ccErrorCookie != undefined && ccErrorCookie != null && ccErrorCookie != "null" && ccErrorCookie.trim() != ""){
+                    handbidMain.notice(ccErrorCookie, "Card Error", "error");
+                    $.removeCookie(ccErrorCookieKey, { path: '/' });
+                }
+                var ccSuccessCookieKey = "handbid-cc-success",
+                    ccSuccessCookie = $.cookie(ccSuccessCookieKey);
+                if(ccSuccessCookie != undefined && ccSuccessCookie != null && ccSuccessCookie != "null" && ccSuccessCookie.trim() != ""){
+                    handbidMain.notice(ccSuccessCookie, "Card Success", "success");
+                    $.removeCookie(ccSuccessCookieKey, { path: '/' });
+                }
+
+            },
+
             setupProvincesSelect : function() {
 
                 var countriesSelect = $("#userAddressCountryId");
@@ -2653,11 +2683,12 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
 
             displayRequiredCardsMessage: function(msg){
 
-            // Woody added this to prevent the message showing when pages load in the wrong order
-               var cards_exist = $("div.credit-card ul").children("li.row");
-               if (cards_exist.length) {
-                       return true;
-               }
+                // Woody added this to prevent the message showing when pages load in the wrong order
+                var cards_exist = $("div.credit-card ul").children("li.row");
+                var creditCardFooterNumber = parseInt($("#footer-credit-cards-count").val());
+                if (cards_exist.length || creditCardFooterNumber) {
+                        return true;
+                }
                 msg = (msg != undefined) ? msg : "You must supply a credit card to bid in this auction.";
 
                 new PNotify({
@@ -2968,7 +2999,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
                                     }
                                     bidderInfo.slideDown("normal");
                                     // ($('input[name="action"]').val() == 'handbid_ajax_add_credit_card') ? handbid.setupAddCreditCard() : '';
-                                    
+
                                     handbid.setupAddCreditCard();
                                     
                                     handbid.setupProvincesSelect();
@@ -2981,14 +3012,14 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
                     }
                     else {
                         // ($('input[name="action"]').val() == 'handbid_ajax_add_credit_card') ? handbid.setupAddCreditCard() : '';
-                        
+
                         handbid.setupAddCreditCard();
                         
                         handbid.setupProvincesSelect();
                         handbid.loadAllToContainers();
                     }
-                } 
-                
+                }
+
                 ($('.creditcard-template').length > 0) ? handbid.setupAddCreditCard() : '';
 
             },
@@ -3094,6 +3125,8 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
 
 
         handbid.reloadBidderProfile();
+
+        handbid.showCardErrorsIfExists();
 
 
 

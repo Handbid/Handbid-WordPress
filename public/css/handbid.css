@@ -533,6 +533,10 @@
     font-weight: bold;
 }
 
+.handbid-credit-card-footer-form{
+    display: none;
+}
+
 @media (max-width: 767px) {
 
     .global-footer .toggle-info{

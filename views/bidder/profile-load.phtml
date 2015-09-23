@@ -8,7 +8,7 @@
  * @author Master of Code (worldclass@masterofcode.com)
  */
 
-
+global $displayBidderProfile;
 if(!$this->get('profile'))
     return;
 
@@ -30,7 +30,7 @@ $displayBidderProfile = in_array($pageNameForProfile, $profileDashboardOn);
      $image = $auction->logo->medium;
      $image = ($image) ? $image : $auction->imageUrl;
      $imageUrlPath = parse_url($image);
-     $image = ($imageUrlPath["scheme"]) ? $image : "http://" . $image;
+     $image = ($imageUrlPath["scheme"]) ? $image : "https://" . $image;
      echo $image; ?>"
      data-auction-organization-key="<?php echo $auction->organization->key; ?>"
      data-auction-organization-name="<?php echo $auction->organization->name; ?>"

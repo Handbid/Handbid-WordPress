@@ -77,7 +77,7 @@ $itemHideIfSold = (isset($item->hideSales) and $item->hideSales == 1);
 								<div class="image" data-slider-nav-key="<?php echo 'item-image-' . $k; ?>">
 									<div style="background-image: url('<?php
 									$image = apply_filters("handbid_cdn_image_gallery", $v->itemImageUrl);
-									$image = ( strpos( $image, "http://" ) === false and strpos( $image, "https://" ) === false ) ? "http://" . $image : $image;
+									$image = ( strpos( $image, "http://" ) === false and strpos( $image, "https://" ) === false ) ? "https://" . $image : $image;
 									echo $image; ?>'); background-size: contain;" class="image-holder"></div>
 								</div>
 							<?php } ?>
@@ -89,7 +89,7 @@ $itemHideIfSold = (isset($item->hideSales) and $item->hideSales == 1);
 						<div style="background-image: url('<?php
 						$image = apply_filters("handbid_cdn_image_gallery", $item->images[0]->itemImageUrl);
 						$image = (trim($image))?$image: HANDBID_PLUGIN_URL . 'public/images/simple-box/default_photo.png'  ;
-						$image = ( strpos( $image, "http://" ) === false and strpos( $image, "https://" ) === false ) ? "http://" . $image : $image;
+						$image = ( strpos( $image, "http://" ) === false and strpos( $image, "https://" ) === false ) ? "https://" . $image : $image;
 						echo $image;?>'); background-size: contain;" class="image-holder"></div>
 					<?php
 					}

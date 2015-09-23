@@ -43,7 +43,7 @@ if ($this->organization) {
                 $imageUrlPath = parse_url($image);
                 $image = ($image and isset($imageUrlPath["scheme"])) ? $image : $org->organizationImages[0]->organizationImageUrl;
                 $imageUrlPath = parse_url($image);
-                $image = ($imageUrlPath["scheme"]) ? $image : "http://" . $image;
+                $image = ($imageUrlPath["scheme"]) ? $image : "https://" . $image;
                 echo $image; ?>"/>
             </div>
         </div>
@@ -51,7 +51,7 @@ if ($this->organization) {
 
              <span class="status">
                 <a href="<?php if (strpos($org->website, 'http') === false)  {
-                    echo "http://";
+                    echo "https://";
                 } echo $org->website; ?>" target="_blank"><?php echo $org->website; ?></a>
             </span>
 

@@ -91,7 +91,7 @@ $selected = isset($_GET['auction_list']) ? $_GET['auction_list'] : 'current';
                         $image = (isset($auction->logo) and isset($auction->logo->medium))?$auction->logo->medium:"";
                         $image = ($image) ? $image : (isset($auction->imageUrl) ? $auction->imageUrl : "");
                         $imageUrlPath = parse_url($image);
-                        $image = (isset($imageUrlPath["scheme"])) ? $image : "http://" . $image;
+                        $image = (isset($imageUrlPath["scheme"])) ? $image : "https://" . $image;
                         echo $image; ?>">
                     </div>
 
