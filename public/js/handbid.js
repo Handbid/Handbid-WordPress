@@ -2967,7 +2967,10 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
                                         $("[data-paddle-for-auction-" + auctionID + "]").html(currentPaddleNumber);
                                     }
                                     bidderInfo.slideDown("normal");
-                                    ($('input[name="action"]').val() == 'handbid_ajax_add_credit_card') ? handbid.setupAddCreditCard() : '';
+                                    // ($('input[name="action"]').val() == 'handbid_ajax_add_credit_card') ? handbid.setupAddCreditCard() : '';
+                                    
+                                    handbid.setupAddCreditCard();
+                                    
                                     handbid.setupProvincesSelect();
 
                                     handbid.loadAllToContainers();
@@ -2977,7 +2980,10 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
 
                     }
                     else {
-                        ($('input[name="action"]').val() == 'handbid_ajax_add_credit_card') ? handbid.setupAddCreditCard() : '';
+                        // ($('input[name="action"]').val() == 'handbid_ajax_add_credit_card') ? handbid.setupAddCreditCard() : '';
+                        
+                        handbid.setupAddCreditCard();
+                        
                         handbid.setupProvincesSelect();
                         handbid.loadAllToContainers();
                     }
