@@ -223,6 +223,8 @@ var handbidLoginMain, cookieExpire = 7;
             var nonce = $("#hb-login-form-nonce").val();
             var redirect = $("#hb-login-form-redirect").val();
 
+            var isCurrentlyLoggingIn = $(".isCurrentlyLoggingIn");
+
             var errorBlock = $(".login-modal-tab .errorsRow");
 
             if(!handbidLogin.validEmail(username)){
@@ -230,6 +232,8 @@ var handbidLoginMain, cookieExpire = 7;
             }
 
             button.addClass("active");
+            isCurrentlyLoggingIn.slideDown();
+            errorBlock.slideUp("normal");
             $.post(ajaxurl,
                 {
                     action: action,
@@ -242,10 +246,12 @@ var handbidLoginMain, cookieExpire = 7;
                     data = JSON.parse(data);
                     button.removeClass("active");
                     if (data.success) {
+                        isCurrentlyLoggingIn.children("h3").html("Successfully Logged In. Redirecting");
                         errorBlock.slideUp("normal");
                         window.location = redirect;
                     }
                     else{
+                        isCurrentlyLoggingIn.slideUp();
                         errorBlock.slideDown("normal");
                     }
                 }
@@ -352,8 +358,9 @@ var handbidLoginMain, cookieExpire = 7;
                     nonce: nonce
                 },
                 function (data) {
-                    //console.log(data);
+                    console.log(data);
                     data = JSON.parse(data);
+                    console.log(data);
                     button.removeClass("active");
                     if(data.success){
                         errorBlock.slideUp("normal");

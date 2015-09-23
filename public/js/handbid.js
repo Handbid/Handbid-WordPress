@@ -2242,7 +2242,12 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
                 var authorized = ($.cookie('handbid-auth') && hasBidderDashboard) ? true : false;
 
                 if (authorized === true) {
-                    $('.handbid-logout').css('display', 'inline-block');
+                    if(! $('body').hasClass('home')) {
+                        $('.handbid-logout').css('display', 'inline-block');
+                    }
+                    else{
+                        $('.handbid-logout').hide();
+                    }
                     $('body').addClass('handbid-logged-in');
 
                     $.ajaxSetup({
@@ -2252,7 +2257,12 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
                     });
                 }
                 else {
-                    $('.handbid-login').css('display', 'inline-block');
+                    if(! $('body').hasClass('home')) {
+                        $('.handbid-login').css('display', 'inline-block');
+                    }
+                    else{
+                        $('.handbid-login').hide();
+                    }
                     $('body').addClass('handbid-logged-out');
                 }
 
