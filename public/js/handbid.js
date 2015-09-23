@@ -2987,7 +2987,10 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
                         handbid.setupProvincesSelect();
                         handbid.loadAllToContainers();
                     }
-                }
+                } 
+                
+                ($('.creditcard-template').length > 0) ? handbid.setupAddCreditCard() : '';
+
             },
 
             redirectFromResetedAuctions: function(data){
