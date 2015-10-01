@@ -1058,9 +1058,9 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
                 var attr = elem.attr('data-handbid-credit-cards-required');
 
                 var needCreditCard = (typeof attr !== typeof undefined && attr !== false);
-                var creditCardRows = 0; //$("[data-handbid-card-row]");
+                var creditCardRows = $("[data-handbid-card-row]");
                 var creditCardFooterNumber = parseInt($("#footer-credit-cards-count").val());
-                if(needCreditCard && creditCardRows.length == 0 && creditCardFooterNumber == 0){
+                if(needCreditCard && creditCardFooterNumber == 0){ // creditCardRows.length == 0 && 
                     currentElemNeedsCard = elem;
                     $(".credit-card-form-link").eq(0).click();
                     //handbidMain.displayRequiredCardsMessage("You must supply a credit card to do this action.");
