@@ -311,7 +311,7 @@ var timerForSearch;
         //refreshSearchResults();
 
         //show iso on first load of items tab
-        $('.slider-nav [data-slider-nav-key="items"], [data-slider-nav-key="items"] .filter-wrapper').on('click', function () {
+        $('.slider-nav [data-slider-nav-key="items"]').on('click', function () {
 
             //prepareIsotope();
 
