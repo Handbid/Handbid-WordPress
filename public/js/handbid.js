@@ -1060,8 +1060,8 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
                 var needCreditCard = (typeof attr !== typeof undefined && attr !== false);
                 var creditCardRows = $("[data-handbid-card-row]");
                 var creditCardFooterNumber = parseInt($("#footer-credit-cards-count").val());
-                if(needCreditCard && creditCardRows.length == 0 && creditCardFooterNumber == 0){
-                    currentElemNeedsCard = elem;
+                if(needCreditCard && creditCardRows.length == 0 ){ // creditCardRows.length == 0 && 
+                    //currentElemNeedsCard = elem;
                     $(".credit-card-form-link").eq(0).click();
                     //handbidMain.displayRequiredCardsMessage("You must supply a credit card to do this action.");
                     //handbidMain.notice("Please add credit card to your profile for this action", "Credit Card Required", "error");
