@@ -1466,8 +1466,10 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
                                 var startCount = (data.item.inventoryRemaining != 0) ? 1 : 0;
                                 amount.html(startCount);
 
-                                message = "You purchased " + quantity + " <br>of Item #" + data.item.id + " <br><b>" + data.item.name + "</b>";
-                                handbidMain.notice(message, "Congratulations!", "success");
+                                var isAppeal = (data.item.isAppeal != undefined && data.item.isAppeal == 1);
+                                var noticeTitle = (isAppeal)?"Thank You!":"Congratulations!";
+                                message = (isAppeal)?"You donated $"+(data.currentAmount*data.quantity) :"You purchased " + quantity + " <br>of Item #" + data.item.id + " <br><b>" + data.item.name + "</b>";
+                                handbidMain.notice(message, noticeTitle, "success");
 
                                 handbidMain.removeItemFromDashboardList(itemId, "proxy");
                                 handbidMain.recheckAndRecalculateBids();
