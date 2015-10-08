@@ -261,6 +261,15 @@ class Handbid
             wp_enqueue_style($key);
         }
 
+        $outerStyles = array(
+            'fonts-google-oswald'          => 'https://fonts.googleapis.com/css?family=Oswald',
+        );
+
+        foreach ($outerStyles as $key => $sc) {
+            wp_register_style($key, $sc);
+            wp_enqueue_style($key);
+        }
+
     }
 
     function createHandbid()

@@ -93,7 +93,7 @@ class HandbidAdminActionController
         $fontFaces = [
             "Arial", "Verdana", "Times", "Times New Roman", "Georgia", "Trebuchet MS",
             "Sans", "Sans-serif", "Comic Sans MS", "Courier New", "Garamond", "Helvetica",
-            "Palatino", "Tahoma", "Impact", "Arial Black", "Arial Narrow", "Gill Sans",
+            "Palatino", "Tahoma", "Impact", "Arial Black", "Arial Narrow", "Gill Sans", "Oswald",
         ];
         sort($fontFaces);
         $fontFaces = array_unique($fontFaces);

@@ -438,6 +438,12 @@ class HandbidShortCodeController {
 
 			$template = $this->templateFromAttributes( $attributes, 'views/auction/details' );
 			$auction  = $this->state->currentAuction( $attributes );
+
+            if($this->isAuctionSetup($auction)){
+                return $this->viewRenderer->render('views/auction/setup', []);
+            }
+
+
 			$tickets  = $this->state->getCurrentAuctionTickets(  );
             $auctionID = (isset($auction->id))? $auction->id : 0;
             $bidder   = $this->state->currentBidder( $auctionID );
@@ -726,6 +732,11 @@ class HandbidShortCodeController {
         // $profile  = $this->handbid->store( 'Bidder' )->myProfile();
 
         $auction = $this->state->currentAuction();
+
+        if($this->isAuctionSetup($auction)){
+            return "";
+        }
+
         $auctionID = (isset($auction->id))?$auction->id:0;
         $profile  = $this->state->currentBidder($auctionID);
 
@@ -786,17 +797,25 @@ class HandbidShortCodeController {
                     $purchases = $myInventory->purchases;
                     $proxyBids = $myInventory->max_bids;
 
-                    if(is_array($winning) and count($winning)) {
-                        foreach ( $winning as $w ) {
-                            $totalSpent += $w->amount;
-                        }
-                    }
 
+                    $alreadyInPurchasesIDs = [];
                     if(is_array($purchases) and count($purchases)) {
                         foreach ($purchases as $p) {
                             $totalSpent += $p->grandTotal;
+                            $alreadyInPurchasesIDs[] = $p->item->id;
                         }
                     }
+
+                    $tempWinning = [];
+                    if(is_array($winning) and count($winning)) {
+                        foreach ( $winning as $w ) {
+                            if(!in_array($w->item->id, $alreadyInPurchasesIDs)) {
+                                $totalSpent += $w->amount;
+                                $tempWinning[] = $w;
+                            }
+                        }
+                    }
+                    $winning = $tempWinning;
 
                 }
 
@@ -875,17 +894,24 @@ class HandbidShortCodeController {
                     $purchases = $myInventory->purchases;
                     $proxyBids = $myInventory->max_bids;
 
-                    if(is_array($winning) and count($winning)) {
-                        foreach ( $winning as $w ) {
-                            $totalSpent += $w->amount;
-                        }
-                    }
-
+                    $alreadyInPurchasesIDs = [];
                     if(is_array($purchases) and count($purchases)) {
                         foreach ($purchases as $p) {
                             $totalSpent += $p->grandTotal;
+                            $alreadyInPurchasesIDs[] = $p->item->id;
                         }
                     }
+
+                    $tempWinning = [];
+                    if(is_array($winning) and count($winning)) {
+                        foreach ( $winning as $w ) {
+                            if(!in_array($w->item->id, $alreadyInPurchasesIDs)) {
+                                $totalSpent += $w->amount;
+                                $tempWinning[] = $w;
+                            }
+                        }
+                    }
+                    $winning = $tempWinning;
 
                 }
 
@@ -1345,6 +1371,10 @@ class HandbidShortCodeController {
 
 		error_log( $e->getMessage() . ' on' . $e->getFile() . ':' . $e->getLine() );
 	}
+
+    public function isAuctionSetup($auction){
+        return (is_object($auction) and $auction->status == "setup");
+    }
 
     public function myProfileAjax(){
 
