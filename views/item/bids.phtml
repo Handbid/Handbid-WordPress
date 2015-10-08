@@ -37,7 +37,7 @@ else{
 if(count($bids) > 0) {
 
         foreach ($bids as $bid) {
-            if($bid->amount){
+            if($bid->amount and $bid->status != 'removed'){
             ?>
             <li class="row <?php echo ($bid->status == 'winning') ? 'open' : 'closed'; ?>" data-list-bid-id="<?php echo $bid->id; ?>">
                 <div class="col-md-6">
