@@ -221,11 +221,12 @@ class Handbid
         );
 
         foreach ($outerScripts as $key => $sc) {
-            wp_register_script($key, $sc);
+            wp_register_script($key, $sc, [], null, true);
             wp_enqueue_script($key);
         }
 
         $scripts = array(
+            'stripe-init-js'          => 'public/js/stripe-init.js',
             'progress-bar-js'          => 'public/js/progress-bar.js',
             'cookie-plugin-js'         => 'public/js/jquery.cookie.js',
             'handbid-isotope-js'       => 'public/js/isotope.pkgd.min.js',
@@ -244,7 +245,7 @@ class Handbid
         );
 
         foreach ($scripts as $key => $sc) {
-            wp_register_script($key, plugins_url($sc, __FILE__));
+            wp_register_script($key, plugins_url($sc, __FILE__), [], null, true);
             wp_enqueue_script($key);
         }
 
@@ -446,13 +447,11 @@ class Handbid
                 currentAuctionKey = '<?php echo $auctionKey; ?>',
                 userChannelId = '<?php echo $userGuid; ?>',
                 url = '<?php echo $nodeClientUrl; ?>',
-                params = <?php echo $params; ?>;
+                params = <?php echo $params; ?>,
+                stripePublishableKey = '<?php echo $this->state->getStripeApiKey();?>';
 
             var forcePageRefreshAfterBids = <?php echo (get_option('handbidForceRefresh', 'no') == "yes") ? "true" : "false" ;?>;
 
-        </script>
-        <script type="text/javascript">
-            Stripe.setPublishableKey('<?php echo $this->state->getStripeApiKey();?>');
         </script>
         <?php
 
@@ -483,6 +482,14 @@ class Handbid
 
         if(isset($_GET["auction-reset"])){
             echo '<input type="hidden" data-auction-reset-sign>';
+        }
+
+        if($this->state->getMapVisibility()) {
+            $currentPostID = get_the_ID();
+            $currentPost = get_post($currentPostID);
+            if ($currentPost->post_name == 'auction') {
+                echo '<script async defer src="https://maps.googleapis.com/maps/api/js?v=3.exp&callback=auctionGoogleMapsInit"></script>';
+            }
         }
     }
 

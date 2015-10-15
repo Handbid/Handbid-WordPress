@@ -470,10 +470,17 @@ class HandbidShortCodeController {
             $colsCount = $this->state->getGridColsCount(3, "Item");
             $winning= (is_array($winning))?$winning:[];
             $losing= (is_array($losing))?$losing:[];
+
+            $location    = (isset($auction->locations) and is_array($auction->locations) and count($auction->locations))?$auction->locations[0]:[];
+            $hasLocation = (isset($location->auctionLocationStreet1)) ? !!($location->auctionLocationStreet1): false;
+            $this->state->setMapVisibility($hasLocation);
+
 			return $this->viewRenderer->render(
 				$template,
 				[
 					'auction'    => $auction,
+					'location'   => $location,
+					'hasLocation'=> $hasLocation,
 					'tickets'    => $tickets,
 					'profile'    => $bidder,
 					'items'      => $items,

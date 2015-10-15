@@ -32,6 +32,7 @@ class HandbidState
     public $bidderNotAvailable = false;
     public $bidderAuctionID = null;
     public $countriesAndProvinces;
+    public $mapVisibility;
 
     public function __construct($basePath, $handbid)
     {
@@ -258,6 +259,16 @@ class HandbidState
     {
         $slug = get_option('handbidShowOnlyMyOrganization');
         return trim($slug) ? trim($slug) : false;
+    }
+
+    public function setMapVisibility($mapVisibility)
+    {
+        $this->mapVisibility = $mapVisibility;
+    }
+
+    public function getMapVisibility()
+    {
+        return $this->mapVisibility;
     }
 
     public function isLocalOrganizationPlugin()

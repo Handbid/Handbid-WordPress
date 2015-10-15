@@ -18,13 +18,12 @@ $losing      = $this->get('losing');
 $colsCount   = $this->get('cols_count');
 $tickets     = $this->get('tickets');
 $profile     = $this->get('profile');
-$location    = (isset($auction->locations) and is_array($auction->locations) and count($auction->locations))?$auction->locations[0]:[];
-$hasLocation = (isset($location->auctionLocationStreet1)) ? !!($location->auctionLocationStreet1): false;
+$location    = $this->get('location');
+$hasLocation = $this->get('hasLocation');
 $address     = null;
 $mapsUrl     = null;
 $categories  = $this->get('categories');
 $categories  = $auction->categories;
-
 
 $locationStreet1 = ($hasLocation) ? $location->auctionLocationStreet1 : "";
 $locationStreet2 = ($hasLocation) ? $location->auctionLocationStreet2 : "";
@@ -320,9 +319,6 @@ $selected = '';
 
 </div>
 </div>
-
-<?php //holy lazy piece of ...?>
-<script async defer src="https://maps.googleapis.com/maps/api/js?v=3.exp&callback=auctionGoogleMapsInit"></script>
 
 <?php if($auction->timerRemaining > 0) {
     ?>
