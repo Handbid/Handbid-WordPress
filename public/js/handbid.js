@@ -45,8 +45,13 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
         }
     };
 
+    var currencySpan = function(){
+        var currencyCode = $("[data-auction-currency-code]").eq(0).data("auction-currency-code"),
+            currencySymbol = $("[data-auction-currency-symbol]").eq(0).data("auction-currency-symbol");
+        return '<span class="handbidAuctionCurrency" title="'+currencyCode+'">'+currencySymbol+'</span>';
+    };
+
     var restEndpoint = $("#apiEndpointsAddress").val(),
-        currencySymbol = '$',
         statusReasons = {
             no_response : "Sorry, try again later",
             current_winner : "You are current winner of this item"
@@ -151,7 +156,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
                     ' <a href="/auctions/'+auctionKey+'/item/'+itemKey+'"><h4>'+itemName+'</h4></a>' +
                     ' </div>' +
                     ' <div class="col-md-2 col-xs-2">' +
-                    ' <span class="bid-amount winning">$<span>'+maxAmount+'</span></span>' +
+                    ' <span class="bid-amount winning">'+currencySpan()+'<span>'+maxAmount+'</span></span>' +
                     ' </div>' +
                     ' <div class="col-md-2 col-xs-2">' +
                     ' <a class="button pink-solid-button loading-span-button" href="#" data-handbid-delete-proxy="'+bidID+'" data-item-id="'+itemID+'"><em>Delete</em></a>' +
@@ -176,7 +181,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
                 '     <a href="'+itemLink+'"><h4>'+itemName+'</h4></a>'+
                 ' </div>'+
                 ' <div class="col-md-2 col-xs-2">'+
-                ' <span class="bid-amount winning">$<span>'+amount+'</span></span>'+
+                ' <span class="bid-amount winning">'+currencySpan()+'<span>'+amount+'</span></span>'+
                 ' </div>'+
                 ' </li>';
 
@@ -200,7 +205,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
                     '<a href="'+itemLink+'"><h4>'+itemName+'</h4></a>' +
                     '</div>' +
                     '<div class="col-md-4 col-xs-4">' +
-                    '<span class="bid-amount losing">$<span>'+amount+'</span></span>' +
+                    '<span class="bid-amount losing">'+currencySpan()+'<span>'+amount+'</span></span>' +
                     '</div>' +
                     '</li>';
 
@@ -225,10 +230,10 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
                     '<a href="/auctions/'+auctionKey+'/item/'+itemKey+'"><h4>'+itemName+'</h4></a>' +
                 '</div>' +
                 '<div class="col-md-4 col-xs-4">' +
-                '<h4 class="quantity-total">'+quantity+' x $'+amount+'</h4>' +
+                '<h4 class="quantity-total">'+quantity+' x '+currencySpan()+amount+'</h4>' +
                 '</div>' +
                 '<div class="col-md-4 col-xs-4">' +
-                '<span class="bid-amount winning">$<span>'+(amount * quantity)+'</span></span>' +
+                '<span class="bid-amount winning">'+currencySpan()+'<span>'+(amount * quantity)+'</span></span>' +
                 '</div>' +
                 '</li>';
 
@@ -249,7 +254,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
                     '<span>' + values.bidderName + '</span>' +
                     '</div>' +
                     '<div class="col-md-6">' +
-                    '<span class="bid-amount winning">$<span>' + amount + '</span></span>' +
+                    '<span class="bid-amount winning">'+currencySpan()+'<span>' + amount + '</span></span>' +
                     '</div>' +
                     '</li>';
 
@@ -326,7 +331,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
                     '<p class="ticket-description">'+description+'</p>' +
                     '</div>' +
                     '<div class="col-md-3 ticket-part-container">' +
-                    '<strong class="ticket-price">$<span>'+buyNowPrice+'</span></strong>' +
+                    '<strong class="ticket-price">'+currencySpan()+'<span>'+buyNowPrice+'</span></strong>' +
                     '</div>' +
                     '<div class="col-md-4 ticket-part-container no-padding-right tickets-are-sold"' +
                     'style="'+ticketsAreSoldStyle+'">' +
@@ -706,7 +711,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
 
                                 if(profileID && val.id && viewCookie != "yes") {
 
-                                    var message = "You have an unpaid invoice with a Balance of $" + val.total + " in " + val.title + ".  Do you want to pay it?";
+                                    var message = "You have an unpaid invoice with a Balance of "+currencySpan() + val.total + " in " + val.title + ".  Do you want to pay it?";
                                     new PNotify({
                                         title: 'Unpaid Invoice',
                                         type: 'info',
@@ -969,7 +974,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
 
                 var noticeFormatting = {isBidding : true, itemLink: itemLink, itemImage: itemImage};
 
-                this.notice('You are <br>outbid</b> the item <b>' + values.item.name + ' ('+values.item.itemCode+') </b> at $' + values.amount + "" + reasonStr + " <a href='"+itemLink+"'>GO TO ITEM</a>", "Losing Item", "error", null, noticeFormatting);
+                this.notice('You are <br>outbid</b> the item <b>' + values.item.name + ' ('+values.item.itemCode+') </b> at '+currencySpan() + values.amount + "" + reasonStr + " <a href='"+itemLink+"'>GO TO ITEM</a>", "Losing Item", "error", null, noticeFormatting);
 
             },
 
@@ -993,7 +998,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
 
                 var noticeFormatting = {isBidding : true, itemLink: itemLink, itemImage: itemImage};
 
-                this.notice('You are <br>winning</b> the item <b>' + values.item.name + ' ('+values.item.itemCode+') </b> at $' + values.amount + ""+reasonStr, "Winner Winner", "success", null, noticeFormatting);
+                this.notice('You are <br>winning</b> the item <b>' + values.item.name + ' ('+values.item.itemCode+') </b> at '+currencySpan() + values.amount + ""+reasonStr, "Winner Winner", "success", null, noticeFormatting);
             },
 
             checkIfBidsExistsAndChange: function(values, type){
@@ -1079,7 +1084,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
                     var itemName = values.item.name;
                     var newMax = values.proxyBid;
                     var oldMax = values.item.highestProxyBid;
-                    handbidMain.notice("Cannot create MaxBid at <b>" + itemName + "</b> at $" + newMax + ". You already have a maxbid for this item at $" + oldMax + " . Please remove the current maxbid to create a new one.", "Already Have MaxBid", "error");
+                    handbidMain.notice("Cannot create MaxBid at <b>" + itemName + "</b> at "+currencySpan() + newMax + ". You already have a maxbid for this item at "+currencySpan() + oldMax + " . Please remove the current maxbid to create a new one.", "Already Have MaxBid", "error");
                 }
             },
 
@@ -1329,7 +1334,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
                             }
                             else{
                                 $('[data-handbid-item-attribute="bidCount"]').html(data.item.bidCount);
-                                $('[data-handbid-item-attribute="minimumBidAmount"]').html(currencySymbol + data.item.minimumBidAmount);
+                                $('[data-handbid-item-attribute="minimumBidAmount"]').html(currencySpan() + data.item.minimumBidAmount);
                                 if(data.statusReason == "under_maxbid"){
                                     handbid.addLosingItemRow(data.item.id, data, data.statusReason);
                                     handbid.loadBidsHistoryToContainer(data.item.id);
@@ -1471,7 +1476,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
 
                                 var isAppeal = (data.item.isAppeal != undefined && data.item.isAppeal == 1);
                                 var noticeTitle = (isAppeal)?"Thank You!":"Congratulations!";
-                                message = (isAppeal)?"You donated $"+(data.currentAmount*data.quantity) :"You purchased " + quantity + " <br>of Item #" + data.item.id + " <br><b>" + data.item.name + "</b>";
+                                message = (isAppeal)?"You donated "+currencySpan()+(data.currentAmount*data.quantity) :"You purchased " + quantity + " <br>of Item #" + data.item.id + " <br><b>" + data.item.name + "</b>";
                                 handbidMain.notice(message, noticeTitle, "success");
 
                                 handbidMain.removeItemFromDashboardList(itemId, "proxy");

@@ -50,6 +50,9 @@ if ( ! $item->hasInventory ) {
 $hasManyImages   = ( count( $item->images ) > 1 );
 $itemValueHidden = ( isset( $item->showValue ) and ( $item->showValue != 1 ) );
 $itemHideIfSold = (isset($item->hideSales) and $item->hideSales == 1);
+
+$currencyCode = (isset($auction->currencyCode))? $auction->currencyCode : HANDBID_DEFAULT_CURRENCY;
+$currencySymbol = (isset($auction->currencySymbol))? $auction->currencySymbol : HANDBID_DEFAULT_CURRENCY_SYMBOL;
 ?>
 
 	<div class="item-details item-<?php echo $item->status; ?>"
@@ -137,18 +140,24 @@ $itemHideIfSold = (isset($item->hideSales) and $item->hideSales == 1);
 						<li class="bids col-md-4 col-xs-3"><em
 								data-handbid-item-attribute="bidCount"><?php echo $item->bidCount; ?></em>Bids
 						</li>
-						<li class="increment col-md-4 col-xs-5"><em>$<span
+						<li class="increment col-md-4 col-xs-5"><em>
+                                <span class="handbidAuctionCurrency" title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span>
+                                <span
 									class="incrementSpan"><?php echo $item->bidIncrement; ?></span></em>Increment
 						</li>
 						<li class="min col-md-4 col-xs-4"><em
-								class=" itemValueBox<?php echo $item->id; ?> <?php echo ( $itemValueHidden ) ? " itemValueBoxHidden " : ""; ?>">$<span
+								class=" itemValueBox<?php echo $item->id; ?> <?php echo ( $itemValueHidden ) ? " itemValueBoxHidden " : ""; ?>">
+                                <span class="handbidAuctionCurrency" title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span>
+                                <span
 									data-change-attribute="value"><?php echo $item->value; ?></span></em>Value
 						</li>
 					<?php } else { ?>
 						<li class="purchases col-md-4 col-xs-4" data-handbid-item-attribute="totalSold"><em
 								data-handbid-item-attribute="totalSoldItems"><?php echo $item->quantitySold; ?></em>Sold
 						</li>
-						<li class="increment col-md-4 col-xs-4"><em>$<span id="singleItemPrice"
+						<li class="increment col-md-4 col-xs-4"><em>
+                                <span class="handbidAuctionCurrency" title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span>
+                                <span id="singleItemPrice"
 						                                                   data-handbid-item-attribute="buyNowPrice"><?php echo $item->buyNowPrice; ?></span></em>Price
 						</li>
 						<li class="remaining col-md-4 col-xs-4"><em

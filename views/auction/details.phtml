@@ -8,6 +8,10 @@
  * @author Master of Code (worldclass@masterofcode.com)
  */
 $auction     = $this->get('auction');
+if (!$auction) {
+    return '';
+}
+
 $items       = $this->get('items');
 $winning     = $this->get('winning');
 $losing      = $this->get('losing');
@@ -34,14 +38,10 @@ if ($hasLocation) {
     $address = $locationStreet1 . ', ' . $locationStreet2 . ', ' . $locationCity . ', ' . $locationProvince . ', ' . $locationPCode;
 }
 
-if (!$auction) {
-    return '';
-}
-
-
-
 $hasTicketItems = !!(count($tickets));
 
+$currencyCode = (isset($auction->currencyCode))? $auction->currencyCode : HANDBID_DEFAULT_CURRENCY;
+$currencySymbol = (isset($auction->currencySymbol))? $auction->currencySymbol : HANDBID_DEFAULT_CURRENCY_SYMBOL;
 ?>
 
 <div class="auction-details <?php echo $auction->status; ?>" data-handbid-auction-guid="<?php echo $auction->auctionGuid; ?>" >

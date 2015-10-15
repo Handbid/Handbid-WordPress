@@ -29,6 +29,9 @@ elseif($item->disableMobileBidding){
 else{
 	$noBidsMessage = "No bids yet! You could be the first!";
 }
+
+$currencyCode = (isset($auction->currencyCode))? $auction->currencyCode : HANDBID_DEFAULT_CURRENCY;
+$currencySymbol = (isset($auction->currencySymbol))? $auction->currencySymbol : HANDBID_DEFAULT_CURRENCY_SYMBOL;
 ?>
 
 <ul class="simple-list bid-history bid-history-item-<?php echo ($item) ? $item->id : $itemID ; ?>"  data-no-items-text="<?php echo $noBidsMessage;?>">
@@ -45,7 +48,7 @@ if(count($bids) > 0) {
                     <span><?php echo $bid->bidderName; ?></span>
                 </div>
                 <div class="col-md-6">
-                    <span class="bid-amount winning">$<span><?php echo $bid->amount; ?></span></span>
+                    <span class="bid-amount winning"><span class="handbidAuctionCurrency" title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span><span><?php echo $bid->amount; ?></span></span>
                 </div>
             </li>
         <?php

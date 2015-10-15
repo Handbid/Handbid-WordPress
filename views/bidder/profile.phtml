@@ -24,6 +24,8 @@ if (!is_null($this->get('profile'))) {
     $bidderName = strtoupper($profile->firstName[0]) . '. ' . $profile->lastName;
     $redirect   = $_SERVER['REQUEST_URI'];
     $bidderPage = is_page('bidder');
+    $currencyCode = (isset($auction->currencyCode))? $auction->currencyCode : HANDBID_DEFAULT_CURRENCY;
+    $currencySymbol = (isset($auction->currencySymbol))? $auction->currencySymbol : HANDBID_DEFAULT_CURRENCY_SYMBOL;
 } else {
     return;
 }
@@ -65,7 +67,7 @@ if (!is_null($this->get('profile'))) {
             </div>
             <a class="col-xs-3 total-spent">
 
-                <span>$<span data-handbid-stats-grand-total><?php echo $total; ?></span></span>
+                <span><span class="handbidAuctionCurrency" title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span> <span data-handbid-stats-grand-total><?php echo $total; ?></span></span>
                 <label>Total</label>
 
             </a>
@@ -96,7 +98,7 @@ if (!is_null($this->get('profile'))) {
                 </a>
                 <a class="col-md-2 col-xs-12 total-spent <?php echo $loader;?>">
                     <label>Total</label>
-                    <span>$<span data-handbid-stats-grand-total><?php echo $total; ?></span></span>
+                    <span><span class="handbidAuctionCurrency" title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span><span data-handbid-stats-grand-total><?php echo $total; ?></span></span>
                 </a>
             <?php } ?>
         </div>
@@ -136,7 +138,7 @@ if (!is_null($this->get('profile'))) {
                                             <a href="/auctions/<?php echo $auction->key; ?>/item/<?php echo $bid->item->key; ?>"><h4><?php echo $bid->item->name; ?></h4></a>
                                         </div>
                                         <div class="col-md-2 col-xs-2">
-                                            <span class="bid-amount winning">$<span><?php echo (int) $bid->maxAmount; ?></span></span>
+                                            <span class="bid-amount winning"><span class="handbidAuctionCurrency" title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span><span><?php echo (int) $bid->maxAmount; ?></span></span>
                                         </div>
                                         <div class="col-md-2 col-xs-2">
                                             <a class="button pink-solid-button loading-span-button" href="#" data-handbid-delete-proxy="<?php echo $bid->id; ?>" data-item-id="<?php echo $bid->item->id; ?>"><em>Delete</em></a>
@@ -167,7 +169,7 @@ if (!is_null($this->get('profile'))) {
                                         <h4 class="bid-name">
                                             <a href="/auctions/<?php echo $auction->key; ?>/item/<?php echo $bid->item->key; ?>"><?php echo $bid->item->name; ?></a>
                                         </h4>
-                                        <span class="bid-amount winning">$<?php echo (int) $bid->amount; ?></span>
+                                        <span class="bid-amount winning"><span class="handbidAuctionCurrency" title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span><?php echo (int) $bid->amount; ?></span>
                                     </li>
                                 <?php
                                 }
@@ -195,7 +197,7 @@ if (!is_null($this->get('profile'))) {
                                             <a href="/auctions/<?php echo $auction->key; ?>/item/<?php echo $bid->item->key; ?>"><h4><?php echo $bid->item->name; ?></h4></a>
                                         </div>
                                         <div class="col-md-4 col-xs-4">
-                                            <span class="bid-amount losing">$<span><?php echo (int) $bid->amount; ?></span></span>
+                                            <span class="bid-amount losing"><span class="handbidAuctionCurrency" title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span><span><?php echo (int) $bid->amount; ?></span></span>
                                         </div>
                                     </li>
                                 <?php
@@ -224,10 +226,10 @@ if (!is_null($this->get('profile'))) {
                                             <a href="/auctions/<?php echo $auction->key; ?>/item/<?php echo $purchase->item->key; ?>"><h4><?php echo $purchase->item->name; ?></h4></a>
                                         </div>
                                         <div class="col-md-4 col-xs-4">
-                                            <h4 class="quantity-total"><?php echo $purchase->quantity; ?> x $<?php echo $purchase->pricePerItem; ?></h4>
+                                            <h4 class="quantity-total"><?php echo $purchase->quantity; ?> x <span class="handbidAuctionCurrency" title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span><?php echo $purchase->pricePerItem; ?></h4>
                                         </div>
                                         <div class="col-md-4 col-xs-4">
-                                            <span class="bid-amount winning">$<span><?php echo $purchase->grandTotal; ?></span></span>
+                                            <span class="bid-amount winning"><span class="handbidAuctionCurrency" title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span><span><?php echo $purchase->grandTotal; ?></span></span>
                                         </div>
                                     </li>
                                 <?php

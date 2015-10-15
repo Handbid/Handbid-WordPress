@@ -87,11 +87,12 @@ $selected = isset($_GET['auction_list']) ? $_GET['auction_list'] : 'current';
                 <div class="contents">
 
                     <div class="image-wrapper">
-                        <img class="logo" src="<?php
+                        <img class="logo" height="80" src="<?php
                         $image = (isset($auction->logo) and isset($auction->logo->medium))?$auction->logo->medium:"";
                         $image = ($image) ? $image : (isset($auction->imageUrl) ? $auction->imageUrl : "");
                         $imageUrlPath = parse_url($image);
                         $image = (isset($imageUrlPath["scheme"])) ? $image : "https://" . $image;
+                        $image = (strpos($image, "ucarecdn") !== false and strpos($image, "preview") === false)? $image . "-/preview/220x80/" : $image ;
                         echo $image; ?>">
                     </div>
 

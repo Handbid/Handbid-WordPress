@@ -24,6 +24,8 @@ if (!$auction->enableTicketSales) {
     return;
 }
 
+$currencyCode = (isset($auction->currencyCode))? $auction->currencyCode : HANDBID_DEFAULT_CURRENCY;
+$currencySymbol = (isset($auction->currencySymbol))? $auction->currencySymbol : HANDBID_DEFAULT_CURRENCY_SYMBOL;
 ?>
 
 <a class="button pink-button handbid-modal-link purchase-tickets"
@@ -64,7 +66,7 @@ if (!$auction->enableTicketSales) {
                     >
                     <div class="col-xs-8 ticket-part-container no-padding-left">
                         <h4 class="ticket-title"><span data-handbid-ticket-title><?php echo $ticket->name; ?></span>
-	                        &nbsp;&nbsp;<strong class="ticket-price">$<span data-handbid-ticket-buynow><?php echo $ticket->buyNowPrice; ?></span></strong>
+	                        &nbsp;&nbsp;<strong class="ticket-price"><span class="handbidAuctionCurrency" title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span><span data-handbid-ticket-buynow><?php echo $ticket->buyNowPrice; ?></span></strong>
                         </h4>
 
                         <p class="ticket-quantity" >(admits <span data-handbid-ticket-quant><?php echo $ticket->ticketQuantity; ?></span> people)</p>
@@ -112,7 +114,7 @@ if (!$auction->enableTicketSales) {
         <div class="col-md-12 col-xs-12">
 
             <div class="col-md-3 col-md-offset-6">
-                <h3 class="total">$<span data-handbid-tickets-total>0</span></h3>
+                <h3 class="total"><span class="handbidAuctionCurrency" title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span><span data-handbid-tickets-total>0</span></h3>
                 <h5>Grand Total</h5>
             </div>
 

@@ -56,6 +56,12 @@ if(!defined("HANDBID_APP_APPSTORE_IPAD")){
 if(!defined("HANDBID_APP_GOOGLEPLAY")){
 	define("HANDBID_APP_GOOGLEPLAY", "https://play.google.com/store/apps/details?id=com.handbid.android");
 }
+if(!defined("HANDBID_DEFAULT_CURRENCY")){
+	define("HANDBID_DEFAULT_CURRENCY", "USD");
+}
+if(!defined("HANDBID_DEFAULT_CURRENCY_SYMBOL")){
+	define("HANDBID_DEFAULT_CURRENCY_SYMBOL", "$");
+}
 
 class Handbid
 {
@@ -449,6 +455,12 @@ class Handbid
             Stripe.setPublishableKey('<?php echo $this->state->getStripeApiKey();?>');
         </script>
         <?php
+
+        $currencyCode = (isset($auction->currencyCode))? $auction->currencyCode : HANDBID_DEFAULT_CURRENCY;
+        $currencySymbol = (isset($auction->currencySymbol))? $auction->currencySymbol : HANDBID_DEFAULT_CURRENCY_SYMBOL;
+
+        echo '<input type="hidden" data-auction-currency-code="'.$currencyCode.'">';
+        echo '<input type="hidden" data-auction-currency-symbol="'.$currencySymbol.'">';
 
         $bidderID = (isset($bidder->id)) ? $bidder->id : 0;
         echo '<input type="hidden" data-dashboard-profile-id="'.$bidderID.'">';
