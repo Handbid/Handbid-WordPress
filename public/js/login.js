@@ -220,6 +220,7 @@ var handbidLoginMain, cookieExpire = 7;
             var action = $("#hb-login-form-action").val();
             var username = $("#hb-login-form-username").val();
             var password = $("#hb-login-form-password").val();
+            var auctionGuid = $("#login-add-to-auction").val();
             var nonce = $("#hb-login-form-nonce").val();
             var redirect = $("#hb-login-form-redirect").val();
 
@@ -239,6 +240,7 @@ var handbidLoginMain, cookieExpire = 7;
                     action: action,
                     username: username,
                     password: password,
+                    auctionGuid: auctionGuid,
                     nonce: nonce
                 },
                 function (data) {

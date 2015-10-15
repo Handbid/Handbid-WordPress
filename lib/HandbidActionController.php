@@ -238,6 +238,7 @@ class HandbidActionController
             $values = [
                 'username' => $_POST['username'],
                 'password' => $_POST['password'],
+                'auctionGuid' => $_POST['auctionGuid'],
                 'pin' => $_POST['password']
             ];
 

@@ -104,6 +104,8 @@ if(!function_exists("handbid_app_links")){
 	                            <?php if($is_logged_in){?>
 		                            <a class="btn btn-info handbid-logout-link" href="/handbid-logout/">Logout</a>
 	                            <?php }else{ ?>
+
+                                    <input type="hidden" id="login-add-to-auction" value="<?php echo (isset($auction->auctionGuid))?trim($auction->auctionGuid):"";?>">
 		                            <button type="submit" class="btn btn-info signup" id="hb-login-form-submit"><span>Sign In</span></button>
 	                            <?php }?>
                             </div>
