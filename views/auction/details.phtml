@@ -48,12 +48,14 @@ $currencySymbol = (isset($auction->currencySymbol))? $auction->currencySymbol : 
 <div class="container container-fluid detail-banner-wrapper">
     <div class="detail-banner" style="background-image: url('<?php
     $image = ($auction->bannerImage) ? $auction->bannerImage : $auction->organization->banner;
+    $image = (strpos($image, "ucarecdn") !== false and strpos($image, "preview") === false)? $image . "-/preview/1140x280/" : $image ;
     echo $image; ?>')">
         <div class="logo">
             <img src="<?php
             $image = ($auction->imageUrl) ? $auction->imageUrl : $auction->sponsorImage;
             $imageUrlPath = parse_url($image);
             $image = ($imageUrlPath["scheme"]) ? $image : "https://" . $image;
+            $image = (strpos($image, "ucarecdn") !== false and strpos($image, "preview") === false)? $image . "-/preview/120x120/" : $image ;
             echo $image;
             ?>"/>
         </div>

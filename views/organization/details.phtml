@@ -36,14 +36,22 @@ if ($this->organization) {
 <div class="org-details">
 
     <div class="container container-fluid detail-banner-wrapper">
-        <div class="detail-banner" style="background-image: url('<?php echo $org->banner; ?>')">
+        <div class="detail-banner" style="background-image: url('<?php
+        $image = $org->banner;
+        $image = (strpos($image, "ucarecdn") !== false and strpos($image, "preview") === false)? $image . "-/preview/1140x280/" : $image ;
+        echo $image; ?>')">
             <div class="logo">
                 <img src="<?php
-                $image = $org->logo;
+                $image = (isset($org->logo))?$org->logo:"";
                 $imageUrlPath = parse_url($image);
-                $image = ($image and isset($imageUrlPath["scheme"])) ? $image : $org->organizationImages[0]->organizationImageUrl;
+                $image = ($image and isset($imageUrlPath["scheme"])) ? $image :
+                    ((isset($org->organizationImages)
+                        and is_array($org->organizationImages)
+                        and count($org->organizationImages)
+                        and isset($org->organizationImages[0]->organizationImageUrl))?$org->organizationImages[0]->organizationImageUrl : "" );
                 $imageUrlPath = parse_url($image);
-                $image = ($imageUrlPath["scheme"]) ? $image : "https://" . $image;
+                $image = (isset($imageUrlPath["scheme"])) ? $image : "https://" . $image;
+                $image = (strpos($image, "ucarecdn") !== false and strpos($image, "preview") === false)? $image . "-/preview/120x120/" : $image ;
                 echo $image; ?>"/>
             </div>
         </div>
