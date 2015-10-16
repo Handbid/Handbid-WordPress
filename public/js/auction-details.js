@@ -7,7 +7,7 @@
  * @author Master of Code (worldclass@masterofcode.com)
  */
 
-var timerForSearch;
+var timerForSearch, timerToLoad, isotopeWasFiltered = false;
 (function ($) {
 
 
@@ -251,6 +251,8 @@ var timerForSearch;
         else{
             $('.message-no-isotope-results').fadeOut('fast');
         }
+
+        detectVisibleIsotopeElementsCallBack();
     }
 
     function showSearchPlaceholderCallBack(){
@@ -258,6 +260,29 @@ var timerForSearch;
             timerForSearch = undefined;
         }
         timerForSearch = setTimeout(showSearchPlaceholder, 1000);
+    }
+
+    function detectVisibleIsotopeElementsCallBack(){
+        if(timerToLoad != undefined){
+            timerToLoad = undefined;
+        }
+        isotopeWasFiltered = true;
+        timerToLoad = setTimeout(detectVisibleIsotopeElements, 2000);
+    }
+
+    function detectVisibleIsotopeElements(){
+        if(isotopeWasFiltered) {
+            $('.simple-item-box .full-image-wrapper.without-image').each(function () {
+                var visible = $(this).visible("complete");
+                if (visible) {
+                    var backGround = $(this).data("backgroung-image-url");
+                    if(backGround.trim != "") {
+                        $(this).attr("style", "background-image: url('" + backGround + "');");
+                    }
+                    $(this).removeClass("without-image");
+                }
+            });
+        }
     }
 
 
@@ -323,6 +348,8 @@ var timerForSearch;
             }
 
         });
+
+        $(window).scroll(detectVisibleIsotopeElements);
 
 
         //search box

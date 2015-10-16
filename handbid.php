@@ -229,6 +229,7 @@ class Handbid
             'stripe-init-js'          => 'public/js/stripe-init.js',
             'progress-bar-js'          => 'public/js/progress-bar.js',
             'cookie-plugin-js'         => 'public/js/jquery.cookie.js',
+            'visible-plugin-js'        => 'public/js/jquery.visible.min.js',
             'handbid-isotope-js'       => 'public/js/isotope.pkgd.min.js',
             'handbid-unslider-js'      => 'public/js/unslider.min.js',
             'handbid-photo-gallery-js' => 'public/js/photoGallery.js',
