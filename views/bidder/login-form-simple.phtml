@@ -673,6 +673,7 @@ if(!function_exists("handbid_app_links")){
     </div>
 </div>
 
+<?php if(defined("HANDBID_SHOW_TUTORIAL") and HANDBID_SHOW_TUTORIAL){?>
 
 <div class="container-fluid container-tab" style="display: none" data-tab-name="tutorial-info-1">
     <div class="row">
@@ -792,7 +793,6 @@ if(!function_exists("handbid_app_links")){
     </div>
 </div>
 
-
 <div class="container-fluid container-tab" style="display: none" data-tab-name="tutorial-info-2">
     <div class="row">
         <div class="row col-xs-12 col-md-10 col-md-offset-1 signup-form">
@@ -849,7 +849,6 @@ if(!function_exists("handbid_app_links")){
     </div>
 </div>
 
-
 <div class="container-fluid container-tab" style="display: none" data-tab-name="tutorial-info-3">
     <div class="row">
         <div class="row col-xs-12 col-md-10 col-md-offset-1 signup-form">
@@ -897,5 +896,6 @@ if(!function_exists("handbid_app_links")){
     </div>
 </div>
 
+<?php }?>
 
 </div>
