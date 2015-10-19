@@ -216,7 +216,11 @@ class Handbid
     function initScripts()
     {
 
+        $socketUrl = $this->getSocketUrl();
+        $socketIoUrl = sprintf('%ssocket.io/socket.io.js', $socketUrl);
+
         $outerScripts = array(
+            'socket-io-js'           => $socketIoUrl,
             'stripe-api-js'          => 'https://js.stripe.com/v2/',
         );
 
@@ -226,7 +230,9 @@ class Handbid
         }
 
         $scripts = array(
-            'stripe-init-js'          => 'public/js/stripe-init.js',
+            'yii-node-socket-js'       => 'public/js/yii-node-socket.js',
+            'node-socket-manager-js'   => 'public/js/node-socket-manager.js',
+            'stripe-init-js'           => 'public/js/stripe-init.js',
             'progress-bar-js'          => 'public/js/progress-bar.js',
             'cookie-plugin-js'         => 'public/js/jquery.cookie.js',
             'visible-plugin-js'        => 'public/js/jquery.visible.min.js',
@@ -386,6 +392,12 @@ class Handbid
         }
     }
 
+    function getSocketUrl(){
+        $socketUrl = get_option('handbidSocketUrl', 'https://socket.hand.bid');
+        $socketUrl = (substr($socketUrl, -1) != "/")? $socketUrl."/":$socketUrl;
+        return $socketUrl;
+    }
+
     function onRenderFooter()
     {
 
@@ -418,28 +430,16 @@ class Handbid
                 echo do_shortcode('[handbid_bidder_profile_form template="views/bidder/credit-card-form" show_credit_card_required_message=true]');
                 echo "</div>";
         }
-
         // Set Values
-        // $hostName = 'manager.hand.bid';
-        $endpoint = parse_url(get_option('handbidRestEndpoint'));
-        $socketUrl = get_option('handbidSocketUrl', 'https://socket.hand.bid');
-        $socketUrl = (substr($socketUrl, -1) != "/")? $socketUrl."/":$socketUrl;
 
-        $hostName = $endpoint["host"];
         $auctionGuid = (isset($auction->auctionGuid))?trim($auction->auctionGuid):"";
         $auctionKey = (isset($auction->key))?trim($auction->key):"";
         $userGuid = (isset($bidder->usersGuid))?trim($bidder->usersGuid):"";
 
-        //$hostPort = '3002';
-        $isSecure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443);
-
         // Determined Values
-        $protocol = $isSecure ? 'https' : 'http';
-        $hostUrl = sprintf('%s://%s', $protocol, $hostName);
-        //$socketIoUrl = sprintf('%s:%s/socket.io/socket.io.js', $hostUrl, $hostPort);
-        //$nodeClientUrl = sprintf('%s:%s/client', $hostUrl, $hostPort);
-        $socketIoUrl = sprintf('%ssocket.io/socket.io.js', $socketUrl);
+        $socketUrl = $this->getSocketUrl();
         $nodeClientUrl = sprintf('%sclient', $socketUrl);
+
         $params = json_encode(["secure" => true, "cookie" => $userGuid]);
 
         ?>
@@ -468,10 +468,6 @@ class Handbid
         echo '<input type="hidden" data-handbid-app-appstore value="'.HANDBID_APP_APPSTORE.'">';
         echo '<input type="hidden" data-handbid-app-appstore-ipad value="'.HANDBID_APP_APPSTORE_IPAD.'">';
         echo '<input type="hidden" data-handbid-app-googleplay value="'.HANDBID_APP_GOOGLEPLAY.'">';
-
-        echo '<script src="'.$socketIoUrl.'"></script>';
-        echo '<script type="text/javascript" src="' . plugins_url("handbid/public/js/yii-node-socket.js") .  '"></script>';
-        echo '<script type="text/javascript" src="' . plugins_url("handbid/public/js/node-socket-manager.js") .  '"></script>';
 
         $isCustomizerPage = (isset($_SERVER["HTTP_REFERER"]) and (explode("?",basename($_SERVER["HTTP_REFERER"]))[0] == "customize.php"));
         if($isCustomizerPage){
