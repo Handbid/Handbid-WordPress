@@ -221,6 +221,7 @@ if(!function_exists("handbid_app_links")){
         </div>
     </div>
 
+    <?php if(defined("HANDBID_SHOW_TUTORIAL") and HANDBID_SHOW_TUTORIAL){?>
     <div class="container-fluid container-tab" style="display: none" data-tab-name="get-started">
         <div class="row">
             <div class="col-xs-12 signup-form">
@@ -313,7 +314,7 @@ if(!function_exists("handbid_app_links")){
             </div>
         </div>
     </div>
-
+    <?php }?>
 
 </div>
 
