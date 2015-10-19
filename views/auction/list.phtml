@@ -93,6 +93,7 @@ $selected = isset($_GET['auction_list']) ? $_GET['auction_list'] : 'current';
                         $imageUrlPath = parse_url($image);
                         $image = (isset($imageUrlPath["scheme"])) ? $image : "https://" . $image;
                         $image = (strpos($image, "ucarecdn") !== false and strpos($image, "preview") === false)? $image . "-/preview/220x80/" : $image ;
+                        $image = add_query_arg(["cval" => date("Y-m-d")], $image);
                         echo $image; ?>">
                     </div>
 
