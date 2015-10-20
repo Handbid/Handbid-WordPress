@@ -3108,7 +3108,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
         handbid.makePaymentForReceipt();
         handbid.detectIfUserWantToBuyTickets();
         handbid.detectIfUserWantToBid();
-        handbid.detectIfUserCanDownloadApps();
+        //handbid.detectIfUserCanDownloadApps();
         handbid.messageToAuctionManager();
         handbid.redirectFromResetedAuctionsCheck();
         setTimeout(function () {

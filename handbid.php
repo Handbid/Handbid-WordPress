@@ -47,14 +47,23 @@ if(!defined("HANDBID_PLUGIN_URL")){
 if(!defined("HANDBID_PLUGIN_PATH")){
 	define("HANDBID_PLUGIN_PATH", plugin_dir_path( __FILE__ ));
 }
+if(!defined("HANDBID_APP_APPSTORE_ID")){
+	define("HANDBID_APP_APPSTORE_ID", "433831139");
+}
 if(!defined("HANDBID_APP_APPSTORE")){
-	define("HANDBID_APP_APPSTORE", "https://itunes.apple.com/us/app/handbid/id433831139?l=ru&ls=1&mt=8");
+	define("HANDBID_APP_APPSTORE", "https://itunes.apple.com/us/app/handbid/id".HANDBID_APP_APPSTORE_ID."?l=ru&ls=1&mt=8");
+}
+if(!defined("HANDBID_APP_APPSTORE_IPAD_ID")){
+	define("HANDBID_APP_APPSTORE_IPAD_ID", "476689122");
 }
 if(!defined("HANDBID_APP_APPSTORE_IPAD")){
-	define("HANDBID_APP_APPSTORE_IPAD", "https://itunes.apple.com/us/app/bidpad/id476689122?l=ru&ls=1&mt=8");
+	define("HANDBID_APP_APPSTORE_IPAD", "https://itunes.apple.com/us/app/bidpad/id".HANDBID_APP_APPSTORE_IPAD_ID."?l=ru&ls=1&mt=8");
+}
+if(!defined("HANDBID_APP_GOOGLEPLAY_ID")){
+	define("HANDBID_APP_GOOGLEPLAY_ID", "com.handbid.android");
 }
 if(!defined("HANDBID_APP_GOOGLEPLAY")){
-	define("HANDBID_APP_GOOGLEPLAY", "https://play.google.com/store/apps/details?id=com.handbid.android");
+	define("HANDBID_APP_GOOGLEPLAY", "https://play.google.com/store/apps/details?id=".HANDBID_APP_GOOGLEPLAY_ID);
 }
 if(!defined("HANDBID_DEFAULT_CURRENCY")){
 	define("HANDBID_DEFAULT_CURRENCY", "USD");
@@ -102,6 +111,7 @@ class Handbid
         register_activation_hook(__FILE__, [$this, 'install']);
         add_action('init', [$this, 'init']);
         add_action('wp_footer', [$this, 'onRenderFooter']);
+        add_action('wp_head', [$this, 'onRenderHeader'], 1);
         add_filter('query_vars', [$this, 'registerVariables']);
 
         // Temporary fix for showing admin bar
@@ -230,6 +240,7 @@ class Handbid
         }
 
         $scripts = array(
+            'smart-app-banner-js'      => 'public/js/smart-app-banner.js',
             'yii-node-socket-js'       => 'public/js/yii-node-socket.js',
             'node-socket-manager-js'   => 'public/js/node-socket-manager.js',
             'stripe-init-js'           => 'public/js/stripe-init.js',
@@ -245,9 +256,9 @@ class Handbid
             'handbid-tooltip-js'       => 'public/js/tooltip.js',
             'handbid-bootstrap-js'     => 'public/js/bootstrap.js',
             'handbid-select2-js'       => 'public/js/select2.full.js',
-            'handbid-login-js'      => 'public/js/login.js',
-            'handbid-notices-js'    => 'public/js/pnotify.custom.min.js',
-            'handbid-plugin-js'     => 'public/js/handbid.js',
+            'handbid-login-js'         => 'public/js/login.js',
+            'handbid-notices-js'       => 'public/js/pnotify.custom.min.js',
+            'handbid-plugin-js'        => 'public/js/handbid.js',
             'handbid-modal-js'         => 'public/js/modal.js',
         );
 
@@ -258,6 +269,7 @@ class Handbid
 
 
         $styles = array(
+            'smart-app-banner-css'       => 'public/css/smart-app-banner.css',
             'handid-bootstrap-css'       => 'public/css/bootstrap.min.css',
             'handid-modal-css'           => 'public/css/modal.css',
             'handid-modal-connect-css'   => 'public/css/modal-connect.css',
@@ -266,8 +278,8 @@ class Handbid
             'handbid-generic-styles-css' => 'public/css/handbid.css',
             'handbid-less-buttons-css'   => 'public/less/buttons.less',
             'handbid-less-modal-css'     => 'public/less/modal.less',
-            'handbid-less-css'    => 'public/less/handbid.less',
-            'handbid-less-responsive-css'    => 'public/less/responsive-fix.less',
+            'handbid-less-css'           => 'public/less/handbid.less',
+            'handbid-less-responsive-css'=> 'public/less/responsive-fix.less',
         );
 
         foreach ($styles as $key => $sc) {
@@ -396,6 +408,37 @@ class Handbid
         $socketUrl = get_option('handbidSocketUrl', 'https://socket.hand.bid');
         $socketUrl = (substr($socketUrl, -1) != "/")? $socketUrl."/":$socketUrl;
         return $socketUrl;
+    }
+
+
+    function onRenderHeader() {
+
+        $affiliateIOS = "http://www.apple.com/itunes/affiliates/";
+        $affiliateGoogle = "";
+
+        $imageIOS = "http://a3.mzstatic.com/us/r30/Purple3/v4/b9/fa/47/b9fa4799-502e-e4ba-6a96-bd5ce38929cb/icon175x175.jpeg";
+        $imageGoogle = "https://lh3.googleusercontent.com/uiYA8FoF_ghTBsZ_QTRUAylYimM86FurQlVNsMaWdA5XT7HQgclGktOSjsBtGj1JfkKD=w300-rw";
+
+        $auction = $this->state()->currentAuction();
+
+        $bidderToken = isset($_COOKIE["handbid-auth"])? str_replace("Authorization: Bearer ","",$_COOKIE["handbid-auth"]):"";
+        $auctionGuid = isset($auction->auctionGuid) ? $auction->auctionGuid : "";
+        $dataLink = add_query_arg(
+            [
+                "id" => $bidderToken,
+                "auid" => $auctionGuid,
+            ],
+            get_bloginfo("url")."/autologin"
+        );
+
+        $output='
+        <meta name="apple-itunes-app" content="app-id='.HANDBID_APP_APPSTORE_ID.', affiliate-data='.$affiliateIOS.', app-argument='.$dataLink.'" >
+        <meta name="google-play-app" content="app-id='.HANDBID_APP_GOOGLEPLAY_ID.', affiliate-data='.$affiliateGoogle.', app-argument='.$dataLink.'">
+        <link rel="apple-touch-icon" href="'.$imageIOS.'">
+        <link rel="android-touch-icon" href="'.$imageGoogle.'" />
+        ';
+        echo $output;
+
     }
 
     function onRenderFooter()
