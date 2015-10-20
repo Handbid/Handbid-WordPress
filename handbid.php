@@ -241,6 +241,7 @@ class Handbid
 
         $scripts = array(
             'smart-app-banner-js'      => 'public/js/smart-app-banner.js',
+            'smart-app-banner-init-js' => 'public/js/smart-app-banner-init.js',
             'yii-node-socket-js'       => 'public/js/yii-node-socket.js',
             'node-socket-manager-js'   => 'public/js/node-socket-manager.js',
             'stripe-init-js'           => 'public/js/stripe-init.js',
