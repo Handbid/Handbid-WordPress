@@ -1848,6 +1848,11 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
                     $('[data-handbid-connect]').live('click', function (e) {
 
                         e.preventDefault();
+                        var isRegisterButton = $(this).hasClass("register");
+                        if(isRegisterButton){
+                            $(".active-container").eq(0).removeClass("active-container").hide();
+                            $("[data-tab-name='register-form']").eq(0).addClass("active-container").show();
+                        }
                         loginModal.css('display', 'block');
                         underlay.css('display', 'block');
 
