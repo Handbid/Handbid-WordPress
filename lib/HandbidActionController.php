@@ -889,7 +889,6 @@ class HandbidActionController
 
     }
 
-    //TODO: autologin
     function autologin_callback(){
          $this->handbid->store( 'Bidder' )->setCookie($_REQUEST["id"]);
         $uuid = $_REQUEST["uuid"];
@@ -899,7 +898,7 @@ class HandbidActionController
             $auctions = $this->handbid->store('Auction')->all($page = 0, $pageSize = 255, null, null, []);
             if(count($auctions)) {
                 foreach($auctions as $auction) {
-                    if($auction->auctionGuid == $auid)
+                    if(trim(strtolower($auction->auctionGuid)) == trim(strtolower($auid)))
                         $auctionSlug = $auction->key;
                 }
             }

@@ -440,7 +440,7 @@ class Handbid
 
         $output='
         <meta name="apple-itunes-app" content="app-id='.HANDBID_APP_APPSTORE_ID.', affiliate-data='.$affiliateIOS.', app-argument='.$dataLink.'" >
-        <meta name="google-play-app" content="app-id='.HANDBID_APP_GOOGLEPLAY_ID.', affiliate-data='.$affiliateGoogle.', app-argument='.$dataLink.'">
+        <meta name="google-play-app" content="app-id=com.app_'.HANDBID_APP_GOOGLEPLAY_ID.'.layout, affiliate-data='.$affiliateGoogle.', app-argument='.$dataLink.'">
         <link rel="apple-touch-icon" href="'.$imageIOS.'">
         <link rel="android-touch-icon" href="'.$imageGoogle.'" />
         ';
