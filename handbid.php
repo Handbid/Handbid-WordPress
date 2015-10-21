@@ -436,6 +436,8 @@ class Handbid
             define("HANDBID_APP_REFERRER", $dataLink);
         }
 
+        $dataLink = str_replace(["http", "https"], "handbid", $dataLink);
+
         $output='
         <meta name="apple-itunes-app" content="app-id='.HANDBID_APP_APPSTORE_ID.', affiliate-data='.$affiliateIOS.', app-argument='.$dataLink.'" >
         <meta name="google-play-app" content="app-id='.HANDBID_APP_GOOGLEPLAY_ID.', affiliate-data='.$affiliateGoogle.', app-argument='.$dataLink.'">
