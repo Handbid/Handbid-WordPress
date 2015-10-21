@@ -432,6 +432,10 @@ class Handbid
             get_bloginfo("url")."/autologin"
         );
 
+        if(!defined("HANDBID_APP_REFERRER")){
+            define("HANDBID_APP_REFERRER", $dataLink);
+        }
+
         $output='
         <meta name="apple-itunes-app" content="app-id='.HANDBID_APP_APPSTORE_ID.', affiliate-data='.$affiliateIOS.', app-argument='.$dataLink.'" >
         <meta name="google-play-app" content="app-id='.HANDBID_APP_GOOGLEPLAY_ID.', affiliate-data='.$affiliateGoogle.', app-argument='.$dataLink.'">

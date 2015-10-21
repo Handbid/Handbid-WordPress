@@ -24,12 +24,12 @@ if(!function_exists("handbid_app_links")){
         <h4>You can download the Handbid App for Android or iPhone.</h4>
         <ul class="app-links">
         <li class="app-store">
-            <a target="_blank" href="<?php echo HANDBID_APP_APPSTORE;?>">
+            <a target="_blank" href="<?php echo add_query_arg(["referrer" => urlencode(HANDBID_APP_REFERRER)], HANDBID_APP_APPSTORE );?>">
                 Download from App Store
             </a>
         </li>
         <li class="google-play">
-            <a target="_blank"  href="<?php echo HANDBID_APP_GOOGLEPLAY;?>">
+            <a target="_blank"  href="<?php echo add_query_arg(["referrer" => urlencode(HANDBID_APP_REFERRER)], HANDBID_APP_GOOGLEPLAY );?>">
                 Download from Google Play
             </a>
         </li>
