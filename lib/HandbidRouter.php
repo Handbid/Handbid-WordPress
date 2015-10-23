@@ -90,8 +90,11 @@ class HandbidRouter
     function outputAppleAssociationFile() {
 
 	    if(!is_admin()) {
-            header('Content-Type: application/pkcs7-mime');
-            echo file_get_contents(str_replace("\\","/",HANDBID_PLUGIN_PATH)."apple-app-site-association");
+            $file = str_replace("\\","/",HANDBID_PLUGIN_PATH)."apple-app-site-association";
+            $headers = get_headers($file);
+            echo "<pre>".print_r($headers,true)."</pre>";
+//            header('Content-Type: application/pkcs7-mime');
+//            echo file_get_contents();
 
 	        exit;
 	    }
