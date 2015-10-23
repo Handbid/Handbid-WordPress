@@ -355,12 +355,13 @@ var timerForSearch, timerToLoad, isotopeWasFiltered = false;
         //search box
         $('.fancy-search .query').on('keydown', function (e) {
 
-            if (searchTimeout) {
-                clearTimeout(searchTimeout);
-            }
+            var charCode = e.charCode || e.keyCode;
+            if(!(charCode == 13 && $(this).hasClass("categories-query"))) {
+                if (searchTimeout) {
+                    clearTimeout(searchTimeout);
+                }
 
-            var charCode = e.charCode || e.keyCode,
-                go = function () {
+                var go = function () {
                     searchTerm = $(this).val();
 
                     searchEnabled = false;
@@ -373,13 +374,13 @@ var timerForSearch, timerToLoad, isotopeWasFiltered = false;
                 }.bind(this);
 
 
-            if (charCode === 13) {
-                go();
-                return false;
+                if (charCode === 13) {
+                    go();
+                    return false;
+                }
+
+                searchTimeout = setTimeout(go, debounce);
             }
-
-            searchTimeout = setTimeout(go, debounce);
-
         });
 
 

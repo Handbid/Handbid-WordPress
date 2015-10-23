@@ -240,6 +240,7 @@ class Handbid
         }
 
         $scripts = array(
+            'handbid-details-map-js'   => 'public/js/details-map.js',
             'smart-app-banner-js'      => 'public/js/smart-app-banner.js',
             'smart-app-banner-init-js' => 'public/js/smart-app-banner-init.js',
             'yii-node-socket-js'       => 'public/js/yii-node-socket.js',
@@ -253,7 +254,6 @@ class Handbid
             'handbid-photo-gallery-js' => 'public/js/photoGallery.js',
             'handbid-tab-slider-js'    => 'public/js/slider.js',
             'handbid-auction-page-js'  => 'public/js/auction-details.js',
-            'handbid-details-map-js'   => 'public/js/details-map.js',
             'handbid-tooltip-js'       => 'public/js/tooltip.js',
             'handbid-bootstrap-js'     => 'public/js/bootstrap.js',
             'handbid-select2-js'       => 'public/js/select2.full.js',
@@ -499,7 +499,8 @@ class Handbid
                 userChannelId = '<?php echo $userGuid; ?>',
                 url = '<?php echo $nodeClientUrl; ?>',
                 params = <?php echo $params; ?>,
-                stripePublishableKey = '<?php echo $this->state->getStripeApiKey();?>';
+                stripePublishableKey = '<?php echo $this->state->getStripeApiKey();?>',
+                mapsAreActivated = false;
 
             var forcePageRefreshAfterBids = <?php echo (get_option('handbidForceRefresh', 'no') == "yes") ? "true" : "false" ;?>;
 
@@ -534,7 +535,7 @@ class Handbid
         if($this->state->getMapVisibility()) {
             $currentPostID = get_the_ID();
             $currentPost = get_post($currentPostID);
-            if ($currentPost->post_name == 'auction') {
+            if (in_array($currentPost->post_name, ['auction', 'organization'])) {
                 echo '<script async defer src="https://maps.googleapis.com/maps/api/js?v=3.exp&callback=auctionGoogleMapsInit"></script>';
             }
         }

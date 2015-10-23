@@ -87,6 +87,16 @@ class HandbidRouter
 	    }
     }
 
+    function outputAppleAssociationFile() {
+
+	    if(!is_admin()) {
+            header('Content-Type: application/pkcs7-mime');
+            echo file_get_contents(str_replace("\\","/",HANDBID_PLUGIN_PATH)."apple-app-site-association");
+
+	        exit;
+	    }
+    }
+
     function checkPageState() {
 
         global $post;
@@ -96,6 +106,10 @@ class HandbidRouter
         }
 
         $auctionID = 0;
+
+        if($post->post_name == 'apple-app-site-association') {
+            $this->outputAppleAssociationFile();
+        }
 
         if($post->post_name == 'auction') {
             $currentAuction = $this->state->currentAuction();

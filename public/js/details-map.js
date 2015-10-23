@@ -82,4 +82,5 @@ function auctionGoogleMapsInit(){
             large.setCenter(center);
         }, 500);
     });
+    mapsAreActivated = true;
 }

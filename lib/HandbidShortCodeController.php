@@ -117,10 +117,14 @@ class HandbidShortCodeController {
 
 			$organization = $this->state->currentOrg();
 
+            $hasLocation = (isset($organization->organizationAddressStreet1)) ? !!($organization->organizationAddressStreet1): false;
+            $this->state->setMapVisibility($hasLocation);
+
 			$markup = $this->viewRenderer->render(
 				$template,
 				[
-					'organization' => $organization
+					'organization' => $organization,
+					'hasLocation'  => $hasLocation
 				]
 			);
 
@@ -164,6 +168,16 @@ class HandbidShortCodeController {
 			} else {
 				$auctions = [ ];
 			}
+
+            $tempOrgAuctions = [];
+            if(count($auctions)){
+                foreach($auctions as $auctionSingle){
+                    if($org->id == $auctionSingle->organizationId ){
+                        $tempOrgAuctions[] = $auctionSingle;
+                    }
+                }
+                $auctions = $tempOrgAuctions;
+            }
 
             $colsCount = $this->state->getGridColsCount();
 
@@ -290,6 +304,11 @@ class HandbidShortCodeController {
 
 			$query = [ ];
 
+            $organizationSearch = isset( $_GET[ "search" ] ) ? $_GET[ "search" ] : false;
+            if($organizationSearch){
+                $pageSize = 999999;
+            }
+
             //$profile = $this->handbid->store( 'Bidder' )->myProfile();
             $profile = $this->state->currentBidder();
             //$this->handbid->store('Organization')->setBasePublicity(! $profile);
@@ -309,6 +328,20 @@ class HandbidShortCodeController {
 
 			$total = $this->handbid->store( 'Organization' )->count( $query );
 
+            if($organizationSearch){
+                $tempOrganizations = [];
+                $searchString = strtolower(trim(strip_tags($organizationSearch)));
+                if(count($organizations)){
+                    foreach($organizations as $organization){
+                        $orgName = strtolower(trim(strip_tags($organization->name)));
+                        if(strpos($orgName, $searchString) !== false){
+                            $tempOrganizations[] = $organization;
+                        }
+                    }
+                }
+                $organizations = $tempOrganizations;
+            }
+
 
             $organizations = (is_array($organizations))?$organizations:[];
             if(count($organizations) > $pageSize){
@@ -326,7 +359,8 @@ class HandbidShortCodeController {
 					'id'            => $id,
 					'page_size'     => $pageSize,
 					'page'          => $page,
-                    'cols_count' => $colsCount,
+                    'cols_count'    => $colsCount,
+                    'search'        => $organizationSearch,
 				]
 			);
 

@@ -9,11 +9,10 @@
  */
 
 
-if ($this->organization) {
 
     $org = $this->get('organization');
+    $hasLocation = $this->get('hasLocation');
     $address = null;
-    $hasLocation = !!($org->organizationAddressStreet1);
 
     if ($hasLocation) {
         $street1 = $org->organizationAddressStreet1;
@@ -21,16 +20,16 @@ if ($this->organization) {
         $city = $org->organizationAddressCity;
         $province = $org->organizationAddressProvince;
         $postalCode = $org->organizationAddressPostalCode;
-        $address = $street1 . ' ' . $street2 . ' ' . $city . ' ' . $prov . ' ' . $postalCode;
+        $address = $street1 . ' ' . $street2 . ' ' . $city . ' ' . $province . ' ' . $postalCode;
     }
 
 
-} else {
+if(!$org) {
     echo "No Organization Set";
     return;
 }
 
-
+//echo "<pre>".print_r($org,true)."</pre>";
 ?>
 
 <div class="org-details">
@@ -71,15 +70,15 @@ if ($this->organization) {
                 ],
                 [
                     "class" => "google-plus",
-                    "link" => $org->socialFacebook,
+                    "link" => $org->socialGoogle,
                 ],
                 [
                     "class" => "twitter",
-                    "link" => $org->socialFacebook,
+                    "link" => $org->socialTwitter,
                 ],
                 [
                     "class" => "pinterest",
-                    "link" => $org->socialFacebook,
+                    "link" => $org->socialPinterest,
                 ],
             ];
             $socialsNotEmpty = false;
@@ -106,16 +105,25 @@ if ($this->organization) {
     </div>
 
     <ul class="slider-nav col-md-12 auto-open" data-slider-nav-id="org-details">
+        <?php $auctions_tab = (isset($_GET['auction_list']));?>
+        <?php if ($auctions_tab) { ?>
+            <li>
+                <a data-slider-nav-key="auctions">Auctions</a>
+            </li>
+        <?php } ?>
         <?php if ($org->description) { ?>
             <li>
                 <a data-slider-nav-key="description">Description</a>
             </li>
         <?php } ?>
-        <?php if ($hasLocation) { ?>
+        <?php if (!$auctions_tab) { ?>
             <li>
-                <a data-slider-nav-key="map">Address &amp; Map</a>
+                <a data-slider-nav-key="auctions">Auctions</a>
             </li>
         <?php } ?>
+            <li>
+                <a data-slider-nav-key="map" class="map-holder-item">Contact Us</a>
+            </li>
     </ul>
 
     <div class="slider-content" data-slider-nav-id="org-details">
@@ -126,46 +134,91 @@ if ($this->organization) {
             </div>
         <?php } ?>
 
-        <?php if ($hasLocation) { ?>
-            <div class="details-map" data-slider-nav-key="map" data-address="<?php echo $address; ?>">
-
-                <div id="large-map"></div>
-                <div id="small-map"></div>
-
-            </div>
-            <div style="display: none" id="map-marker-content">
-                <div class="overflow">
-                    <div class="row">
-                        <div class="col-md-6 iw-label">Location</div>
-                        <div class="col-md-6"><?php echo $org->name; ?></div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 iw-label">Address</div>
-                        <div
-                            class="col-md-6"><?php
-                            $street1 = $org->organizationAddressStreet1;
-                            $street2 = $org->organizationAddressStreet2;
-                            $city = $org->organizationAddressCity;
-                            $province = $org->organizationAddressProvince;
-                            $postalCode = $org->organizationAddressPostalCode;
-                            echo $street1 . ' ' . $street2 . '<br />' . $city . ', ' . strtoupper($province) . ' ' . $postalCode; ?></div>
-                    </div>
-                    <div class="row submit">
-                        <a class="pink-button get-directions" onclick="getDirections()" href="#">Get Directions</a>
-                    </div>
-                </div>
+        <?php if ((int) $org->totalAuctions) { ?>
+            <div class="container container-fluid" data-slider-nav-key="auctions">
+                <?php echo do_shortcode('[handbid_organization_auctions]'); ?>
             </div>
         <?php } ?>
 
-    </div>
+
+            <div class="details-map" data-slider-nav-key="map" data-address="<?php echo $address; ?>">
+
+                <?php if ($org->public == 0) { ?>
+
+                <div id="large-map"></div>
+                <div id="small-map"></div>
+                    <div style="display: none" id="map-marker-content">
+                        <div class="overflow">
+                            <div class="row">
+                                <div class="col-md-6 iw-label">Location</div>
+                                <div class="col-md-6"><?php echo $org->name; ?></div>
+                            </div>
+                            <?php if(trim($org->organizationPhone)){?>
+                                <div class="row">
+                                    <div class="col-md-6 iw-label">Contact Phone</div>
+                                    <div class="col-md-6"><?php echo $org->organizationPhone; ?></div>
+                                </div>
+                            <?php }?>
+                            <?php if(trim($org->email)){?>
+                                <div class="row">
+                                    <div class="col-md-6 iw-label">Email</div>
+                                    <div class="col-md-6"><a target="_blank" href="mailto:<?php echo antispambot($org->email) ?>"><?php echo antispambot($org->email) ?></a></div>
+                                </div>
+                            <?php }?>
+                            <?php if(trim($org->website)){?>
+                                <div class="row">
+                                    <div class="col-md-6 iw-label">Website</div>
+                                    <div class="col-md-6"><a target="_blank" href="<?php echo (strpos($org->website, "http") === false)?"http://".$org->website:$org->website; ?>"><?php echo $org->website ?></a></div>
+                                </div>
+                            <?php }?>
+                            <div class="row">
+                                <div class="col-md-6 iw-label">Address</div>
+                                <div
+                                    class="col-md-6"><?php
+                                    $street1 = $org->organizationAddressStreet1;
+                                    $street2 = $org->organizationAddressStreet2;
+                                    $city = $org->organizationAddressCity;
+                                    $province = $org->organizationAddressProvince;
+                                    $postalCode = $org->organizationAddressPostalCode;
+                                    echo $street1 . ' ' . $street2 . '<br />' . $city . ', ' . strtoupper($province) . ' ' . $postalCode; ?></div>
+                            </div>
+                            <div class="row submit">
+                                <a class="pink-button get-directions" onclick="getDirections()" href="#">Get Directions</a>
+                            </div>
+                        </div>
+                    </div>
+                <?php }else{ ?>
+                    <div class="container container-fluid public-contacts">
+                        <div class="row">
+                            <div class="col-md-2 iw-label">Location</div>
+                            <div class="col-md-4 iw-data"><?php echo $org->name; ?></div>
+                        </div>
+                        <?php if(trim($org->organizationPhone)){?>
+                            <div class="row">
+                                <div class="col-md-2 iw-label">Contact Phone</div>
+                                <div class="col-md-4 iw-data"><?php echo $org->organizationPhone; ?></div>
+                            </div>
+                        <?php }?>
+                        <?php if(trim($org->email)){?>
+                            <div class="row">
+                                <div class="col-md-2 iw-label">Email</div>
+                                <div class="col-md-4 iw-data"><a target="_blank" href="mailto:<?php echo antispambot($org->email) ?>"><?php echo antispambot($org->email) ?></a></div>
+                            </div>
+                        <?php }?>
+                        <?php if(trim($org->website)){?>
+                            <div class="row">
+                                <div class="col-md-2 iw-label">Website</div>
+                                <div class="col-md-4 iw-data"><a target="_blank" href="<?php echo (strpos($org->website, "http") === false)?"http://".$org->website:$org->website; ?>"><?php echo $org->website ?></a></div>
+                            </div>
+                        <?php }?>
+                    </div>
+
+                <?php } ?>
+            </div>
 
 
-    <div class="container container-fluid">
-        <h3 class="auction-title">Auctions</h3>
-        <?php echo do_shortcode('[handbid_organization_auctions]'); ?>
     </div>
+
 
 
 </div>
-
-<script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>

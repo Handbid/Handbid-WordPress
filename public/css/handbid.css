@@ -537,6 +537,15 @@
     display: none;
 }
 
+.public-contacts .iw-label,
+.public-contacts .data{
+    font-size: 20px !important;
+    margin-bottom: 15px;
+}
+.public-contacts .iw-label{
+    font-weight: bold;
+}
+
 @media (max-width: 767px) {
 
     .global-footer .toggle-info{

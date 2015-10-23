@@ -3233,6 +3233,12 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
             handbid.clickOnFiltersToReorder();
         });
 
+        $('.map-holder-item').live("click", function(e){
+            if(!mapsAreActivated){
+                auctionGoogleMapsInit();
+            }
+        });
+
     });
 
 })(jQuery);

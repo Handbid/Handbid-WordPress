@@ -12,6 +12,7 @@
 
 $organizations = $this->get('organizations');
 $cols = $this->get('cols_count');
+$search = $this->get('search');
 $col = 1;
 $newRow = false;
 $total = count($organizations);
@@ -29,9 +30,26 @@ $selected = isset($_GET['auction_list']) ? $_GET['auction_list'] : 'current';
     <a href="/auctions">Auctions |</a> Organizations
 </div>
 
+<div class="row sort-bar auction-item-list" style="transition: none; margin-bottom: 15px;">
+
+    <div class="category-cover-cheating"></div>
+
+    <div class="col-md-6 col-xs-6 fancy-search-wrapper">
+
+        <form class="fancy-search" method="get">
+            <button type="submit">Search Organizations</button>
+            <input class="query categories-query" type="search" name="search" placeholder="Search organizations" value="<?php echo ($search)?$search:"";?>">
+            <a class="reset" href="#" style="display: none">X</a>
+        </form>
+
+    </div>
+</div>
+
 <div class="row simple-box-row organizations">
 
-    <?php foreach ($organizations as $organization) {
+    <?php
+    if(count($organizations)){
+    foreach ($organizations as $organization) {
 
     $url = '/organizations/' . $organization->key . '/';
     $image = (isset($organization->logo))?$organization->logo:"";
@@ -111,7 +129,12 @@ $selected = isset($_GET['auction_list']) ? $_GET['auction_list'] : 'current';
     <?php if ($newRow) { ?></div><div class="row simple-box-row organizations"><?php } ?>
 
 
-    <?php } ?>
+    <?php }
+    }
+    else{
+        echo "<h3>No organizations found</h3>";
+    }
+    ?>
 
 </div>
 
