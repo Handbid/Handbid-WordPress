@@ -90,8 +90,9 @@ class HandbidRouter
     function outputAppleAssociationFile() {
 
 	    if(!is_admin()) {
-            $file = str_replace("\\","/",HANDBID_PLUGIN_PATH)."apple-app-site-association";
-            $fileUrl = str_replace("\\","/",HANDBID_PLUGIN_URL)."apple-app-site-association";
+            $filename = "apple-app-site-association-unsigned";
+            $file = str_replace("\\","/",HANDBID_PLUGIN_PATH).$filename;
+            $fileUrl = str_replace("\\","/",HANDBID_PLUGIN_URL).$filename;
             $headers = get_headers($fileUrl);
             foreach($headers as $header){
                 header($header);
