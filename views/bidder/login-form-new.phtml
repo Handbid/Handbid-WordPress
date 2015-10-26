@@ -11,53 +11,76 @@
 $countries = $this->get("countries");
 $in_page = $this->get("in_page");
 $is_logged_in = $this->get("is_logged_in");
+$auction = $this->get("auction");
 if($in_page){
-	$redirectLink = (isset($_SERVER["HTTP_REFERER"]) and $_SERVER["HTTP_REFERER"] != get_permalink()) ? $_SERVER["HTTP_REFERER"] : "/auctions/";
+    $redirectLink = (isset($_SERVER["HTTP_REFERER"]) and $_SERVER["HTTP_REFERER"] != get_permalink()) ? $_SERVER["HTTP_REFERER"] : "/auctions/";
 }
 else{
-	$redirectLink = $_SERVER["REQUEST_URI"];
+    $redirectLink = $_SERVER["REQUEST_URI"];
+}
+if(!function_exists("handbid_app_links")){
+    function handbid_app_links(){
+        ?>
+        <h4>You can download the Handbid App for Android or iPhone.</h4>
+        <ul class="app-links">
+            <li class="app-store">
+                <a target="_blank" href="<?php echo add_query_arg(["referrer" => urlencode(HANDBID_APP_REFERRER)], HANDBID_APP_APPSTORE );?>">
+                    Download from App Store
+                </a>
+            </li>
+            <li class="google-play">
+                <a target="_blank"  href="<?php echo add_query_arg(["referrer" => urlencode(HANDBID_APP_REFERRER)], HANDBID_APP_GOOGLEPLAY );?>">
+                    Download from Google Play
+                </a>
+            </li>
+        </ul>
+    <?php
+    }
 }
 ?>
 
 
-<div class="handbid-modal <?php echo ($in_page) ? "handbid-modal-in-page" : "" ; ?> user-modal contact-body login-modal-tab" data-handbid-modal-key="login-modal">
+<div class="handbid-modal handbid-simplified-login-modal simplified-login-new <?php echo ($in_page) ? "handbid-modal-in-page" : "" ; ?> user-modal contact-body login-modal-tab" data-handbid-modal-key="login-modal">
 <?php if(!$in_page){?>
-<a href="#" class="modal-close">X</a>
+    <a href="#" class="modal-close">X</a>
 <?php }?>
 
 <div class="page-body connect-page">
 
-    <div class="container-fluid container-tab active-container" data-tab-name="login-form">
-        <div class="row">
-            <div class="col-xs-12 signup-form">
-                <div class="handbid-form signup-form">
-                    <div class="row">
-                        <div class="col-md-8 col-md-offset-2 col-xs-12">
-                            <h3>Handbid Bidder Login</h3>
-	                        <?php if($is_logged_in){?>
-		                        <h4>You are already logged in</h4>
-		                        <h4><a class="login-popup-link" href="/auctions/">Click here</a> to choose your auction!</h4>
-	                        <?php }else{ ?>
-                            <h4>Login with your bidder account information below.</h4>
+<div class="container-fluid container-tab active-container" data-tab-name="login-form">
+    <div class="row">
+        <div class="col-xs-12 signup-form">
+            <div class="handbid-form signup-form">
+                <div class="row no-margin">
+                    <div class="col-md-10 col-md-offset-1 col-xs-12">
+                        <h3>Handbid Bidder Login</h3>
+                        <?php if($is_logged_in){?>
+                            <h4>You are already logged in</h4>
+                            <h4><a class="login-popup-link" href="/auctions/">Click here</a> to choose your auction!</h4>
+                        <?php }else{ ?>
                             <h4>Not sure if you have an account?
-                                <a class="login-popup-link" data-target-tab="get-started">Click here</a> to get
+                                <a class="login-popup-link" data-target-tab="register-form">Click here</a> to get
                                 started.</h4>
-	                        <?php }?>
+                        <?php }?>
+                    </div>
+                </div>
+
+                <form id="hb-login-form" class="form" method="POST" action="<?php echo get_admin_url() . 'admin-post.php'; ?>"
+                      enctype="multipart/form-data">
+
+
+                    <div class="row isCurrentlyLoggingIn to-hide-block" style="display: none;">
+                        <h3 class="col-xs-12 ">
+                            Logging in. Please wait.
+                        </h3>
+                    </div><div class="row errorsRow to-hide-block" style="display: none;">
+                        <div class="col-md-10 col-md-offset-1 col-xs-12 errorsContainer">
+                            Specified combination not found.
                         </div>
                     </div>
-
-                    <form id="hb-login-form" class="form" method="POST" action="<?php echo get_admin_url() . 'admin-post.php'; ?>"
-                          enctype="multipart/form-data">
-
-
-                        <div class="row errorsRow to-hide-block" style="display: none;">
-                            <div class="col-md-8 col-md-offset-2 col-xs-12 errorsContainer">
-                                Specified combination not found.
-                            </div>
-                        </div>
-	                    <?php if(!$is_logged_in){?>
+                    <?php if(!$is_logged_in){?>
                         <div class="row">
-                            <div class="form-group col-md-8 col-md-offset-2 col-xs-12">
+                            <div class="form-group col-md-10 col-md-offset-1 col-xs-12">
                                 <input placeholder="Email or Phone Number" type="text" name="username" value=""
                                        class="form-control cleanable-input" id="hb-login-form-username">
                             </div>
@@ -65,7 +88,7 @@ else{
 
 
                         <div class="row">
-                            <div class="form-group col-md-8 col-md-offset-2 col-xs-12">
+                            <div class="form-group col-md-10 col-md-offset-1 col-xs-12">
                                 <input placeholder="Password" type="text" name="pin" value=""
                                        class="form-control cleanable-input"  id="hb-login-form-password">
                                 <h5>Having trouble logging in? <a class="login-popup-link"
@@ -74,142 +97,131 @@ else{
 
                             </div>
                         </div>
-	                    <?php }?>
+                    <?php }?>
 
-                        <div class="row">
-                            <div class="form-group col-md-8 col-md-offset-2 col-xs-12 buttons">
-	                            <?php if($is_logged_in){?>
-		                            <a class="btn btn-info handbid-logout-link" href="/handbid-logout/">Logout</a>
-	                            <?php }else{ ?>
-		                            <button type="submit" class="btn btn-info signup" id="hb-login-form-submit"><span>Sign In</span></button>
-	                            <?php }?>
-
-                                <a class="btn btn-info signup login-popup-link" data-target-tab="tutorial-info-1">Tutorial</a>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="form-group col-md-8 col-md-offset-2 col-xs-12">
-                                <h2>Trying to manage your Handbid account?</h2>
-                                <h5><a target="_blank" href="https://manager.handbid.com/login">Click here</a> to access
-                                    Handbid Auction Manager.</h5>
-
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-8 col-md-offset-2 col-xs-12 modal-footer center-aligned-text">
-                                <h4>You can download the Handbid App for Android or iPhone.</h4>
-                                <ul class="app-links">
-                                    <li class="app-store"><a href="#">Download from App Store</a></li>
-                                    <li class="google-play"><a href="#">Download from Google Play</a></li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        <input type='hidden' name='redirect' value='<?php echo $redirectLink; ?>' id="hb-login-form-redirect"/>
-                        <input type='hidden' name='form-id' value='handbid-login'/>
-                        <input type='hidden' name='nonce' value='<?php echo apply_filters("handbid_create_nonce", date("d.m.Y") . "login");?>' id="hb-login-form-nonce"/>
-                        <input type='hidden' name='action' value='handbid_ajax_login' id="hb-login-form-action"/>
-                    </form>
-
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="container-fluid container-tab forgot-pass-tab" style="display: none" data-tab-name="forgot-pass">
-        <div class="row">
-            <div class="col-xs-12 signup-form">
-                <div class="handbid-form signup-form">
-                    <h3>LOGIN</h3>
-                    <h4 class="sub-title">to your <span>Handbid</span> account</h4>
-
-                    <form class="form" method="POST" action="<?php echo get_admin_url() . 'admin-post.php'; ?>"
-                          enctype="multipart/form-data">
-
-                        <div class="row errorsRow to-hide-block" style="display: none;">
-                            <div class="col-md-8 col-md-offset-2 col-xs-12 errorsContainer">
-                                User with specified email or phone was not found.
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="form-group col-md-8 col-md-offset-2 col-xs-12">
-                                <h2>Forgot your Password or Login Info?</h2>
-                                <h5>Not sure if you have an account? <a class="login-popup-link"
-                                                                        data-target-tab="get-started">Click here</a> to
-                                    get started.</h5>
-                            </div>
-                        </div>
-
-
-                        <div class="row">
-                            <div class="form-group col-md-8 col-md-offset-2 col-xs-12">
-                                <h5>Enter your email or phone number and we will send you instructions on how to get
-                                    logged in.</h5>
-
-                                <input placeholder="Email or Phone Number" type="text" id="emailOrPhoneToResetPass"
-                                       name="username" value=""
-                                       class="form-control cleanable-input">
-
-                                <button type="submit" class="btn btn-info signup login-popup-link reset-password-link loading-span-button"
-                                        data-change-pass-nonce="<?php echo apply_filters("handbid_create_nonce", date("d.m.Y") . "reset_pass");?>"
-                                    ><span>Send Instructions</span></button>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-8 col-md-offset-2 col-xs-12 modal-footer center-aligned-text">
-                                <h4>You can download the Handbid App for Android or iPhone.</h4>
-                                <ul class="app-links">
-                                    <li class="app-store"><a href="#">Download from App Store</a></li>
-                                    <li class="google-play"><a href="#">Download from Google Play</a></li>
-                                </ul>
-                            </div>
-                        </div>
-
-                    </form>
-
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="container-fluid container-tab" style="display: none" data-tab-name="forgot-pass-sent">
-        <div class="row">
-            <div class="col-xs-12 signup-form">
-                <div class="handbid-form signup-form">
                     <div class="row">
-                        <div class="col-md-8 col-md-offset-2 col-xs-12">
-                            <h3>LOGIN</h3>
-                            <h4 class="sub-title">to your <span>Handbid</span> account</h4>
+                        <div class="form-group col-md-10 col-md-offset-1 col-xs-12 buttons">
+                            <?php if($is_logged_in){?>
+                                <a class="btn btn-info handbid-logout-link" href="/handbid-logout/">Logout</a>
+                            <?php }else{ ?>
+
+                                <input type="hidden" id="login-add-to-auction" value="<?php echo (isset($auction->auctionGuid))?trim($auction->auctionGuid):"";?>">
+                                <button type="submit" class="btn btn-info signup" id="hb-login-form-submit"><span>Sign In</span></button>
+                            <?php }?>
                         </div>
                     </div>
 
                     <div class="row">
-                        <div class="form-group col-md-8 col-md-offset-2 col-xs-12">
-                            <h2 class="center-aligned-text">Your Login Information has been Sent!</h2>
-                            <h5 class="center-aligned-text">Check your email (including your SPAM folder) or phone for the information.</h5>
+                        <div class="form-group col-md-10 col-md-offset-1 col-xs-12">
+                            <h2>Trying to manage your Handbid account?</h2>
+                            <h5><a target="_blank" href="https://manager.handbid.com/login">Click here</a> to access
+                                Handbid Auction Manager.</h5>
+
                         </div>
                     </div>
 
                     <div class="row">
-                        <div class="col-md-8 col-md-offset-2 col-xs-12 modal-footer center-aligned-text">
-                            <a class="btn btn-info signup login-popup-link" data-target-tab="login-form">Start Over</a>
-                            <h4>You can download the Handbid App for Android or iPhone.</h4>
-                            <ul class="app-links">
-                                <li class="app-store"><a href="#">Download from App Store</a></li>
-                                <li class="google-play"><a href="#">Download from Google Play</a></li>
-                            </ul>
+                        <div class="col-md-10 col-md-offset-1 col-xs-12 modal-footer center-aligned-text">
+                            <?php handbid_app_links();?>
                         </div>
                     </div>
 
-                </div>
+                    <input type='hidden' name='redirect' value='<?php echo $redirectLink; ?>' id="hb-login-form-redirect"/>
+                    <input type='hidden' name='form-id' value='handbid-login'/>
+                    <input type='hidden' name='nonce' value='<?php echo apply_filters("handbid_create_nonce", date("d.m.Y") . "login");?>' id="hb-login-form-nonce"/>
+                    <input type='hidden' name='action' value='handbid_ajax_login' id="hb-login-form-action"/>
+                </form>
+
             </div>
         </div>
     </div>
+</div>
 
+<div class="container-fluid container-tab forgot-pass-tab" style="display: none" data-tab-name="forgot-pass">
+    <div class="row">
+        <div class="col-xs-12 signup-form">
+            <div class="handbid-form signup-form">
+                <h3>LOGIN</h3>
+                <h4 class="sub-title">to your <span>Handbid</span> account</h4>
+
+                <form class="form" method="POST" action="<?php echo get_admin_url() . 'admin-post.php'; ?>"
+                      enctype="multipart/form-data">
+
+                    <div class="row errorsRow to-hide-block" style="display: none;">
+                        <div class="col-md-10 col-md-offset-1 col-xs-12 errorsContainer">
+                            User with specified email or phone was not found.
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-md-10 col-md-offset-1 col-xs-12">
+                            <h2>Forgot your Password or Login Info?</h2>
+                            <h5>Not sure if you have an account? <a class="login-popup-link"
+                                                                    data-target-tab="register-form">Click here</a> to
+                                get started.</h5>
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="form-group col-md-10 col-md-offset-1 col-xs-12">
+                            <h5>Enter your email or phone number and we will send you instructions on how to get
+                                logged in.</h5>
+
+                            <input placeholder="Email or Phone Number" type="text" id="emailOrPhoneToResetPass"
+                                   name="username" value=""
+                                   class="form-control cleanable-input">
+
+                            <button type="submit" class="btn btn-info signup login-popup-link reset-password-link loading-span-button"
+                                    data-change-pass-nonce="<?php echo apply_filters("handbid_create_nonce", date("d.m.Y") . "reset_pass");?>"
+                                ><span>Send Instructions</span></button>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-10 col-md-offset-1 col-xs-12 modal-footer center-aligned-text">
+                            <?php handbid_app_links();?>
+                        </div>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid container-tab" style="display: none" data-tab-name="forgot-pass-sent">
+    <div class="row">
+        <div class="col-xs-12 signup-form">
+            <div class="handbid-form signup-form">
+                <div class="row">
+                    <div class="col-md-10 col-md-offset-1 col-xs-12">
+                        <h3>LOGIN</h3>
+                        <h4 class="sub-title">to your <span>Handbid</span> account</h4>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-md-10 col-md-offset-1 col-xs-12">
+                        <h2 class="center-aligned-text">Your Login Information has been Sent!</h2>
+                        <h5 class="center-aligned-text">Check your email or phone for the information.</h5>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-10 col-md-offset-1 col-xs-12 modal-footer center-aligned-text">
+                        <a class="btn btn-info signup login-popup-link" data-target-tab="login-form">Start Over</a>
+                        <?php handbid_app_links();?>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php if(defined("HANDBID_SHOW_TUTORIAL") and HANDBID_SHOW_TUTORIAL){?>
     <div class="container-fluid container-tab" style="display: none" data-tab-name="get-started">
         <div class="row">
             <div class="col-xs-12 signup-form">
@@ -291,12 +303,8 @@ else{
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-8 col-md-offset-2 col-xs-12 modal-footer center-aligned-text">
-                                <h4>You can download the Handbid App for Android or iPhone.</h4>
-                                <ul class="app-links">
-                                    <li class="app-store"><a href="#">Download from App Store</a></li>
-                                    <li class="google-play"><a href="#">Download from Google Play</a></li>
-                                </ul>
+                            <div class="col-md-10 col-md-offset-1 col-xs-12 modal-footer center-aligned-text">
+                                <?php handbid_app_links();?>
                             </div>
                         </div>
 
@@ -306,7 +314,7 @@ else{
             </div>
         </div>
     </div>
-
+<?php }?>
 
 </div>
 
@@ -319,7 +327,7 @@ else{
 
 
                 <div class="row">
-                    <div class="form-group col-md-8 col-md-offset-2 col-xs-12">
+                    <div class="form-group col-md-10 col-md-offset-1 col-xs-12">
                         <h2 class="center-aligned-text">You were invited to use Handbid!</h2>
                         <h5 class="center-aligned-text">Welcome! We are so glad you are here. Enter your invite code
                             below and lets get you setup.</h5>
@@ -327,13 +335,13 @@ else{
                 </div>
 
                 <div class="row errorsRow to-hide-block" style="display: none;">
-                    <div class="col-md-8 col-md-offset-2 col-xs-12 errorsContainer">
+                    <div class="col-md-10 col-md-offset-1 col-xs-12 errorsContainer">
                         Cannot find auction by invite code.
                     </div>
                 </div>
 
                 <div class="row">
-                    <div class="form-group col-md-8 col-md-offset-2 col-xs-12">
+                    <div class="form-group col-md-10 col-md-offset-1 col-xs-12">
 
                         <input placeholder="Enter code" type="text" name="code" value=""
                                id="inviteShortCodeInput"
@@ -344,7 +352,7 @@ else{
                 </div>
 
                 <div class="row">
-                    <div class="form-group col-md-8 col-md-offset-2 col-xs-12 center-aligned-text">
+                    <div class="form-group col-md-10 col-md-offset-1 col-xs-12 center-aligned-text">
                         <a class="btn btn-info signup login-popup-link inviteShortCodeButton loading-span-button"
                            data-check-invite-nonce="<?php echo apply_filters("handbid_create_nonce", date("d.m.Y") . "check_invite_code");?>"
                             ><span>Find My Auction</span></a>
@@ -352,7 +360,7 @@ else{
                 </div>
 
                 <div class="row">
-                    <div class="form-group col-md-8 col-md-offset-2 col-xs-12">
+                    <div class="form-group col-md-10 col-md-offset-1 col-xs-12">
                         <h5 class="center-aligned-text">Handbid can't find your auction? Perhaps it is not setup yet.
                             You can <a class="login-popup-link" data-target-tab="register-form">register</a> without it
                             and connect to it later.</h5>
@@ -360,12 +368,8 @@ else{
                 </div>
 
                 <div class="row">
-                    <div class="modal-footer center-aligned-text col-md-8 col-md-offset-2 col-xs-12">
-                        <h4>You can download the Handbid App for Android or iPhone.</h4>
-                        <ul class="app-links">
-                            <li class="app-store"><a href="#">Download from App Store</a></li>
-                            <li class="google-play"><a href="#">Download from Google Play</a></li>
-                        </ul>
+                    <div class="modal-footer center-aligned-text col-md-10 col-md-offset-1 col-xs-12">
+                        <?php handbid_app_links();?>
                     </div>
                 </div>
             </div>
@@ -381,7 +385,7 @@ else{
                 <h4 class="sub-title">with <span>Handbid</span></h4>
                 <h4>Creating Your Bidder Account<br></h4>
 
-                <div class="col-md-8 col-md-offset-2 col-xs-12 center-aligned-text">
+                <div class="col-md-10 col-md-offset-1 col-xs-12 center-aligned-text">
                     <div class="row errorsRow" style="display: none;">
                         <div class="col-xs-12 errorsContainer">
 
@@ -509,63 +513,13 @@ else{
                                 ?
                             </a>
                         </div>
+
+                        <input type="hidden" name="phone-type" value="other" class="copyable-field" data-copy-to="confirm-phone-type">
+                        <input type="hidden" class="" id="confirm-add-to-auction" name="add-to-auction" value="<?php echo (isset($auction->auctionGuid))?trim($auction->auctionGuid):"";?>">
                     </div>
 
                     <div class="row">
-                        <div class="form-group col-xs-12">
-                            <h5>What kind of phone do you have?</h5>
-
-                            <div class="row">
-                                <label for="reg-phone-type-1" class="col-xs-4 radio-label">
-                                    <input type="radio" id="reg-phone-type-1" name="phone-type" value="iphone" class="copyable-field" data-copy-to="confirm-phone-type" checked>
-                                    iPhone</label>
-                                <label for="reg-phone-type-2" class="col-xs-4 radio-label">
-                                    <input type="radio" id="reg-phone-type-2" name="phone-type" value="android" class="copyable-field" data-copy-to="confirm-phone-type">
-                                    Android</label>
-                                <label for="reg-phone-type-3" class="col-xs-4 radio-label">
-                                    <input type="radio" id="reg-phone-type-3" name="phone-type" value="other" class="copyable-field" data-copy-to="confirm-phone-type">
-                                    Other</label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="form-group col-md-12">
-                            <h5>Add me as a bidder to this Auction</h5>
-
-                            <div class="loadAuctionsToAutoCompleteRegisterTextContainer col-xs-12" style="display: none">
-                                <div class=" col-md-8">
-                                    <h2 class="loadAuctionsToAutoCompleteRegisterText"></h2>
-                                </div>
-                                <div class=" col-md-4">
-                                    <a class="btn btn-info signup login-popup-link change-auto-complete-auction" ><span>Change</span></a>
-                                </div>
-                            </div>
-                            <div class="loadAuctionsToAutoCompleteRegisterSelectContainer">
-                                <select class="col-md-6 js-data-example-ajax cleanable-input copyable-field loadAuctionsToAutoComplete loadAuctionsToAutoCompleteRegister"
-                                        data-auto-complete-nonce="<?php echo apply_filters("handbid_create_nonce", date("d.m.Y") . "auto_complete");?>"
-                                        data-auto-complete-input=".autoCompleteHiddenRegister, .autoCompleteHiddenConfirm"
-                                        data-auto-complete-select=".loadAuctionsToAutoCompleteConfirm"
-                                        name="add-to-auction" data-copy-to="confirm-add-to-auction">
-                                    <option value="" selected="selected">----</option>
-                                </select>
-                            </div>
-                            <input type="hidden" class="autoCompleteHiddenRegister cleanable-input" id="confirm-add-to-auction" name="add-to-auction">
-
-
-
-                            <!--                        <select class="col-md-6 js-data-example-ajax cleanable-input copyable-field loadAuctionsToAutoComplete loadAuctionsToAutoCompleteRegister"-->
-                            <!--                                data-auto-complete-nonce="--><?php //echo apply_filters("handbid_create_nonce", date("d.m.Y") . "auto_complete");?><!--"-->
-                            <!--                                data-auto-complete-input=".autoCompleteHiddenRegister, .autoCompleteHiddenConfirm"-->
-                            <!--                                data-auto-complete-select=".loadAuctionsToAutoCompleteConfirm"-->
-                            <!--                                name="add-to-auction" data-copy-to="confirm-add-to-auction">-->
-                            <!--                            <option value="" selected="selected">----</option>-->
-                            <!--                        </select>-->
-                            <!--                        <input type="hidden" class="autoCompleteHiddenRegister cleanable-input" id="reg-add-to-auction" name="add-to-auction">-->
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-8 col-md-offset-2 col-xs-12">
+                        <div class="col-md-10 col-md-offset-1 col-xs-12">
                             <label for="reg-agree-terms" class="radio-label agree-terms-label">
                                 <input type="checkbox" id="reg-agree-terms" name="agree-terms" value="agree"
                                        required
@@ -575,22 +529,18 @@ else{
 
                     </div>
                     <div class="row">
-                        <div class="col-md-8 col-md-offset-2 col-xs-12">
+                        <div class="col-md-10 col-md-offset-1 col-xs-12">
                             <a class="btn btn-info signup login-popup-link register-next" data-target-tab="register-form-confirm">CONTINUE</a>
                         </div>
                     </div>
                 </div>
 
                 <div class="row">
-                    <div class="modal-footer center-aligned-text col-md-8 col-md-offset-2 col-xs-12">
+                    <div class="modal-footer center-aligned-text col-md-10 col-md-offset-1 col-xs-12">
                         <h4>
                             Already have an Account? <a class="go-back-button login-popup-link" data-target-tab="login-form">Login</a>
                         </h4>
-                        <h4>You can download the Handbid App for Android or iPhone.</h4>
-                        <ul class="app-links">
-                            <li class="app-store"><a href="#">Download from App Store</a></li>
-                            <li class="google-play"><a href="#">Download from Google Play</a></li>
-                        </ul>
+                        <?php handbid_app_links();?>
                     </div>
                 </div>
 
@@ -602,21 +552,15 @@ else{
 
 <div class="container-fluid container-tab register-confirm-tab" style="display: none" data-tab-name="register-form-confirm">
     <div class="row">
-        <div class="col-xs-12 col-md-6 col-md-offset-3 signup-form">
+        <div class="col-xs-12 col-md-10 col-md-offset-1 signup-form">
             <div class="handbid-form signup-form">
                 <h3>GETTING STARTED</h3>
                 <h4 class="sub-title">with <span>Handbid</span></h4>
-                <h4>Your Handbid Account is SETUP<br></h4>
+                <h4>Your Handbid Account is SETUP<br>please confirm your information below</h4>
 
                 <div class="row errorsRow" style="display: none;">
                     <div class="col-xs-12 errorsContainer">
 
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="form-group col-xs-12">
-                        <h4>please confirm your information below</h4>
                     </div>
                 </div>
 
@@ -653,42 +597,16 @@ else{
                         </select>
                         <input id="confirm-phone-number" placeholder="Cell Phone" type="text" name="phone-number"
                                value=""
-                               class="col-xs-4 has-question-icon has-popover cleanable-input">
-                        <select class="col-xs-4" id="confirm-phone-type">
-                            <option name="phone-type" value="iphone" selected>iPhone</option>
-                            <option name="phone-type" value="android">Android</option>
-                            <option name="phone-type" value="other">Other</option>
-                        </select>
+                               class="col-xs-8 has-question-icon has-popover cleanable-input">
+                        <input type="hidden" name="phone-type" value="other">
                     </div>
+
+                    <input type="hidden" class="" id="confirm-add-to-auction-id" name="add-to-auction-id" value="<?php echo (isset($auction->id))?trim($auction->id):"";?>">
+                    <input type="hidden" class="" id="confirm-add-to-auction" name="add-to-auction" value="<?php echo (isset($auction->auctionGuid))?trim($auction->auctionGuid):"";?>">
+                    <input type="hidden" class="" id="confirm-add-to-auction-slug" name="add-to-auction-slug" value="<?php echo (isset($auction->key))?trim($auction->key):"";?>">
+                    <input type="hidden" class="" id="confirm-add-to-auction-name" name="add-to-auction-name" value="<?php echo (isset($auction->name))?esc_attr(trim($auction->name)):"";?>">
                 </div>
 
-                <div class="row">
-                    <div class="form-group col-xs-12 center-aligned-text">
-                        <h5>Add me as a bidder to this Auction</h5>
-<!--                        <input id="confirm-add-to-auction" placeholder="" type="text" name="add-to-auction" value=""-->
-<!--                               class="col-md-12 cleanable-input">-->
-                        <div class="loadAuctionsToAutoCompleteConfirmTextContainer col-xs-12" style="display: none">
-                            <div class=" col-md-8">
-                                <h2 class="loadAuctionsToAutoCompleteConfirmText"></h2>
-                            </div>
-                            <div class=" col-md-4">
-                                <a class="btn btn-info signup login-popup-link change-auto-complete-auction" ><span>Change</span></a>
-                            </div>
-                        </div>
-                        <div class="loadAuctionsToAutoCompleteConfirmSelectContainer">
-                        <select class="col-md-6 js-data-example-ajax cleanable-input copyable-field loadAuctionsToAutoComplete loadAuctionsToAutoCompleteConfirm"
-                                data-auto-complete-nonce="<?php echo apply_filters("handbid_create_nonce", date("d.m.Y") . "auto_complete");?>"
-                                data-auto-complete-input=".autoCompleteHiddenRegister, .autoCompleteHiddenConfirm"
-                                data-auto-complete-select=".loadAuctionsToAutoCompleteRegister"
-                                name="add-to-auction" data-copy-to="confirm-add-to-auction">
-                            <option value="" selected="selected">----</option>
-                        </select>
-                        </div>
-                        <input type="hidden" class="autoCompleteHiddenConfirm cleanable-input" id="confirm-add-to-auction" name="add-to-auction">
-                        <input type="hidden" class="autoCompleteHiddenConfirmSlug cleanable-input" id="confirm-add-to-auction-slug" name="add-to-auction-slug">
-                        <input type="hidden" class="autoCompleteHiddenConfirmName cleanable-input" id="confirm-add-to-auction-name" name="add-to-auction-name">
-                    </div>
-                </div>
                 <input type="hidden" id="confirm-password" name="password">
 
                 <div class="row">
@@ -699,11 +617,7 @@ else{
 
                 <div class="row">
                     <div class="col-md-12 modal-footer center-aligned-text">
-                        <h4>You can download the Handbid App for Android or iPhone.</h4>
-                        <ul class="app-links">
-                            <li class="app-store"><a href="#">Download from App Store</a></li>
-                            <li class="google-play"><a href="#">Download from Google Play</a></li>
-                        </ul>
+                        <?php handbid_app_links();?>
 
                         <!--                    <input type='hidden' name='redirect' value='--><?php //echo $_SERVER["REQUEST_URI"] ?><!--' id="hb-reg-form-redirect"/>-->
                         <input type='hidden' name='form-id' value='handbid-register'/>
@@ -727,7 +641,7 @@ else{
                 <h4>Registration complete!<br></h4>
 
                 <div class="row">
-                    <div class="col-md-8 col-md-offset-2 col-xs-12">
+                    <div class="col-md-10 col-md-offset-1 col-xs-12">
                         <h3 class="bidder-name" id="reg-complete-name">Fred Flinstone</h3>
 
                         <div id="reg-complete-have-paddle-number">
@@ -743,23 +657,15 @@ else{
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-xs-12 col-md-4 col-md-offset-2">
-                        <a class="btn btn-info signup login-popup-link" data-target-tab="tutorial-info-1">Check out our
-                            tutorial</a>
-                    </div>
-                    <div class="col-xs-12 col-md-4">
+                    <div class="col-xs-12 col-md-4 col-md-offset-4">
                         <a class="btn btn-info signup" id="start-bidding-button" href="/auctions/">Start Bidding</a>
                     </div>
                 </div>
 
                 <div class="row">
-                    <div class="col-md-8 col-md-offset-2 modal-footer center-aligned-text">
+                    <div class="col-md-10 col-md-offset-1 modal-footer center-aligned-text">
 
-                        <h4>You can download the Handbid App for Android or iPhone.</h4>
-                        <ul class="app-links">
-                            <li class="app-store"><a href="#">Download from App Store</a></li>
-                            <li class="google-play"><a href="#">Download from Google Play</a></li>
-                        </ul>
+                        <?php handbid_app_links();?>
                     </div>
                 </div>
 
@@ -768,241 +674,229 @@ else{
     </div>
 </div>
 
+<?php if(defined("HANDBID_SHOW_TUTORIAL") and HANDBID_SHOW_TUTORIAL){?>
 
-<div class="container-fluid container-tab" style="display: none" data-tab-name="tutorial-info-1">
-    <div class="row">
-        <div class="row signup-form">
-            <div class="handbid-form signup-form">
-                <h3>GETTING STARTED</h3>
-                <h4 class="sub-title">with <span>Handbid</span></h4>
-                <h4 class="help-title">HANDBID 101<br></h4>
-                <h4 class="step">Step 1<br></h4>
+    <div class="container-fluid container-tab" style="display: none" data-tab-name="tutorial-info-1">
+        <div class="row">
+            <div class="row signup-form">
+                <div class="handbid-form signup-form">
+                    <h3>GETTING STARTED</h3>
+                    <h4 class="sub-title">with <span>Handbid</span></h4>
+                    <h4 class="help-title">HANDBID 101<br></h4>
+                    <h4 class="step">Step 1<br></h4>
 
-                <div class="row" role="tablist">
-                    <div class="col-lg-4 center-aligned-text active tutorialTabsContainer"  role="presentation">
-                        <a href="#your-phone" aria-controls="your-phone" role="tab" data-toggle="tab" class="tutorialTabs">
-                            <img class="img-circle"
-                                 src="<?php echo plugin_dir_url(__FILE__)."../../public/images/login-modal/phones.png"; ?>"
-                                 alt="Generic placeholder image" width="140" height="140">
-                            <h2 class="center-aligned-text">Your Phone</h2>
-                        </a>
+                    <div class="row col-md-10 col-md-offset-1" role="tablist">
+                        <div class="col-lg-4 center-aligned-text active tutorialTabsContainer"  role="presentation">
+                            <a href="#your-phone" aria-controls="your-phone" role="tab" data-toggle="tab" class="tutorialTabs">
+                                <img class="img-circle"
+                                     src="<?php echo plugin_dir_url(__FILE__)."../../public/images/login-modal/phones.png"; ?>"
+                                     alt="Generic placeholder image" width="140" height="140">
+                                <h2 class="center-aligned-text">Your Phone</h2>
+                            </a>
+                        </div>
+                        <div class="col-lg-4 center-aligned-text tutorialTabsContainer"  role="presentation">
+                            <a href="#ipads" aria-controls="ipads" role="tab" data-toggle="tab" class="tutorialTabs">
+                                <img class="img-circle"
+                                     src="<?php echo plugin_dir_url(__FILE__)."../../public/images/login-modal/ipads.png"; ?>"
+                                     alt="Generic placeholder image" width="140" height="140">
+                                <h2 class="center-aligned-text">iPads</h2>
+                            </a>
+                        </div>
+                        <div class="col-lg-4 center-aligned-text tutorialTabsContainer"  role="presentation">
+                            <a href="#your-comp" aria-controls="your-comp" role="tab" data-toggle="tab" class="tutorialTabs">
+                                <img class="img-circle"
+                                     src="<?php echo plugin_dir_url(__FILE__)."../../public/images/login-modal/comp.png"; ?>"
+                                     alt="Generic placeholder image" width="140" height="140">
+                                <h2 class="center-aligned-text">Your Computer</h2>
+                            </a>
+                        </div>
                     </div>
-                    <div class="col-lg-4 center-aligned-text tutorialTabsContainer"  role="presentation">
-                        <a href="#ipads" aria-controls="ipads" role="tab" data-toggle="tab" class="tutorialTabs">
-                            <img class="img-circle"
-                                 src="<?php echo plugin_dir_url(__FILE__)."../../public/images/login-modal/ipads.png"; ?>"
-                                 alt="Generic placeholder image" width="140" height="140">
-                            <h2 class="center-aligned-text">iPads</h2>
-                        </a>
-                    </div>
-                    <div class="col-lg-4 center-aligned-text tutorialTabsContainer"  role="presentation">
-                        <a href="#your-comp" aria-controls="your-comp" role="tab" data-toggle="tab" class="tutorialTabs">
-                            <img class="img-circle"
-                                 src="<?php echo plugin_dir_url(__FILE__)."../../public/images/login-modal/comp.png"; ?>"
-                                 alt="Generic placeholder image" width="140" height="140">
-                            <h2 class="center-aligned-text">Your Computer</h2>
-                        </a>
-                    </div>
-                </div>
 
-                <div class="tab-content">
+                    <div class="tab-content">
 
-                    <div role="tabpanel" class="tab-pane active center-aligned-text" id="your-phone">
-                        <div class="row">
-                            <div class="col-xs-12 col-md-6 col-md-offset-3">
-                                <p>Watch a brief video tutorial on how the App works.</p>
-                                <div class="video">
-                                    <iframe width="480" height="270"
-                                            src="https://www.youtube.com/embed/wlyH3M7zpPY">
-                                    </iframe>
-                                </div>
-                                <div class="row">
-                                    <p>Send Text Instructions to My Phone</p>
-                                    <div class="row col-xs-10 col-xs-offset-1">
-                                        <input id="reg-phone-number" placeholder="Cell Phone" type="text" name="phone-number" value=""
-                                               class="col-xs-10 cleanable-input">
-                                        <button class="btn btn-info signup col-xs-2">SEND</button>
+                        <div role="tabpanel" class="tab-pane active center-aligned-text" id="your-phone">
+                            <div class="row">
+                                <div class="col-xs-12 col-md-10 col-md-offset-1">
+                                    <p>Watch a brief video tutorial on how the App works.</p>
+                                    <div class="video">
+                                        <iframe width="480" height="270"
+                                                src="https://www.youtube.com/embed/XQu8TTBmGhA">
+                                        </iframe>
                                     </div>
+                                    <div class="row" style="display: none;">
+                                        <p>Send Text Instructions to My Phone</p>
+                                        <div class="row col-xs-10 col-xs-offset-1">
+                                            <input id="reg-phone-number" placeholder="Cell Phone" type="text" name="phone-number" value=""
+                                                   class="col-xs-10 cleanable-input">
+                                            <button class="btn btn-info signup col-xs-2">SEND</button>
+                                        </div>
 
+                                    </div>
                                 </div>
                             </div>
+
                         </div>
 
-                    </div>
-
-                    <div role="tabpanel" class="tab-pane center-aligned-text" id="ipads">
-                        <div class="row">
-                            <div class="col-xs-12 col-md-10 col-md-offset-1">
-                                <h4>Don't have a smartphone? Not sure you will bring it?<br></h4>
-                                <h5>
-                                    No worries! You can bid from iPads at the event.
-                                    The iPads provided will allow you to bid on any ithem on the auction.
-                                    You will be given assistance on how to place bids when you are at the event.
-                                </h5>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-xs-12 col-md-6 col-md-offset-3">
-                                <p>
-                                    Watch a brief video tutorial on how the iPad works.
-                                </p>
-                                <div class="video">
-                                    <iframe width="480" height="270"
-                                            src="https://www.youtube.com/embed/MrnxLM0TU94">
-                                    </iframe>
+                        <div role="tabpanel" class="tab-pane center-aligned-text" id="ipads">
+                            <div class="row">
+                                <div class="col-xs-12 col-md-10 col-md-offset-1">
+                                    <h4>Don't have a smartphone? Not sure you will bring it?<br></h4>
+                                    <h5>
+                                        No worries! You can bid from iPads at the event.
+                                        The iPads provided will allow you to bid on any ithem on the auction.
+                                        You will be given assistance on how to place bids when you are at the event.
+                                    </h5>
                                 </div>
                             </div>
+
+                            <div class="row">
+                                <div class="col-xs-12 col-md-10 col-md-offset-1">
+                                    <p>
+                                        Watch a brief video tutorial on how the iPad works.
+                                    </p>
+                                    <div class="video">
+                                        <iframe width="480" height="270"
+                                                src="https://www.youtube.com/embed/XQu8TTBmGhA">
+                                        </iframe>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
 
+                        <div role="tabpanel" class="tab-pane center-aligned-text" id="your-comp">
+                            <div class="row">
+                                <div class="col-xs-12 col-md-10 col-md-offset-1">
+                                    <h4>You can bid right from your computer or smartphone web browser!</h4>
+                                    <h5>You can go to Handbid.com right now, find your auction and start bidding.<br></h5>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-xs-12 col-md-10 col-md-offset-1">
+                                    <a class="btn btn-info signup" href="/auctions/">START BIDDING</a>
+                                </div>
+                            </div>
+
+                        </div>
                     </div>
 
-                    <div role="tabpanel" class="tab-pane center-aligned-text" id="your-comp">
-                        <div class="row">
-                            <div class="col-xs-12 col-md-10 col-md-offset-1">
-                                <h4>You can bid right from your computer or smartphone web browser!</h4>
-                                <h5>You can go to Handbid.com right now, find your auction and start bidding.<br></h5>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-xs-12 col-md-6 col-md-offset-3">
-                                <a class="btn btn-info signup" href="/auctions/">START BIDDING</a>
-                            </div>
-                        </div>
-
-                    </div>
                 </div>
-
             </div>
-        </div>
-        <div class="row">
-            <div class="modal-footer center-aligned-text col-xs-12 col-md-4 col-md-offset-4">
-				<!--   <a class="action-link go-back-button login-popup-link" data-target-tab="register-complete">< Go Back</a>-->
-                <a class="action-link go-next-button login-popup-link" data-target-tab="tutorial-info-2">Next ></a>
-                <h4>You can download the Handbid App for Android or iPhone.</h4>
-                <ul class="app-links">
-                    <li class="app-store"><a href="#">Download from App Store</a></li>
-                    <li class="google-play"><a href="#">Download from Google Play</a></li>
-                </ul>
+            <div class="row">
+                <div class="modal-footer center-aligned-text col-xs-12 col-md-8 col-md-offset-2">
+                    <!--   <a class="action-link go-back-button login-popup-link" data-target-tab="register-complete">< Go Back</a>-->
+                    <a class="action-link go-next-button login-popup-link" data-target-tab="tutorial-info-2">Next ></a>
+                    <?php handbid_app_links();?>
+                </div>
             </div>
-        </div>
 
+        </div>
     </div>
-</div>
 
-
-<div class="container-fluid container-tab" style="display: none" data-tab-name="tutorial-info-2">
-    <div class="row">
-        <div class="row col-xs-12 col-md-6 col-md-offset-3 signup-form">
-            <div class="handbid-form signup-form">
-                <h3>GETTING STARTED</h3>
-                <h4 class="sub-title">with <span>Handbid</span></h4>
-                <h4 class="help-title">HANDBID 101<br></h4>
-                <h4 class="step">Step 2<br></h4>
-
-                <h3>Handbid Bidding Tips</h3>
-
-
-                <ul class="handbid-tips">
-                    <li>
-                        <h2>Set MaxBids to avoid losing that treasured item</h2>
-                        <p>Do you really want to win that Diamond Pendant? Don't rely on your craftiness and swift finger to place that last minute bid.
-                        Instead, set a MaxBid on it and forget about it! Handbid will bid for you automatically up to that amount. And trust us, Handbid doesn't lose.
-                        That bid will go in on time</p>
-                    </li>
-                    <li>
-                        <h2>Make Sure you are getting notified when you are not at your computer</h2>
-                        <p>Even if you are not bidding from the Apps, you can still get text notifications when you are outbid.
-                        Just enter a valid cell phone number into your profile and turn on SMS notifications in your settings.
-                        You can easily turn these off later if you want to stop getting messages.</p>
-                    </li>
-                    <li>
-                        <h2>Understand how Extended Biding Works</h2>
-                        <p>Your auction host MAY have enabled this feature. It will indicate that it is on when you are viewing the auction page.
-                        Extended bidding will keep specific items open AFTER the auction closes if a last minute bid was placed.
-                        So, if you think you can snipe that item at the item by placing a bid right before time expires, you may just be
-                        extending the item longer for others to bid.</p>
-                    </li>
-                    <li>
-                        <h2>View your Invoice and Pay From your Phone or Computer</h2>
-                        <p>At the end of the auction, you will receive a notification with a link to your invoice in the app or by clicking on the
-                        text message you received. You can also view the invoice from your profile at Handbid.com. If the auction manager
-                        has enabled the Handbid payment system, then you will be able to pay your invoice directly.</p>
-                    </li>
-                </ul>
-
-
-
-            </div>
-        </div>
-
+    <div class="container-fluid container-tab" style="display: none" data-tab-name="tutorial-info-2">
         <div class="row">
-            <div class="modal-footer center-aligned-text col-xs-12 col-md-4 col-md-offset-4">
-                <a class="action-link go-back-button login-popup-link" data-target-tab="tutorial-info-1">< Go Back</a>
-                <a class="action-link go-next-button login-popup-link" data-target-tab="tutorial-info-3">Next ></a>
-                <h4>You can download the Handbid App for Android or iPhone.</h4>
-                <ul class="app-links">
-                    <li class="app-store"><a href="#">Download from App Store</a></li>
-                    <li class="google-play"><a href="#">Download from Google Play</a></li>
-                </ul>
+            <div class="row col-xs-12 col-md-10 col-md-offset-1 signup-form">
+                <div class="handbid-form signup-form">
+                    <h3>GETTING STARTED</h3>
+                    <h4 class="sub-title">with <span>Handbid</span></h4>
+                    <h4 class="help-title">HANDBID 101<br></h4>
+                    <h4 class="step">Step 2<br></h4>
+
+                    <h3>Handbid Bidding Tips</h3>
+
+
+                    <ul class="handbid-tips">
+                        <li>
+                            <h2>Set MaxBids to avoid losing that treasured item</h2>
+                            <p>Do you really want to win that Diamond Pendant? Don't rely on your craftiness and swift finger to place that last minute bid.
+                                Instead, set a MaxBid on it and forget about it! Handbid will bid for you automatically up to that amount. And trust us, Handbid doesn't lose.
+                                That bid will go in on time</p>
+                        </li>
+                        <li>
+                            <h2>Make Sure you are getting notified when you are not at your computer</h2>
+                            <p>Even if you are not bidding from the Apps, you can still get text notifications when you are outbid.
+                                Just enter a valid cell phone number into your profile and turn on SMS notifications in your settings.
+                                You can easily turn these off later if you want to stop getting messages.</p>
+                        </li>
+                        <li>
+                            <h2>Understand how Extended Biding Works</h2>
+                            <p>Your auction host MAY have enabled this feature. It will indicate that it is on when you are viewing the auction page.
+                                Extended bidding will keep specific items open AFTER the auction closes if a last minute bid was placed.
+                                So, if you think you can snipe that item at the item by placing a bid right before time expires, you may just be
+                                extending the item longer for others to bid.</p>
+                        </li>
+                        <li>
+                            <h2>View your Invoice and Pay From your Phone or Computer</h2>
+                            <p>At the end of the auction, you will receive a notification with a link to your invoice in the app or by clicking on the
+                                text message you received. You can also view the invoice from your profile at Handbid.com. If the auction manager
+                                has enabled the Handbid payment system, then you will be able to pay your invoice directly.</p>
+                        </li>
+                    </ul>
+
+
+
+                </div>
             </div>
+
+            <div class="row">
+                <div class="modal-footer center-aligned-text col-xs-12 col-md-8 col-md-offset-2">
+                    <a class="action-link go-back-button login-popup-link" data-target-tab="tutorial-info-1">< Go Back</a>
+                    <a class="action-link go-next-button login-popup-link" data-target-tab="tutorial-info-3">Next ></a>
+                    <?php handbid_app_links();?>
+                </div>
+            </div>
+
         </div>
-
     </div>
-</div>
+
+    <div class="container-fluid container-tab" style="display: none" data-tab-name="tutorial-info-3">
+        <div class="row">
+            <div class="row col-xs-12 col-md-10 col-md-offset-1 signup-form">
+                <div class="handbid-form signup-form">
+                    <h3>GETTING STARTED</h3>
+                    <h4 class="sub-title">with <span>Handbid</span></h4>
+                    <h4 class="help-title">HANDBID 101<br></h4>
+                    <h4 class="step">Step 3<br></h4>
+
+                    <h3>How to get Help</h3>
 
 
-<div class="container-fluid container-tab" style="display: none" data-tab-name="tutorial-info-3">
-    <div class="row">
-        <div class="row col-xs-12 col-md-6 col-md-offset-3 signup-form">
-            <div class="handbid-form signup-form">
-                <h3>GETTING STARTED</h3>
-                <h4 class="sub-title">with <span>Handbid</span></h4>
-                <h4 class="help-title">HANDBID 101<br></h4>
-                <h4 class="step">Step 3<br></h4>
+                    <ul class="handbid-tips">
+                        <li>
+                            <h2>Have you a question about auction or auction items?</h2>
+                            <p>Best to contact the auction managers and ask them. Your auction manager information will be provided
+                                to you by them when you are invited or register for the auction. Please contact them first as they will
+                                have the quickest answer about whether or not Disney Vacation has an expiration date on it or not.</p>
+                        </li>
+                        <li>
+                            <h2>Not sure how to use Handbid or bid?</h2>
+                            <p>Click on the help button either in the app (from the menu) or on the bottom right of the website
+                                (handbid.com) and ask us for help.</p>
+                        </li>
+                    </ul>
 
-                <h3>How to get Help</h3>
-
-
-                <ul class="handbid-tips">
-                    <li>
-                        <h2>Have you a question about auction or auction items?</h2>
-                        <p>Best to contact the auction managers and ask them. Your auction manager information will be provided
-                        to you by them when you are invited or register for the auction. Please contact them first as they will
-                        have the quickest answer about whether or not Disney Vacation has an expiration date on it or not.</p>
-                    </li>
-                    <li>
-                        <h2>Not sure how to use Handbid or bid?</h2>
-                        <p>Click on the help button either in the app (from the menu) or on the bottom right of the website
-                            (handbid.com) and ask us for help.</p>
-                    </li>
-                </ul>
-
-                <h3>Thats all we have.</h3>
-                <h4>We hope the quick tutorial was helpful. Happy Bidding!</h4>
+                    <h3>Thats all we have.</h3>
+                    <h4>We hope the quick tutorial was helpful. Happy Bidding!</h4>
 
 
                     <div class="row center-aligned-text">
-                        <a class="btn btn-info signup login-popup-link" data-target-tab="login-form">EXIT TUTORIAL</a>
+                        <a class="btn btn-info signup exit-tutorial-link">EXIT TUTORIAL</a>
                     </div>
 
+                </div>
             </div>
-        </div>
 
-        <div class="row">
-            <div class="modal-footer center-aligned-text col-xs-12 col-md-4 col-md-offset-4">
-                <a class="action-link go-back-button login-popup-link" data-target-tab="tutorial-info-2">< Go Back</a>
-                <h4>You can download the Handbid App for Android or iPhone.</h4>
-                <ul class="app-links">
-                    <li class="app-store"><a href="#">Download from App Store</a></li>
-                    <li class="google-play"><a href="#">Download from Google Play</a></li>
-                </ul>
+            <div class="row">
+                <div class="modal-footer center-aligned-text col-xs-12 col-md-8 col-md-offset-2">
+                    <a class="action-link go-back-button login-popup-link" data-target-tab="tutorial-info-2">< Go Back</a>
+                    <?php handbid_app_links();?>
+                </div>
             </div>
-        </div>
 
+        </div>
     </div>
-</div>
 
+<?php }?>
 
 </div>

@@ -443,6 +443,7 @@ class Handbid
         <meta name="google-play-app" content="app-id='.HANDBID_APP_GOOGLEPLAY_ID.', affiliate-data='.$affiliateGoogle.', app-argument='.$dataLink.'">
         <link rel="apple-touch-icon" href="'.$imageIOS.'">
         <link rel="android-touch-icon" href="'.$imageGoogle.'" />
+        <link rel="alternate" href="android-app://'.HANDBID_APP_GOOGLEPLAY_ID.'/'.str_replace("://","/", $dataLink).'" />
         ';
         echo $output;
 
