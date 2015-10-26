@@ -444,6 +444,20 @@ class Handbid
         <link rel="apple-touch-icon" href="'.$imageIOS.'">
         <link rel="android-touch-icon" href="'.$imageGoogle.'" />
         <link rel="alternate" href="android-app://'.HANDBID_APP_GOOGLEPLAY_ID.'/'.str_replace("://","/", $dataLink).'" />
+
+        <meta property="al:android:url" content="'.$dataLink.'">
+        <meta property="al:android:package" content="'.HANDBID_APP_GOOGLEPLAY_ID.'">
+        <meta property="al:android:app_name" content="Handbid">
+
+        <meta property="al:ios:url" content="'.$dataLinkIos.'" />
+        <meta property="al:ios:app_store_id" content="'.HANDBID_APP_APPSTORE_ID.'" />
+        <meta property="al:ios:app_name" content="Handbid" />
+
+        <meta property="al:web:url"
+          content="'.$dataLink.'" />
+
+        <meta property="og:title" content="Handbid" />
+        <meta property="og:type" content="website" />
         ';
         echo $output;
 
