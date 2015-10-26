@@ -241,8 +241,8 @@ class Handbid
 
         $scripts = array(
             'handbid-details-map-js'   => 'public/js/details-map.js',
-            'smart-app-banner-js'      => 'public/js/smart-app-banner.js',
-            'smart-app-banner-init-js' => 'public/js/smart-app-banner-init.js',
+            //'smart-app-banner-js'      => 'public/js/smart-app-banner.js',
+            //'smart-app-banner-init-js' => 'public/js/smart-app-banner-init.js',
             'yii-node-socket-js'       => 'public/js/yii-node-socket.js',
             'node-socket-manager-js'   => 'public/js/node-socket-manager.js',
             'stripe-init-js'           => 'public/js/stripe-init.js',
@@ -516,6 +516,12 @@ class Handbid
 
             var forcePageRefreshAfterBids = <?php echo (get_option('handbidForceRefresh', 'no') == "yes") ? "true" : "false" ;?>;
 
+        </script>
+        <script type="text/javascript">
+            (function(h,l,i,n,k,s){
+                s=h.createElement(i);s.type="text/javascript";s.async=1;
+                s.src=l+n+".js";k=h.getElementsByTagName(i)[0];k.parentNode.insertBefore(s,k);
+            })(document,"//cdn.hokolinks.com/banner/v1/","script","af303d2c3f3fb386");
         </script>
         <?php
 
