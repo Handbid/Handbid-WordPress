@@ -448,6 +448,7 @@ class Handbid
         <meta property="al:android:url" content="'.$dataLink.'">
         <meta property="al:android:package" content="'.HANDBID_APP_GOOGLEPLAY_ID.'">
         <meta property="al:android:app_name" content="Handbid">
+        <meta property="al:android:class" content="'.HANDBID_APP_GOOGLEPLAY_ID.'.screens.activities.HandbidAutologinActivity">
 
         <meta property="al:ios:url" content="'.$dataLinkIos.'" />
         <meta property="al:ios:app_store_id" content="'.HANDBID_APP_APPSTORE_ID.'" />
