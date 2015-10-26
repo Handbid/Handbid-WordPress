@@ -5,7 +5,7 @@
             {
                 "appID": "35JZN6VPM3.com.handbid.client",
                 "paths": [
-                    "/autologin"
+                    "*"
                 ]
             }
         ]
