@@ -998,7 +998,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, timerNotice, tim
 
                 var noticeFormatting = {isBidding : true, itemLink: itemLink, itemImage: itemImage};
 
-                this.notice('You are <br>winning</b> the item <b>' + values.item.name + ' ('+values.item.itemCode+') </b> at '+currencySpan() + values.amount + ""+reasonStr, "Winner Winner", "success", null, noticeFormatting);
+                this.notice('You are <br>winning</b> the item <b>' + values.item.name + ' ('+values.item.itemCode+') </b> at '+currencySpan() + values.amount + ""+reasonStr, "Winning!", "success", null, noticeFormatting);
             },
 
             checkIfBidsExistsAndChange: function(values, type){

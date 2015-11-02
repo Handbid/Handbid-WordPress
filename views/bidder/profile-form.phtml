@@ -50,6 +50,13 @@ if (!is_null($this->get('profile'))) {
                 <input type="hidden" value="<?php echo $profile->email; ?>" id="profileEmailOld"/>
             </div>
         </li>
+	    <?php if(isset($profile->spendingLimit) and ((int) $profile->spendingLimit > 0)){?>
+	    <li class="row">
+		    <div class="col-md-12">
+			    <span title="Spending Limit: <?php echo $profile->spendingLimit; ?>" style="text-transform: uppercase;">Spending Limit: <b><?php echo $profile->spendingLimit; ?></b></span>
+		    </div>
+	    </li>
+	    <?php }?>
         <li class="row">
             <div class="col-md-4">
                         <select id="userAddressCountryId" name="userAddressCountryId"
