@@ -15,6 +15,7 @@ if (!is_null($this->get('profile'))) {
     $redirect = $this->get('redirect');
     $countries = $this->get("countries");
     $countryIDs = $this->get("countryIDs");
+    $bidConfirm = $this->get("bidConfirm");
 } else {
     echo "You must be logged in to view your profile.";
     return;
@@ -160,6 +161,20 @@ if (!is_null($this->get('profile'))) {
 <!--                <input type="hidden" value="--><?php //echo $profile->countryCode; ?><!--" id="profileCountryOld"/>-->
 <!--            </div>-->
 <!--        </li>-->
+
+	    <li class="row">
+		    <div class="col-md-5">
+			    <span style="text-transform: uppercase; padding: 6px 0px; display: block;">Bid confirmations Enabled: </span>
+		    </div>
+		    <div class="col-md-7">
+			    <select id="bidConfirmationsEnabled" name="bidConfirmationsEnabled"
+			            title="Bid Confirmations"
+			            class="col-md-12">
+				    <option value="yes" <?php selected($bidConfirm, true);?>><?php _e("Yes"); ?></option>
+				    <option value="no" <?php selected($bidConfirm, false);?>><?php _e("No"); ?></option>
+			    </select>
+		    </div>
+	    </li>
     </ul>
     <div class="row">
         <div class="col-md-12">

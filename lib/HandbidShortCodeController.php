@@ -780,11 +780,16 @@ class HandbidShortCodeController {
 
         $auctionID = (isset($auction->id))?$auction->id:0;
         $profile  = $this->state->currentBidder($auctionID);
-
-        return $this->viewRenderer->render(
+	    $bidderID = (isset($profile->id))?$profile->id:0;
+	    $cookieName = $bidderID."_bid_confirmations";
+	    $cookieNotExists = empty($_COOKIE[$cookieName]);
+	    $cookieExistsAndYes = (!empty($_COOKIE[$cookieName]) and $_COOKIE[$cookieName] != "no");
+	    $bidConfirm = ($cookieNotExists or $cookieExistsAndYes );
+	    return $this->viewRenderer->render(
             $template, [
                 'profile'    => $profile,
                 'auction'    => $auction,
+                'bidConfirm' => $bidConfirm,
             ]
         );
     }
@@ -826,7 +831,6 @@ class HandbidShortCodeController {
                 if ( $auction && $profile ) {
 
                     $myInventory = $this->state->currentInventory($auctionID);
-                    // echo "<pre>".print_r($myInventory,true)."</pre>";
 
                     // $winning   = $this->handbid->store( 'Bid' )->myWinning($auction->id );
                     // $losing    = $this->handbid->store( 'Bid' )->myLosing( $auction->id );
@@ -1107,6 +1111,11 @@ class HandbidShortCodeController {
 			$redirect                      = isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : $redirect ;
 			$showCreditCardRequiredMessage = isset( $attributes['show_credit_card_required_message'] ) ? $attributes['show_credit_card_required_message'] == 'true' : false;
 
+			$bidderID = (isset($profile->id))?$profile->id:false;
+			$cookieName = $bidderID."_bid_confirmations";
+			$cookieNotExists = empty($_COOKIE[$cookieName]);
+			$cookieExistsAndYes = (!empty($_COOKIE[$cookieName]) and $_COOKIE[$cookieName] != "no");
+			$bidConfirm = ($cookieNotExists or $cookieExistsAndYes );
 			return $this->viewRenderer->render(
 				$template,
 				[
@@ -1114,6 +1123,7 @@ class HandbidShortCodeController {
 					'redirect'                      => $redirect,
 					'countries'                      => $countries,
 					'countryIDs'                      => $countryIDs,
+					'bidConfirm' => $bidConfirm,
 					'showCreditCardRequiredMessage' => $showCreditCardRequiredMessage
 				]
 			);

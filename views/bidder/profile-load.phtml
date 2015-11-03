@@ -14,6 +14,7 @@ if(!$this->get('profile'))
 
 $auction = $this->get('auction');
 $profile = $this->get('profile');
+$bidConfirm = $this->get("bidConfirm");
 $auctionID = (isset($auction->id))?$auction->id:"";
 $profileDashboardOn = get_option('handbidDisplayProfileDashboardOn', array("other", "auction", "auction-item"));
 $pageNameForProfile = get_query_var('name');
