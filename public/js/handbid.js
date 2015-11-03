@@ -1233,7 +1233,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     itemId = ($('[data-handbid-item-id]').length > 0) ? $('[data-handbid-item-id]').attr('data-handbid-item-id') : (parseInt($("#bidItemId").val()) ? parseInt($("#bidItemId").val()) : null),
                     amount = $('[data-handbid-quantity], [data-handbid-bid-amount]'),
                     increment = ($('.increment span.incrementSpan').length > 0 ) ? parseInt($('.increment span.incrementSpan')[0].innerHTML) : 1,
-                    minimalBidAmount = ($('.minimalBidAmount span').length > 0 ) ? parseInt($('.minimalBidAmount span')[0].innerHTML) : 1;
+                    minimalBidAmount = ($('.minimalBidAmount span[data-change-attribute="minimumBidAmount"]').length > 0 ) ? parseInt($('.minimalBidAmount span[data-change-attribute="minimumBidAmount"]')[0].innerHTML) : 1;
 
                 $('[data-handbid-bid-button="up"]').live('click', function (e) {
 
@@ -1268,7 +1268,8 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
                     }
                     else{
-                        var buyNowPrice = ($('[data-handbid-buynow-price]').length > 0 ) ? parseInt($('[data-handbid-buynow-price]').eq(0).data("handbid-buynow-price")) : -1;
+                        var buyNowPrice = ($('[data-handbid-buynow-price]').length > 0 ) ? $('[data-handbid-buynow-price]').eq(0).data("handbid-buynow-price") : -1;
+                        buyNowPrice = (buyNowPrice != "" ) ? parseInt(buyNowPrice) : -1;
 
                         canBeUp = ((buyNowPrice <=0 ) || ((buyNowPrice > 0) && (value <= buyNowPrice)));
 
@@ -1302,6 +1303,8 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
                         var value = parseInt(amountContainer[0].innerHTML) - increment;
 
+
+                    minimalBidAmount = ($('.minimalBidAmount span[data-change-attribute="minimumBidAmount"]').length > 0 ) ? parseInt($('.minimalBidAmount span[data-change-attribute="minimumBidAmount"]')[0].innerHTML) : 1;
                         if(value >= minimalBidAmount) {
                             amountContainer.html(value);
                             if(!isDirectPurchaseButton && !isMaxBidButton){
@@ -1687,7 +1690,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
             },
 
             // Setup tickets
-            setupTicketsPurchasing:             function (handbid) {
+            setupTicketsPurchasing:  function (handbid) {
 
                 $('[data-handbid-ticket-button="up"]').live('click', function (e) {
 
