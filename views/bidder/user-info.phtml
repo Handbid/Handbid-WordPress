@@ -61,7 +61,7 @@ if(count($myInvoices)){
     <div class="slider-content" data-slider-nav-id="bidder-dashboard-inner">
 
         <div class="" data-slider-nav-key="user-profile" data-slider-href="">
-            <?php echo do_shortcode('[handbid_bidder_profile_form redirect="' . $redirect . '"]'); ?>
+            <?php echo do_shortcode('[handbid_bidder_profile_form auction="'.$auctionCurrent->id.'" redirect="' . $redirect . '"]'); ?>
         </div>
 
         <div class="" data-slider-nav-key="update-credit-card">

@@ -474,18 +474,6 @@ class Handbid
             echo do_shortcode('[handbid_bidder_login_form]');
         //}
 
-        if (false) {
-
-            if($bidder && !!$auction->requireCreditCard && count($bidder->creditCards) > 0 && ($auction->spendingThreshold == 0 || $auction->spendingThreshold <= $bidder->totalSpent)) {
-
-                echo "<div class='handbid-credit-card-footer-form'>";
-                echo do_shortcode('[handbid_bidder_profile_form template="views/bidder/credit-card-form" show_credit_card_required_message=true]');
-                echo "</div>";
-
-            }
-
-        }
-
         if (!$displayBidderProfile) {
                 echo "<div class='handbid-credit-card-footer-form'>";
                 echo "<input type='hidden' id='footer-credit-cards-count' value='".count($bidder->creditCards)."'>";
@@ -527,6 +515,9 @@ class Handbid
 
         $currencyCode = (isset($auction->currencyCode))? $auction->currencyCode : HANDBID_DEFAULT_CURRENCY;
         $currencySymbol = (isset($auction->currencySymbol))? $auction->currencySymbol : HANDBID_DEFAULT_CURRENCY_SYMBOL;
+
+	    $spendingThreshold = (isset($auction->spendingThreshold))? (int) $auction->spendingThreshold : 0;
+        echo '<input type="hidden" data-auction-spending-threshold value="'.$spendingThreshold.'">';
 
         echo '<input type="hidden" data-auction-currency-code="'.$currencyCode.'">';
         echo '<input type="hidden" data-auction-currency-symbol="'.$currencySymbol.'">';

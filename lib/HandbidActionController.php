@@ -499,7 +499,6 @@ class HandbidActionController
 
     function handbid_ajax_add_credit_card_post_callback(){
 
-        echo "<pre>".print_r($_POST,true)."</pre>";
         $opts = $_POST;
         $nonce = $opts["nonce"];
         $nonce = isset($opts['nonce']) ? $opts['nonce'] : 'nonce';

@@ -11,6 +11,7 @@
 
 if (!is_null($this->get('profile'))) {
     $profile = $this->get('profile');
+	$auction = $this->get('auction');
     $address = $profile->shippingAddress;
     $redirect = $this->get('redirect');
     $countries = $this->get("countries");
@@ -21,6 +22,8 @@ if (!is_null($this->get('profile'))) {
     return;
 }
 
+$currencyCode = (isset($auction->currencyCode))? $auction->currencyCode : HANDBID_DEFAULT_CURRENCY;
+$currencySymbol = (isset($auction->currencySymbol))? $auction->currencySymbol : HANDBID_DEFAULT_CURRENCY_SYMBOL;
 ?>
 
 <form class="edit-profile" action="<?php echo get_admin_url() . 'admin-post.php'; ?>" method="post" enctype="multipart/form-data">
@@ -51,10 +54,10 @@ if (!is_null($this->get('profile'))) {
                 <input type="hidden" value="<?php echo $profile->email; ?>" id="profileEmailOld"/>
             </div>
         </li>
-	    <?php if(isset($profile->spendingLimit) and ((int) $profile->spendingLimit > 0)){?>
+	    <?php if(isset($auction->spendingThreshold) and ((int) $auction->spendingThreshold > 0)){?>
 	    <li class="row">
 		    <div class="col-md-12">
-			    <span title="Spending Limit: <?php echo $profile->spendingLimit; ?>" style="text-transform: uppercase;">Spending Limit: <b><?php echo $profile->spendingLimit; ?></b></span>
+			    <span title="Spending Limit: <?php echo $currencySymbol . $auction->spendingThreshold; ?>" style="text-transform: uppercase;">Spending Limit: <?php echo $currencySymbol . $auction->spendingThreshold; ?></span>
 		    </div>
 	    </li>
 	    <?php }?>

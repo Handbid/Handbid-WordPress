@@ -86,10 +86,17 @@ class HandbidState
             if ($this->auction && !$attributes) {
                 return $this->auction;
             }
+	        elseif($this->item and isset($this->item->auction)){
+		        $this->auction = $this->item->auction;
+		        return $this->auction;
+	        }
 
             $auctionKey = (isset($attributes['key']) && $attributes['key']) ? $attributes['key'] : get_query_var(
                 'auction'
             );
+
+            $auctionID = (isset($attributes['id']) && $attributes['id']) ? $attributes['id'] : false;
+
             if (!$auctionKey) {
                 $auctionKey = get_option('handbidDefaultAuctionKey');
             }
@@ -107,6 +114,12 @@ class HandbidState
                 }
 
                 $this->auction = $this->handbid->store('Auction')->byKey($auctionKey, $query, false);
+            }
+            elseif ($auctionID) {
+
+                $query = ['options' => []];
+
+                $this->auction = $this->handbid->store('Auction')->byID($auctionID, $query, false);
             }
 
             return $this->auction;

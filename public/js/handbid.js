@@ -479,6 +479,11 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
 
                 $("[data-item-check-status-auction-id='"+auctionID+"']").val(auctionStatus);
+
+                var spendingThreshold = values.spendingThreshold;
+                spendingThreshold = (spendingThreshold != null && spendingThreshold != undefined)? spendingThreshold:0;
+                $("[data-auction-spending-threshold]").val(spendingThreshold);
+
                 this.checkItemIsAlreadySoldOrNotAvailable();
             },
 
@@ -1069,6 +1074,15 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 var creditCardsNumber = (footerCardsCountHolder.length)
                     ? parseInt(footerCardsCountHolder.val())
                     : creditCardRows.length;
+                //if(needCreditCard){
+                //    var spendingThreshold = parseInt($("[data-auction-spending-threshold]").val());
+                //    var currentExistingTotal = parseInt($("[data-handbid-stats-grand-total]").eq(0).html());
+                //    var potentialBid = parseInt($('[data-change-attribute="minimumBidAmount"]').eq(0).html());
+                //    if((spendingThreshold > 0) && (spendingThreshold > (potentialBid + currentExistingTotal))){
+                //        needCreditCard = false;
+                //    }
+                //}
+
                 if(needCreditCard && creditCardsNumber == 0 ){ // creditCardRows.length == 0 &&
                     //currentElemNeedsCard = elem;
                     $(".credit-card-form-link").eq(0).click();
