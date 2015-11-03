@@ -12,6 +12,7 @@
 if (!is_null($this->get('profile'))) {
     $profile = $this->get('profile');
 	$auction = $this->get('auction');
+        $inventory = $this->get('inventory');
     $address = $profile->shippingAddress;
     $redirect = $this->get('redirect');
     $countries = $this->get("countries");
@@ -54,10 +55,10 @@ $currencySymbol = (isset($auction->currencySymbol))? $auction->currencySymbol : 
                 <input type="hidden" value="<?php echo $profile->email; ?>" id="profileEmailOld"/>
             </div>
         </li>
-	    <?php if(isset($auction->spendingThreshold) and ((int) $auction->spendingThreshold > 0)){?>
+	    <?php if(!empty($inventory->spendingLimit)){ // NOT EMPTY does the work of ISSET and > 0 ?>
 	    <li class="row">
 		    <div class="col-md-12">
-			    <span title="Spending Limit: <?php echo $currencySymbol . $auction->spendingThreshold; ?>" style="text-transform: uppercase;">Spending Limit: <?php echo $currencySymbol . $auction->spendingThreshold; ?></span>
+			    <span title="Spending Limit: <?php echo $currencySymbol . $inventory->spendingLimit; ?>" style="text-transform: uppercase;">Spending Limit: <?php echo $currencySymbol . $inventory->spendingLimit; ?></span>
 		    </div>
 	    </li>
 	    <?php }?>

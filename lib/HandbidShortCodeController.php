@@ -1104,7 +1104,7 @@ class HandbidShortCodeController {
             $auction = $this->state->currentAuction(["id" => (int) $attributes["auction"] ]);
             $auctionID = (isset($auction->id))?$auction->id:0;
 			$profile  = $this->state->currentBidder($auctionID);
-
+		$inventory = $this->state->currentInventory($auctionID);
             $countries                     = $this->state->getCountriesWithCodes();
             $countryIDs                    = $this->state->getCountriesAndProvinces();
 			$redirect                      = isset( $attributes['redirect'] ) ? $attributes['redirect'] : null;
@@ -1121,6 +1121,7 @@ class HandbidShortCodeController {
 				[
 					'profile'                       => $profile,
 					'auction'                       => $auction,
+                                        'inventory'                       => $inventory,
 					'redirect'                      => $redirect,
 					'countries'                      => $countries,
 					'countryIDs'                      => $countryIDs,
