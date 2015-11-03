@@ -3249,7 +3249,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
         //}
         handbid.setupTutorialPopup();
 
-        ($('[data-handbid-bid]').length > 0) ? handbid.setupBidding(handbid) : '';
+        ($('[data-handbid-bid]').length > 0 || $('.handbid-list-of-bids-proxy').length > 0 ) ? handbid.setupBidding(handbid) : '';
         ($('[data-handbid-timer]').length > 0) ? handbid.startTimer(handbid) : '';
         ($('[data-handbid-tickets]').length > 0) ? handbid.setupTicketsPurchasing(handbid) : '';
         handbid.setTimerRemaining(handbid);
