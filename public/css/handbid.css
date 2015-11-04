@@ -546,6 +546,13 @@
     font-weight: bold;
 }
 
+.simple-list-container .simple-list p{
+    display: none;
+}
+.simple-list-container .simple-list p:first-child{
+    display: block;
+}
+
 @media (max-width: 767px) {
 
     .global-footer .toggle-info{

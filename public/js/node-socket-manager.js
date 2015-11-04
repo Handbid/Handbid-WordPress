@@ -220,6 +220,7 @@ console.log("success connect");
     $.eventUserBid = function (data) {
         var message = JSON.stringify(data, null, 2);
         console.log(data.values);
+        handbidMain.userItemBiddingEvent(data.values);
         //handbidMain.notice(message);
     };
 

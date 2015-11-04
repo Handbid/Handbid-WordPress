@@ -222,11 +222,12 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
             },
 
 
-            addDashboardBidPurchased: function(itemID, itemName, itemKey, auctionKey, amount, quantity){
+            addDashboardBidPurchased: function(itemID, itemName, itemKey, auctionKey, amount, quantity, purchaseID){
 
                 var pattern = '<li class="row"' +
                     'data-dashboard-price="'+(amount * quantity)+'"' +
-                    'data-purchased-item-id="'+itemID+'">' +
+                    'data-purchased-item-id="'+itemID+'" ' +
+                    'data-purchased-purchase-id="'+purchaseID+'">' +
                     '<div class="col-md-4 col-xs-4">' +
                     '<a href="/auctions/'+auctionKey+'/item/'+itemKey+'"><h4>'+itemName+'</h4></a>' +
                 '</div>' +
@@ -429,7 +430,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 return (itemStatus == "yes");
             },
 
-            checkItemIsAlreadySoldOrNotAvailable: function(){
+            checkItemIsAlreadySoldOrNotAvailable: function(winnerID, itemID){
                 var biddingBlock = $("[data-item-bidding-id]"),
                     noBiddingBlock = $("[data-item-nobidding-id]"),
                     isSoldBlock = $("[data-item-is-sold-id]"),
@@ -442,6 +443,14 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 (itemCanNotBeShownInPreSale) ? noBiddingBlock.show(): noBiddingBlock.hide();
                 (itemIsAlreadySold) ? isSoldBlock.show(): isSoldBlock.hide();
                 (itemIsLiveOnly) ? isLiveBlock.show(): isLiveBlock.hide();
+
+                if(itemIsAlreadySold && winnerID != undefined){
+                    var bidderDashboardPlace = $("#bidder-info-load"),
+                        profileID = parseInt(bidderDashboardPlace.data("profile-id"));
+                    if(profileID == winnerID){
+                        this.displayOnlyCurrentStatusOfItem(itemID, "winning");
+                    }
+                }
             },
 
 
@@ -629,12 +638,12 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 $("[data-item-check-status-item-id='"+itemID+"']").val(itemStatus);
                 $("[data-item-check-is-live-item-id='"+itemID+"']").val((disableMobileBidding)?"yes":"no");
                 $("[data-item-check-available-item-id='"+itemID+"']").val(availableForPreSale);
-                this.checkItemIsAlreadySoldOrNotAvailable();
+                this.checkItemIsAlreadySoldOrNotAvailable(item.winnerId, item.id);
 
 
                 item.buyNowPrice = (item.buyNowPrice == null || item.buyNowPrice == undefined) ? 0: item.buyNowPrice;
                 var isBiddable = (!item.isDirectPurchaseItem);
-                var buyItNow   = (isBiddable && item.buyNowPrice > 0 && item.buyNowPrice > item.minimumBidAmount);
+                var buyItNow   = (isBiddable && item.buyNowPrice > 0 && item.buyNowPrice > item.currentPrice);
                 var BINContainer = $(".BINButton.BINItem"+itemID).eq(0),
                     BINButton = $(".BINButton.BINItem"+itemID+" a.buy-now").eq(0);
                 (buyItNow) ? BINContainer.addClass("BINAvailable"): BINContainer.removeClass("BINAvailable");
@@ -946,7 +955,12 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
             removeItemFromDashboardList: function(itemID, status){
                 var listBids = $(".handbid-list-of-bids-"+status).eq(0);
-                $("[data-"+status+"-item-id="+itemID+"]").remove();
+                if((status == "purchases")){
+                    $("[data-purchased-purchase-id=" + itemID + "]").remove();
+                }
+                else {
+                    $("[data-" + status + "-item-id=" + itemID + "]").remove();
+                }
                 if($("li", listBids).length == 0){
                     var noItemsText = listBids.data("no-items-text");
                     listBids.prepend("<p>"+noItemsText+"</p>");
@@ -1004,7 +1018,11 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
                 var noticeFormatting = {isBidding : true, itemLink: itemLink, itemImage: itemImage};
 
-                this.notice('You are <br>winning</b> the item <b>' + values.item.name + ' ('+values.item.itemCode+') </b> at '+currencySpan() + values.amount + ""+reasonStr, "Winning!", "success", null, noticeFormatting);
+                var noticeMessage = 'You are <br>winning</b> the item <b>' + values.item.name + ' ('+values.item.itemCode+') </b> at '+currencySpan() + values.amount + ""+reasonStr;
+
+                noticeMessage = (type == "maxbid_auto") ? values.message : noticeMessage;
+
+                this.notice(noticeMessage, "Winning!", "success", null, noticeFormatting);
             },
 
             checkIfBidsExistsAndChange: function(values, type){
@@ -1021,7 +1039,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     // You Are Losing This Item.
                     console.log("----- LOSING ITEM -----");
 
-                    this.addLosingItemRow(itemID, values);
+                    //this.addLosingItemRow(itemID, values);
 
                     this.checkIfMaxBidIsNotAtual(values);
 
@@ -1041,12 +1059,26 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
             },
 
+            userItemBiddingEvent: function(values){
+                var itemID = values.item.id,
+                    status = values.status,
+                    statusReason = values.statusReason;
+                if(status == "losing") {
+                    this.removeItemFromDashboardList(itemID, "losing");
+                    this.addLosingItemRow(itemID, values, statusReason);
+                }
+                if(status == "winning" && statusReason == "maxbid_auto"){
+                    this.removeItemFromDashboardList(itemID, "winning");
+                    this.addWinningItemRow(itemID, values, statusReason);
+                    handbid.loadBidsHistoryToContainer(itemID);
+                }
+            },
+
             checkIfMaxBidIsNotAtual: function(values){
                 var itemID = values.item.id,
                     itemBlock = $("[data-maxbid-item-id='"+itemID+"']").eq(0),
                     itemBlockVal = parseInt(itemBlock.data("proxy-item-max-value"));
                 if(itemBlock != undefined && values.amount >= itemBlockVal ) {
-                    console.log(itemBlock != undefined && values.amount >= itemBlockVal);
                     this.removeItemFromDashboardList(itemID, "proxy");
                 }
                 this.recheckAndRecalculateBids();
@@ -1056,10 +1088,17 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
 
             addUserPurchase: function(values){
-                this.removeItemFromDashboardList(values.item.id, "winning");
-                var auctionKey = (values.auctionKey != undefined)? values.auctionKey: currentAuctionKey;
-                this.addDashboardBidPurchased(values.item.id, values.item.name, values.item.key, auctionKey, values.pricePerItem, values.quantity );
-                this.loadMessagesToContainer();
+                if(values.isDeleted == 1){
+                    this.removeItemFromDashboardList(values.id, "purchases");
+                    this.recheckAndRecalculateBids();
+                }
+                else {
+                    this.removeItemFromDashboardList(values.item.id, "winning");
+                    this.removeItemFromDashboardList(values.id, "purchases");
+                    var auctionKey = (values.auctionKey != undefined) ? values.auctionKey : currentAuctionKey;
+                    this.addDashboardBidPurchased(values.item.id, values.item.name, values.item.key, auctionKey, values.pricePerItem, values.quantity, values.id);
+                    this.loadMessagesToContainer();
+                }
             },
 
 
@@ -1772,7 +1811,6 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                         auctionId: auctionId,
                         items:     prices
                     };
-                    console.log(data);
                     $.post(
                         ajaxurl,
                         data,
@@ -2259,8 +2297,6 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     var countryPrevID = parseInt(provincesByCountries.data("current-country"));
                     if(countryID != countryPrevID){
                         var countryProvinces = provincesByCountries.data("provinces-"+countryID);
-                        console.log(countryID);
-                        console.log(countryProvinces);
                         if(countryProvinces != undefined){
 
                             var nonce = countriesSelect.data("provinces-nonce");
@@ -2511,7 +2547,6 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                                         auctionID: auctionID,
                                         nonce: nonce
                                     };
-                                    console.log(data);
                                     $.post(
                                         ajaxurl,
                                         data,
@@ -2959,7 +2994,6 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
             showTimerRemainingNotice: function(timerTime, timerTitle){
                 timerTitle = (timerTitle != undefined) ? " <b>"+timerTitle+"</b>" : "";
                 var timeFormatted = this.formatTimerTime(timerTime);
-                console.log(timeFormatted);
                 (timerNotice != undefined) ? timerNotice.remove() : '';
                 timerNotice = undefined;
                 timerNotice = handbid.notice("Auction "+timerTitle+"<br>closes after <b><div data-handbid-timer>" + timeFormatted + "</div></b>", "Closing Auction Timer");
