@@ -134,7 +134,7 @@ $currencySymbol = (isset($auction->currencySymbol))? $auction->currencySymbol : 
 				<?php if ( $category ) { ?>
 					<h3 class="category" data-handbid-item-attribute="categoryName"><?php echo $category; ?></h3>
 				<?php } ?>
-				<ul class="horizontal-details row">
+				<ul class="horizontal-details not-for-live-auctions row" style="<?php echo ($isLiveItem)?" display:none; ":"";?>">
 
 					<?php if ( $isBiddable ) { ?>
 						<li class="bids col-md-4 col-xs-3"><em

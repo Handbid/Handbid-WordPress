@@ -435,6 +435,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     noBiddingBlock = $("[data-item-nobidding-id]"),
                     isSoldBlock = $("[data-item-is-sold-id]"),
                     isLiveBlock = $("[data-item-is-live-id]"),
+                    isNotForLiveBlock = $(".not-for-live-auctions"),
                     itemCanNotBeShownInPreSale = this.checkItemIsAvailableForPresale(),
                     itemIsAlreadySold = this.checkItemIsAlreadySold(),
                     itemIsLiveOnly = this.checkItemIsLiveOnly();
@@ -443,6 +444,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 (itemCanNotBeShownInPreSale) ? noBiddingBlock.show(): noBiddingBlock.hide();
                 (itemIsAlreadySold) ? isSoldBlock.show(): isSoldBlock.hide();
                 (itemIsLiveOnly) ? isLiveBlock.show(): isLiveBlock.hide();
+                (itemIsLiveOnly) ? isNotForLiveBlock.hide(): isNotForLiveBlock.show();
 
                 if(itemIsAlreadySold && winnerID != undefined){
                     var bidderDashboardPlace = $("#bidder-info-load"),
