@@ -431,6 +431,11 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 return ((auctionStatus == "preview" || auctionStatus == "presale") && (availableForPreSale != "1") && (itemStatus != "sold"));
             },
 
+            checkItemsAuctionIsClosed: function(){
+                var auctionStatus = $("[data-item-check-status-auction-id]").val();
+                return (auctionStatus == "closed");
+            },
+
             checkItemIsAlreadySold: function(){
                 var itemStatus = $("[data-item-check-status-item-id]").val();
                 return (itemStatus == "sold");
@@ -448,11 +453,12 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     isLiveBlock = $("[data-item-is-live-id]"),
                     isNotForLiveBlock = $(".not-for-live-auctions"),
                     itemCanNotBeShownInPreSale = this.checkItemIsAvailableForPresale(),
+                    itemsAuctionIsClosed = this.checkItemsAuctionIsClosed(),
                     itemIsAlreadySold = this.checkItemIsAlreadySold(),
                     itemIsLiveOnly = this.checkItemIsLiveOnly();
 
-                (itemCanNotBeShownInPreSale || itemIsAlreadySold || itemIsLiveOnly) ? biddingBlock.hide(): biddingBlock.show();
-                (itemCanNotBeShownInPreSale) ? noBiddingBlock.show(): noBiddingBlock.hide();
+                (itemCanNotBeShownInPreSale || itemIsAlreadySold || itemIsLiveOnly || itemsAuctionIsClosed) ? biddingBlock.hide(): biddingBlock.show();
+                (itemCanNotBeShownInPreSale || itemsAuctionIsClosed) ? noBiddingBlock.show(): noBiddingBlock.hide();
                 (itemIsAlreadySold) ? isSoldBlock.show(): isSoldBlock.hide();
                 (itemIsLiveOnly) ? isLiveBlock.show(): isLiveBlock.hide();
                 (itemIsLiveOnly) ? isNotForLiveBlock.hide(): isNotForLiveBlock.show();
