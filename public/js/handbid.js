@@ -407,10 +407,21 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
             },
 
             clickOnFiltersToReorder: function(){
-                var firstCatLink = $('ul.by-category li.selected a')[0];
-                if(firstCatLink != undefined){
-                    firstCatLink.click();
-                }
+                var initialCat = $('[data-initial-auction-category]').eq(0).val();
+                var initialCatLink = $('[data-legacy-category-id="'+initialCat+'"] a');
+                console.log(initialCat);
+                console.log(initialCatLink);
+                initialCatLink = initialCatLink[0];
+                //if(initialCatLink != undefined){
+                //    $('[data-initial-auction-category]').val(0);
+                    //initialCatLink.eq(0).click();
+                //}
+                //else {
+                    var firstCatLink = $('ul.by-category li.selected a')[0];
+                    if (firstCatLink != undefined) {
+                        firstCatLink.click();
+                    }
+                //}
             },
 
             checkItemIsAvailableForPresale: function(){
@@ -1402,37 +1413,41 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                         data,
                         function (data) {
 
+                            console.log(data);
                             console.log("-----------------------");
                             console.log("----Max Bid success----");
                             data = JSON.parse(data);
                             console.log(data);
 
-                            if(data.status == "failed"){
-                                var message = "";
-                                if(data.bidType == "max_bid") {
-                                    handbid.alreadyHaveMaxBidForItem(data);
-                                }
-                                else{
-                                    message = handbid.getStatusReasonByCode(data.statusReason);
-                                    handbid.notice(message, data.status.toUpperCase(), data.status);
-                                }
+                            if(data.status == undefined){
+                                handbid.notice("Something went wrong. Please, try again later", "No response from server", "error");
                             }
-                            else{
-                                data.item.auctionKey = $("#bidder-info-load").data("auction-key");
-                                handbid.addDashboardBidProxy(data.id, data.item.id, data.item.name, data.item.key, data.item.auctionKey, data.maxAmount);
+                            else {
 
-                                if(data.statusReason == "raised_maxbid"){
-                                    if(data.status == "winning"){
-                                        handbid.addWinningItemRow(data.item.id, data, data.statusReason);
-                                        handbid.loadBidsHistoryToContainer(data.item.id);
+                                if (data.status == "failed") {
+                                    var message = "";
+                                    if (data.bidType == "max_bid") {
+                                        handbid.alreadyHaveMaxBidForItem(data);
+                                    }
+                                    else {
+                                        message = handbid.getStatusReasonByCode(data.statusReason);
+                                        handbid.notice(message, data.status.toUpperCase(), data.status);
                                     }
                                 }
+                                else {
+                                    data.item.auctionKey = $("#bidder-info-load").data("auction-key");
+                                    handbid.addDashboardBidProxy(data.id, data.item.id, data.item.name, data.item.key, data.item.auctionKey, data.maxAmount);
 
-                                handbid.reloadPageIfForceRefresh();
+                                    if (data.statusReason == "raised_maxbid") {
+                                        if (data.status == "winning") {
+                                            handbid.addWinningItemRow(data.item.id, data, data.statusReason);
+                                            handbid.loadBidsHistoryToContainer(data.item.id);
+                                        }
+                                    }
 
-
+                                    handbid.reloadPageIfForceRefresh();
+                                }
                             }
-
 
                             button.removeClass("active");
                             $(".proxy-bid-dialog-close").show();
@@ -1684,6 +1699,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     data,
                     function (data) {
 
+                        console.log(data);
                         console.log("-----------------------");
                         console.log("----Bid Now success----");
                         data = JSON.parse(data);

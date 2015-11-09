@@ -55,14 +55,14 @@ $currencyCode = (isset($auction->currencyCode))? $auction->currencyCode : HANDBI
 $currencySymbol = (isset($auction->currencySymbol))? $auction->currencySymbol : HANDBID_DEFAULT_CURRENCY_SYMBOL;
 ?>
 
-	<div class="item-details item-<?php echo $item->status; ?>"
+	<div class="item-details item-<?php echo $item->status; ?> items-auction-<?php echo $auction->status; ?>"
 	     data-handbid-item-details-block="<?php echo $item->id; ?>" data-handbid-item-key="<?php echo $item->key; ?>"
 	     data-handbid-auction-guid="<?php echo $auction->auctionGuid; ?>"
 	     <?php if ($itemHideIfSold) { ?>data-hide-if-sold<?php } ?>>
 
 
 		<div class="back-to-previous-container">
-			<a class="back-to-previous" href="/auctions/<?php echo $auction->key; ?>/">View All Items</a>
+			<a class="back-to-previous" href="/auctions/<?php echo $auction->key; ?>/?initial-category=<?php echo $item->categoryId;?>">View All Items</a>
 		</div>
 
 		<div class="row detail-bar">

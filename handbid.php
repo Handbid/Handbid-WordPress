@@ -463,7 +463,7 @@ class Handbid
     function onRenderFooter()
     {
 
-        global $displayBidderProfile;
+        global $displayBidderProfile, $post;
 
         //do we need to prompt for credit card?
         $auction = $this->state()->currentAuction();
@@ -521,6 +521,8 @@ class Handbid
 
         echo '<input type="hidden" data-auction-currency-code="'.$currencyCode.'">';
         echo '<input type="hidden" data-auction-currency-symbol="'.$currencySymbol.'">';
+
+        echo '<input type="hidden" data-initial-auction-category value="'.(($post->post_name == 'auction' and !empty($_GET["initial-category"]))?((int)$_GET["initial-category"]):0).'">';
 
         $bidderID = (isset($bidder->id)) ? $bidder->id : 0;
         echo '<input type="hidden" data-dashboard-profile-id="'.$bidderID.'">';
