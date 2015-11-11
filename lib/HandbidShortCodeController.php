@@ -307,26 +307,63 @@ class HandbidShortCodeController {
             $organizationSearch = isset( $_GET[ "search" ] ) ? $_GET[ "search" ] : false;
             if($organizationSearch){
                 $pageSize = 999999;
+                $total = $pageSize;
             }
 
             //$profile = $this->handbid->store( 'Bidder' )->myProfile();
             $profile = $this->state->currentBidder();
             //$this->handbid->store('Organization')->setBasePublicity(! $profile);
-			$organizations = $this->handbid->store( 'Organization' )->all(
-				$page,
-				$pageSize,
-				$sortField,
-				$sortDirection,
-				$query,
-				[
-					'logo' => [
-						'w' => $logoWidth,
-						'h' => $logoHeight
-					]
-				]
-			);
+            if($organizationSearch){
+                $organizations = [];
+                $searchNext = true;
+                $searchLimit = 50;
+                $searchPage = 0;
+                $loml = "";
+                $loml .=  "<pre>".print_r($searchNext,true)."</pre>";
+                $loml .=  "<pre>".print_r($searchLimit,true)."</pre>";
+                $loml .=  "<pre>".print_r($searchPage,true)."</pre>";
+                while($searchNext){
+                    $organizationsTemp = $this->handbid->store('Organization')->all(
+                        $searchPage,
+                        $searchLimit,
+                        $sortField,
+                        $sortDirection,
+                        $query,
+                        [
+                            'logo' => [
+                                'w' => $logoWidth,
+                                'h' => $logoHeight
+                            ]
+                        ]
+                    );
 
-			$total = $this->handbid->store( 'Organization' )->count( $query );
+                    $loml .=  "<pre>--- ".print_r(count($organizationsTemp),true)."</pre>";
+                    $organizations = array_merge($organizations, $organizationsTemp);
+                    $searchNext = (count($organizationsTemp) == $searchLimit);
+                    $searchPage = ($searchNext)?($searchPage + 1):$searchPage;
+                    $loml .=  "<pre>=== ".print_r($searchPage,true)."</pre>";
+                }
+//                return $loml;
+            }
+            else {
+                $organizations = $this->handbid->store('Organization')->all(
+                    $page,
+                    $pageSize,
+                    $sortField,
+                    $sortDirection,
+                    $query,
+                    [
+                        'logo' => [
+                            'w' => $logoWidth,
+                            'h' => $logoHeight
+                        ]
+                    ]
+                );
+            }
+            if(! $organizationSearch){
+                $total = $this->handbid->store( 'Organization' )->count( $query );
+            }
+
 
             if($organizationSearch){
                 $tempOrganizations = [];
