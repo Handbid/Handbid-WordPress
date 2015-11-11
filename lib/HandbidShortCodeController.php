@@ -318,10 +318,6 @@ class HandbidShortCodeController {
                 $searchNext = true;
                 $searchLimit = 50;
                 $searchPage = 0;
-                $loml = "";
-                $loml .=  "<pre>".print_r($searchNext,true)."</pre>";
-                $loml .=  "<pre>".print_r($searchLimit,true)."</pre>";
-                $loml .=  "<pre>".print_r($searchPage,true)."</pre>";
                 while($searchNext){
                     $organizationsTemp = $this->handbid->store('Organization')->all(
                         $searchPage,
@@ -337,13 +333,10 @@ class HandbidShortCodeController {
                         ]
                     );
 
-                    $loml .=  "<pre>--- ".print_r(count($organizationsTemp),true)."</pre>";
                     $organizations = array_merge($organizations, $organizationsTemp);
                     $searchNext = (count($organizationsTemp) == $searchLimit);
                     $searchPage = ($searchNext)?($searchPage + 1):$searchPage;
-                    $loml .=  "<pre>=== ".print_r($searchPage,true)."</pre>";
                 }
-//                return $loml;
             }
             else {
                 $organizations = $this->handbid->store('Organization')->all(
