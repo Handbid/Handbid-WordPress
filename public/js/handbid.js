@@ -2516,6 +2516,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
                 var bidderDashboardPlace = $("#bidder-info-load"),
                     auctionID = parseInt(bidderDashboardPlace.data("auction")),
+                    auctionStatus = bidderDashboardPlace.data("auction-status"),
                     profileID = parseInt(bidderDashboardPlace.data("profile-id")),
                     paddleNumber = bidderDashboardPlace.data("profile-paddle-number"),
                     nonce = bidderDashboardPlace.data("paddle-nonce"),
@@ -2529,7 +2530,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     $.cookie(bidCookieKey, paddleNumber, { expires: cookieExpire, path: '/' });
                 }
 
-                if(auctionID && profileID && paddleNumberIsUndefined && viewCookie != "yes") {
+                if(auctionID && profileID && paddleNumberIsUndefined && viewCookie != "yes" && auctionStatus != "closed") {
                     attentionAboutBidding = true;
                     var bidNotice =  new PNotify({
                         title: 'Register to Bid?',
@@ -2693,11 +2694,12 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 var bidderDashboardPlace = $("#bidder-info-load"),
                     haveTickets = $("[data-handbid-tickets]").length,
                     auctionID = parseInt(bidderDashboardPlace.data("auction")),
+                    auctionStatus = bidderDashboardPlace.data("auction-status"),
                     profileID = parseInt(bidderDashboardPlace.data("profile-id"));
 
                 var viewCookie = $.cookie("bidder-"+profileID+"-want-no-tickets-"+auctionID);
 
-                if(auctionID && profileID && haveTickets && viewCookie != "yes") {
+                if(auctionID && profileID && haveTickets && viewCookie != "yes" && auctionStatus != "closed") {
                     attentionAboutTickets = true;
                     var bidNotice =  new PNotify({
                         title: 'Auction Tickets',
