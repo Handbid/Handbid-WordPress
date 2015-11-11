@@ -1527,6 +1527,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                                 handbidMain.removeItemFromDashboardList(itemId, "proxy");
                                 handbidMain.recheckAndRecalculateBids();
 
+                                handbid.loadAllToContainers();
                                 handbid.reloadPageIfForceRefresh();
                             }
 
@@ -1572,6 +1573,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                             $('[data-handbid-item-banner="sold"]').show();
                             handbid.disableAllBiddingButtonsIfSold();
                             button.removeClass("active");
+                            handbid.loadAllToContainers();
                             handbid.reloadPageIfForceRefresh();
                             return false;
                         }
@@ -1898,9 +1900,9 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                                         return null;
                                     }
                                 });
+                                handbid.loadAllToContainers();
                                 handbidMain.notice("You purchased <br>"+ messages.join("; <br>"), "Congratulations!", "success");
                             }
-
                             button.removeClass("active");
                             closeModal.show();
                             closeModal.click();
