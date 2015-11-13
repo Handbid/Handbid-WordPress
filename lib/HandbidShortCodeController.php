@@ -851,11 +851,11 @@ class HandbidShortCodeController {
 
 
                 //$myAuctions = $this->handbid->store( 'Bidder' )->getMyAuctions();
-                //$myInvoices = $this->handbid->store( 'Receipt' )->allReceipts();
+                $myInvoices = $this->handbid->store( 'Receipt' )->allReceipts();
                 //$myMessages = $this->handbid->store( 'Notification' )->allMessages( 0, 255 );
 
                 $myAuctions = [];
-                $myInvoices = [];
+                //$myInvoices = [];
                 $myMessages = [];
 
                 if ( $auction && $profile ) {
