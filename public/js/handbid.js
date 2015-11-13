@@ -1573,7 +1573,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                             $('[data-handbid-item-banner="sold"]').show();
                             handbid.disableAllBiddingButtonsIfSold();
                             button.removeClass("active");
-                            handbid.loadAllToContainers();
+                            handbid.loadInvoicesToContainer(true);
                             handbid.reloadPageIfForceRefresh();
                             return false;
                         }
@@ -1900,7 +1900,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                                         return null;
                                     }
                                 });
-                                handbid.loadAllToContainers();
+                                handbid.loadInvoicesToContainer(true);
                                 handbidMain.notice("You purchased <br>"+ messages.join("; <br>"), "Congratulations!", "success");
                             }
                             button.removeClass("active");

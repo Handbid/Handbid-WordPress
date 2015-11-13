@@ -815,6 +815,10 @@ class HandbidShortCodeController {
 	    $cookieNotExists = empty($_COOKIE[$cookieName]);
 	    $cookieExistsAndYes = (!empty($_COOKIE[$cookieName]) and $_COOKIE[$cookieName] != "no");
 	    $bidConfirm = ($cookieNotExists or $cookieExistsAndYes );
+        if($auction->currentPaddleNumber == "N/A" and $profile){
+            $myInventory = $this->state->currentInventory($auctionID);
+            $auction->currentPaddleNumber = (isset($myInventory->currentPaddleNumber))?$myInventory->currentPaddleNumber:$auction->currentPaddleNumber;
+        }
 	    return $this->viewRenderer->render(
             $template, [
                 'profile'    => $profile,
