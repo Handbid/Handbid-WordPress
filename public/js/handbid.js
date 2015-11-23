@@ -18,6 +18,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
     attentionAboutBidding = false;
     attentionAboutMobiles = false;
     attentionAboutConfirm = false;
+    attentionAboutTBuying = false;
 
     var isMobile = {
         getUserAgent: function(){
@@ -222,11 +223,22 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
             },
 
 
-            addDashboardBidPurchased: function(itemID, itemName, itemKey, auctionKey, amount, quantity, purchaseID){
-
+            addDashboardBidPurchased: function(values){
+                var item = values.item,
+                    itemID = item.id,
+                    itemKey = item.key,
+                    itemName = item.name,
+                    amount = values.pricePerItem,
+                    quantity = values.quantity,
+                    receiptId = values.receiptId,
+                    auctionId = values.auctionId,
+                    purchaseID = values.id,
+                    auctionKey = (values.auctionKey != undefined) ? values.auctionKey : "undefined";
                 var pattern = '<li class="row"' +
                     'data-dashboard-price="'+(amount * quantity)+'"' +
+                    'data-dashboard-quantity="'+quantity+'"' +
                     'data-purchased-item-id="'+itemID+'" ' +
+                    ((item.isTicket == 1)?'data-purchased-item-is-ticket="yes" ':'') +
                     'data-purchased-purchase-id="'+purchaseID+'">' +
                     '<div class="col-md-4 col-xs-4">' +
                     '<a href="/auctions/'+auctionKey+'/item/'+itemKey+'"><h4>'+itemName+'</h4></a>' +
@@ -244,6 +256,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 listBidsPurchases.append(pattern);
 
                 this.recheckAndRecalculateBids();
+                this.doesUserWantToBuyTicketsJustNow(receiptId, auctionId);
             },
 
             addItemBidsHistory: function(itemID, bidID, values, amount){
@@ -670,6 +683,183 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
                 if(needToReSort){
                     this.clickOnFiltersToReorder();
+                }
+            },
+
+            wantToPurchaseTicketsImmediately: function(ticketsQuantity, ticketsPrice, receiptId, auctionId){
+
+                var bidderDashboardPlace = $("#bidder-info-load"),
+                    nonce = bidderDashboardPlace.data("paddle-nonce");
+
+                attentionAboutTBuying = true;
+                var bidNotice =  new PNotify({
+                    title: 'Pay for Purchased Tickets?',
+                    text: "Confirm purchase of "+ticketsQuantity+" tickets for $"+ticketsPrice+" ?",
+                    icon: 'glyphicon glyphicon-question-sign',
+                    type: 'info',
+                    addclass: 'handbid-message-notice',
+                    hide: false,
+                    mouse_reset: false,
+                    confirm: {
+                        confirm: true,
+                        buttons: [{
+                            text: 'Confirm',
+                            addClass: 'bid-here-button',
+                            click: function (notice) {
+                                notice.update({
+                                    title: "Purchasing",
+                                    text: '<div class="progress progress-striped active" style="margin:0">\
+	                                            <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">\
+		                                        <span class="sr-only">100%</span>\
+	                                            </div>\
+                                                </div>',
+                                    icon: 'glyphicon glyphicon-refresh gly-spin',
+                                    addclass: "handbid-paddle-number-notice",
+                                    hide: false,
+                                    confirm: {
+                                        confirm: false
+                                    },
+                                    buttons: {
+                                        closer: false,
+                                        sticker: false
+                                    },
+                                    history: {
+                                        history: false
+                                    }
+                                });
+
+                                var dataAct = {
+                                    action: "handbid_ajax_pay_for_tickets",
+                                    auctionId: auctionId,
+                                    receiptId: receiptId,
+                                    nonce: nonce
+                                };
+                                $.post(
+                                    ajaxurl,
+                                    dataAct,
+                                    function (data) {
+
+                                        console.log("-----------------------");
+                                        console.log("----Pay For Tickets success----");
+                                        data = JSON.parse(data);
+                                        console.log(data);
+
+                                        var text = "";
+                                        var title = "";
+                                        var type = "";
+                                        var icon = "";
+
+                                        if(data.errors == undefined){
+                                            if(data.result) {
+                                                text = "Purchased by your credit card '"+data.paid_by.nameOnCard+"' (**** **** **** "+data.paid_by.lastFour+")";
+                                                title = 'Purchasing success';
+                                                type = 'success';
+                                                icon = 'glyphicon glyphicon-ok';
+                                            }
+                                            else{
+                                                text = "Cannot pay invoice by any of your cards. Please, contact auction manager for instructions.";
+                                                title = 'Failed';
+                                                type = 'error';
+                                                icon = 'glyphicon glyphicon-remove-sign';
+                                            }
+                                        }
+                                        else{
+                                            text = data.errors.join("<br>");
+                                            title = 'Failed';
+                                            type = 'error';
+                                            icon = 'glyphicon glyphicon-remove-sign';
+                                        }
+
+                                        attentionAboutTBuying = false;
+                                        notice.update({
+                                            title: title,
+                                            text: text,
+                                            icon: icon,
+                                            hide: true,
+                                            type: type,
+                                            delay: 3000,
+                                            mouse_reset: false,
+                                            confirm: {
+                                                confirm: false
+                                            },
+                                            buttons: {
+                                                closer: true,
+                                                sticker: false
+                                            },
+                                            history: {
+                                                history: false
+                                            }
+                                        });
+
+                                        return false;
+                                    }
+                                );
+                            }
+                        }, {
+                            text: 'Cancel',
+                            addClass: 'browse-here-button',
+                            click: function (notice) {
+                                attentionAboutTBuying = false;
+                                notice.remove();
+                            }
+                        }]
+                    },
+                    stack: false,
+                    before_open: function(PNotify) {
+                        PNotify.get().css({
+                            "top": ($(window).height() / 2) - (PNotify.get().height() / 2) - 80,
+                            "left": ($(window).width() / 2) - (PNotify.get().width() / 2)
+                        });
+                        if (modal_overlay) modal_overlay.fadeIn("fast");
+                        else modal_overlay = $("<div />", {
+                            "class": "ui-widget-overlay",
+                            "css": {
+                                "display": "none",
+                                "position": "fixed",
+                                "background": "rgba(0, 0, 0, 0.7)",
+                                "top": "0",
+                                "bottom": "0",
+                                "right": "0",
+                                "left": "0"
+                            }
+                        }).appendTo("body").fadeIn("fast");
+                    },
+                    before_close: function() {
+                        if(!attentionAboutBidding && !attentionAboutTickets && !attentionAboutMobiles && !attentionAboutConfirm && !attentionAboutTBuying) {
+                            modal_overlay.fadeOut("fast");
+                        }
+                    },
+                    buttons: {
+                        closer: false,
+                        sticker: false
+                    },
+                    history: {
+                        history: false
+                    }
+                });
+                bidNotice.get().on('pnotify.cancel', function () {
+                    return false;
+                });
+            },
+
+            doesUserWantToBuyTicketsJustNow: function(receiptId, auctionId){
+                var purchaseRows = $("[data-purchased-purchase-id]");
+                if(purchaseRows.length){
+                    var onlyTickets = true,
+                        ticketsQuantity = 0,
+                        ticketsPrice = 0;
+                    $.map(purchaseRows, function(val){
+                        if($(val).attr("data-purchased-item-is-ticket") == undefined){
+                            onlyTickets = false;
+                        }
+                        else{
+                            ticketsPrice += parseInt($(val).data("dashboard-price"));
+                            ticketsQuantity += parseInt($(val).data("dashboard-quantity"));
+                        }
+                    });
+                    if(onlyTickets){
+                        handbidMain.wantToPurchaseTicketsImmediately(ticketsQuantity, ticketsPrice, receiptId, auctionId);
+                    }
                 }
             },
 
@@ -1114,8 +1304,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 else {
                     this.removeItemFromDashboardList(values.item.id, "winning");
                     this.removeItemFromDashboardList(values.id, "purchases");
-                    var auctionKey = (values.auctionKey != undefined) ? values.auctionKey : currentAuctionKey;
-                    this.addDashboardBidPurchased(values.item.id, values.item.name, values.item.key, auctionKey, values.pricePerItem, values.quantity, values.id);
+                    this.addDashboardBidPurchased(values);
                     this.loadMessagesToContainer();
                 }
             },
@@ -2669,7 +2858,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                             }).appendTo("body").fadeIn("fast");
                         },
                         before_close: function() {
-                            if(!attentionAboutBidding && !attentionAboutTickets && !attentionAboutMobiles && !attentionAboutConfirm) {
+                            if(!attentionAboutBidding && !attentionAboutTickets && !attentionAboutMobiles && !attentionAboutConfirm && !attentionAboutTBuying) {
                                 modal_overlay.fadeOut("fast");
                             }
                         },
@@ -2752,7 +2941,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                             }).appendTo("body").fadeIn("fast");
                         },
                         before_close: function() {
-                            if(!attentionAboutBidding && !attentionAboutTickets && !attentionAboutMobiles && !attentionAboutConfirm) {
+                            if(!attentionAboutBidding && !attentionAboutTickets && !attentionAboutMobiles && !attentionAboutConfirm && !attentionAboutTBuying) {
                                 modal_overlay.fadeOut("fast");
                             }
                         },
@@ -2837,7 +3026,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                             }).appendTo("body").fadeIn("fast");
                         },
                         before_close: function() {
-                            if(!attentionAboutBidding && !attentionAboutTickets && !attentionAboutMobiles && !attentionAboutConfirm) {
+                            if(!attentionAboutBidding && !attentionAboutTickets && !attentionAboutMobiles && !attentionAboutConfirm && !attentionAboutTBuying) {
                                 modal_overlay.fadeOut("fast");
                             }
                         },

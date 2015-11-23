@@ -221,7 +221,9 @@ if (!is_null($this->get('profile'))) {
                                     ?>
                                     <li class="row"
                                         data-dashboard-price="<?php echo (int) $purchase->grandTotal; ?>"
+                                        data-dashboard-quantity="<?php echo (int) $purchase->quantity; ?>"
                                         data-purchased-item-id="<?php echo $purchase->item->id; ?>"
+                                        <?php if($purchase->item->isTicket){ ?>data-purchased-item-is-ticket="yes"<?php } ?>
                                         data-purchased-purchase-id="<?php echo $purchase->id; ?>">
                                         <div class="col-md-4 col-xs-4">
                                             <a href="/auctions/<?php echo $auction->key; ?>/item/<?php echo $purchase->item->key; ?>"><h4><?php echo $purchase->item->name; ?></h4></a>

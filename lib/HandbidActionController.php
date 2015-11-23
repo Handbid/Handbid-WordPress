@@ -129,6 +129,7 @@ class HandbidActionController
             "handbid_ajax_get_paddle_number",
             "handbid_ajax_createbid",
             "handbid_ajax_buy_tickets",
+            "handbid_ajax_pay_for_tickets",
             "handbid_ajax_make_receipt_payment",
             "handbid_ajax_removebid",
             "handbid_ajax_add_credit_card",
@@ -409,6 +410,50 @@ class HandbidActionController
             }
         }
         echo json_encode($result);
+        exit;
+    }
+
+
+    function handbid_ajax_pay_for_tickets_callback(){
+        $nonce = isset($_POST['nonce']) ? $_POST['nonce'] : 'nonce';
+        $response = [];
+        $values = [
+            "receiptId" => (int) $_POST["receiptId"],
+            "auctionId" => (int) $_POST["auctionId"],
+        ];
+        if($this->handbid_verify_nonce($nonce, date("d.m.Y") . "paddle-nonce")){
+            $profile = $this->state->currentBidder( );
+
+            if(count($profile->creditCards)){
+                $ccCount = count($profile->creditCards);
+                $ccIndex = 0;
+                $paid = false;
+                while(!$paid and $ccIndex < $ccCount){
+                    $card = $profile->creditCards[$ccIndex];
+                    $ccIndex++;
+                    //foreach($profile->creditCards as $card){
+                    $tempValues = [
+                        "cardId" => $card->id,
+                        "stripeId" => $card->stripeId,
+                        "creditCardHandle" => $card->creditCardHandle,
+                        "receiptId" => $values["receiptId"],
+                        "auctionId" => $values["auctionId"],
+                    ];
+                    try {
+                        $resp = $this->handbid->store('Receipt')->makePayment($tempValues);
+                        $response["result"] = $resp->paid;
+                        if($resp->paid){
+                            $paid = true;
+                            $response["paid_by"] = $card;
+                        }
+                    }
+                    catch(Exception $e) {
+                        $response["errors"] = ["Something went wrong. Please, try again later"];
+                    }
+                }
+            }
+        }
+        echo json_encode($response);
         exit;
     }
 
