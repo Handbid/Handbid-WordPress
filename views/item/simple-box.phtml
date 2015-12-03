@@ -65,6 +65,7 @@ $currencySymbol = (isset($auction->currencySymbol))? $auction->currencySymbol : 
      <?php echo ($itemCanNotBeShownInPresale)?" not-available-in-presale ":"";?>"
      <?php if ($item->isDirectPurchaseItem) { ?>data-for-sale<?php } ?>
      <?php if ($item->disableMobileBidding) { ?>data-live<?php } ?>
+     <?php if ($item->isBidpadOnly) { ?>data-bidpad<?php } ?>
      <?php if ($item->isTicket) { ?>data-is-ticket<?php } ?>
      <?php if ($itemHideIfSold) { ?>data-hide-if-sold<?php } ?>
      <?php if (!$item->isDirectPurchaseItem && $item->bidCount === 0) { ?>data-no-bids<?php } ?>
@@ -95,6 +96,7 @@ $currencySymbol = (isset($auction->currencySymbol))? $auction->currencySymbol : 
             <div class="dim-overlay"></div>
             <div class="box-flag">
 
+                <h3 data-handbid-box-banner="bidpad" data-handbid-box-id="<?php echo $item->id; ?>">BidPad Only</h3>
                 <h3 data-handbid-box-banner="live" data-handbid-box-id="<?php echo $item->id; ?>">Live Auction Only</h3>
                 <h3 data-handbid-box-banner="losing" data-handbid-box-id="<?php echo $item->id; ?>">Losing this item.</h3>
                 <h3 data-handbid-box-banner="winning" data-handbid-box-id="<?php echo $item->id; ?>">Winning this item.</h3>

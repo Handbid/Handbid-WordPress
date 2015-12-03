@@ -459,20 +459,28 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 return (itemStatus == "yes");
             },
 
+            checkItemIsBidPadOnly: function(){
+                var itemStatus = $("[data-item-check-is-bidpad-item-id]").val();
+                return (itemStatus == "yes");
+            },
+
             checkItemIsAlreadySoldOrNotAvailable: function(winnerID, itemID){
                 var biddingBlock = $("[data-item-bidding-id]"),
                     noBiddingBlock = $("[data-item-nobidding-id]"),
                     isSoldBlock = $("[data-item-is-sold-id]"),
                     isLiveBlock = $("[data-item-is-live-id]"),
+                    isBidPadBlock = $("[data-item-is-bidpad-id]"),
                     isNotForLiveBlock = $(".not-for-live-auctions"),
                     itemCanNotBeShownInPreSale = this.checkItemIsAvailableForPresale(),
                     itemsAuctionIsClosed = this.checkItemsAuctionIsClosed(),
                     itemIsAlreadySold = this.checkItemIsAlreadySold(),
-                    itemIsLiveOnly = this.checkItemIsLiveOnly();
+                    itemIsLiveOnly = this.checkItemIsLiveOnly(),
+                    itemIsBidPadOnly = this.checkItemIsBidPadOnly();
 
-                (itemCanNotBeShownInPreSale || itemIsAlreadySold || itemIsLiveOnly || itemsAuctionIsClosed) ? biddingBlock.hide(): biddingBlock.show();
+                (itemCanNotBeShownInPreSale || itemIsAlreadySold || itemIsLiveOnly || itemIsBidPadOnly || itemsAuctionIsClosed) ? biddingBlock.hide(): biddingBlock.show();
                 (itemCanNotBeShownInPreSale || itemsAuctionIsClosed) ? noBiddingBlock.show(): noBiddingBlock.hide();
                 (itemIsAlreadySold) ? isSoldBlock.show(): isSoldBlock.hide();
+                (itemIsBidPadOnly) ? isBidPadBlock.show(): isBidPadBlock.hide();
                 (itemIsLiveOnly) ? isLiveBlock.show(): isLiveBlock.hide();
                 (itemIsLiveOnly) ? isNotForLiveBlock.hide(): isNotForLiveBlock.show();
 
@@ -612,6 +620,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     isHidden = (values.isHidden == "1"),
                     isDirectPurchaseItem  = (values.isDirectPurchaseItem == "1"),
                     disableMobileBidding = (values.disableMobileBidding == "1"),
+                    isBidPadOnly = (values.isBidpadOnly == "1"),
                     noBids = (!isDirectPurchaseItem && values.bidCount === 0);
                 $.map(paramsBoxes, function(val){
                     var paramsBox = $(val),
@@ -652,6 +661,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     (isHidden) ? paramsBox.attr("data-is-hidden-item", "1") : paramsBox.removeAttr("data-is-hidden-item");
                     (isDirectPurchaseItem) ? paramsBox.attr("data-for-sale", "1") : paramsBox.removeAttr("data-for-sale");
                     (disableMobileBidding) ? paramsBox.attr("data-live", "1") : paramsBox.removeAttr("data-live");
+                    (isBidPadOnly) ? paramsBox.attr("data-bidpad", "1") : paramsBox.removeAttr("data-bidpad");
                     (noBids) ? paramsBox.attr("data-no-bids", "1") : paramsBox.removeAttr("data-no-bids");
                     (newHideIfSold) ? paramsBox.attr("data-hide-if-sold", "1") : paramsBox.removeAttr("data-hide-if-sold");
                     paramsBox.attr("data-handbid-item-box-status", itemStatus);
@@ -669,6 +679,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
                 $("[data-item-check-status-item-id='"+itemID+"']").val(itemStatus);
                 $("[data-item-check-is-live-item-id='"+itemID+"']").val((disableMobileBidding)?"yes":"no");
+                $("[data-item-check-is-live-bidpad-id='"+itemID+"']").val((isBidPadOnly)?"yes":"no");
                 $("[data-item-check-available-item-id='"+itemID+"']").val(availableForPreSale);
                 this.checkItemIsAlreadySoldOrNotAvailable(item.winnerId, item.id);
 
