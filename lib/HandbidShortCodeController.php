@@ -80,6 +80,7 @@ class HandbidShortCodeController {
 			'handbid_bidder_receipt'        => 'bidderReceipt',
 			'handbid_bidder_login_form'     => 'loginRegisterForm',
 			'handbid_customizer_styles'     => 'customizerStyles',
+			'handbid_testimonials'          => 'handbidTestimonials',
 		];
 
 		forEach ( $shortCodes as $shortCode => $callback ) {
@@ -1360,6 +1361,27 @@ class HandbidShortCodeController {
 			return;
 
 		}
+
+	}
+
+
+	public function handbidTestimonials( $attributes ) {
+
+        $args = array(
+            'posts_per_page'   => -1,
+            'orderby'          => 'date',
+            'order'            => 'DESC',
+            'post_type'        => 'hb_testimonial',
+            'post_status'      => 'publish'
+        );
+        $testimonials = get_posts( $args );
+
+        return $this->viewRenderer->render(
+            "views/social/testimonials",
+            [
+                "testimonials" => $testimonials,
+            ]
+        );
 
 	}
 

@@ -553,6 +553,106 @@
     display: block;
 }
 
+
+.testimonials-wrapper{
+    overflow: hidden;
+}
+.testimonials-container .single-testimonial-block{
+    display: none;
+}
+.testimonials-container .single-testimonial-block.active-testimonial-block{
+    display: block;
+}
+.testimonials-container{
+    width: 69%;
+    text-align: center;
+    float: left;
+    border-right: 1px solid #bbb;
+    padding-right: 25px;
+}
+.testimonials-container img{
+    max-height: 100px;
+}
+.testimonials-container h3{
+    color: #4cb0ce;
+    font-weight: bolder;
+    font-size: 2em;
+}
+.testimonials-container .testimonial-person{
+    display: block;
+    font-weight: bolder;
+    font-size: 1.8em;
+    margin-top: 20px;
+}
+.testimonials-container .testimonial-position{
+    display: block;
+    font-size: 1.4em;
+}
+.testimonials-container .testimonial-date{
+    display: block;
+    font-size: 1.2em;
+    color: #1A72B3;
+    font-weight: bold;
+}
+.testimonials-container .testimonial-content{
+    text-align: justify;
+    margin-top: 25px;
+}
+.testimonials-sidebar{
+    width: 28%;
+    float: right;
+}
+.testimonials-sidebar h4{
+    font-weight: bolder;
+    text-align: left;
+}
+.testimonials-sidebar h4.started-header{
+    font-size: 1.5em;
+    color: #4cb0ce;
+}
+.testimonials-sidebar p.howto{}
+.testimonials-sidebar ul.testimonials-list{
+    margin-bottom: 40px;
+    list-style-type: none;
+}
+.testimonials-sidebar ul.testimonials-list li{}
+.testimonials-sidebar ul.testimonials-list li a{
+    color: #999;
+    overflow: hidden;
+    display: block;
+}
+.testimonials-sidebar ul.testimonials-list li a:hover{
+    opacity: 0.7;
+}
+.testimonials-sidebar ul.testimonials-list li a img{
+    max-height: 70px;
+    max-width: 70px;
+    float: left;
+    margin: 0 15px 15px 0;
+}
+.testimonials-sidebar ul.testimonials-list li a .testimonial-date{
+    display: block;
+    font-size: 14px;
+    color: #777;
+}
+.testimonials-sidebar .start-auction-button{
+    color: #D94A67;
+    text-decoration: none;
+    text-transform: uppercase;
+    display: inline-block;
+    border: 1px solid;
+    border-radius: 7px;
+    padding: 10px;
+}
+.testimonials-sidebar .start-auction-button:hover{
+    background: #D94A67;
+    color: #fff;
+
+}
+
+
+
+
 @media (max-width: 767px) {
 
     .global-footer .toggle-info{

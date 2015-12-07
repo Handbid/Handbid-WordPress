@@ -1,0 +1,22 @@
+<?php
+/**
+ * @copyright Copyright (c) 2014-2015 Handbid Inc.
+ * @category handbid
+ * @package Handbid2-WordPress
+ * @license Proprietary
+ * @link http://www.handbid.com/
+ * @author Master of Code (worldclass@masterofcode.com)
+ */
+
+$testimonial = $this->get("testimonial");
+$is_initial = $this->get("is_initial");
+?>
+<div class="single-testimonial-block single-testimonial-block-<?php echo $testimonial->ID?> <?php echo ($is_initial)?" active-testimonial-block ":"";?>">
+<img src="<?php echo wp_get_attachment_image_src( get_post_thumbnail_id($testimonial->ID), "medium" )[0] ?>">
+<h3><?php echo get_the_title($testimonial->ID)?></h3>
+<span class="testimonial-person"><?php echo get_post_meta($testimonial->ID, "hb_person", true)?></span>
+<span class="testimonial-position"><?php echo get_post_meta($testimonial->ID, "hb_position", true)?></span>
+<span class="testimonial-date"><?php echo date("F Y", strtotime($testimonial->post_date))?></span>
+
+<div class="testimonial-content"><?php echo apply_filters("the_content", $testimonial->post_content)?></div>
+</div>

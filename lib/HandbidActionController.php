@@ -143,6 +143,7 @@ class HandbidActionController
             "handbid_load_auto_complete_auctions",
             "handbid_load_shortcode_auctions",
             "handbid_ajax_customizer_css",
+            "handbid_ajax_get_testimonial",
         ];
         foreach($ajaxActions as $ajaxAction){
             add_action("wp_ajax_".$ajaxAction, [$this, $ajaxAction."_callback"]);
@@ -899,6 +900,23 @@ class HandbidActionController
         }
         echo json_encode($result);
         exit;
+    }
+
+
+    public function handbid_ajax_get_testimonial_callback() {
+
+        $postID = (int) $_POST["testimonial_id"];
+        $testimonial = get_post( $postID );
+
+        echo $this->viewRenderer->render(
+            "views/social/single-testimonial",
+            [
+                "testimonial" => $testimonial,
+                "is_initial" => false,
+            ]
+        );
+        exit;
+
     }
 
 

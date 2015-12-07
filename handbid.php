@@ -79,6 +79,7 @@ class Handbid
     public $viewRender;
     public $basePath;
     public $state;
+    public $testimonials;
     public $actionController;
     public $adminActionController;
     public $router;
@@ -98,6 +99,7 @@ class Handbid
         $this->viewRender            = isset($options['viewRender']) ? $options['viewRender'] : $this->createViewRenderer(
         );
         $this->state                 = isset($options['state']) ? $options['state'] : $this->state();
+        $this->testimonials          = isset($options['state']) ? $options['state'] : $this->testimonials();
         $this->router                = isset($options['router']) ? $options['router'] : $this->createRouteController();
         $this->shortCodeController   = isset($options['createShortCodeController']) ? $options['createShortCodeController'] : $this->createShortCodeController(
         );
@@ -110,6 +112,7 @@ class Handbid
 
         register_activation_hook(__FILE__, [$this, 'install']);
         add_action('init', [$this, 'init']);
+        add_action('init', [$this->testimonials, 'addActions']);
         add_action('wp_footer', [$this, 'onRenderFooter']);
         add_action('wp_head', [$this, 'onRenderHeader'], 1);
         add_filter('query_vars', [$this, 'registerVariables']);
@@ -132,6 +135,7 @@ class Handbid
         $this->shortCodeController->init();
         $this->actionController->init();
         $this->adminActionController->init();
+        $this->testimonials->init();
 
         add_action(
             'admin_post_submit-form',
@@ -322,6 +326,17 @@ class Handbid
         }
 
         return $this->state;
+    }
+
+    // State
+    function testimonials()
+    {
+
+        if (!$this->testimonials) {
+            $this->testimonials = new HandbidTestimonials();
+        }
+
+        return $this->testimonials;
     }
 
     // Controllers

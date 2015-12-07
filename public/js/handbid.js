@@ -3607,6 +3607,30 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
             }
         });
 
+        $('.testimonials-list li a').live("click", function(e){
+            e.preventDefault();
+            var testimonialID = $(this).data("testimonial-id");
+            var testimonialsContainer = $("#testimonials-container");
+            if($(".single-testimonial-block-" + testimonialID).length){
+                $(".single-testimonial-block").removeClass("active-testimonial-block");
+                $(".single-testimonial-block-" + testimonialID).addClass("active-testimonial-block");
+            }
+            else {
+                $.post(
+                    ajaxurl,
+                    {
+                        action: "handbid_ajax_get_testimonial",
+                        testimonial_id: testimonialID
+                    },
+                    function (data) {
+                        testimonialsContainer.append(data);
+                        $(".single-testimonial-block").removeClass("active-testimonial-block");
+                        $(".single-testimonial-block-" + testimonialID).addClass("active-testimonial-block");
+                    }
+                );
+            }
+        });
+
     });
 
 })(jQuery);

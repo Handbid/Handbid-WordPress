@@ -1,0 +1,53 @@
+<?php
+/**
+ * @copyright Copyright (c) 2014-2015 Handbid Inc.
+ * @category handbid
+ * @package Handbid2-WordPress
+ * @license Proprietary
+ * @link http://www.handbid.com/
+ * @author Master of Code (worldclass@masterofcode.com)
+ */
+
+$testimonials = $this->get("testimonials");
+
+?>
+<div class="container container-fluid auction-timer-wrapper testimonials-wrapper">
+    <?php if (count($testimonials)) {
+        $first_testimonial = $testimonials[0];
+        ?>
+        <div id="testimonials-container" class="testimonials-container">
+            <?php
+            echo $this->partial('single-testimonial.phtml', [
+                    'testimonial' => $first_testimonial,
+                    'is_initial' => true,
+                ]
+            );
+            ?>
+        </div>
+        <div class="testimonials-sidebar">
+            <h4>RECENT TESTIMONIALS</h4>
+            <p class="howto">What customers say about Handbid</p>
+            <ul class="testimonials-list">
+                <?php foreach($testimonials as $testimonial){ ?>
+                <li>
+                    <a href="#" data-testimonial-id="<?php echo $testimonial->ID;?>">
+                        <img src="<?php echo wp_get_attachment_image_src( get_post_thumbnail_id($testimonial->ID), "medium" )[0] ?>">
+                        <span class="testimonial-title"><?php echo get_the_title($testimonial->ID);?></span>
+                        <span class="testimonial-date"><?php echo date("F Y", strtotime($testimonial->post_date))?></span>
+                    </a>
+
+                </li>
+                <?php } ?>
+            </ul>
+
+            <h4 class="started-header">START YOUR AUCTION</h4>
+            <p class="howto">Get started with your own
+                Handbid auction today or reach
+                out to us to learn more!</p>
+            <a href="/get-started/" class="start-auction-button">Get Started</a>
+        </div>
+    <?php
+    } else {
+        echo "<h3>No Testimonials Yet</h3>";
+    }?>
+</div>
