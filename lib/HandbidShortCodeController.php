@@ -310,6 +310,7 @@ class HandbidShortCodeController {
                 $pageSize = 999999;
                 $total = $pageSize;
             }
+            $searchString = strtolower(trim(strip_tags($organizationSearch)));
 
             //$profile = $this->handbid->store( 'Bidder' )->myProfile();
             $profile = $this->state->currentBidder();
@@ -327,10 +328,7 @@ class HandbidShortCodeController {
                         $sortDirection,
                         $query,
                         [
-                            'logo' => [
-                                'w' => $logoWidth,
-                                'h' => $logoHeight
-                            ]
+                            'search' => $searchString
                         ]
                     );
 
@@ -361,7 +359,7 @@ class HandbidShortCodeController {
 
             if($organizationSearch){
                 $tempOrganizations = [];
-                $searchString = strtolower(trim(strip_tags($organizationSearch)));
+
                 if(count($organizations)){
                     foreach($organizations as $organization){
                         $orgName = strtolower(trim(strip_tags($organization->name)));
