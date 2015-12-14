@@ -1342,6 +1342,9 @@ class HandbidShortCodeController {
 			$pageSize = isset( $attributes['page_size'] ) ? $attributes['page_size'] : 25;
 			$total    = isset( $attributes['total'] ) ? $attributes['total'] : 0;
 			$id       = isset( $attributes['id'] ) ? $attributes['id'] : 0;
+			$true_url = isset( $attributes['true_url'] ) ? $attributes['true_url'] : false;
+			$base     = isset( $attributes['base'] ) ? $attributes['base'] : "page";
+			$initial_point = isset( $attributes['initial_point'] ) ? (int) $attributes['initial_point'] : 0;
 
 			return $this->viewRenderer->render(
 				$template,
@@ -1349,7 +1352,10 @@ class HandbidShortCodeController {
 					'page'      => $page,
 					'page_size' => $pageSize,
 					'total'     => $total,
-					'id'        => $id
+					'id'        => $id,
+					'true_url'  => $true_url,
+					'base'      => $base,
+					'initial_point' => $initial_point,
 				]
 			);
 		} catch ( Exception $e ) {
@@ -1365,6 +1371,11 @@ class HandbidShortCodeController {
 
 	public function handbidTestimonials( $attributes ) {
 
+        $currentTestimonial = intval($_GET['testimonial']);
+        $currentPage = (intval($_GET['block']) > 0 ) ? intval($_GET['block']) : 1;
+        $perPage = 5;
+        $offset = ($currentPage - 1) * $perPage;
+
         $args = array(
             'posts_per_page'   => -1,
             'orderby'          => 'date',
@@ -1373,11 +1384,28 @@ class HandbidShortCodeController {
             'post_status'      => 'publish'
         );
         $testimonials = get_posts( $args );
+        $recentTestimonials = array_slice($testimonials, 0, 3);
+        $displayTestimonials = array_slice($testimonials, $offset, $perPage);
+
+        if($currentTestimonial){
+            $singleTestimonial = get_post($currentTestimonial);
+            $singleTestimonial = ($singleTestimonial) ? $singleTestimonial : false;
+        }
+        else{
+            $singleTestimonial = false;
+        }
 
         return $this->viewRenderer->render(
             "views/social/testimonials",
             [
                 "testimonials" => $testimonials,
+                "count" => count($testimonials),
+                "perPage" => $perPage,
+                "currentPage" => $currentPage,
+                "offset" => $offset,
+                "singleTestimonial" => $singleTestimonial,
+                "recentTestimonials" => $recentTestimonials,
+                "displayTestimonials" => $displayTestimonials,
             ]
         );
 

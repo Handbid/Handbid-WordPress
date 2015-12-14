@@ -9,28 +9,60 @@
  */
 
 $testimonials = $this->get("testimonials");
-
+$singleTestimonial = $this->get("singleTestimonial");
+$recentTestimonials = $this->get("recentTestimonials");
+$displayTestimonials = $this->get("displayTestimonials");
+$count = $this->get("count");
+$perPage = $this->get("perPage");
+$currentPage = $this->get("currentPage");
+$offset = $this->get("offset");
 ?>
 <div class="container container-fluid auction-timer-wrapper testimonials-wrapper">
     <?php if (count($testimonials)) {
-        $first_testimonial = $testimonials[0];
         ?>
-        <div id="testimonials-container" class="testimonials-container">
+        <div id="testimonials-container" class="testimonials-container <?php echo ($singleTestimonial)?" container-align-center ":"";?>">
+            <?php if(!$singleTestimonial) { ?>
+                <h4 class="testimonials-header">Here are some comments from our customers</h4>
+                <ul class="testimonials-list">
+                    <?php foreach ($displayTestimonials as $testimonial) { ?>
+                        <li>
+                            <a href="<?php echo add_query_arg(["testimonial" => $testimonial->ID], get_permalink());?>" data-testimonial-id="<?php echo $testimonial->ID; ?>">
+                                <img
+                                    src="<?php echo wp_get_attachment_image_src(get_post_thumbnail_id($testimonial->ID), "medium")[0] ?>">
+                                <span class="testimonial-title"><?php echo get_the_title($testimonial->ID); ?></span>
+                                <?php $teaser = get_post_meta($testimonial->ID, "hb_teaser", true);
+                                if(trim($teaser)){
+                                ?>
+                                <span class="testimonial-teaser"><?php echo $teaser; ?></span>
+                                <?php }?>
+                                <span
+                                    class="testimonial-date"><?php echo date("F Y", strtotime($testimonial->post_date)) ?></span>
+                            </a>
+
+                        </li>
+                    <?php } ?>
+                </ul>
             <?php
-            echo $this->partial('single-testimonial.phtml', [
-                    'testimonial' => $first_testimonial,
-                    'is_initial' => true,
-                ]
-            );
+                if($count > $perPage){
+                    echo do_shortcode('[handbid_pager page_size=' . $perPage . ' page=' . $currentPage . ' total=' . $count . ' true_url=1 base="block" initial_point=1 ]');
+                }
+            } else {
+                echo $this->partial('single-testimonial.phtml', [
+                        'testimonial' => $singleTestimonial,
+                        'is_initial' => true,
+                    ]
+                );
+            }
             ?>
         </div>
         <div class="testimonials-sidebar">
+            <?php if(!dynamic_sidebar('sidebar-testimonials')){?>
             <h4>RECENT TESTIMONIALS</h4>
             <p class="howto">What customers say about Handbid</p>
             <ul class="testimonials-list">
-                <?php foreach($testimonials as $testimonial){ ?>
+                <?php foreach($recentTestimonials as $testimonial){ ?>
                 <li>
-                    <a href="#" data-testimonial-id="<?php echo $testimonial->ID;?>">
+                    <a href="<?php echo add_query_arg(["testimonial" => $testimonial->ID], get_permalink());?>" data-testimonial-id="<?php echo $testimonial->ID;?>">
                         <img src="<?php echo wp_get_attachment_image_src( get_post_thumbnail_id($testimonial->ID), "medium" )[0] ?>">
                         <span class="testimonial-title"><?php echo get_the_title($testimonial->ID);?></span>
                         <span class="testimonial-date"><?php echo date("F Y", strtotime($testimonial->post_date))?></span>
@@ -39,7 +71,7 @@ $testimonials = $this->get("testimonials");
                 </li>
                 <?php } ?>
             </ul>
-
+            <?php  } ?>
             <h4 class="started-header">START YOUR AUCTION</h4>
             <p class="howto">Get started with your own
                 Handbid auction today or reach

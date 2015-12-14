@@ -120,6 +120,8 @@ class Handbid
         // Temporary fix for showing admin bar
         add_action('after_setup_theme', [$this, 'remove_admin_bar']);
 
+        add_action( 'widgets_init', [$this->testimonials, "addCustomSidebar"]);
+
     }
 
     function init()

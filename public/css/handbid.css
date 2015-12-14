@@ -565,10 +565,12 @@
 }
 .testimonials-container{
     width: 69%;
-    text-align: center;
     float: left;
     border-right: 1px solid #bbb;
     padding-right: 25px;
+}
+.testimonials-container .testimonial-content.container-align-center{
+    text-align: center;
 }
 .testimonials-container img{
     max-height: 100px;
@@ -602,38 +604,48 @@
     width: 28%;
     float: right;
 }
+.testimonials-sidebar div.widget{
+    margin-bottom: 20px;
+}
+
 .testimonials-sidebar h4{
     font-weight: bolder;
     text-align: left;
+    text-transform: uppercase;
 }
 .testimonials-sidebar h4.started-header{
     font-size: 1.5em;
     color: #4cb0ce;
 }
-.testimonials-sidebar p.howto{}
-.testimonials-sidebar ul.testimonials-list{
+ul.testimonials-list{
     margin-bottom: 40px;
     list-style-type: none;
 }
-.testimonials-sidebar ul.testimonials-list li{}
-.testimonials-sidebar ul.testimonials-list li a{
+ul.testimonials-list li{}
+ul.testimonials-list li a{
     color: #999;
     overflow: hidden;
     display: block;
 }
-.testimonials-sidebar ul.testimonials-list li a:hover{
+ul.testimonials-list li a:hover{
     opacity: 0.7;
 }
-.testimonials-sidebar ul.testimonials-list li a img{
+ul.testimonials-list li a img{
     max-height: 70px;
     max-width: 70px;
     float: left;
     margin: 0 15px 15px 0;
 }
-.testimonials-sidebar ul.testimonials-list li a .testimonial-date{
+ul.testimonials-list li a .testimonial-date{
     display: block;
     font-size: 14px;
     color: #777;
+}
+ul.testimonials-list li a .testimonial-teaser{
+    display: block;
+    color: #999;
+    font-size: 16px;
+    font-style: italic;
 }
 .testimonials-sidebar .start-auction-button{
     color: #D94A67;
@@ -648,6 +660,31 @@
     background: #D94A67;
     color: #fff;
 
+}
+.testimonials-container .testimonials-header{
+    font-size: 1.8em;
+    color: #999;
+    text-align: left;
+    margin: 0 0 25px;
+}
+.testimonials-container .testimonials-list{
+    text-align: left;
+}
+.testimonials-container .testimonials-list li{
+    margin-bottom: 5px;
+}
+
+.testimonials-container ul.testimonials-list li a img{
+    max-height: 90px;
+    max-width: 90px;
+    margin-bottom: 30px;
+}
+.testimonials-container .testimonials-list .testimonial-title{
+    color: #4cb0ce;
+    font-size: 20px;
+}
+.testimonials-container .testimonials-list .testimonial-date{
+    font-weight: lighter;
 }
 
 

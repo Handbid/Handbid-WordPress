@@ -70,6 +70,19 @@ class HandbidTestimonials {
         register_post_type( $this->postTypeSlug, $args );
     }
 
+    public function addCustomSidebar(){
+        register_sidebar( array(
+            'name' => __( 'Testimonials Sidebar', 'handbid' ),
+            'id' => 'sidebar-testimonials',
+            'description' => __( 'Widgets in this area will be shown on testimonials page.', 'handbid' ),
+            'before_widget' => '<div id="%1$s" class="widget %2$s">',
+            'after_widget'  => '</div>',
+            'before_title'  => '<h4>',
+            'after_title'   => '</h4>',
+        ) );
+        register_widget( 'HBTestimonialsWidget' );
+    }
+
 }
 
 
@@ -86,7 +99,7 @@ class HBMetabox extends StdClass {
     public function __construct( $postTypeSlug ) {
         $this->postTypeSlug = $postTypeSlug;
         $this->metaBoxSlug  = "handbid-testimonial-meta-box";
-        $this->metaBoxTitle = __( "Testimonial Details", HB_LANG );
+        $this->metaBoxTitle = __( "Testimonial Details", 'handbid' );
         $this->metaBoxViews = new HBMetaboxView();
     }
 
@@ -113,16 +126,23 @@ class HBMetabox extends StdClass {
     public function getFields() {
         return array(
             array(
-                "title"        => __( "Person", HB_LANG ),
+                "title"        => __( "Person", 'handbid' ),
                 "type"         => "text",
                 "name"         => "person",
                 "default"      => "",
                 "autocomplete" => array(),
             ),
             array(
-                "title"        => __( "Position of Person", HB_LANG ),
+                "title"        => __( "Position of Person", 'handbid' ),
                 "type"         => "text",
                 "name"         => "position",
+                "default"      => "",
+                "autocomplete" => array(),
+            ),
+            array(
+                "title"        => __( "Teaser Sentence", 'handbid' ),
+                "type"         => "text",
+                "name"         => "teaser",
                 "default"      => "",
                 "autocomplete" => array(),
             ),
@@ -281,4 +301,76 @@ class HBMetaboxView extends StdClass{
 
 
 
+}
+
+class HBTestimonialsWidget extends WP_Widget {
+
+    function __construct() {
+        parent::__construct(
+            'hb_testimonials_widget',
+            __( 'Recent Testimonials', 'handbid' ),
+            array( 'description' => __( 'Widget for displaying recent Handbid Testimonials', 'handbid' ), )
+        );
+    }
+
+    function widget( $args, $instance ) {
+        echo $args['before_widget'];
+        if ( ! empty( $instance['title'] ) ) {
+            echo $args['before_title'] . apply_filters( 'widget_title', $instance['title'] ). $args['after_title'];
+        }
+        echo '<p class="howto">'.$instance["subtitle"].'</p>';
+
+        $arguments = array(
+            'posts_per_page'   => (int) $instance['number'],
+            'orderby'          => 'date',
+            'order'            => 'DESC',
+            'post_type'        => 'hb_testimonial',
+            'post_status'      => 'publish'
+        );
+        $testimonials_arr = get_posts( $arguments );
+        ?>
+        <ul class="testimonials-list">
+            <?php foreach($testimonials_arr as $testimonial){ ?>
+                <li>
+                    <a href="<?php echo add_query_arg(["testimonial" => $testimonial->ID], get_permalink());?>" data-testimonial-id="<?php echo $testimonial->ID;?>">
+                        <img src="<?php echo wp_get_attachment_image_src( get_post_thumbnail_id($testimonial->ID), "medium" )[0] ?>">
+                        <span class="testimonial-title"><?php echo get_the_title($testimonial->ID);?></span>
+                        <span class="testimonial-date"><?php echo date("F Y", strtotime($testimonial->post_date))?></span>
+                    </a>
+                </li>
+            <?php } ?>
+        </ul>
+        <?php
+
+        echo $args['after_widget'];
+    }
+
+    function update( $new_instance, $old_instance ) {
+        $instance = array();
+        $instance['title'] = ( ! empty( $new_instance['title'] ) ) ? strip_tags( $new_instance['title'] ) : '';
+        $instance['subtitle'] = ( ! empty( $new_instance['subtitle'] ) ) ? strip_tags( $new_instance['subtitle'] ) : '';
+        $instance['number'] = ( ! empty( $new_instance['number'] ) ) ? strip_tags( $new_instance['number'] ) : 3;
+
+        return $instance;
+    }
+
+    function form( $instance ) {
+        $title = ! empty( $instance['title'] ) ? $instance['title'] : __( 'Recent Testimonials', 'text_domain' );
+        $subtitle = ! empty( $instance['subtitle'] ) ? $instance['subtitle'] : __( 'What customers say about Handbid', 'text_domain' );
+        $number = ! empty( $instance['number'] ) ? $instance['number'] : 3;
+        ?>
+        <p>
+            <label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:' ); ?></label>
+            <input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>">
+        </p>
+        <p>
+            <label for="<?php echo $this->get_field_id( 'subtitle' ); ?>"><?php _e( 'Subtitle:' ); ?></label>
+            <input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'subtitle' ); ?>" type="text" value="<?php echo esc_attr( $subtitle ); ?>">
+        </p>
+        <p>
+            <label for="<?php echo $this->get_field_id( 'number' ); ?>"><?php _e( 'Number:' ); ?></label>
+            <input class="widefat" id="<?php echo $this->get_field_id( 'number' ); ?>" name="<?php echo $this->get_field_name( 'number' ); ?>" type="number" value="<?php echo esc_attr( $number ); ?>" min="1">
+        </p>
+    <?php
+    }
 }

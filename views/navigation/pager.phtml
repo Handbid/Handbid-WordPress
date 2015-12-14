@@ -14,6 +14,9 @@ $page     = $this->get( 'page' );
 $pageSize = $this->get( 'page_size' );
 $pages    = ceil( $total / $pageSize );
 $id       = $this->get( 'id' );
+$trueUrl = !!((int) $this->get( 'true_url' ));
+$base = $this->get( 'base' );
+$initialPoint = $this->get( 'initial_point' );
 
 if ( $pages < 2 ) {
 	return;
@@ -21,14 +24,14 @@ if ( $pages < 2 ) {
 
 ?>
 <ul class="page pagination">
-	<?php if ( $page > 0 ) {
+	<?php if ( $page > $initialPoint ) {
 		?>
-		<li class="first"><a href="<?php echo $this->url( null, [
+		<li class="first"><a href="<?php echo ($trueUrl)? $this->trueUrl(null,[$base => $initialPoint]):  $this->url( null, [
 				$id => [
-					'page' => 0
+					'page' => $initialPoint
 				]
 			] ); ?>"><< First</a></li>
-		<li class="previous"><a href="<?php echo $this->url( null, [
+		<li class="previous"><a href="<?php echo ($trueUrl)? $this->trueUrl(null,[$base => $page-1]):  $this->url( null, [
 				$id => [
 					'page' => ( $page - 1 )
 				]
@@ -36,25 +39,25 @@ if ( $pages < 2 ) {
 	<?php
 	}
 
-	for ( $p = 0; $p < $pages; $p ++ ) {
+	for ( $p = $initialPoint; $p < $pages + $initialPoint; $p ++ ) {
 		?>
 
-		<li><a href="<?php echo $this->url( null, [
+		<li><a href="<?php echo ($trueUrl)? $this->trueUrl(null,[$base => $p]):  $this->url( null, [
 				$id => [
 					'page' => $p
 				]
-			] ); ?>" class="<?php echo ( $page == $p ) ? 'selected' : ''; ?>"><?php echo( $p + 1 ); ?></a></li>
+			] ); ?>" class="<?php echo ( $page == $p ) ? 'selected' : ''; ?>"><?php echo( $p + (1-$initialPoint) ); ?></a></li>
 
 	<?php } ?>
 
-	<?php if ( $page < ( $pages - 1 ) ) {
+	<?php if ( $page < ( $pages - (1-$initialPoint) ) ) {
 		?>
-		<li class="next"><a href="<?php echo $this->url( null, [
+		<li class="next"><a href="<?php echo ($trueUrl)? $this->trueUrl(null,[$base => $page+1]):  $this->url( null, [
 				$id => [
 					'page' => ( $page + 1 )
 				]
 			] ); ?>">Next ></a></li>
-		<li class="last"><a href="<?php echo $this->url( null, [
+		<li class="last"><a href="<?php echo ($trueUrl)? $this->trueUrl(null,[$base => $pages - (1-$initialPoint)]):  $this->url( null, [
 				$id => [
 					'page' => ( $pages - 1 )
 				]

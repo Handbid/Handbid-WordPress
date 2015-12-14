@@ -89,4 +89,20 @@ class HandbidView {
         return $url;
     }
 
+    public function trueUrl($href, $params = [], $options = [], $trueUrl = false) {
+
+        if($trueUrl) {
+
+            $href = ($href) ? $href : get_permalink();
+
+            return add_query_arg($params, $href);
+
+        }
+        else{
+
+            return $this->url($href, $params, $options);
+
+        }
+    }
+
 }
