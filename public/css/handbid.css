@@ -569,7 +569,7 @@
     border-right: 1px solid #bbb;
     padding-right: 25px;
 }
-.testimonials-container .testimonial-content.container-align-center{
+.testimonials-container.container-align-center{
     text-align: center;
 }
 .testimonials-container img{
