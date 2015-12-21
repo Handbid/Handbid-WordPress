@@ -38,8 +38,21 @@ if (!is_front_page()) {
                     echo '<a href="#">' . the_title() . '</a>';
                 }
             } elseif (is_page()) {
-                echo ' : ';
-                echo '<a href="#">' . the_title() . '</a>';
+                $is_testimonial = false;
+                if(!empty($_GET['testimonial'])){
+                    $testimonial = get_post(intval($_GET['testimonial']));
+                    if($testimonial){
+                        $is_testimonial = true;
+                        echo ' : ';
+                        echo '<a href="'.get_permalink(get_the_ID()).'">' . get_the_title() . '</a>';
+                        echo ' : ';
+                        echo '<a href="#">' . get_the_title($testimonial->ID) . '</a>';
+                    }
+                }
+                if(!$is_testimonial) {
+                    echo ' : ';
+                    echo '<a href="#">' . the_title() . '</a>';
+                }
             }
         }
         ?>
