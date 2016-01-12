@@ -448,7 +448,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
             checkItemsAuctionIsClosed: function(){
                 var auctionStatus = $("[data-item-check-status-auction-id]").val();
-                return (auctionStatus == "closed");
+                return (auctionStatus == "closed" || auctionStatus == "reconcile" || auctionStatus == "reconciled");
             },
 
             checkItemIsAlreadySold: function(){
@@ -511,7 +511,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                         listAuctions.prepend("<p>"+noItemsText+"</p>");
                     }
 
-                    if(auctionStatus == "closed"){
+                    if(auctionStatus == "closed" || auctionStatus == "reconcile" || auctionStatus == "reconciled"){
                         var hiddenAuctionIds = $("[data-hidden-active-auction="+auctionID+"]");
 
                         (hiddenAuctionIds.length) ? hiddenAuctionIds.remove() : "" ;
@@ -2735,7 +2735,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     $.cookie(bidCookieKey, paddleNumber, { expires: cookieExpire, path: '/' });
                 }
 
-                if(auctionID && profileID && paddleNumberIsUndefined && viewCookie != "yes" && auctionStatus != "closed") {
+                if(auctionID && profileID && paddleNumberIsUndefined && viewCookie != "yes" && auctionStatus != "closed" && auctionStatus != "reconcile" && auctionStatus != "reconciled") {
                     attentionAboutBidding = true;
                     var bidNotice =  new PNotify({
                         title: 'Register to Bid?',
@@ -2904,7 +2904,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
                 var viewCookie = $.cookie("bidder-"+profileID+"-want-no-tickets-"+auctionID);
 
-                if(auctionID && profileID && haveTickets && viewCookie != "yes" && auctionStatus != "closed") {
+                if(auctionID && profileID && haveTickets && viewCookie != "yes" && auctionStatus != "closed" && auctionStatus != "reconcile" && auctionStatus != "reconciled") {
                     attentionAboutTickets = true;
                     var bidNotice =  new PNotify({
                         title: 'Auction Tickets',
