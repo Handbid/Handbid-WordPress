@@ -161,6 +161,9 @@ class HandbidState
                 $itemKey = (isset($attributes['key']) && $attributes['key']) ? $attributes['key'] : get_query_var(
                     'item'
                 );
+                $auctionKey = (isset($attributes['auction']) && $attributes['auction']) ? $attributes['auction'] : get_query_var(
+                    'auction'
+                );
 
                 if ($itemKey) {
 
@@ -178,6 +181,8 @@ class HandbidState
 
                         $query['options']['images']['h'] = $attributes['thumb_height'];
                     }
+
+                    $itemKey = $itemKey . '?auction='. $auctionKey;
 
                     $this->item = $this->handbid->store('Item')->byKey($itemKey, $query);
 
