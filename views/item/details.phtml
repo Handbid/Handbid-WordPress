@@ -54,6 +54,8 @@ $itemHideIfSold = (isset($item->hideSales) and $item->hideSales == 1);
 
 $currencyCode = (isset($auction->currencyCode))? $auction->currencyCode : HANDBID_DEFAULT_CURRENCY;
 $currencySymbol = (isset($auction->currencySymbol))? $auction->currencySymbol : HANDBID_DEFAULT_CURRENCY_SYMBOL;
+
+$isDonation = (!empty($item->isAppeal) and $item->isAppeal);
 ?>
 
 	<div class="item-details item-<?php echo $item->status; ?> items-auction-<?php echo $auction->status; ?>"
@@ -158,7 +160,7 @@ $currencySymbol = (isset($auction->currencySymbol))? $auction->currencySymbol : 
 						</li>
 					<?php } else { ?>
 						<li class="purchases col-md-4 col-xs-4" data-handbid-item-attribute="totalSold"><em
-								data-handbid-item-attribute="totalSoldItems"><?php echo $item->quantitySold; ?></em>Sold
+								data-handbid-item-attribute="totalSoldItems"><?php echo $item->quantitySold; ?></em><?php echo ($isDonation)?'Donated':'Sold'?>
 						</li>
 						<li class="increment col-md-4 col-xs-4"><em>
                                 <span class="handbidAuctionCurrency" title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span>

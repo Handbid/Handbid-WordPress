@@ -26,6 +26,7 @@ $isBidpadOnly  = $item->isBidpadOnly;
 $availableForPreSale = ($item->availableForPreSale == "1");
 $itemCanNotBeShownInPresale = (in_array($auction->status, ["presale","preview"]) and !$availableForPreSale);
 $itemsAuctionIsClosed = ($auction->status == "closed");
+$isDonation = (!empty($item->isAppeal) and $item->isAppeal);
 ?>
 <input type="hidden" data-item-check-status-auction-id="<?php echo $auction->id;?>" value="<?php echo $auction->status;?>">
 <input type="hidden" data-item-check-status-item-id="<?php echo $item->id;?>" value="<?php echo $item->status;?>">
@@ -122,7 +123,7 @@ $itemsAuctionIsClosed = ($auction->status == "closed");
                 <a class="buy-now green-solid-button  loading-span-button"
                    href=""
                     <?php echo $creditCardsRequired; ?>
-                   data-handbid-bid-button="purchase" data-handbid-buynow-price="<?php echo (int) $item->buyNowPrice;?>"><span><?php echo __('Buy Now'); ?></span></a>
+                   data-handbid-bid-button="purchase" data-handbid-buynow-price="<?php echo (int) $item->buyNowPrice;?>"><span><?php echo ($isDonation ? __('Donate Now') : __('Buy Now')); ?></span></a>
             </div>
         <?php } ?>
 
