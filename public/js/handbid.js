@@ -232,10 +232,14 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     quantity = values.quantity,
                     receiptId = values.receiptId,
                     auctionId = values.auctionId,
+                    receiptTotal = values.grandTotal,
                     purchaseID = values.id,
                     auctionKey = (values.auctionKey != undefined) ? values.auctionKey : "undefined";
                 console.log("=====------====");
                 console.log(item);
+                console.log("=====------====");
+                console.log(values);
+                console.log("=====------====");
                 var pattern = '<li class="row"' +
                     'data-dashboard-price="'+(amount * quantity)+'"' +
                     'data-dashboard-quantity="'+quantity+'"' +
@@ -258,7 +262,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 listBidsPurchases.append(pattern);
 
                 this.recheckAndRecalculateBids();
-                this.doesUserWantToBuyTicketsJustNow(receiptId, auctionId);
+                this.doesUserWantToBuyTicketsJustNow(receiptId, auctionId, receiptTotal);
             },
 
             addItemBidsHistory: function(itemID, bidID, values, amount){
@@ -699,7 +703,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 }
             },
 
-            wantToPurchaseTicketsImmediately: function(ticketsQuantity, ticketsPrice, receiptId, auctionId){
+            wantToPurchaseTicketsImmediately: function(ticketsQuantity, ticketsPrice, receiptId, auctionId, receiptTotal){
 
                 var bidderDashboardPlace = $("#bidder-info-load"),
                     nonce = bidderDashboardPlace.data("paddle-nonce");
@@ -707,7 +711,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 attentionAboutTBuying = true;
                 var bidNotice =  new PNotify({
                     title: 'Pay for Purchased Tickets?',
-                    text: "Confirm purchase of "+ticketsQuantity+" tickets for $"+ticketsPrice+" ?",
+                    text: "Confirm purchase your tickets?",
                     icon: 'glyphicon glyphicon-question-sign',
                     type: 'info',
                     addclass: 'handbid-message-notice',
@@ -856,7 +860,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 });
             },
 
-            doesUserWantToBuyTicketsJustNow: function(receiptId, auctionId){
+            doesUserWantToBuyTicketsJustNow: function(receiptId, auctionId, receiptTotal){
                 var purchaseRows = $("[data-purchased-purchase-id]");
                 if(purchaseRows.length){
                     var onlyTickets = true,
@@ -872,7 +876,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                         }
                     });
                     if(onlyTickets){
-                        handbidMain.wantToPurchaseTicketsImmediately(ticketsQuantity, ticketsPrice, receiptId, auctionId);
+                        handbidMain.wantToPurchaseTicketsImmediately(ticketsQuantity, ticketsPrice, receiptId, auctionId, receiptTotal);
                     }
                 }
             },
@@ -1320,6 +1324,29 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     this.removeItemFromDashboardList(values.id, "purchases");
                     this.addDashboardBidPurchased(values);
                     this.loadMessagesToContainer();
+                }
+            },
+
+
+
+
+            processUserReceipt: function(values){
+                var receiptID = values.id;
+                var receiptBlock = $('[data-receipt-block-id="'+receiptID+'"]').eq(0);
+                var unpaidControls = $('[data-receipt-block-id="'+receiptID+'"] .unpaidControls');
+                var paidControls = $('[data-receipt-block-id="'+receiptID+'"] .paidControls');
+                var unpaidRows = $('[data-receipt-block-id="'+receiptID+'"] .unpaidRows');
+                if(values.paid){
+                    receiptBlock.removeClass("preview").addClass("open");
+                    unpaidControls.hide();
+                    unpaidRows.hide();
+                    paidControls.show();
+                }
+                else{
+                    receiptBlock.addClass("preview").removeClass("open");
+                    unpaidControls.show();
+                    unpaidRows.show();
+                    paidControls.hide();
                 }
             },
 

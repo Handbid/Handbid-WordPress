@@ -91,12 +91,12 @@ foreach ($invoices as $i => $invoice) {
                                 data-attribute="grandTotal"><?php echo $currency . "<em>" . number_format($invoice->grandTotal / 100, $coinsCount, $coinsDivider, $groupDivider) . "</em>"; ?></td>
                         </tr>
                         <?php if(!($invoice->paid) and $invoice->amountPaid > 0){?>
-                            <tr>
+                            <tr class="unpaidRows">
                                 <th scope="row">Already Paid</th>
                                 <td class="format-money"
                                     data-attribute="grandTotal"><?php echo $currency . "<em>" . number_format($invoice->amountPaid / 100, $coinsCount, $coinsDivider, $groupDivider) . "</em>"; ?></td>
                             </tr>
-                            <tr class="receipt-due">
+                            <tr class="receipt-due unpaidRows">
                                 <th scope="row" class="total">LEFT</th>
                                 <td class="receipt-total format-money text-red"
                                     data-attribute="grandTotal"><?php echo $currency . "<em>" . number_format(($invoice->grandTotal - $invoice->amountPaid) / 100, $coinsCount, $coinsDivider, $groupDivider) . "</em>"; ?></td>
