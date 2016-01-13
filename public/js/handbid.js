@@ -707,7 +707,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 attentionAboutTBuying = true;
                 var bidNotice =  new PNotify({
                     title: 'Pay for Purchased Tickets?',
-                    text: "Confirm purchase of "+ticketsQuantity+" tickets for $"+ticketsPrice+" ?",
+                    text: "Confirm charge of $"+ticketsPrice+" ?",
                     icon: 'glyphicon glyphicon-question-sign',
                     type: 'info',
                     addclass: 'handbid-message-notice',
@@ -810,7 +810,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                                 );
                             }
                         }, {
-                            text: 'Cancel',
+                            text: 'Pay Later',
                             addClass: 'browse-here-button',
                             click: function (notice) {
                                 attentionAboutTBuying = false;
