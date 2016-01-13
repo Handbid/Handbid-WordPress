@@ -814,7 +814,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                                 );
                             }
                         }, {
-                            text: 'Cancel',
+                            text: 'Pay Later',
                             addClass: 'browse-here-button',
                             click: function (notice) {
                                 attentionAboutTBuying = false;
