@@ -475,12 +475,8 @@ body.handbid-logged-in {
   }
 }
 
-.simple-box.status-reconcile,
-.simple-box.status-reconciled,
 .simple-box.status-closed,
 .item-details.item-closed,
-.item-details.item-reconcile,
-.item-details.item-reconciled,
 .our-clients {
     a,
     img,
@@ -1152,6 +1148,12 @@ select {
 
 }
 
+.auction-details.presale {
+    .filter-wrapper [data-section="category"] {
+        display: none;
+    }
+}
+
 .sort-bar.auction-item-list {
 
     .category-cover-cheating {
@@ -1209,14 +1211,10 @@ select {
     }
 }
 
-.auction-details.reconcile,
-.auction-details.reconciled,
 .auction-details.closed {
     .grayscale;
 }
 
-.item-details.items-auction-reconcile,
-.item-details.items-auction-reconciled,
 .item-details.items-auction-closed {
     .grayscale;
 }
@@ -2325,8 +2323,6 @@ section.container.what-clients-say-nav {
         padding-left: 15px;
     }
 
-    .reconcile,
-    .reconciled,
     .closed,
     li.losing {
         -webkit-box-shadow: inset 10px 0 0 0 rgba(233, 77, 112, 1);
@@ -2954,7 +2950,7 @@ body .container a.back-to-previous {
         font-size: 1.5em;
         text-align: left;
         color:#45b1ce;
-    
+
     }
     h3 {
         font-size: 1.8em;
@@ -3078,12 +3074,7 @@ body .container a.back-to-previous {
         }
     }
 
-    a {
-        margin: 35px 35px;
-        display: block;
-        bottom: 35px;
-        position: relative;
-    }
+  
 }
 
 label.no-results {
