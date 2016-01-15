@@ -711,7 +711,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 attentionAboutTBuying = true;
                 var bidNotice =  new PNotify({
                     title: 'Pay for Purchased Tickets?',
-                    text: "Confirm purchase your tickets?",
+                    text: "Confirm purchase of your tickets?",
                     icon: 'glyphicon glyphicon-question-sign',
                     type: 'info',
                     addclass: 'handbid-message-notice',
