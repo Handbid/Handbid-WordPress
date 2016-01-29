@@ -701,6 +701,14 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 if(needToReSort){
                     this.clickOnFiltersToReorder();
                 }
+
+                var simpleBox = $('[data-handbid-item-box="'+item.id+'"].simple-item-box');
+                simpleBox.removeClass('status-open')
+                    .removeClass('status-closed')
+                    .removeClass('status-sold')
+                    .removeClass('status-preview')
+                    .removeClass('status-presale')
+                    .addClass('status-'+itemStatus);
             },
 
             wantToPurchaseTicketsImmediately: function(ticketsQuantity, ticketsPrice, receiptId, auctionId, receiptTotal){
