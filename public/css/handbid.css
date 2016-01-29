@@ -1,6 +1,7 @@
 .handbid-fatal-error * {
     display: none;
 }
+/* This is a single-line comment */
 
 .enable-handbid-fatal-error .handbid-fatal-error {
     position: fixed;
