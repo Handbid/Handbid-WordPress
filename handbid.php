@@ -246,27 +246,43 @@ class Handbid
         }
 
         $scripts = array(
-            'handbid-details-map-js'   => 'public/js/details-map.js',
+//            'handbid-details-map-js'   => 'public/js/details-map.js',
+
             //'smart-app-banner-js'      => 'public/js/smart-app-banner.js',
             //'smart-app-banner-init-js' => 'public/js/smart-app-banner-init.js',
+
             'yii-node-socket-js'       => 'public/js/yii-node-socket.js',
             'node-socket-manager-js'   => 'public/js/node-socket-manager.js',
             'stripe-init-js'           => 'public/js/stripe-init.js',
-            'progress-bar-js'          => 'public/js/progress-bar.js',
-            'cookie-plugin-js'         => 'public/js/jquery.cookie.js',
-            'visible-plugin-js'        => 'public/js/jquery.visible.min.js',
-            'handbid-isotope-js'       => 'public/js/isotope.pkgd.min.js',
-            'handbid-unslider-js'      => 'public/js/unslider.min.js',
-            'handbid-photo-gallery-js' => 'public/js/photoGallery.js',
-            'handbid-tab-slider-js'    => 'public/js/slider.js',
-            'handbid-auction-page-js'  => 'public/js/auction-details.js',
-            'handbid-tooltip-js'       => 'public/js/tooltip.js',
-            'handbid-bootstrap-js'     => 'public/js/bootstrap.js',
-            'handbid-select2-js'       => 'public/js/select2.full.js',
-            'handbid-login-js'         => 'public/js/login.js',
-            'handbid-notices-js'       => 'public/js/pnotify.custom.min.js',
-            'handbid-plugin-js'        => 'public/js/handbid.js',
-            'handbid-modal-js'         => 'public/js/modal.js',
+
+            'handbid-notices-js'       => 'public/js/pnotify.custom.min.js',      // Probably should be changed on newest version, but there is problems with plugin docs
+
+//            'progress-bar-js'          => 'public/js/progress-bar.js',
+//            'cookie-plugin-js'         => 'public/js/jquery.cookie.js',
+//            'visible-plugin-js'        => 'public/js/jquery.visible.min.js',
+//            'handbid-isotope-js'       => 'public/js/isotope.pkgd.min.js',
+//            'handbid-unslider-js'      => 'public/js/unslider.min.js',
+//            'handbid-photo-gallery-js' => 'public/js/photoGallery.js',
+//            'handbid-tab-slider-js'    => 'public/js/slider.js',
+//            'handbid-auction-page-js'  => 'public/js/auction-details.js',
+//            'handbid-tooltip-js'       => 'public/js/tooltip.js',
+//            'handbid-bootstrap-js'     => 'public/js/bootstrap.js',
+//            'handbid-select2-js'       => 'public/js/select2.full.js',
+//            'handbid-login-js'         => 'public/js/login.js',
+//            'handbid-plugin-js'        => 'public/js/handbid.js',
+//            'handbid-modal-js'         => 'public/js/modal.js',
+
+        
+            'progress-bar-js'          => 'public/plugins/progressbar.js/progressbar.min.js',
+            'cookie-plugin-js'         => 'public/plugins/jquery.cookie/jquery.cookie.js',
+            'visible-plugin-js'        => 'public/plugins/df-visible/jquery.visible.min.js',
+            'handbid-isotope-js'       => 'public/plugins/isotope/isotope.pkgd.min.js',
+            'handbid-unslider-js'      => 'public/plugins/unslider/js/unslider-min.js',
+            'handbid-bootstrap-js'     => 'public/plugins/bootstrap/js/bootstrap.min.js',
+            'handbid-select2-js'       => 'public/plugins/select2/js/select2.full.min.js',
+
+            'handbid-js'               => 'public/js/app.min.js',
+
         );
 
         foreach ($scripts as $key => $sc) {
@@ -276,17 +292,25 @@ class Handbid
 
 
         $styles = array(
-            'smart-app-banner-css'       => 'public/css/smart-app-banner.css',
-            'handid-bootstrap-css'       => 'public/css/bootstrap.min.css',
-            'handid-modal-css'           => 'public/css/modal.css',
-            'handid-modal-connect-css'   => 'public/css/modal-connect.css',
-            'handid-notices-css'         => 'public/css/pnotify.custom.min.css',
-            'handbid-select2-css'        => 'public/css/select2.css',
-            'handbid-generic-styles-css' => 'public/css/handbid.css',
-            'handbid-less-buttons-css'   => 'public/less/buttons.less',
-            'handbid-less-modal-css'     => 'public/less/modal.less',
-            'handbid-less-css'           => 'public/less/handbid.less',
-            'handbid-less-responsive-css'=> 'public/less/responsive-fix.less',
+//            'smart-app-banner-css'       => 'public/css/smart-app-banner.css',
+//            'handid-bootstrap-css'       => 'public/css/bootstrap.min.css',
+//            'handid-modal-css'           => 'public/css/modal.css',
+//            'handid-modal-connect-css'   => 'public/css/modal-connect.css',
+//            'handbid-select2-css'        => 'public/css/select2.css',
+//            'handbid-generic-styles-css' => 'public/css/handbid.css',
+//            'handbid-less-buttons-css'   => 'public/less/buttons.less',
+//            'handbid-less-modal-css'     => 'public/less/modal.less',
+//            'handbid-less-css'           => 'public/less/handbid.less',
+//            'handbid-less-responsive-css'=> 'public/less/responsive-fix.less',
+
+
+            'handid-notices-css'         => 'public/css/pnotify.custom.min.css', // Probably should be changed on newest version, but there is problems with plugin docs
+//            'smart-app-banner-css'       => 'public/plugins/smart-app-banner/smart-app-banner.css',
+            'handid-bootstrap-css'       => 'public/plugins/bootstrap/css/bootstrap.min.css',
+            'handbid-select2-css'        => 'public/plugins/select2/css/select2.min.css',
+
+            'handid-css'           => 'public/css/app.min.css',
+
         );
 
         foreach ($styles as $key => $sc) {

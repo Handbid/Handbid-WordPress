@@ -1,0 +1,30 @@
+{
+  "name": "Handbid_WP",
+  "homepage": "https://github.com/Handbid/Handbid-WordPress",
+  "authors": [
+    "yana.tsylinska <yana.tsylinska@masterofcode.com>"
+  ],
+  "description": "Handbid WP plugin",
+  "main": "handbid.php",
+  "moduleType": [],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "unslider": "https://github.com/idiot/unslider.git#^2.0.3",
+    "smart-app-banner": "*",
+    "select2": "https://github.com/select2/select2.git#^4.0.1",
+    "progressbar.js": "^0.9.0",
+    "df-visible": "https://github.com/customd/jquery-visible.git#^1.2.0",
+    "jquery.cookie": "https://github.com/carhartl/jquery-cookie.git#^1.4.1",
+    "isotope": "^2.2.2",
+    "bootstrap": "^3.3.6",
+    "animate.css": "https://github.com/daneden/animate.css.git#^3.5.1"
+  }
+}
