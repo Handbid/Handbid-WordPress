@@ -719,7 +719,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 attentionAboutTBuying = true;
                 var bidNotice =  new PNotify({
                     title: 'Pay for Purchased Tickets?',
-                    text: "Confirm purchase of your tickets?",
+                    text: "If you choose 'Pay Later', the Auction Staff will charge your card before the Event.",
                     icon: 'glyphicon glyphicon-question-sign',
                     type: 'info',
                     addclass: 'handbid-message-notice',
@@ -728,7 +728,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     confirm: {
                         confirm: true,
                         buttons: [{
-                            text: 'Confirm',
+                            text: 'Pay Now',
                             addClass: 'bid-here-button',
                             click: function (notice) {
                                 notice.update({
