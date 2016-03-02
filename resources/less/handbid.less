@@ -84,20 +84,6 @@ h3.no-results {
     margin: 150px;
 }
 
-// Target the logo in the footer or header as logo is a generic class
-.global-header,
-.global-footer {
-    .logo {
-        width: 174px;
-        height: 53px;
-        background: transparent url("../images/logo.svg") no-repeat;
-        overflow: hidden;
-        display: block;
-        float: left;
-        text-indent: -200em;
-    }
-}
-
 body {
     .menu {
         li.handbid-login,
@@ -2768,9 +2754,6 @@ body .container a.back-to-previous {
 }
 
 .error404 {
-    .global-header {
-        padding-bottom: 15px;
-    }
     .entry-title {
         display: none;
     }
@@ -3667,14 +3650,6 @@ div.handbid-modal[data-handbid-modal-key="credit-card-form"] {
 /**
  * Globlerl responsivenessses
  */
-@media screen and (max-width: 1200px) {
-    .global-header {
-        .logo {
-            width: 38px;
-        }
-    }
-}
-
 @media (max-width: 992px) {
 
     body {
@@ -3811,11 +3786,6 @@ div.handbid-modal[data-handbid-modal-key="credit-card-form"] {
     body.home {
         text-align: center;
         overflow-x: hidden;
-        .global-header .logo {
-            background: url('../images/logo-horizontal.svg') no-repeat center center;
-            width: 200px;
-            background-size: contain;
-        }
         .container-fluid {
             padding: 0;
             overflow-x: hidden;
@@ -3827,9 +3797,6 @@ div.handbid-modal[data-handbid-modal-key="credit-card-form"] {
         .three-reasons,
         .our-native-app {
             padding-bottom: 25px;
-        }
-        div.global-header {
-            border-bottom: 0;
         }
         .slide-image,
         .simple-staircase .image {
@@ -3950,35 +3917,6 @@ div.handbid-modal[data-handbid-modal-key="credit-card-form"] {
             top: 0;
             font-size: 1em;
         }
-
-        // One off remove how it works from menu on home
-        .global-header {
-            .menu {
-                li:nth-of-type(4) {
-                    display: none;
-                }
-            }
-        }
-    }
-
-    .global-header {
-
-        .menu {
-            li {
-                padding: 0 15px;
-            }
-
-            li:first-of-type,
-            li:nth-of-type(2) {
-                display: none;
-            }
-
-            li:nth-of-type(3) {
-                padding-left: 0;
-            }
-
-        }
-
     }
 
     .simple-box {
@@ -4155,26 +4093,6 @@ div.handbid-modal[data-handbid-modal-key="credit-card-form"] {
 }
 
 @media (max-width: 767px) {
-
-
-    body.home div.global-header {
-
-        height: 163px;
-
-        canvas,
-        .slide2 {
-            display: none;
-        }
-    }
-
-    .global-header {
-
-        .logo {
-            float: none;
-            margin: 0 auto;
-        }
-    }
-
     .auction-details, .org-details, .item-details {
 
         .mobile-filters {
@@ -4219,19 +4137,6 @@ div.handbid-modal[data-handbid-modal-key="credit-card-form"] {
 }
 
 @media (max-width: 700px) {
-
-    .global-header {
-
-        .menu {
-            float: none;
-            text-align: center;
-
-            li:nth-of-type(3) {
-                display: none;
-            }
-        }
-    }
-
     .auction-details {
 
         .slider-nav {
@@ -4272,16 +4177,6 @@ div.handbid-modal[data-handbid-modal-key="credit-card-form"] {
 }
 
 @media (max-width: 560px) {
-
-    .global-header {
-
-        .menu {
-
-            li:nth-of-type(4) {
-                display: none;
-            }
-        }
-    }
     [data-handbid-item-key] [data-slider-nav-id] {
         li {
             display:block;
@@ -4293,22 +4188,6 @@ div.handbid-modal[data-handbid-modal-key="credit-card-form"] {
 }
 
 @media (max-width: 450px) {
-
-    .global-header {
-
-        .menu {
-
-            li:nth-of-type(5) {
-                display: none;
-            }
-        }
-
-        .entry-title span {
-            margin-top:15px;
-            line-height: 1.2em;
-        }
-    }
-
     .images .image-holder {
         height: 325px;
     }
