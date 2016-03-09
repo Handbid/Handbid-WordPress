@@ -44,14 +44,28 @@
   body .breadcrumb {
     margin: 0;
   }
-  .item-details h2.name, .proxy-bid-dialog h2.name{
-    font-size: 35px;
+  .item-details,
+  .proxy-bid-dialog {
+    h2.name {
+      font-size: 24px;
+    }
+    h3.category {
+      text-transform: uppercase;
+      font-size: 125%;
+      font-weight: 400;
+    }
+    .horizontal-details{
+      padding: 0;
+    }
+    .bid-controls{
+      padding-bottom: 10px;
+    }
   }
-  .item-details .horizontal-details, .proxy-bid-dialog .horizontal-details{
-    padding: 0;
-  }
-  .item-details .bid-controls, .proxy-bid-dialog .bid-controls{
-    padding-bottom: 10px;
+  .item-details {
+    .bid-controls .bid-amount {
+      font-size: 275%;
+      line-height: 50px;
+    }
   }
 }
 
@@ -63,30 +77,10 @@
     margin: 0;
   }
 
-  .item-details h2.name, .proxy-bid-dialog h2.name {
-    font-size: 27px;
-  }
-
-  .item-details .buttons-and-titles *{
-    font-size: 100% !important;
-  }
-
-  .item-details .buttons-and-titles h2.name,
-  .item-details .buttons-and-titles .bid-amount{
-    font-size: 140% !important;
-  }
-
   .item-details .row.additional,
   .item-details .slider-content{
     font-size: 90% !important;
   }
-
-  .global-footer *{
-    font-size: 95% !important;
-  }
-
-
-
 }
 
 
