@@ -1,0 +1,398 @@
+@import "variables";
+@import "buttons";
+
+.bidder-info-container {
+  * {
+    -webkit-transition: all 0.2s ease-in-out;
+    -moz-transition: all 0.2s ease-in-out;
+    -ms-transition: all 0.2s ease-in-out;
+    -o-transition: all 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out;
+  }
+  margin-bottom: 25px;
+
+  .meta {
+    .paddle-number,
+    .auction {
+      text-align: right;
+    }
+
+  }
+
+  .bidder-info-body .slider-content {
+    transition: all 0.5s;
+  }
+
+  .slider-content {
+    * {
+      .animated;
+      .fadeIn;
+    }
+  }
+  a {
+    cursor: pointer;
+    text-align: left;
+    label {
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+    > span {
+      color: @lightBlue;
+      font-size: 2em;
+      position: relative;
+      top: 5px;
+      left: 5px;
+    }
+  }
+  [data-slider-nav-key="profile-user-info"] {
+    h4 {
+      margin-top: 5px;
+    }
+  }
+
+  .bidder-image-wrapper {
+    text-align: center;
+    a.edit-picture {
+      color: @pink;
+      background: url('../images/edit-picture.svg') no-repeat left center;
+      padding: 25px 30px;
+      display: inline-block;
+    }
+    a.active-slide {
+      display: none;
+    }
+  }
+  .bidder-image {
+    border-radius: 50%;
+    margin-top: 10px;
+    overflow: hidden;
+    width: 100%;
+    max-width: 165px;
+  }
+
+  .stats-bar {
+    font-size: 90%;
+  }
+
+  .slider-nav {
+
+    .active-slide {
+      label,
+      span {
+        color: @lightBlue;
+      }
+    }
+
+    .profile-winning {
+      span,
+      &.active-slide label {
+        color: @green;
+      }
+    }
+
+    .profile-losing {
+      span,
+      &.active-slide label {
+        color: @pink;
+      }
+    }
+
+  }
+
+  [data-slider-nav-id="bidder-dashboard"].slider-nav a {
+    color: rgba(110, 130, 138, 1);
+    text-align: right;
+    &.profile-user-info {
+      text-align: left;
+    }
+    > span {
+      padding-right: 15px;
+    }
+    &::after {
+      content: "";
+      right: 0;
+      top: 20px;
+      position: absolute;
+      height: 10px;
+      width: 15px;
+      background: url('../images/triangle-down.svg') no-repeat center center;
+      display: inline-block;
+      .rotateDeg(180deg);
+      -webkit-transition: all 0.2s ease-in-out;
+      -moz-transition: all 0.2s ease-in-out;
+      -ms-transition: all 0.2s ease-in-out;
+      -o-transition: all 0.2s ease-in-out;
+      transition: all 0.2s ease-in-out;
+    }
+    &.active-slide::after {
+      .rotateDeg(0deg);
+    }
+    &.total-spent::after {
+      background: none !important;
+    }
+    &.initial-loading-space::after {
+      background: none !important;
+    }
+    &.initial-loading-space {
+      background: none !important;
+    }
+
+    &.profile-opener::after {
+      content: "profile";
+      -moz-transform: rotate(0deg) !important;
+      -webkit-transform: rotate(0deg) !important;
+      -o-transform: rotate(0deg) !important;
+      -ms-transform: rotate(0deg) !important;
+      transform: rotate(0deg) !important;
+      background: none;
+      text-transform: uppercase;
+      color: @lightBlue;
+      font-size: 11px;
+      border: 1px solid @lightBlue;
+      width: auto;
+      height: auto;
+      padding: 0px 4px;
+      border-radius: 5px;
+    }
+
+    &.profile-opener:hover::after,
+    &.profile-opener.active-slide::after {
+      background-color: @lightBlue;
+      color: #fff;
+    }
+
+    &.profile-opener {
+      padding-right: 52px;
+    }
+  }
+
+  a.profile-user-info span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: @lightBlue;
+    display: block;
+  }
+
+  .slider-content {
+    .row[data-slider-nav-key] {
+      padding: 35px 0;
+    }
+  }
+
+  [data-slider-nav-id="bidder-dashboard"].slider-nav {
+    padding-bottom: 25px;
+  }
+
+  [data-slider-nav-id="bidder-dashboard"] {
+
+    a.active-slide .arrow {
+      .rotateDeg(0deg);
+    }
+  }
+
+  [data-slider-nav-id="bidder-dashboard"].slider-nav-mobile {
+    display: none;
+    text-align: left;
+    border-bottom: 1px solid @lightGray;
+    margin-bottom: 10px;
+    position: relative;
+
+    .total-spent {
+
+      position: absolute;
+      top: 0px;
+      right:0px;
+      bottom: 0px;
+      border-left: 1px solid @lightGray;
+      text-align: center;
+
+      > span {
+        padding:10px 0 0;
+        display: block;
+        padding-right: 0px;
+        position: static;
+      }
+
+      label {
+        display: block;
+      }
+
+    }
+
+    .pin {
+      position: relative;
+      top:10px;
+    }
+
+
+  }
+
+  .quick-links {
+    padding-left:0;
+    a {
+      padding: 10px 0;
+      margin: 0 auto;
+      color: @pink;
+      display: block;
+      font-weight: normal;
+      background: transparent;
+      border: 0;
+      text-align: left;
+      &:hover {
+        background: transparent;
+        color: @pink;
+      }
+    }
+    li {
+      display: block;
+      &:last-of-type a {
+        border: 0;
+      }
+    }
+  }
+}
+
+.bidder-info-container .receipt-action-button{
+  padding: 10px 5px;
+  text-align: center;
+  span{
+    font-size: 13px;
+    line-height: 10px;
+    color: #fff;
+    top: initial;
+    left: initial;
+    text-align: center;
+    display: inline-block;
+  }
+
+  &.make-payment-button{
+    background-color: @lightBlue;
+    border-color: @lightBlue;
+    &:hover{
+      background-color: #fff;
+      span{
+        color: @lightBlue;
+      }
+    }
+  }
+
+  &:hover {
+    span{
+      color: @green;
+    }
+  }
+}
+
+.bidder-info-container .slider-content .select-payment-card{
+  text-transform: none;
+  padding: 9px 10px;
+  border-radius: 3px;
+}
+
+.bidder-info-container a > span.unpaidInvoicesCountContainer{
+  font-size: 14px;
+  color: #fff !important;
+}
+
+@media (max-width: 1200px) and (min-width: 992px) {
+  .bidder-info-container.credit-card {
+    .simple-list {
+      .pink-solid-button {
+        padding: 15px 25px;
+      }
+    }
+  }
+}
+
+@media (max-width: 992px) {
+  .bidder-info-container {
+
+    position: relative;
+    top:-20px;
+
+    a {
+      & > span {
+        font-size: 1.5em;
+      }
+      label {
+        font-size: 0.8em;
+      }
+    }
+
+    .meta,
+    [data-slider-nav-id="bidder-dashboard"].slider-nav-desktop .profile-user-info,
+    [data-slider-nav-id="bidder-dashboard"].slider-nav-desktop .total-spent {
+      display: none;
+    }
+
+    [data-slider-nav-id="bidder-dashboard"].slider-nav-mobile {
+      display: block;
+    }
+
+    [data-slider-nav-id="bidder-dashboard"].slider-nav-desktop {
+      a {
+        text-align: center;
+        margin:0;
+        padding:0;
+        position: relative;
+        height: 4.5em;
+      }
+
+      a:after {
+        top: 100%;
+        left:50%;
+        margin-left:-10px;
+      }
+
+      a span {
+        position: absolute;
+        left:0px;
+        right:0px;
+        top:0px;
+        display: block;
+        margin:0;
+        padding:0;
+      }
+
+      label {
+        position: absolute;
+        left:0px;
+        right:0px;
+        bottom:0px;
+        display: block;
+      }
+    }
+
+  }
+}
+
+@media (max-width: 767px) {
+  .bidder-info-container {
+    top: 0;
+    margin-bottom: 0;
+    .no-results-row {
+      margin: 5px 0;
+      .no-results {
+        margin-bottom: 10px;
+      }
+    }
+    .credit-card-form-link {
+      margin: 0 15px;
+    }
+  }
+  .bidder-info-container .slider-content .row[data-slider-nav-key] {
+    padding: 35px 0 25px;
+  }
+
+  .bidder-info-container.credit-card {
+    .simple-list {
+      margin: 0 -15px 15px;
+      padding: 0 15px;
+    }
+  }
+}
+
+
+
+

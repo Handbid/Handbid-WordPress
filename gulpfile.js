@@ -28,6 +28,7 @@ gulp.task('js', function() {
         'resources/js/tooltip.js',
         'resources/js/login.js',
         'resources/js/handbid.js',
+        'resources/js/mobile-menu.js',
         'resources/js/modal.js'
     ])
     .pipe(concat('app.min.js'))
@@ -44,6 +45,7 @@ gulp.task('less', function () {
         'resources/less/buttons.less',
         'resources/less/modal.less',
         'resources/less/handbid.less',
+        'resources/less/bidder-info.less',
         'resources/less/responsive-fix.less'
     ])
     .pipe(sourcemaps.init())

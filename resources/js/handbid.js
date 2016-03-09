@@ -58,8 +58,8 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
             no_response : "Sorry, try again later",
             current_winner : "You are current winner of this item"
         },
-	socket_retry = 0,
-	socket_retry_limit = 9,
+	    socket_retry = 0,
+	    socket_retry_limit = 9,
         stack_bar_top = {
             addpos2: 0,
             animation: true,
@@ -2236,7 +2236,6 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     var underlay = $('#handbid-confirmation-underlay');
 
                     $('[data-handbid-connect]').live('click', function (e) {
-
                         e.preventDefault();
                         var isRegisterButton = $(this).hasClass("register");
                         if(isRegisterButton){
@@ -2645,13 +2644,8 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 var authorized = ($.cookie('handbid-auth') && hasBidderDashboard) ? true : false;
 
                 if (authorized === true) {
-                    if(! $('body').hasClass('home')) {
-                        $('.handbid-logout').css('display', 'inline-block');
-                    }
-                    else{
-                        $('.handbid-logout').hide();
-                    }
                     $('body').addClass('handbid-logged-in');
+                    $(".quick-links > li").clone().appendTo("#menu-mobile-menu");
 
                     $.ajaxSetup({
                         headers: {
@@ -2660,12 +2654,6 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     });
                 }
                 else {
-                    if(! $('body').hasClass('home')) {
-                        $('.handbid-login').css('display', 'inline-block');
-                    }
-                    else{
-                        $('.handbid-login').hide();
-                    }
                     $('body').addClass('handbid-logged-out');
                 }
 
