@@ -538,7 +538,7 @@ class HandbidState
     }
 
     function getCountriesAndProvinces(){
-        $countriesFileName = str_replace("\\","/",HANDBID_PLUGIN_PATH . "public/js/countriesAndProvinces.json");
+        $countriesFileName = str_replace("\\","/",HANDBID_PLUGIN_PATH . "public/json/countriesAndProvinces.json");
         if($this->countriesAndProvinces){
             return $this->countriesAndProvinces;
         }
