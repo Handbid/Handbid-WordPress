@@ -2640,8 +2640,13 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
                 var bidderDashboardPlace = $("#bidder-info-load"),
                     hasBidderDashboard = (bidderDashboardPlace.is(":visible") &&
-                    (bidderDashboardPlace.html().trim() != "" || bidderDashboardPlace.hasClass("hidden-page-dashboard") ) );
+                    (bidderDashboardPlace.html().trim() != "" || bidderDashboardPlace.hasClass("hidden-page-dashboard") ) ),
+                    pageWithAuth = (bidderDashboardPlace.is(":visible") && (bidderDashboardPlace.html().trim() != ""));
                 var authorized = ($.cookie('handbid-auth') && hasBidderDashboard) ? true : false;
+
+                if (pageWithAuth) {
+                    $('body').addClass('page-with-auth');
+                }
 
                 if (authorized === true) {
                     $('body').addClass('handbid-logged-in');
@@ -2656,6 +2661,8 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 else {
                     $('body').addClass('handbid-logged-out');
                 }
+
+
 
             },
             oldNotice:                   function (msg) {
