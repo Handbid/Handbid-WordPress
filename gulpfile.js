@@ -46,6 +46,7 @@ gulp.task('less', function () {
         'resources/less/modal.less',
         'resources/less/handbid.less',
         'resources/less/section_nav.less',
+        'resources/less/sort_bar.less',
         'resources/less/bidder-info.less',
         'resources/less/responsive-fix.less'
     ])
