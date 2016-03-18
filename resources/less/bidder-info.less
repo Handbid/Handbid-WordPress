@@ -1,6 +1,10 @@
 @import "variables";
 @import "buttons";
 
+.bidder-info-container .pin {
+  margin: 10px 0 0; 
+}
+
 .bidder-info-container {
   * {
     -webkit-transition: all 0.2s ease-in-out;
@@ -16,7 +20,6 @@
     .auction {
       text-align: right;
     }
-
   }
 
   .bidder-info-body .slider-content {
@@ -29,6 +32,7 @@
       .fadeIn;
     }
   }
+
   a {
     cursor: pointer;
     text-align: left;
@@ -44,6 +48,7 @@
       left: 5px;
     }
   }
+
   [data-slider-nav-key="profile-user-info"] {
     h4 {
       margin-top: 5px;
@@ -180,10 +185,6 @@
     }
   }
 
-  [data-slider-nav-id="bidder-dashboard"].slider-nav {
-    padding-bottom: 25px;
-  }
-
   [data-slider-nav-id="bidder-dashboard"] {
 
     a.active-slide .arrow {
@@ -198,8 +199,12 @@
     margin-bottom: 10px;
     position: relative;
 
-    .total-spent {
+    a.profile-opener::after {
+      top: 50%;
+      margin-top: -8px;
+    }
 
+    .total-spent {
       position: absolute;
       top: 0px;
       right:0px;
@@ -208,21 +213,15 @@
       text-align: center;
 
       > span {
-        padding:10px 0 0;
-        display: block;
-        padding-right: 0px;
         position: static;
+        display: block;
+        padding: 0;
+        margin-top: 10px;        
       }
 
       label {
         display: block;
       }
-
-    }
-
-    .pin {
-      position: relative;
-      top:10px;
     }
 
 
@@ -307,10 +306,6 @@
 
 @media (max-width: 992px) {
   .bidder-info-container {
-
-    position: relative;
-    top:-20px;
-
     a {
       & > span {
         font-size: 1.5em;
@@ -320,6 +315,7 @@
       }
     }
 
+    .quick-links,
     .meta,
     [data-slider-nav-id="bidder-dashboard"].slider-nav-desktop .profile-user-info,
     [data-slider-nav-id="bidder-dashboard"].slider-nav-desktop .total-spent {
@@ -336,41 +332,42 @@
         margin:0;
         padding:0;
         position: relative;
-        height: 4.5em;
-      }
+        height: 5em;
+        &:after {
+          top: auto;
+          bottom: 10px;
+          left: 50%;
+          margin-left: -7px;
+        }
 
-      a:after {
-        top: 100%;
-        left:50%;
-        margin-left:-10px;
-      }
-
-      a span {
-        position: absolute;
-        left:0px;
-        right:0px;
-        top:0px;
-        display: block;
-        margin:0;
-        padding:0;
+        span {
+          position: absolute;
+          left:0px;
+          right:0px;
+          top:0px;
+          display: block;
+          margin:0;
+          padding:0;
+        } 
       }
 
       label {
-        position: absolute;
-        left:0px;
-        right:0px;
-        bottom:0px;
         display: block;
+        margin-top: 30px;
       }
     }
-
+    .slider-content .row[data-slider-nav-key] {
+      padding: 0;
+    }
+    .bidder-image-wrapper {
+      margin-bottom: 10px
+    }
   }
 }
 
 @media (max-width: 767px) {
   .bidder-info-container {
-    top: 0;
-    margin-bottom: 0;
+    margin-bottom: 10px;
     .no-results-row {
       margin: 5px 0;
       .no-results {

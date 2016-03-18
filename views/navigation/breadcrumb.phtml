@@ -15,48 +15,46 @@ $org     = $this->get('org');
 
 if (!is_front_page()) {
     ?>
-    <div class="handbid-breadcrumb">
-        <?php
-        // print out home
-        echo '<a href="' . get_option('home') . '">Home</a>';
-        if (isset($org) && $org !== []) {
-            echo ' : <a href="/organizations">Organizations</a>';
-            echo ' : <a href="/organizations/' . $org->key . '">' . $org->name . '</a>';
+    <?php
+    // print out home
+    echo '<a href="' . get_option('home') . '">Home</a>';
+    if (isset($org) && $org !== []) {
+        echo ' : <a href="/organizations">Organizations</a>';
+        echo ' : <a href="/organizations/' . $org->key . '">' . $org->name . '</a>';
+    }
+    elseif (isset($auction->key)) {
+        echo ' : <a href="/auctions">Auctions</a>';
+        // If there is an auction set drop in the link
+        echo ' : <a href="/auctions/' . $auction->key . '">' . $auction->name . '</a>';
+        if (isset($item->key) and isset($item->name)) {
+            // If there is an auction and an item set drop in the link
+            echo ' : <a href="/auctions/' . $auction->key . '/item/' . $item->key . '">' . $item->name . '</a>';
         }
-        elseif (isset($auction->key)) {
-            echo ' : <a href="/auctions">Auctions</a>';
-            // If there is an auction set drop in the link
-            echo ' : <a href="/auctions/' . $auction->key . '">' . $auction->name . '</a>';
-            if (isset($item->key) and isset($item->name)) {
-                // If there is an auction and an item set drop in the link
-                echo ' : <a href="/auctions/' . $auction->key . '/item/' . $item->key . '">' . $item->name . '</a>';
+    } else {
+        if (is_category() || is_single()) {
+            if (is_single()) {
+                echo ' : <a href="/blog">Blog</a> : ';
+                echo '<a href="#">' . the_title() . '</a>';
             }
-        } else {
-            if (is_category() || is_single()) {
-                if (is_single()) {
-                    echo ' : <a href="/blog">Blog</a> : ';
-                    echo '<a href="#">' . the_title() . '</a>';
-                }
-            } elseif (is_page()) {
-                $is_testimonial = false;
-                if(!empty($_GET['testimonial'])){
-                    $testimonial = get_post(intval($_GET['testimonial']));
-                    if($testimonial){
-                        $is_testimonial = true;
-                        echo ' : ';
-                        echo '<a href="'.get_permalink(get_the_ID()).'">' . get_the_title() . '</a>';
-                        echo ' : ';
-                        echo '<a href="#">' . get_the_title($testimonial->ID) . '</a>';
-                    }
-                }
-                if(!$is_testimonial) {
+        } elseif (is_page()) {
+            $is_testimonial = false;
+            if(!empty($_GET['testimonial'])){
+                $testimonial = get_post(intval($_GET['testimonial']));
+                if($testimonial){
+                    $is_testimonial = true;
                     echo ' : ';
-                    echo '<a href="#">' . the_title() . '</a>';
+                    echo '<a href="'.get_permalink(get_the_ID()).'">' . get_the_title() . '</a>';
+                    echo ' : ';
+                    echo '<a href="#">' . get_the_title($testimonial->ID) . '</a>';
                 }
             }
+            if(!$is_testimonial) {
+                echo ' : ';
+                echo '<a href="#">' . the_title() . '</a>';
+            }
         }
-        ?>
-    </div>
+    }
+    ?>
 <?php
 }
 ?>

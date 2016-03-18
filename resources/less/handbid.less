@@ -45,28 +45,6 @@ h3 {
   }
 }
 
-body .breadcrumb {
-  background: #f0f0f0;
-}
-
-.handbid-breadcrumb {
-
-  max-width: 100%;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-
-  a {
-    color: @lightBlue;
-  }
-  a:last-of-type {
-    color: @gray;
-  }
-  a:first-of-type {
-    color: @lightBlue;
-  }
-}
-
 .container {
   font-size: 16px;
 }
@@ -490,27 +468,6 @@ h3.no-results {
   }
 }
 
-/**
- * Section Nav
- */
-.section-nav {
-  text-align: center;
-  border-bottom: 1px solid @lightGray;
-  padding-bottom: 10px;
-  text-transform: uppercase;
-  font-weight: bold;
-  color: @lightBlue;
-  a {
-    color: @gray;
-    font-weight: normal;
-  }
-}
-
-.section-nav.auction-list {
-  margin-bottom: 20px;
-  border-bottom: 0;
-}
-
 .shadow-box,
 .share-container,
 .item-details,
@@ -864,177 +821,6 @@ h3.no-results {
   z-index: 3;
 }
 
-/**
- * Sort bar (usually sticky)
- */
-.sticky-for-sort-bar {
-  margin-bottom: 20px;
-  .clear {
-    clear: both;
-  }
-}
-
-select {
-  -webkit-appearance: button;
-  -webkit-border-radius: 2px;
-  -webkit-padding-end: 20px;
-  -webkit-padding-start: 2px;
-  -webkit-user-select: none;
-  background-image: url("../images/triangle-down.svg");
-  background-position: 97% center;
-  background-repeat: no-repeat;
-  border: 1px solid @lightGray;
-  border-radius: 0px;
-  color: #555;
-  font-size: inherit;
-  margin: 0px;
-  overflow: hidden;
-  padding: 5px 10px;
-  text-transform: uppercase;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  width: 80%
-}
-
-.sort-bar {
-  @border: 1px solid @lightGray;
-  border-top: @border;
-  border-bottom: @border;
-  font-size: 90%;
-  text-transform: uppercase;
-  float: left;
-  clear: both;
-  width: 100%;
-  padding: 7px 0;
-
-  .sort-label {
-    line-height: 2.3em;
-    text-align: right;
-  }
-
-  .select-wrapper {
-    text-align: right;
-    margin-right: 0;
-    padding-right: 0;
-    float: right;
-  }
-
-  .fancy-search {
-
-    margin: 0px;
-    border-bottom: none;
-    line-height: 2.3em;
-
-    .query {
-      font-size: 110%;
-      line-height: normal;
-      margin-left: 5px;
-    }
-
-    button {
-      background-size: contain;
-      background-position: bottom;
-      width: 20px;
-      height: 26px;
-    }
-  }
-
-  .legend {
-
-    text-align: center;
-    line-height: 2.3em;
-    font-size: 80%;
-    a {
-      color: @green;
-    }
-    .box {
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-      background-color: @green;
-      margin: 0px 5px 0 10px;
-      position: relative;
-      top: 5px;
-    }
-
-    .selected {
-      font-weight: 700;
-    }
-
-    .open {
-      color: @green;
-    }
-
-    .preview {
-      color: @orange;
-      .box {
-        background-color: @orange;
-      }
-    }
-
-    .presale {
-      color: @pink;
-      .box {
-        background-color: @pink;
-      }
-    }
-
-    .closed {
-      color: @gray;
-      .box {
-        background-color: @lightGray;
-      }
-    }
-
-    .current {
-      .box {
-        background-image: url("../images/current-auction-box.svg");
-        background-size: cover;
-      }
-    }
-
-  }
-
-}
-
-.auction-details.presale {
-  .filter-wrapper [data-section="category"] {
-    display: none;
-  }
-}
-
-.sort-bar.auction-item-list {
-
-  .category-cover-cheating {
-    display: none;
-    position: absolute;
-    left: -20px;
-    right: 0px;
-    top: -1px;
-    bottom: 0px;
-
-    background-color: white;
-
-  }
-
-}
-
-.sort-bar.auction-item-list.sticking {
-  .category-cover-cheating {
-    display: block;
-  }
-}
-
-.sort-bar.sticking {
-  background-color: @white;
-  z-index: 8;
-}
-
-.sort-bar.auction-list,
-.sort-bar.org-list {
-  margin-bottom: 20px;
-}
-
 .auction-details,
 .item-details {
   .slider-content {
@@ -1056,6 +842,12 @@ select {
     .status-label {
       color: @green;
     }
+  }
+}
+
+.auction-details.presale {
+  .filter-wrapper [data-section="category"] {
+    display: none;
   }
 }
 
@@ -3233,6 +3025,34 @@ div.handbid-modal[data-handbid-modal-key="credit-card-form"] {
 
   .buttons-and-titles {
     max-width: 320px;
+  }
+
+  .item-list .simple-box .body {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-content: stretch;
+    align-items: flex-start;
+    .full-image-wrapper {
+      order: 0;
+      flex: 1 1 130px;
+      align-self: stretch;
+      width: 130px;
+      min-width: 130px;
+      height: auto;
+      float: left;
+    }
+    .contents {
+      height: auto;
+      padding-bottom: 80px;
+      order: 0;
+      flex: 4 1 auto;
+      align-self: auto;
+    }
+  }
+  .simple-box .body h3 {
+    font-size: 120%;
   }
 
 }
