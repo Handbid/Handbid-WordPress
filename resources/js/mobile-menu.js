@@ -11,28 +11,28 @@
 
 
         $mobileMenu.find('a[data-slider-nav-key="see-my-receipt"]').on("click", function() {
-            var profileLinkVisible = $('a[data-slider-nav-key="profile-user-info"]');
+            var profileLinkVisible = $('a[data-slider-nav-key="profile-user-info"]:visible');
             profileLinkVisible.click();
             $(".quick-links").find('a[data-slider-nav-key="see-my-receipt"]').click();
             $('html,body').animate({scrollTop: profileLinkVisible.offset().top},'normal');
         });
 
         $mobileMenu.find('a[data-slider-nav-key="user-profile"]').on("click", function() {
-            var profileLinkVisible = $('a[data-slider-nav-key="profile-user-info"]');
+            var profileLinkVisible = $('a[data-slider-nav-key="profile-user-info"]:visible');
             profileLinkVisible.click();
             $(".quick-links").find('a[data-slider-nav-key="user-profile"]').click();
             $('html,body').animate({scrollTop: profileLinkVisible.offset().top},'normal');
         });
 
         $mobileMenu.find('a[data-slider-nav-key="update-credit-card"]').on("click", function() {
-            var profileLinkVisible = $('a[data-slider-nav-key="profile-user-info"]');
+            var profileLinkVisible = $('a[data-slider-nav-key="profile-user-info"]:visible');
             profileLinkVisible.click();
             $(".quick-links").find('a[data-slider-nav-key="update-credit-card"]').click();
             $('html,body').animate({scrollTop: profileLinkVisible.offset().top},'normal');
         });
 
         $mobileMenu.find('a[data-slider-nav-key="bidder-notifications"]').on("click", function() {
-            var profileLinkVisible = $('a[data-slider-nav-key="profile-user-info"]');
+            var profileLinkVisible = $('a[data-slider-nav-key="profile-user-info"]:visible');
             profileLinkVisible.click();
             $(".quick-links").find('a[data-slider-nav-key="bidder-notifications"]').click();
             $('html,body').animate({scrollTop: profileLinkVisible.offset().top},'normal');
