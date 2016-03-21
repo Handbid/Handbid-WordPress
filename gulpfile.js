@@ -39,15 +39,20 @@ gulp.task('js', function() {
 
 gulp.task('less', function () {
     gulp.src([
-        'resources/less/modal_css.less',
-        'resources/less/modal-connect_css.less',
-        'resources/less/handbid_css.less',
+        'resources/less/variables.less',
         'resources/less/buttons.less',
-        'resources/less/modal.less',
         'resources/less/handbid.less',
         'resources/less/section_nav.less',
         'resources/less/sort_bar.less',
         'resources/less/bidder-info.less',
+        'resources/less/auctions.less',
+    
+        'resources/less/handbid_css.less',
+        
+        'resources/less/modal.less',
+        'resources/less/modal_css.less',
+        'resources/less/modal-connect_css.less',
+        
         'resources/less/responsive-fix.less'
     ])
     .pipe(sourcemaps.init())
