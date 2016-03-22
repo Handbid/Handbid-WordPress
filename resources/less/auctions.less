@@ -762,6 +762,7 @@
     .slider-nav {
       display: flex;
       justify-content: center;
+      flex-wrap: wrap;
 
       padding-left: 0;
       padding-right: 0;
@@ -882,28 +883,10 @@
   .images .image-holder {
     height: 325px;
   }
-
-  .auction-details, .org-details, .item-details {
-    .slider-nav {
-      li {
-        display: block;
-        a {
-          width: 100%;
-          height: auto;
-        }
-      }
-    }
-  }
 }
 
 @media (max-width: 350px) {
   .auction-details, .org-details, .item-details {
-    .slider-nav {
-      padding-left: 0;
-      padding-right: 0;
-      margin-left: 0;
-      margin-right: 0;
-    }
     #large-map {
       width: 100%;
     }
