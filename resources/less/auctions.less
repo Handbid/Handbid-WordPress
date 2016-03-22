@@ -706,12 +706,7 @@
 
     .controls {
       margin-top: 100px;
-
-      .handbid-share-bar {
-        width: 100%;
-        clear: both;
-        padding-bottom: 10px;
-      }
+      text-align: center;
 
       .buttons {
         margin-top: 15px;
@@ -765,15 +760,18 @@
     }
 
     .slider-nav {
+      display: flex;
+      justify-content: center;
+
       padding-left: 0;
       padding-right: 0;
       margin-left: 0;
       margin-right: 0;
       li {
-        vertical-align: middle;
+        display: inline-flex;
         a {
           width: 125px;
-          height: 76px;
+          //height: 76px;
         }
       }
     }
@@ -811,11 +809,10 @@
     align-items: flex-start;
     .full-image-wrapper {
       order: 0;
-      flex: 1 1 130px;
+      flex: 1 1 auto;
       align-self: stretch;
-      width: 130px;
-      min-width: 130px;
-      max-width: 130px;
+      min-width: 35%;
+      max-width: 35%;
       height: auto;
       float: left;
     }
