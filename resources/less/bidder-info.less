@@ -7,10 +7,6 @@
 
 .bidder-info-container {
   * {
-    -webkit-transition: all 0.2s ease-in-out;
-    -moz-transition: all 0.2s ease-in-out;
-    -ms-transition: all 0.2s ease-in-out;
-    -o-transition: all 0.2s ease-in-out;
     transition: all 0.2s ease-in-out;
   }
 
@@ -24,6 +20,22 @@
 
   .bidder-info-body .slider-content {
     transition: all 0.5s;
+    position: relative;
+    .close-bidder-slider {
+      display: none;
+      position: absolute;
+      z-index: 300;
+      top: 0;
+      right: 0;
+      background: transparent;
+      border: none;
+      outline: none;
+      font-size: 2em;
+      line-height: 1;
+      text-decoration: none;
+      font-weight: 400;
+      color: @gray;
+    }
   }
 
   .slider-content {
@@ -105,7 +117,7 @@
   }
 
   [data-slider-nav-id="bidder-dashboard"].slider-nav a {
-    color: rgba(110, 130, 138, 1);
+    color: @gray;
     text-align: right;
     &.profile-user-info {
       text-align: left;
@@ -123,10 +135,6 @@
       background: url('../images/triangle-down.svg') no-repeat center center;
       display: inline-block;
       .rotateDeg(180deg);
-      -webkit-transition: all 0.2s ease-in-out;
-      -moz-transition: all 0.2s ease-in-out;
-      -ms-transition: all 0.2s ease-in-out;
-      -o-transition: all 0.2s ease-in-out;
       transition: all 0.2s ease-in-out;
     }
     &.active-slide::after {
@@ -144,10 +152,6 @@
 
     &.profile-opener::after {
       content: "profile";
-      -moz-transform: rotate(0deg) !important;
-      -webkit-transform: rotate(0deg) !important;
-      -o-transform: rotate(0deg) !important;
-      -ms-transform: rotate(0deg) !important;
       transform: rotate(0deg) !important;
       background: none;
       text-transform: uppercase;
@@ -163,7 +167,7 @@
     &.profile-opener:hover::after,
     &.profile-opener.active-slide::after {
       background-color: @lightBlue;
-      color: #fff;
+      color: @white;
     }
 
     &.profile-opener {
@@ -193,7 +197,7 @@
     }
   }
 
-  [data-slider-nav-id="bidder-dashboard"].slider-nav-mobile {
+  [data-slider-nav-id="bidder-dashboard"] .slider-nav-mobile {
     display: none;
     text-align: left;
     border-bottom: 1px solid @lightGray;
@@ -207,9 +211,9 @@
 
     .total-spent {
       position: absolute;
-      top: 0px;
-      right:0px;
-      bottom: 0px;
+      top: 0;
+      right: 0;
+      bottom: 0;
       border-left: 1px solid @lightGray;
       text-align: center;
 
@@ -268,7 +272,7 @@
   span{
     font-size: 13px;
     line-height: 10px;
-    color: #fff;
+    color: @white;
     top: initial;
     left: initial;
     text-align: center;
@@ -279,7 +283,7 @@
     background-color: @lightBlue;
     border-color: @lightBlue;
     &:hover{
-      background-color: #fff;
+      background-color: @white;
       span{
         color: @lightBlue;
       }
@@ -301,7 +305,7 @@
 
 .bidder-info-container a > span.unpaidInvoicesCountContainer{
   font-size: 14px;
-  color: #fff !important;
+  color: @white !important;
 }
 
 @media (max-width: 1200px) and (min-width: 992px) {
@@ -325,18 +329,22 @@
       }
     }
 
+    .handbid-list-of-bids {
+      margin: 20px 0;
+    }
+
     .quick-links,
     .meta,
-    [data-slider-nav-id="bidder-dashboard"].slider-nav-desktop .profile-user-info,
-    [data-slider-nav-id="bidder-dashboard"].slider-nav-desktop .total-spent {
+    [data-slider-nav-id="bidder-dashboard"] .slider-nav-desktop .profile-user-info,
+    [data-slider-nav-id="bidder-dashboard"] .slider-nav-desktop .total-spent {
       display: none;
     }
 
-    [data-slider-nav-id="bidder-dashboard"].slider-nav-mobile {
+    [data-slider-nav-id="bidder-dashboard"] .slider-nav-mobile {
       display: block;
     }
 
-    [data-slider-nav-id="bidder-dashboard"].slider-nav-desktop {
+    [data-slider-nav-id="bidder-dashboard"] .slider-nav-desktop {
       a {
         text-align: center;
         margin:0;

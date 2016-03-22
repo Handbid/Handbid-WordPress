@@ -51,61 +51,68 @@ if (!is_null($this->get('profile'))) {
             </div>
         </div>
         <?php $loader = ($isInitialLoading)?" initial-loading-space ":"";?>
-        <div class="row slider-nav slider-nav-mobile" data-slider-nav-id="bidder-dashboard">
+        <div class="slider-nav <?php echo ($bidderPage) ? 'auto-open' : ''; ?>" data-slider-nav-id="bidder-dashboard" data-toggle-mode="true">
 
-            <div class="col-xs-9">
+            <div class="slider-nav-mobile row">
 
-                <div class="pin col-md-12 col-xs-12">
-                    <label>Pin Code:</label>
-                    <?php echo $profile->pin; ?>
+                <div class="col-xs-9">
+
+                    <div class="pin col-md-12 col-xs-12">
+                        <label>Pin Code:</label>
+                        <?php echo $profile->pin; ?>
+                    </div>
+
+                    <a class="col-xs-12 profile-user-info profile-opener" data-slider-nav-key="profile-user-info">
+                        <span><?php echo $bidderName; ?></span>
+                    </a>
+
                 </div>
+                <a class="col-xs-3 total-spent">
 
-                <a class="col-xs-12 profile-user-info profile-opener" data-slider-nav-key="profile-user-info">
-                    <span><?php echo $bidderName; ?></span>
+                    <span><span class="handbidAuctionCurrency" title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span> <span data-handbid-stats-grand-total><?php echo $total; ?></span></span>
+                    <label>Total</label>
+
                 </a>
 
             </div>
-            <a class="col-xs-3 total-spent">
 
-                <span><span class="handbidAuctionCurrency" title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span> <span data-handbid-stats-grand-total><?php echo $total; ?></span></span>
-                <label>Total</label>
 
-            </a>
+            <div class="slider-nav-desktop row stats-bar">
+                <a class="col-md-<?php echo ($auction) ? '2' : '3'; ?> col-xs-8 profile-user-info profile-opener" data-slider-nav-key="profile-user-info">
+                    <span><?php echo $bidderName; ?></span>
+                </a>
+                <?php if($auction) {
+                    ?>
+                    <a class="col-md-2 col-sm-3 col-xs-3 profile-max-bids <?php echo $loader;?>" data-slider-nav-key="profile-max-bids">
+                        <label>Max Bids</label>
+                        <span data-handbid-stats-num-proxies><?php echo ($maxBids) ? count($maxBids) : '0'; ?></span>
+                    </a>
+                    <a class="col-md-2 col-sm-3 col-xs-3 profile-winning <?php echo $loader;?>" data-slider-nav-key="profile-winning">
+                        <label>Winning</label>
+                        <span data-handbid-stats-num-winning><?php echo ($winning) ? count($winning) : '0'; ?></span>
+                    </a>
+                    <a class="col-md-2 col-sm-3 col-xs-3 profile-losing <?php echo $loader;?>" data-slider-nav-key="profile-losing">
+                        <label>Losing</label>
+                        <span data-handbid-stats-num-losing><?php echo ($losing) ? count($losing) : '0'; ?></span>
+                    </a>
+                    <a class="col-md-2 col-sm-3 col-xs-3 profile-purchases <?php echo $loader;?>" data-slider-nav-key="profile-purchases">
+                        <label>Purchases</label>
+                        <span data-handbid-stats-num-purchases><?php echo ($purchases) ? count($purchases) : '0'; ?></span>
+                    </a>
+                    <a class="col-md-2 col-xs-12 total-spent <?php echo $loader;?>">
+                        <label>Total</label>
+                        <span><span class="handbidAuctionCurrency" title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span><span data-handbid-stats-grand-total><?php echo $total; ?></span></span>
+                    </a>
+                <?php } ?>
+            </div>
 
-        </div>
-
-        <div class="row slider-nav slider-nav-desktop stats-bar <?php echo ($bidderPage) ? 'auto-open' : ''; ?>" data-slider-nav-id="bidder-dashboard" data-toggle-mode="true">
-            <a class="col-md-<?php echo ($auction) ? '2' : '3'; ?> col-xs-8 profile-user-info profile-opener" data-slider-nav-key="profile-user-info">
-                <span><?php echo $bidderName; ?></span>
-            </a>
-            <?php if($auction) {
-                ?>
-                <a class="col-md-2 col-sm-3 col-xs-3 profile-max-bids <?php echo $loader;?>" data-slider-nav-key="profile-max-bids">
-                    <label>Max Bids</label>
-                    <span data-handbid-stats-num-proxies><?php echo ($maxBids) ? count($maxBids) : '0'; ?></span>
-                </a>
-                <a class="col-md-2 col-sm-3 col-xs-3 profile-winning <?php echo $loader;?>" data-slider-nav-key="profile-winning">
-                    <label>Winning</label>
-                    <span data-handbid-stats-num-winning><?php echo ($winning) ? count($winning) : '0'; ?></span>
-                </a>
-                <a class="col-md-2 col-sm-3 col-xs-3 profile-losing <?php echo $loader;?>" data-slider-nav-key="profile-losing">
-                    <label>Losing</label>
-                    <span data-handbid-stats-num-losing><?php echo ($losing) ? count($losing) : '0'; ?></span>
-                </a>
-                <a class="col-md-2 col-sm-3 col-xs-3 profile-purchases <?php echo $loader;?>" data-slider-nav-key="profile-purchases">
-                    <label>Purchases</label>
-                    <span data-handbid-stats-num-purchases><?php echo ($purchases) ? count($purchases) : '0'; ?></span>
-                </a>
-                <a class="col-md-2 col-xs-12 total-spent <?php echo $loader;?>">
-                    <label>Total</label>
-                    <span><span class="handbidAuctionCurrency" title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span><span data-handbid-stats-grand-total><?php echo $total; ?></span></span>
-                </a>
-            <?php } ?>
         </div>
     </div>
     <div class="full-width-container bidder-info-body">
         <div class="container container-fluid">
             <div class="slider-content" data-slider-nav-id="bidder-dashboard">
+
+                <button class="close-bidder-slider" data-slider-close="bidder-dashboard">x</button>
 
                 <div class="row" data-slider-nav-key="profile-user-info">
 
@@ -124,7 +131,7 @@ if (!is_null($this->get('profile'))) {
 
                 <div class="row" data-slider-nav-key="profile-max-bids">
                     <div class="col-md-12 simple-list-container">
-                        <ul class="simple-list handbid-list-of-bids-proxy" data-no-items-text="You have not set any max bids on items.">
+                        <ul class="simple-list handbid-list-of-bids handbid-list-of-bids-proxy" data-no-items-text="You have not set any max bids on items.">
                             <?php
                             if(count($maxBids) > 0) {
                                 forEach($maxBids as $bid) {
@@ -158,7 +165,7 @@ if (!is_null($this->get('profile'))) {
 
                 <div class="row" data-slider-nav-key="profile-winning">
                     <div class="col-md-12 simple-list-container">
-                        <ul class="simple-list handbid-list-of-bids-winning" data-no-items-text="You are currently not winning any items.">
+                        <ul class="simple-list handbid-list-of-bids handbid-list-of-bids-winning" data-no-items-text="You are currently not winning any items.">
                             <?php
                             if(count($winning) > 0 ) {
                                 forEach($winning as $bid) {
@@ -186,7 +193,7 @@ if (!is_null($this->get('profile'))) {
 
                 <div class="row" data-slider-nav-key="profile-losing">
                     <div class="col-md-12 simple-list-container">
-                        <ul class="simple-list handbid-list-of-bids-losing" data-no-items-text="You are currently not losing any items.">
+                        <ul class="simple-list handbid-list-of-bids handbid-list-of-bids-losing" data-no-items-text="You are currently not losing any items.">
                             <?php
                             if(count($losing) > 0 ) {
                                 forEach($losing as $bid) {
@@ -214,7 +221,7 @@ if (!is_null($this->get('profile'))) {
 
                 <div class="row" data-slider-nav-key="profile-purchases">
                     <div class="col-md-12 simple-list-container">
-                        <ul class="simple-list handbid-list-of-bids-purchases" data-no-items-text="You have not purchased any items.">
+                        <ul class="simple-list handbid-list-of-bids handbid-list-of-bids-purchases" data-no-items-text="You have not purchased any items.">
                             <?php
                             if(count($purchases) > 0 ) {
                                 forEach($purchases as $purchase) {
