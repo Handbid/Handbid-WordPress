@@ -723,11 +723,9 @@
     }
   }
 
-  .auction-details, .org-details, .item-details {
-    .buttons-and-titles {
-      max-width: 500px;
-      margin: 0 auto;
-    }
+  .buttons-and-titles {
+    max-width: 500px;
+    margin: 0 auto;
   }
 }
 
@@ -801,32 +799,44 @@
     max-width: 320px;
   }
 
-  .item-list .simple-box .body {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    align-content: stretch;
-    align-items: flex-start;
-    .full-image-wrapper {
-      order: 0;
-      flex: 1 1 auto;
-      align-self: stretch;
-      min-width: 35%;
-      max-width: 35%;
-      height: auto;
-      float: left;
+  .item-list .simple-box {
+    .body {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      justify-content: flex-start;
+      align-content: stretch;
+      align-items: flex-start;
+      .full-image-wrapper {
+        order: 0;
+        flex: 1 1 auto;
+        align-self: stretch;
+        min-width: 35%;
+        max-width: 35%;
+        height: auto;
+        float: left;
+      }
+      .contents {
+        height: auto;
+        padding-bottom: 50px;
+        order: 0;
+        flex: 4 1 auto;
+        align-self: auto;
+        .horizontal-details li {
+          padding-top: 10px;
+          background-image: none;
+          font-size: 100%;
+        }
+      }
+      h3 {
+        font-size: 120%;
+      }
+      h4 {
+        margin-top: 0;
+        text-transform: uppercase;
+      }
+
     }
-    .contents {
-      height: auto;
-      padding-bottom: 80px;
-      order: 0;
-      flex: 4 1 auto;
-      align-self: auto;
-    }
-  }
-  .simple-box .body h3 {
-    font-size: 120%;
   }
 }
 
