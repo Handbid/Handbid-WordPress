@@ -10,7 +10,7 @@
 
 
 var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_overlay, timerNotice, timerMessage,
-    circleTimer, auctionInvoices, currentPaddleNumber, currentElemNeedsCard,
+    circleTimer, auctionInvoices, currentPaddleNumber, currentElemNeedsCard, timerTimeout = 890,
     currentCCForm, cookieExpire = 7;
 (function ($) {
 
@@ -3425,7 +3425,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 if (continueTimer) {
                     setTimeout(function () {
                         handbid.startTimer(handbid)
-                    }, 1000);
+                    }, timerTimeout);
                 }
             },
 
