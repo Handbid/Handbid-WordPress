@@ -10,31 +10,16 @@
         var $mobileMenu = $(".mobile-menu");
 
 
-        $mobileMenu.find('a[data-slider-nav-key="see-my-receipt"]').on("click", function() {
-            var profileLinkVisible = $('a[data-slider-nav-key="profile-user-info"]:visible');
-            profileLinkVisible.click();
-            $(".quick-links").find('a[data-slider-nav-key="see-my-receipt"]').click();
-            $('html,body').animate({scrollTop: profileLinkVisible.offset().top},'normal');
-        });
+        $mobileMenu.find('a[data-slider-nav-key]').on("click", function() {
+            var profileLinkVisible = $('.slider-nav[data-slider-nav-id="bidder-dashboard"] .slider-nav-mobile a[data-slider-nav-key="profile-user-info"]'),
+                key                = $(this).attr('data-slider-nav-key');
 
-        $mobileMenu.find('a[data-slider-nav-key="user-profile"]').on("click", function() {
-            var profileLinkVisible = $('a[data-slider-nav-key="profile-user-info"]:visible');
-            profileLinkVisible.click();
-            $(".quick-links").find('a[data-slider-nav-key="user-profile"]').click();
-            $('html,body').animate({scrollTop: profileLinkVisible.offset().top},'normal');
-        });
+            if (!$('.slider-nav[data-slider-nav-id="bidder-dashboard"]').has('.active-slide').length) {
+                profileLinkVisible[0].click();
+            }
 
-        $mobileMenu.find('a[data-slider-nav-key="update-credit-card"]').on("click", function() {
-            var profileLinkVisible = $('a[data-slider-nav-key="profile-user-info"]:visible');
-            profileLinkVisible.click();
-            $(".quick-links").find('a[data-slider-nav-key="update-credit-card"]').click();
-            $('html,body').animate({scrollTop: profileLinkVisible.offset().top},'normal');
-        });
+            $('.slider-nav[data-slider-nav-id="bidder-dashboard-inner"] [data-slider-nav-key="' + key + '"]')[0].click();
 
-        $mobileMenu.find('a[data-slider-nav-key="bidder-notifications"]').on("click", function() {
-            var profileLinkVisible = $('a[data-slider-nav-key="profile-user-info"]:visible');
-            profileLinkVisible.click();
-            $(".quick-links").find('a[data-slider-nav-key="bidder-notifications"]').click();
             $('html,body').animate({scrollTop: profileLinkVisible.offset().top},'normal');
         });
     });

@@ -1,22 +1,198 @@
+@import "variables";
+@import "buttons";
 
+/**
+ * Global responsiveness
+ */
+@media (max-width: 992px) {
+
+  body {
+    .slider-nav[data-slider-nav-id="what-clients-say"] {
+      a {
+        height: 2em;
+      }
+      a[data-slider-nav-key].active-slide,
+      a[data-slider-nav-key]:hover {
+        border-bottom: 0;
+      }
+    }
+  }
+
+  span.status {
+    display: block;
+    clear: both;
+  }
+
+  .auction-timer {
+    width: auto;
+  }
+
+  html {
+    overflow-x: hidden;
+  }
+
+  #credit-card-required-banner {
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 15px;
+    height: auto;
+    margin: 0;
+    width: auto;
+    box-shadow: none;
+    .green-solid-button {
+      margin-bottom: 5px;
+      margin-top: 15px;
+    }
+  }
+
+  // carefully selecting credit card modal
+  div.handbid-modal[data-handbid-modal-key="credit-card-form"] {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: 0 !important; // Inline styles on modal :(
+    .creditcard {
+      width: 100%;
+      padding: 0;
+      background: none;
+      border: 0;
+    }
+    .bottom-row {
+      margin: 0;
+    }
+    .cc-section {
+      width: 100%;
+      clear: both;
+      margin-bottom: 15px;
+      input {
+        width: 100%
+      }
+      .checkout-exp {
+        width: 48%
+      }
+      .checkout-exp[name="expMonth"] {
+        margin-right: 3.9%;
+      }
+      input.checkout-cvc {
+        width: 96%;
+      }
+    }
+    .cc-section:last-of-type {
+      margin: 0;
+    }
+    .simple-tooltip-content {
+      left: -200px;
+    }
+  }
+
+  .handbid-growl-container {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 10;
+    width: 100%;
+    .handbid-growl {
+      width: 100%;
+      box-shadow: 0;
+      margin-top: 15px;
+      color: #81929a;
+      transition: all 0.5s ease-in-out;
+      background: #f0f0f0;
+      background-image: none;
+      padding: 15px;
+    }
+  }
+
+
+  body {
+    .container .item-details {
+      .bid-down {
+        text-align: left;
+      }
+      .bid-up {
+        text-align: right;
+      }
+
+      .slider-nav li a {
+        width: 100%;
+        padding: 15px;
+      }
+
+      .images .image-holder {
+        height: 290px;
+      }
+    }
+
+    .proxy-bid-dialog,
+    div#handbid-confirmation-dialog {
+      padding: 15px;
+      left: 0 !important;
+      top: 0 !important;
+      right: 0;
+      bottom: 0;
+      width: auto;
+      margin: 0 !important;
+      .handbid-message {
+        margin: 0;
+        display: inline-block;
+      }
+      a.modal-close {
+        top: 12px;
+        right: 15px;
+      }
+    }
+  }
+
+  div.handbid-modal.tickets-modal {
+    width: 100%;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin-left: 0 !important;
+    margin-top: 0 !important;
+    .ticket-row {
+      border: none;
+    }
+    .ticket {
+      border-top: 1px solid @dropShadow;
+    }
+    .ticket:last-of-type {
+      border-bottom: 1px solid @dropShadow;
+    }
+    .ticket:nth-child(even) {
+      border-left: none;
+    }
+  }
+}
 
 @media (max-width: 767px) {
-  .simple-box-row {
-    margin-top: 0;
+  .global-footer .toggle-info {
+    display: block !important;
+    width: 50%;
+    margin: 0 auto;
+    text-align: center;
+    font-size: 16px;
+    box-shadow: 1px 1px 5px #777;
+    padding: 10px 10px;
+    border-radius: 5px;
   }
+
+  .global-footer:not(.show-all) * {
+    display: none;
+  }
+
+  .global-footer.show-all .toggle-info {
+    display: none !important;
+  }
+
   .edit-profile input[type="submit"], .simple-form input[type="submit"] {
     margin-left: 0;
-  }
-
-  .item-details.item-open {
-    margin-top: 20px;
-  }
-
-  .row.simple-box-row.auctions {
-    clear: both;
-    .no-results {
-      margin: 100px 20px;
-    }
   }
 
   .handbid-credit-card-footer-form {
@@ -30,13 +206,7 @@
       padding: 15px;
     }
   }
-  body .container .item-details .back-to-previous-container a.back-to-previous {
-    display: inline-block;
-    margin-top: -25px;
-    background-size: 13px;
-    padding: 13px 0 13px 22px;
-    font-size: 13px;
-  }
+
   .item-details,
   .proxy-bid-dialog {
     h2.name {
@@ -54,26 +224,15 @@
       padding-bottom: 10px;
     }
   }
-  .item-details {
-    .bid-controls .bid-amount {
-      font-size: 275%;
-      line-height: 50px;
+}
+
+@media (max-width: 560px) {
+  [data-handbid-item-key] [data-slider-nav-id] {
+    li {
+      display: block;
+      a {
+        height: auto;
+      }
     }
   }
 }
-
-@media (max-width: 350px) {
-  .auction-details .controls .register,
-  .auction-details .controls .purchase-tickets,
-  .org-details .controls .register,
-  .org-details .controls .purchase-tickets {
-    margin: 0;
-  }
-
-  .item-details .row.additional,
-  .item-details .slider-content{
-    font-size: 90% !important;
-  }
-}
-
-

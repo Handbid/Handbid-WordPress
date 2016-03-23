@@ -87,13 +87,13 @@ if(!$org) {
                 }
             }
             if($socialsNotEmpty){
-                echo '<div class="handbid-share-bar row"><div class="col-md-1 col-xs-1">&nbsp;</div>';
+                echo '<div class="handbid-share-bar row">';
                 foreach($socialLinks as $socialLink){
                     if(trim($socialLink["link"])){
-                        echo '<a class="icon '.$socialLink["class"].' col-md-2 col-xs-2" href="'.$socialLink["link"].'"></a>';
+                        echo '<a class="icon '.$socialLink["class"].'" href="'.$socialLink["link"].'"></a>';
                     }
                 }
-                echo '<div class="col-md-1 col-xs-1">&nbsp;</div></div>';
+                echo '</div>';
             }
             else{
                 echo do_shortcode('[handbid_social_share]');
