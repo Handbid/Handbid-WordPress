@@ -319,6 +319,7 @@ class Handbid
         }
 
         $outerStyles = array(
+            'fonts-google-lato'          => 'https://fonts.googleapis.com/css?family=Lato:300,400,500',
             'fonts-google-oswald'          => 'https://fonts.googleapis.com/css?family=Oswald',
         );
 
