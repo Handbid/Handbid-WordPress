@@ -508,15 +508,18 @@ var timerForSearch, timerToLoad, isotopeWasFiltered = false, wasNotVisible = tru
         });
 
         if(window.location.hash){
-            needToMoveToItem = true;
-            setTimeout(function(){
-                $('html, body').animate({
-                    scrollTop: $('[data-slider-nav-key="items"]').offset().top + 50
-                }, 50);
-                setTimeout(function(){
-                    detectIfContainerIsVisibleNow();
-                }, 100);
-            }, 500);
+            var topElementOffset = $('[data-slider-nav-key="items"]').offset();
+            if(topElementOffset != undefined) {
+                needToMoveToItem = true;
+                setTimeout(function () {
+                    $('html, body').animate({
+                        scrollTop: topElementOffset.top + 50
+                    }, 50);
+                    setTimeout(function () {
+                        detectIfContainerIsVisibleNow();
+                    }, 100);
+                }, 500);
+            }
         }
 
         $( window ).scroll(function() {

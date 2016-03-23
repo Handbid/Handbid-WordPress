@@ -1608,9 +1608,12 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 var hash = window.location.hash;
                 if (hash) {
                     hash = hash.split('-').pop();
-                    $('html, body').animate({
-                        scrollTop: jQuery('[data-handbid-item-box="' + hash + '"]').offset().top
-                    }, 900);
+                    var topElementOffset = $('[data-handbid-item-box="' + hash + '"]').offset();
+                    if(topElementOffset != undefined) {
+                        $('html, body').animate({
+                            scrollTop: topElementOffset.top
+                        }, 900);
+                    }
                 }
             },
 
