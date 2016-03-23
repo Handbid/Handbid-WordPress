@@ -15,7 +15,7 @@ $winning = $this->get('winning');
 $losing = $this->get('losing');
 $url = '/auctions/' . $auction->key . '/item/' . $item->key . '/';
 
-if($item->isTicket){
+if ($item->isTicket) {
     $item->isDirectPurchaseItem = true;
 }
 if ($item->isDirectPurchaseItem) {
@@ -26,7 +26,10 @@ if (!$item->hasInventory or ($item->inventoryRemaining == -1)) {
     $item->inventoryRemaining = '∞';
 }
 
-if ($auction->status == 'presale' && !$item->isDirectPurchaseItem) {
+$availableForPreSale = ($item->availableForPreSale == "1");
+$isDirectPurchaseItem = ($item->isDirectPurchaseItem);
+$itemCanNotBeShownInPresale = (($auction->status == 'presale') and !($isDirectPurchaseItem and $availableForPreSale));
+if ($itemCanNotBeShownInPresale) {
     return;
 }
 
@@ -34,7 +37,7 @@ $isLosing = count(array_filter($losing, function ($bid) use ($item) {
     return $bid->itemId == $item->id;
 }));
 
-$isWinning  = count(array_filter($winning, function ($bid) use ($item) {
+$isWinning = count(array_filter($winning, function ($bid) use ($item) {
     return $bid->itemId == $item->id;
 })) and !$isLosing;
 
@@ -43,28 +46,31 @@ $boxStatus = ($isWinning) ? "winning" : (($isLosing) ? "losing" : $item->status)
 $isHidden = ($item->isHidden == "1");
 
 $availableForPreSale = ($item->availableForPreSale == "1");
-$itemCanNotBeShownInPresale = (in_array($auction->status, ["presale","preview"]) and !$availableForPreSale);
+$itemCanNotBeShownInPresale = (in_array($auction->status, ["presale", "preview"]) and !$availableForPreSale);
+
+$hideItemIfSold = (($item->isHidden == "1") or (($item->hideSales == 1) and $item->status == "sold"));
+
 
 $itemValueHidden = (isset($item->showValue) and ($item->showValue != 1));
 
 $itemHideIfSold = ($item->hideSales == 1);
 
-$currencyCode = (isset($auction->currencyCode))? $auction->currencyCode : HANDBID_DEFAULT_CURRENCY;
-$currencySymbol = (isset($auction->currencySymbol))? $auction->currencySymbol : HANDBID_DEFAULT_CURRENCY_SYMBOL;
+$currencyCode = (isset($auction->currencyCode)) ? $auction->currencyCode : HANDBID_DEFAULT_CURRENCY;
+$currencySymbol = (isset($auction->currencySymbol)) ? $auction->currencySymbol : HANDBID_DEFAULT_CURRENCY_SYMBOL;
 
 $isDonation = (!empty($item->isAppeal) and $item->isAppeal);
 ?>
 
 <div onclick="if(event.metaKey) { return; } window.location.href='<?php echo $url; ?>'"
-    <?php echo ($isHidden)?" data-is-hidden-item ":""; ?>
+     class="simple-item-box simple-box status-<?php echo $item->status; ?>
+     <?php echo ($itemCanNotBeShownInPresale or $hideItemIfSold) ? " not-available-in-presale " : ""; ?>"
      data-handbid-item-key="<?php echo $item->key; ?>"
      data-handbid-item-cat-id="<?php echo $item->categoryId; ?>"
      data-handbid-item-box="<?php echo $item->id; ?>"
      data-handbid-params-box="<?php echo $item->id; ?>"
      data-handbid-item-auction="<?php echo $auction->id; ?>"
      data-handbid-item-box-status="<?php echo $boxStatus; ?>"
-     class="simple-item-box simple-box status-<?php echo $item->status; ?>
-     <?php echo ($itemCanNotBeShownInPresale)?" not-available-in-presale ":"";?>"
+     <?php if ($isHidden) { ?>data-is-hidden-item<?php } ?>
      <?php if ($item->isDirectPurchaseItem) { ?>data-for-sale<?php } ?>
      <?php if ($item->disableMobileBidding) { ?>data-live<?php } ?>
      <?php if ($item->isBidpadOnly) { ?>data-bidpad<?php } ?>
@@ -76,8 +82,10 @@ $isDonation = (!empty($item->isAppeal) and $item->isAppeal);
      }, array($item->categoryName))); ?>|">
 
     <div class="header">
-        <div class="col-md-4 col-xs-4 price"><span class="handbidAuctionCurrency" title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span><span
-                class="currentItemPrice" data-handbid-item-attribute="currentPrice"><?php echo $item->currentPrice; ?></span></div>
+        <div class="col-md-4 col-xs-4 price"><span class="handbidAuctionCurrency"
+                                                   title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span><span
+                class="currentItemPrice"
+                data-handbid-item-attribute="currentPrice"><?php echo $item->currentPrice; ?></span></div>
         <?php if (trim($item->itemCode)) { ?>
             <div class="col-md-8 col-xs-8 code">#<span
                     data-handbid-item-attribute="itemCode"><?php echo $item->itemCode; ?></span></div>
@@ -87,22 +95,29 @@ $isDonation = (!empty($item->isAppeal) and $item->isAppeal);
 
     <div class="body">
         <?php
-        $image = (isset($item->images) and is_array($item->images) and count($item->images) and isset($item->images[0]->itemImageUrl))?$item->images[0]->itemImageUrl:"";
+        $image = (isset($item->images) and is_array($item->images) and count($item->images) and isset($item->images[0]->itemImageUrl)) ? $item->images[0]->itemImageUrl : "";
         $image = apply_filters("handbid_cdn_image_thumbnail", $image);
-        $image = (trim($image))?$image: HANDBID_PLUGIN_URL . 'public/images/simple-box/default_photo.png'  ;
+        $image = (trim($image)) ? $image : HANDBID_PLUGIN_URL . 'public/images/simple-box/default_photo.png';
         $imageUrlPath = parse_url($image);
         $image = ($imageUrlPath["scheme"]) ? $image : ((trim($image)) ? "https://" . $image : "");
         $backImageStyle = trim($image) ? "background-image: url(" . $image . ")" : "";
         ?>
-        <div class="full-image-wrapper without-image" style="<?php //echo $backImageStyle; ?>" data-backgroung-image-url="<?php echo $image; ?>">
+        <div class="full-image-wrapper without-image" style="<?php //echo $backImageStyle; ?>"
+             data-backgroung-image-url="<?php echo $image; ?>">
             <div class="dim-overlay"></div>
             <div class="box-flag">
 
                 <h3 data-handbid-box-banner="bidpad" data-handbid-box-id="<?php echo $item->id; ?>">Live Only</h3>
+
                 <h3 data-handbid-box-banner="live" data-handbid-box-id="<?php echo $item->id; ?>">Live Auction Only</h3>
-                <h3 data-handbid-box-banner="losing" data-handbid-box-id="<?php echo $item->id; ?>">Losing this item.</h3>
-                <h3 data-handbid-box-banner="winning" data-handbid-box-id="<?php echo $item->id; ?>">Winning this item.</h3>
-                <h3 data-handbid-box-banner="sold"  data-handbid-box-id="<?php echo $item->id; ?>">Sold Out</h3>
+
+                <h3 data-handbid-box-banner="losing" data-handbid-box-id="<?php echo $item->id; ?>">Losing this
+                    item.</h3>
+
+                <h3 data-handbid-box-banner="winning" data-handbid-box-id="<?php echo $item->id; ?>">Winning this
+                    item.</h3>
+
+                <h3 data-handbid-box-banner="sold" data-handbid-box-id="<?php echo $item->id; ?>">Sold Out</h3>
             </div>
         </div>
 
@@ -110,7 +125,8 @@ $isDonation = (!empty($item->isAppeal) and $item->isAppeal);
 
             <h3>
                 <a href="<?php echo $url; ?>" data-handbid-item-attribute="name"><?php echo $item->name; ?></a>
-                <span style="display: none;" class="nameLowerCase"><?php echo esc_html(strtolower($item->name));?></span>
+                <span style="display: none;"
+                      class="nameLowerCase"><?php echo esc_html(strtolower($item->name)); ?></span>
             </h3>
 
             <?php if (trim($item->categoryName)) { ?>
@@ -121,7 +137,7 @@ $isDonation = (!empty($item->isAppeal) and $item->isAppeal);
 
                 <?php if ($item->isDirectPurchaseItem) { ?>
 
-                    <li class="bids col-md-6 col-xs-6"><?php echo ($isDonation)?'Donated':'Sold'?> <em
+                    <li class="bids col-md-6 col-xs-6"><?php echo ($isDonation) ? 'Donated' : 'Sold' ?> <em
                             data-handbid-sold-of-id="<?php echo $item->id; ?>"
                             data-handbid-item-attribute="quantitySold"><?php echo $item->quantitySold; ?></em></li>
                     <li class="remaining col-md-6 col-xs-6"><em

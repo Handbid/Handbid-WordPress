@@ -9,12 +9,11 @@
  */
 
 
-
-$items      = $this->get('items');
+$items = $this->get('items');
 $cols = $this->get('cols_count');
-$col        = 1;
-$newRow     = false;
-$total      = count($items);
+$col = 1;
+$newRow = false;
+$total = count($items);
 
 
 $mdClass = sprintf('col-md-%d', 12 / $cols); //12 total cols in bootstrap
@@ -32,28 +31,28 @@ $losing = $this->get('losing');
 
 
     <?php
-    if(count($items)) {
-	    foreach ( $items as $item ) {
+    if (count($items)) {
+        foreach ($items as $item) {
+            echo $this->partial('simple-box.phtml', [
+                'item' => $item,
+                'auction' => $auction,
+                'winning' => $winning,
+                'losing' => $losing,
+            ]);
 
-		    echo $this->partial( 'simple-box.phtml', [
-			    'item'    => $item,
-			    'auction' => $auction,
-			    'winning' => $winning,
-			    'losing'  => $losing,
-		    ] );
+            $newRow = ($col % $cols === 0 && $col != $total);
+            $col++;
+            ?>
 
-		    $newRow = ( $col % $cols === 0 && $col != $total );
-		    $col ++;
-		    ?>
-
-	    <?php
-	    }
+        <?php
+        }
     }
     ?>
 
     <?php // ended up having to give the boostrap column its own div, was not meant to be flexible ?>
 
-	<h3 class="message-no-isotope-results" style="display: none;">Sorry! We couldn't find any matching items. Search again!</h3>
+    <h3 class="message-no-isotope-results" style="display: none;">Sorry! We couldn't find any matching items. Search
+        again!</h3>
 
     <div class="sizer <?php echo $mdClass; ?>"></div>
 

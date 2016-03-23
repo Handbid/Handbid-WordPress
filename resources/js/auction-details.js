@@ -7,7 +7,7 @@
  * @author Master of Code (worldclass@masterofcode.com)
  */
 
-var timerForSearch, timerToLoad, isotopeWasFiltered = false;
+var timerForSearch, timerToLoad, isotopeWasFiltered = false, wasNotVisible = true, needToMoveToItem = false;
 (function ($) {
 
 
@@ -271,6 +271,7 @@ var timerForSearch, timerToLoad, isotopeWasFiltered = false;
     }
 
     function detectVisibleIsotopeElements(){
+        detectIfContainerIsVisibleNow();
         if(isotopeWasFiltered) {
             $('.simple-item-box .full-image-wrapper.without-image').each(function () {
                 var visible = $(this).visible("complete");
@@ -282,6 +283,21 @@ var timerForSearch, timerToLoad, isotopeWasFiltered = false;
                     $(this).removeClass("without-image");
                 }
             });
+        }
+    }
+
+    function detectIfContainerIsVisibleNow(){
+        if(wasNotVisible) {
+            var container = $('.container[data-slider-nav-key="items"]');
+            var isVisible = container.is(":visible");
+            if (isVisible) {
+                checkAndUpdateIsotope();
+                wasNotVisible = false;
+                setTimeout(function(){
+                    handbidMain.goBackToItem();
+                    needToMoveToItem = false;
+                }, 500);
+            }
         }
     }
 
@@ -491,17 +507,20 @@ var timerForSearch, timerToLoad, isotopeWasFiltered = false;
 
         });
 
-        var wasNotVisible = true;
+        if(window.location.hash){
+            needToMoveToItem = true;
+            setTimeout(function(){
+                $('html, body').animate({
+                    scrollTop: $('[data-slider-nav-key="items"]').offset().top + 50
+                }, 50);
+                setTimeout(function(){
+                    detectIfContainerIsVisibleNow();
+                }, 100);
+            }, 500);
+        }
 
         $( window ).scroll(function() {
-            if(wasNotVisible) {
-                var container = $('.container[data-slider-nav-key="items"]');
-                var isVisible = container.is(":visible");
-                if (isVisible) {
-                    checkAndUpdateIsotope();
-                    wasNotVisible = false;
-                }
-            }
+            detectIfContainerIsVisibleNow();
         });
 
     });

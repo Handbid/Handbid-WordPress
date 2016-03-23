@@ -19,6 +19,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
     attentionAboutMobiles = false;
     attentionAboutConfirm = false;
     attentionAboutTBuying = false;
+    attentionAboutBuyConf = false;
 
     var isMobile = {
         getUserAgent: function(){
@@ -121,6 +122,18 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     dashboardTotal += pricePart;
                 });
                 $("[data-handbid-stats-grand-total]").html(dashboardTotal);
+            },
+
+
+            fadeOutModalOverlay: function(){
+                if(!attentionAboutBidding
+                    && !attentionAboutTickets
+                    && !attentionAboutMobiles
+                    && !attentionAboutConfirm
+                    && !attentionAboutTBuying
+                    && !attentionAboutBuyConf) {
+                    modal_overlay.fadeOut("fast");
+                }
             },
 
 
@@ -851,9 +864,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                         }).appendTo("body").fadeIn("fast");
                     },
                     before_close: function() {
-                        if(!attentionAboutBidding && !attentionAboutTickets && !attentionAboutMobiles && !attentionAboutConfirm && !attentionAboutTBuying) {
-                            modal_overlay.fadeOut("fast");
-                        }
+                        handbidMain.fadeOutModalOverlay();
                     },
                     buttons: {
                         closer: false,
@@ -1388,6 +1399,98 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 return needCreditCard;
             },
 
+
+
+
+            getCountOfPastItemPurchases: function(itemID){
+                var countOfPurchased = 0;
+                $.map($('.handbid-list-of-bids-purchases [data-purchased-item-id="'+itemID+'"]'), function(item){
+                    countOfPurchased += parseInt($(item).data('dashboard-quantity'));
+                });
+                return countOfPurchased;
+            },
+
+
+
+
+            confirmIfUserReallyWantToBuy: function(handbid){
+
+                var purchaseCount = parseInt($('[data-handbid-quantity]').eq(0).html()),
+                    purchasePrice = parseInt($('[data-handbid-item-attribute="buyNowPrice"]').eq(0).html()),
+                    purchaseTotal = purchaseCount * purchasePrice,
+                    itemDetailsBox = $('.item-details').eq(0),
+                    itemID = itemDetailsBox.data('item-id'),
+                    isDonation = (itemDetailsBox.data('item-is-donation') == 'yes'),
+                    buyAgain = isDonation ? false : handbid.getCountOfPastItemPurchases(itemID),
+                    title = isDonation ? 'Donation Confirmation' : 'Purchase Confirmation',
+                    confirmText = isDonation ? 'Confirm Donation of $'+purchaseTotal+'?' : 'Confirm Purchase of '+purchaseCount+' for $'+purchaseTotal+'?',
+                    text = buyAgain ? confirmText + ' You have already purchased '+buyAgain+' of this item, are you sure you want to purchase '+purchaseCount+' more?' : confirmText;
+
+
+                attentionAboutBuyConf = true;
+                var bidNotice =  new PNotify({
+                    title: title,
+                    text: text,
+                    icon: 'glyphicon glyphicon-question-sign',
+                    type: 'info',
+                    addclass: 'handbid-message-notice',
+                    hide: false,
+                    mouse_reset: false,
+                    confirm: {
+                        confirm: true,
+                        buttons: [{
+                            text: 'Yes',
+                            addClass: 'bid-here-button',
+                            click: function (notice) {
+                                attentionAboutBuyConf = false;
+                                notice.remove();
+                                handbid.confirmedPurchase();
+                            }
+                        }, {
+                            text: 'No, thanks',
+                            addClass: 'browse-here-button',
+                            click: function (notice) {
+                                attentionAboutBuyConf = false;
+                                notice.remove();
+                            }
+                        }]
+                    },
+                    stack: false,
+                    before_open: function(PNotify) {
+                        PNotify.get().css({
+                            "top": ($(window).height() / 2) - (PNotify.get().height() / 2) - 80,
+                            "left": ($(window).width() / 2) - (PNotify.get().width() / 2)
+                        });
+                        if (modal_overlay) modal_overlay.fadeIn("fast");
+                        else modal_overlay = $("<div />", {
+                            "class": "ui-widget-overlay",
+                            "css": {
+                                "display": "none",
+                                "position": "fixed",
+                                "background": "rgba(0, 0, 0, 0.7)",
+                                "top": "0",
+                                "bottom": "0",
+                                "right": "0",
+                                "left": "0"
+                            }
+                        }).appendTo("body").fadeIn("fast");
+                    },
+                    before_close: function() {
+                        handbidMain.fadeOutModalOverlay();
+                    },
+                    buttons: {
+                        closer: false,
+                        sticker: false
+                    },
+                    history: {
+                        history: false
+                    }
+                });
+                bidNotice.get().on('pnotify.cancel', function () {
+                    return false;
+                });
+            },
+
             alreadyHaveMaxBidForItem: function(values){
                 var currentBidderID = parseInt($("[data-dashboard-profile-id]").eq(0).data("dashboard-profile-id"));
                 var winnerBidderID = values.item.winnerId;
@@ -1500,6 +1603,16 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
             },
 
+            goBackToItem: function(){
+                var hash = window.location.hash;
+                if(hash) {
+                    hash = hash.split('-').pop();
+                    $('html, body').animate({
+                        scrollTop: jQuery('[data-handbid-item-box="'+hash+'"]').offset().top
+                    }, 900);
+                }
+            },
+
             getStatusReasonByCode: function(code){
 
                 return (statusReasons[code] != undefined) ? statusReasons[code] : code;
@@ -1521,8 +1634,86 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 return !this.loggedIn;
             },
 
+            confirmedPurchase: function(){
+
+                var hbUserIDs = $('[data-handbid-user-id]'),
+                    hbAuctionIDs = $('[data-handbid-auction-id]'),
+                    hbItemIDs = $('[data-handbid-item-id]'),
+                    bidUserId = $("#bidUserId"),
+                    bidAuctionId = $("#bidAuctionId"),
+                    bidItemId = $("#bidItemId"),
+                    userId = (hbUserIDs.length > 0) ? hbUserIDs.attr('data-handbid-user-id') : (parseInt(bidUserId.val()) ? parseInt(bidUserId.val()) : null),
+                    auctionId = (hbAuctionIDs.length > 0) ? hbAuctionIDs.attr('data-handbid-auction-id') : (parseInt(bidAuctionId.val()) ? parseInt(bidAuctionId.val()) : null),
+                    itemId = (hbItemIDs.length > 0) ? hbItemIDs.attr('data-handbid-item-id') : (parseInt(bidItemId.val()) ? parseInt(bidItemId.val()) : null),
+                    amount = $('[data-handbid-quantity], [data-handbid-bid-amount]'),
+                    incrementSpan = $('.increment span.incrementSpan'),
+                    minimalBidSpan = $('.minimalBidAmount span[data-change-attribute="minimumBidAmount"]'),
+                    increment = (incrementSpan.length > 0 ) ? parseInt(incrementSpan[0].innerHTML) : 1,
+                    minimalBidAmount = (minimalBidSpan.length > 0 ) ? parseInt(minimalBidSpan[0].innerHTML) : 1;
+
+                var nonce = $("#bidNonce").val();
+                var button = $('[data-handbid-bid-button="purchase"]').eq(0);
+                var perItem = parseInt(button.data("handbid-buynow-price"));
+                var quantity = parseInt(amount[0].innerHTML);
+                button.addClass("active");
+                var data = {
+                    action:    "handbid_ajax_createbid",
+                    nonce:     nonce,
+                    userId:    userId,
+                    auctionId: auctionId,
+                    itemId:    itemId,
+                    amount:    perItem,
+                    quantity:  quantity
+                };
+
+                $.post(
+                    ajaxurl,
+                    data,
+                    function (data) {
+
+                        console.log("-----------------------");
+                        console.log("----Buy Items success----");
+                        data = JSON.parse(data);
+                        console.log(data);
+
+                        button.removeClass("active");
+                        var message = "";
+                        if(data.status == "failed"){
+                            message = handbid.getStatusReasonByCode(data.statusReason);
+                            handbidMain.notice(message, data.status.toUpperCase(), data.status);
+                        }
+                        else {
+                            var totalSoldContainer = $('[data-handbid-item-attribute="totalSoldItems"]').eq(0);
+                            var totalSold = data.item.quantitySold;
+                            totalSoldContainer.html(totalSold);
+                            var inventoryRemainingCont = $('[data-handbid-item-attribute="inventoryRemaining"]').eq(0);
+                            var inventoryRemaining = data.item.inventoryRemaining;
+                            inventoryRemaining = (inventoryRemaining == -1) ? "∞" : inventoryRemaining;
+                            inventoryRemainingCont.html(inventoryRemaining);
+                            var startCount = (data.item.inventoryRemaining != 0) ? 1 : 0;
+                            amount.html(startCount);
+
+                            var isAppeal = (data.item.isAppeal != undefined && data.item.isAppeal == 1);
+                            var noticeTitle = (isAppeal)?"Thank You!":"Congratulations!";
+                            message = (isAppeal)?"You donated "+currencySpan()+(data.currentAmount*data.quantity) :"You purchased " + quantity + " <br>of Item #" + data.item.id + " <br><b>" + data.item.name + "</b>";
+                            handbidMain.notice(message, noticeTitle, "success");
+
+                            handbidMain.removeItemFromDashboardList(itemId, "proxy");
+                            handbidMain.recheckAndRecalculateBids();
+
+                            handbid.loadAllToContainers();
+                            handbid.reloadPageIfForceRefresh();
+                        }
+
+
+                        return false;
+                    }
+                );
+            },
+
             // Setup bidding
             setupBidding:             function (handbid) {
+
 
                 var userId = ($('[data-handbid-user-id]').length > 0) ? $('[data-handbid-user-id]').attr('data-handbid-user-id') : (parseInt($("#bidUserId").val()) ? parseInt($("#bidUserId").val()) : null),
                     auctionId = ($('[data-handbid-auction-id]').length > 0) ? $('[data-handbid-auction-id]').attr('data-handbid-auction-id') : (parseInt($("#bidAuctionId").val()) ? parseInt($("#bidAuctionId").val()) : null),
@@ -1542,6 +1733,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     e.preventDefault();
 
                     var canBeUp = true;
+                    var maxCanBeUp = true;
 
                     var amountContainer = amount;
                     var amountDuplicate = null;
@@ -1564,16 +1756,18 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
                     }
                     else{
+                        console.log('maxb burchase');
                         var buyNowPrice = ($('[data-handbid-buynow-price]').length > 0 ) ? $('[data-handbid-buynow-price]').eq(0).data("handbid-buynow-price") : -1;
                         buyNowPrice = (buyNowPrice != "" ) ? parseInt(buyNowPrice) : -1;
 
-                        canBeUp = ((buyNowPrice <=0 ) || ((buyNowPrice > 0) && (value <= buyNowPrice)));
-
+                        var maxBidCondition = isMaxBidButton ? (value < buyNowPrice) : (value <= buyNowPrice);
+                        canBeUp = ((buyNowPrice <=0 ) || ((buyNowPrice > 0) && maxBidCondition));
+                        maxCanBeUp = ((buyNowPrice <=0 ) || ((buyNowPrice > 0) && (value < buyNowPrice)));
 
                     }
                     if(canBeUp) {
                         amountContainer.html(value);
-                        if(!isDirectPurchaseButton && !isMaxBidButton){
+                        if(!isDirectPurchaseButton && !isMaxBidButton && maxCanBeUp){
                             $('[data-handbid-maxbid-amount]').html(value);
                         }
                     }
@@ -1706,73 +1900,18 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
                 $('[data-handbid-bid-button="purchase"]').live('click', function (e) {
 
+                    e.preventDefault();
 
                     var inventoryRemaining = parseInt($('[data-handbid-item-attribute="inventoryRemaining"]').eq(0).html());
 
-                    if(handbid.isButtonDisabledOrAlreadyActive($(this)) || handbid.cannotDoIfUnauthorized() || handbid.noticeIfNoCreditCard($(this)) || inventoryRemaining == 0){
+                    if(handbid.isButtonDisabledOrAlreadyActive($(this))
+                        || handbid.cannotDoIfUnauthorized()
+                        || handbid.noticeIfNoCreditCard($(this))
+                        || inventoryRemaining == 0){
                         return false;
                     }
 
-                    e.preventDefault();
-
-                    var nonce = $("#bidNonce").val();
-                    var perItem = parseInt($(this).data("handbid-buynow-price"));
-                    var quantity = parseInt(amount[0].innerHTML);
-                    var button = $(this);
-                    button.addClass("active");
-                    var data = {
-                        action:    "handbid_ajax_createbid",
-                        nonce:     nonce,
-                        userId:    userId,
-                        auctionId: auctionId,
-                        itemId:    itemId,
-                        amount:    perItem,
-                        quantity:  quantity
-                    };
-
-                    $.post(
-                        ajaxurl,
-                        data,
-                        function (data) {
-
-                            console.log("-----------------------");
-                            console.log("----Buy Items success----");
-                            data = JSON.parse(data);
-                            console.log(data);
-
-                            button.removeClass("active");
-                            var message = "";
-                            if(data.status == "failed"){
-                                message = handbid.getStatusReasonByCode(data.statusReason);
-                                handbidMain.notice(message, data.status.toUpperCase(), data.status);
-                            }
-                            else {
-                                var totalSoldContainer = $('[data-handbid-item-attribute="totalSoldItems"]').eq(0);
-                                var totalSold = data.item.quantitySold;
-                                totalSoldContainer.html(totalSold);
-                                var inventoryRemainingCont = $('[data-handbid-item-attribute="inventoryRemaining"]').eq(0);
-                                var inventoryRemaining = data.item.inventoryRemaining;
-                                inventoryRemaining = (inventoryRemaining == -1) ? "∞" : inventoryRemaining;
-                                inventoryRemainingCont.html(inventoryRemaining);
-                                var startCount = (data.item.inventoryRemaining != 0) ? 1 : 0;
-                                amount.html(startCount);
-
-                                var isAppeal = (data.item.isAppeal != undefined && data.item.isAppeal == 1);
-                                var noticeTitle = (isAppeal)?"Thank You!":"Congratulations!";
-                                message = (isAppeal)?"You donated "+currencySpan()+(data.currentAmount*data.quantity) :"You purchased " + quantity + " <br>of Item #" + data.item.id + " <br><b>" + data.item.name + "</b>";
-                                handbidMain.notice(message, noticeTitle, "success");
-
-                                handbidMain.removeItemFromDashboardList(itemId, "proxy");
-                                handbidMain.recheckAndRecalculateBids();
-
-                                handbid.loadAllToContainers();
-                                handbid.reloadPageIfForceRefresh();
-                            }
-
-
-                            return false;
-                        }
-                    );
+                    handbid.confirmIfUserReallyWantToBuy(handbid);
 
 
                     return false;
@@ -2895,9 +3034,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                             }).appendTo("body").fadeIn("fast");
                         },
                         before_close: function() {
-                            if(!attentionAboutBidding && !attentionAboutTickets && !attentionAboutMobiles && !attentionAboutConfirm && !attentionAboutTBuying) {
-                                modal_overlay.fadeOut("fast");
-                            }
+                            handbidMain.fadeOutModalOverlay();
                         },
                         buttons: {
                             closer: false,
@@ -2978,9 +3115,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                             }).appendTo("body").fadeIn("fast");
                         },
                         before_close: function() {
-                            if(!attentionAboutBidding && !attentionAboutTickets && !attentionAboutMobiles && !attentionAboutConfirm && !attentionAboutTBuying) {
-                                modal_overlay.fadeOut("fast");
-                            }
+                            handbidMain.fadeOutModalOverlay();
                         },
                         buttons: {
                             closer: false,
@@ -3063,9 +3198,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                             }).appendTo("body").fadeIn("fast");
                         },
                         before_close: function() {
-                            if(!attentionAboutBidding && !attentionAboutTickets && !attentionAboutMobiles && !attentionAboutConfirm && !attentionAboutTBuying) {
-                                modal_overlay.fadeOut("fast");
-                            }
+                            handbidMain.fadeOutModalOverlay();
                         },
                         buttons: {
                             closer: false,

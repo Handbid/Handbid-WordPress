@@ -7,30 +7,62 @@
  * @link http://www.handbid.com/
  * @author Master of Code (worldclass@masterofcode.com)
  */
-$auction     = $this->get('auction');
+$auction = $this->get('auction');
 if (!$auction) {
     return '';
 }
 
-$items       = $this->get('items');
-$winning     = $this->get('winning');
-$losing      = $this->get('losing');
-$colsCount   = $this->get('cols_count');
-$tickets     = $this->get('tickets');
-$profile     = $this->get('profile');
-$location    = $this->get('location');
+$items = $this->get('items');
+$winning = $this->get('winning');
+$losing = $this->get('losing');
+$colsCount = $this->get('cols_count');
+$tickets = $this->get('tickets');
+$profile = $this->get('profile');
+$location = $this->get('location');
 $hasLocation = $this->get('hasLocation');
-$address     = null;
-$mapsUrl     = null;
-$categories  = $this->get('categories');
-$categories  = $auction->categories;
+$address = null;
+$mapsUrl = null;
+$categories = $this->get('categories');
+$categories = $auction->categories;
+
+$categoriesOutput = [];
+$auctionStatusIsPresaleOrPreview = in_array($auction->status, ["presale", "preview"]);
+$auctionStatusIsPresale = in_array($auction->status, ["presale"]);
+$allItemsCount = 0;
+foreach ($categories as $category_single) {
+    $temp = [
+        'id' => $category_single->id,
+        'name' => $category_single->name,
+        'count' => 0,
+        'items' => [],
+        'itemz' => [],
+    ];
+    foreach ($category_single->items as $item_single) {
+        $availableForPreSale = ($item_single->availableForPreSale == "1");
+        $isDirectPurchaseItem = ($item_single->isDirectPurchaseItem);
+        $itemCanNotBeShownInPresale = ($auctionStatusIsPresale and !($isDirectPurchaseItem and $availableForPreSale));
+
+        $hideItemIfSold = (($item_single->isHidden == "1") or (($item_single->hideSales == 1) and $item_single->status == "sold"));
+
+        if (!$itemCanNotBeShownInPresale and !$hideItemIfSold) {
+            $temp['count'] += 1;
+            $temp['items'][] = $item_single->name;
+        } else {
+            $temp['itemz'][] = $item_single->name;
+        }
+    }
+    if ($temp['count']) {
+        $allItemsCount += $temp['count'];
+        $categoriesOutput[] = $temp;
+    }
+}
 
 $locationStreet1 = ($hasLocation) ? $location->auctionLocationStreet1 : "";
 $locationStreet2 = ($hasLocation) ? $location->auctionLocationStreet2 : "";
 $locationPCode = ($hasLocation) ? $location->auctionLocationPostalCode : "";
 $locationCity = ($hasLocation) ? $location->auctionLocationCity : "";
-$locationProvince = ($hasLocation) ? ((isset($location->province)) ? $location->province->countriesRegionsName : "" ) : "";
-$locationProvinceShort = ($hasLocation) ? ((isset($location->province)) ? $location->province->countriesRegionsShortName : "" ) : "";
+$locationProvince = ($hasLocation) ? ((isset($location->province)) ? $location->province->countriesRegionsName : "") : "";
+$locationProvinceShort = ($hasLocation) ? ((isset($location->province)) ? $location->province->countriesRegionsShortName : "") : "";
 
 if ($hasLocation) {
 
@@ -39,23 +71,24 @@ if ($hasLocation) {
 
 $hasTicketItems = !!(count($tickets));
 
-$currencyCode = (isset($auction->currencyCode))? $auction->currencyCode : HANDBID_DEFAULT_CURRENCY;
-$currencySymbol = (isset($auction->currencySymbol))? $auction->currencySymbol : HANDBID_DEFAULT_CURRENCY_SYMBOL;
+$currencyCode = (isset($auction->currencyCode)) ? $auction->currencyCode : HANDBID_DEFAULT_CURRENCY;
+$currencySymbol = (isset($auction->currencySymbol)) ? $auction->currencySymbol : HANDBID_DEFAULT_CURRENCY_SYMBOL;
 ?>
 
-<div class="auction-details <?php echo $auction->status; ?>" data-handbid-auction-guid="<?php echo $auction->auctionGuid; ?>" >
+<div class="auction-details <?php echo $auction->status; ?>"
+     data-handbid-auction-guid="<?php echo $auction->auctionGuid; ?>">
 
 <div class="container container-fluid detail-banner-wrapper">
     <div class="detail-banner" style="background-image: url('<?php
     $image = ($auction->bannerImage) ? $auction->bannerImage : $auction->organization->banner;
-    $image = (strpos($image, "ucarecdn") !== false and strpos($image, "preview") === false)? $image . "-/preview/1140x280/" : $image ;
+    $image = (strpos($image, "ucarecdn") !== false and strpos($image, "preview") === false) ? $image . "-/preview/1140x280/" : $image;
     echo $image; ?>')">
         <div class="logo">
             <img src="<?php
             $image = ($auction->imageUrl) ? $auction->imageUrl : $auction->sponsorImage;
             $imageUrlPath = parse_url($image);
             $image = ($imageUrlPath["scheme"]) ? $image : "https://" . $image;
-            $image = (strpos($image, "ucarecdn") !== false and strpos($image, "preview") === false)? $image . "-/preview/120x120/" : $image ;
+            $image = (strpos($image, "ucarecdn") !== false and strpos($image, "preview") === false) ? $image . "-/preview/120x120/" : $image;
             echo $image;
             ?>"/>
         </div>
@@ -69,13 +102,14 @@ $currencySymbol = (isset($auction->currencySymbol))? $auction->currencySymbol : 
 
             <?php
             $managerEmail = $auction->organization->email;
-            if(trim($managerEmail) and $profile){?>
+            if (trim($managerEmail) and $profile) {
+                ?>
                 <a href="#" class="button pink-button register"
-                   data-handbid-mail-to-manager="<?php echo antispambot($managerEmail);?>"
-                   data-handbid-auction="<?php echo $auction->name;?>"
-                   data-handbid-auction-id="<?php echo $auction->id;?>"
-                   data-handbid-auction-org="<?php echo $auction->organization->name;?>"
-                   data-nonce="<?php echo apply_filters("handbid_create_nonce", date("d.m.Y") . "send_message");?>">
+                   data-handbid-mail-to-manager="<?php echo antispambot($managerEmail); ?>"
+                   data-handbid-auction="<?php echo $auction->name; ?>"
+                   data-handbid-auction-id="<?php echo $auction->id; ?>"
+                   data-handbid-auction-org="<?php echo $auction->organization->name; ?>"
+                   data-nonce="<?php echo apply_filters("handbid_create_nonce", date("d.m.Y") . "send_message"); ?>">
                     Mail to manager</a>
             <?php } ?>
 
@@ -92,7 +126,7 @@ $currencySymbol = (isset($auction->currencySymbol))? $auction->currencySymbol : 
     </div>
 </div>
 
-<?php $informationFirst = (in_array($auction->status, ["preview", "presale", "closed"]));?>
+<?php $informationFirst = (in_array($auction->status, ["preview", "presale", "closed"])); ?>
 <ul class="slider-nav col-md-12 auto-open" data-slider-nav-id="auction-details">
     <?php if ($auction->description and $informationFirst) { ?>
         <li>
@@ -166,8 +200,8 @@ $currencySymbol = (isset($auction->currencySymbol))? $auction->currencySymbol : 
                         <option value="[data-for-sale]">For Sale</option>
                         <option value="[data-live]">Live</option>
                         <option value="[data-no-bids]">No Bids</option>
-                        <?php if($hasTicketItems){ ?>
-                        <option value="[data-is-ticket]">Tickets</option>
+                        <?php if ($hasTicketItems) { ?>
+                            <option value="[data-is-ticket]">Tickets</option>
                         <?php } ?>
                     </select>
 
@@ -175,13 +209,13 @@ $currencySymbol = (isset($auction->currencySymbol))? $auction->currencySymbol : 
 
                         <option value="*">Category: All Items</option>
 
-                        <?php foreach ($categories as $category) {
+                        <?php foreach ($categoriesOutput as $category) {
 
-                            if (count($category->items) > 0) {
+                            if ($category['count'] > 0) {
                                 ?>
                                 <option value="[data-tags~='|<?php echo esc_html(
-                                    sanitize_key($category->name)
-                                ); ?>|']"><?php echo $category->name . ' (' . count($category->items) . ')'; ?></option>
+                                    sanitize_key($category['name'])
+                                ); ?>|']"><?php echo $category['name'] . ' (' . $category['count'] . ')'; ?></option>
                             <?php
                             } //end if
                         } ?>
@@ -206,53 +240,38 @@ $currencySymbol = (isset($auction->currencySymbol))? $auction->currencySymbol : 
                             <li data-selector="[data-for-sale]"><a href="#">For Sale</a></li>
                             <li data-selector="[data-live]"><a href="#">Live</a></li>
                             <li data-selector="[data-no-bids]"><a href="#">No Bids</a></li>
-                            <?php if($hasTicketItems){ ?>
+                            <?php if ($hasTicketItems) { ?>
                                 <li data-selector="[data-is-ticket]"><a href="#">Tickets</a></li>
                             <?php } ?>
                         </ul>
                     </div>
 
-                    <div class="section" data-section="category">
+                    <div class="section" data-section="category" style="display: block">
                         <h4>Categories</h4>
                         <ul class="by-category">
+
+                            <li data-selector="*" class="selected"><a href="#">All (<span
+                                        class="countAuctionItemsForCatAll"><?php echo $allItemsCount; ?></span>)</a>
+                            </li>
+
+
                             <?php
-                            $allCount = 0;
-                            if(count($categories)){
-                            foreach ($categories as $category) {
-	                            $notHiddenCount = 0;
-	                            foreach ($category->items as $catItem) {
-		                            $itemHideIfSold = ($catItem->hideSales == 1);
-		                            $isHidden = ($catItem->isHidden == "1");
-		                            $countItem = ($isHidden or ($itemHideIfSold and $catItem->status == "sold"));
-		                            $notHiddenCount += $countItem ? 0 : 1;
-	                            }
-                                $allCount += $notHiddenCount;
-	                            $category->notHiddenCount = $notHiddenCount;
-                            }
-                            } ?>
-<!-- exclude "all" -->
+                            $selected = '';
+                            if (count($categoriesOutput)) {
+                                foreach ($categoriesOutput as $category) {
 
-                            <li data-selector="*" class="selected"><a href="#">All (<span class="countAuctionItemsForCatAll"><?php echo $allCount; ?></span>)</a></li>
-
-
-<?php
-$selected = '';
-?>
-                            <?php
-                            if(count($categories)){
-                            foreach ($categories as $category) {
-
-                                if (count($category->items) > 0) {
-                                    ?>
-                                    <li class="<?php echo $selected;?>" data-selector="[data-tags~='|<?php echo esc_html(
-                                        sanitize_key($category->name)
-                                    ); ?>|']" data-legacy-category-id="<?php echo $category->id; ?>"><a
-                                            href="#"><?php echo $category->name . ' (<span class="countAuctionItemsForCat'.$category->id.'">' . $category->notHiddenCount . '</span>)'; ?></a>
-                                    </li>
-                                <?php
-$selected = '';
-                                } //end if
-                            }
+                                    if ($category['count'] > 0) {
+                                        ?>
+                                        <li class="<?php echo $selected; ?>"
+                                            data-selector="[data-tags~='|<?php echo esc_html(
+                                                sanitize_key($category['name'])
+                                            ); ?>|']" data-legacy-category-id="<?php echo $category['id']; ?>"><a
+                                                href="#"><?php echo $category['name'] . ' (<span class="countAuctionItemsForCat' . $category['id'] . '">' . $category['count'] . '</span>)'; ?></a>
+                                        </li>
+                                        <?php
+                                        $selected = '';
+                                    } //end if
+                                }
                             } ?>
 
                         </ul>
@@ -268,21 +287,23 @@ $selected = '';
 
                 echo $this->partial('../../views/item/list.phtml', [
                         'auction' => $auction,
-                        'items'   => $items,
+                        'items' => $items,
                         'cols_count' => $colsCount,
                         'winning' => $winning,
-                        'losing'  => $losing,
+                        'losing' => $losing,
                     ]
                 );
 
-                //echo do_shortcode('[handbid_auction_item_list auction="' . $auction->key . '"]'); ?>
+                //echo do_shortcode('[handbid_auction_item_list auction="' . $auction->key . '"]');
+                ?>
 
             </div>
         </div>
     </div>
 
     <?php
-    if ($auction->description) { ?>
+    if ($auction->description) {
+        ?>
         <div class="container container-fluid big-content" data-slider-nav-key="description">
             <?php echo $auction->description; ?>
         </div>
@@ -322,8 +343,9 @@ $selected = '';
 </div>
 </div>
 
-<?php if($auction->timerRemaining > 0) {
+<?php if ($auction->timerRemaining > 0) {
     ?>
-    <input type="hidden" id="timerRemaining" data-auction-name="<?php echo $auction->name; ?>" value="<?php echo $auction->timerRemaining; ?>">
+    <input type="hidden" id="timerRemaining" data-auction-name="<?php echo $auction->name; ?>"
+           value="<?php echo $auction->timerRemaining; ?>">
 <?php
 }?>
