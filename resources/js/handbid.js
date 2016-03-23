@@ -22,45 +22,45 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
     attentionAboutBuyConf = false;
 
     var isMobile = {
-        getUserAgent: function(){
+        getUserAgent: function () {
             return navigator.userAgent || navigator.vendor || window.opera;
         },
-        Android: function() {
+        Android: function () {
             return /Android/i.test(this.getUserAgent());
         },
-        BlackBerry: function() {
+        BlackBerry: function () {
             return /BlackBerry/i.test(this.getUserAgent());
         },
-        iPhone: function() {
+        iPhone: function () {
             return /iPhone/i.test(this.getUserAgent());
         },
-        iPad: function() {
+        iPad: function () {
             return /iPad/i.test(this.getUserAgent());
         },
-        iOS: function() {
+        iOS: function () {
             return /iPad|iPod|iPhone/i.test(this.getUserAgent());
         },
-        Windows: function() {
+        Windows: function () {
             return /IEMobile/i.test(this.getUserAgent());
         },
-        any: function() {
+        any: function () {
             return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Windows());
         }
     };
 
-    var currencySpan = function(){
+    var currencySpan = function () {
         var currencyCode = $("[data-auction-currency-code]").eq(0).data("auction-currency-code"),
             currencySymbol = $("[data-auction-currency-symbol]").eq(0).data("auction-currency-symbol");
-        return '<span class="handbidAuctionCurrency" title="'+currencyCode+'">'+currencySymbol+'</span>';
+        return '<span class="handbidAuctionCurrency" title="' + currencyCode + '">' + currencySymbol + '</span>';
     };
 
     var restEndpoint = $("#apiEndpointsAddress").val(),
         statusReasons = {
-            no_response : "Sorry, try again later",
-            current_winner : "You are current winner of this item"
+            no_response: "Sorry, try again later",
+            current_winner: "You are current winner of this item"
         },
-	    socket_retry = 0,
-	    socket_retry_limit = 9,
+        socket_retry = 0,
+        socket_retry_limit = 9,
         stack_bar_top = {
             addpos2: 0,
             animation: true,
@@ -76,16 +76,16 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
         },
         handbid = {
 
-            loggedIn : null,
+            loggedIn: null,
 
-            number_format: function(number, decimals, dec_point, thousands_sep) {
+            number_format: function (number, decimals, dec_point, thousands_sep) {
                 number = (number + '').replace(/[^0-9+\-Ee.]/g, '');
                 var n = !isFinite(+number) ? 0 : +number,
                     prec = !isFinite(+decimals) ? 0 : Math.abs(decimals),
                     sep = (typeof thousands_sep === 'undefined') ? ',' : thousands_sep,
                     dec = (typeof dec_point === 'undefined') ? '.' : dec_point,
                     s = '',
-                    toFixedFix = function(n, prec) {
+                    toFixedFix = function (n, prec) {
                         var k = Math.pow(10, prec);
                         return '' + (Math.round(n * k) / k)
                             .toFixed(prec);
@@ -104,9 +104,9 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 return s.join(dec);
             },
 
-            in_array: function(array, p_val){
-                for(var i = 0, l = array.length; i < l; i++)	{
-                    if(array[i] == p_val) {
+            in_array: function (array, p_val) {
+                for (var i = 0, l = array.length; i < l; i++) {
+                    if (array[i] == p_val) {
                         return true;
                     }
                 }
@@ -114,10 +114,10 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
             },
 
 
-            recalculateDashboardPrice: function(){
+            recalculateDashboardPrice: function () {
                 var dashboardTotal = 0;
                 var pricePart = 0;
-                    $.map($("[data-dashboard-price]"), function(val){
+                $.map($("[data-dashboard-price]"), function (val) {
                     pricePart = parseInt($(val).data("dashboard-price"));
                     dashboardTotal += pricePart;
                 });
@@ -125,8 +125,8 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
             },
 
 
-            fadeOutModalOverlay: function(){
-                if(!attentionAboutBidding
+            fadeOutModalOverlay: function () {
+                if (!attentionAboutBidding
                     && !attentionAboutTickets
                     && !attentionAboutMobiles
                     && !attentionAboutConfirm
@@ -137,7 +137,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
             },
 
 
-            recheckBidCounts: function(){
+            recheckBidCounts: function () {
                 var maxBidsCount = $("[data-maxbid-item-id]").length;
                 $("[data-handbid-stats-num-proxies]").html(maxBidsCount);
 
@@ -152,29 +152,27 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
             },
 
 
-            recheckAndRecalculateBids: function(){
+            recheckAndRecalculateBids: function () {
                 this.recheckBidCounts();
                 this.recalculateDashboardPrice();
             },
 
 
+            addDashboardBidProxy: function (bidID, itemID, itemName, itemKey, auctionKey, maxAmount) {
 
-
-            addDashboardBidProxy: function(bidID, itemID, itemName, itemKey, auctionKey, maxAmount){
-
-                var pattern = '<li class="row bid-row-id-'+bidID+'" ' +
-                    ' data-proxy-item-id="'+itemID+'" ' +
-                    ' data-maxbid-item-id="'+itemID+'" ' +
-                    ' data-proxy-item-max-value="'+maxAmount+'" ' +
-                    ' data-maxbid-bid-id="'+bidID+'">' +
+                var pattern = '<li class="row bid-row-id-' + bidID + '" ' +
+                    ' data-proxy-item-id="' + itemID + '" ' +
+                    ' data-maxbid-item-id="' + itemID + '" ' +
+                    ' data-proxy-item-max-value="' + maxAmount + '" ' +
+                    ' data-maxbid-bid-id="' + bidID + '">' +
                     ' <div class="col-md-8 col-xs-8">' +
-                    ' <a href="/auctions/'+auctionKey+'/item/'+itemKey+'"><h4>'+itemName+'</h4></a>' +
+                    ' <a href="/auctions/' + auctionKey + '/item/' + itemKey + '"><h4>' + itemName + '</h4></a>' +
                     ' </div>' +
                     ' <div class="col-md-2 col-xs-2">' +
-                    ' <span class="bid-amount winning">'+currencySpan()+'<span>'+maxAmount+'</span></span>' +
+                    ' <span class="bid-amount winning">' + currencySpan() + '<span>' + maxAmount + '</span></span>' +
                     ' </div>' +
                     ' <div class="col-md-2 col-xs-2">' +
-                    ' <a class="button pink-solid-button loading-span-button" href="#" data-handbid-delete-proxy="'+bidID+'" data-item-id="'+itemID+'"><em>Delete</em></a>' +
+                    ' <a class="button pink-solid-button loading-span-button" href="#" data-handbid-delete-proxy="' + bidID + '" data-item-id="' + itemID + '"><em>Delete</em></a>' +
                     ' </div>' +
                     ' </li>';
 
@@ -187,18 +185,18 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
             },
 
 
-            addDashboardBidWinning: function(itemID, itemName, itemLink, amount){
+            addDashboardBidWinning: function (itemID, itemName, itemLink, amount) {
 
-                var pattern = '<li class="row"'+
-                ' data-dashboard-price="'+amount+'"'+
-                ' data-winning-item-id="'+itemID+'">'+
-                ' <div class="col-md-10 col-xs-10">'+
-                '     <a href="'+itemLink+'"><h4>'+itemName+'</h4></a>'+
-                ' </div>'+
-                ' <div class="col-md-2 col-xs-2">'+
-                ' <span class="bid-amount winning">'+currencySpan()+'<span>'+amount+'</span></span>'+
-                ' </div>'+
-                ' </li>';
+                var pattern = '<li class="row"' +
+                    ' data-dashboard-price="' + amount + '"' +
+                    ' data-winning-item-id="' + itemID + '">' +
+                    ' <div class="col-md-10 col-xs-10">' +
+                    '     <a href="' + itemLink + '"><h4>' + itemName + '</h4></a>' +
+                    ' </div>' +
+                    ' <div class="col-md-2 col-xs-2">' +
+                    ' <span class="bid-amount winning">' + currencySpan() + '<span>' + amount + '</span></span>' +
+                    ' </div>' +
+                    ' </li>';
 
                 var listBidsWinning = $(".handbid-list-of-bids-winning").eq(0);
                 $("p", listBidsWinning).remove();
@@ -212,15 +210,15 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
             },
 
 
-            addDashboardBidLosing: function(itemID, itemName, itemLink, amount){
+            addDashboardBidLosing: function (itemID, itemName, itemLink, amount) {
 
                 var pattern = '<li class="row"' +
-                    'data-losing-item-id="'+itemID+'">' +
+                    'data-losing-item-id="' + itemID + '">' +
                     '<div class="col-md-8 col-xs-8">' +
-                    '<a href="'+itemLink+'"><h4>'+itemName+'</h4></a>' +
+                    '<a href="' + itemLink + '"><h4>' + itemName + '</h4></a>' +
                     '</div>' +
                     '<div class="col-md-4 col-xs-4">' +
-                    '<span class="bid-amount losing">'+currencySpan()+'<span>'+amount+'</span></span>' +
+                    '<span class="bid-amount losing">' + currencySpan() + '<span>' + amount + '</span></span>' +
                     '</div>' +
                     '</li>';
 
@@ -236,7 +234,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
             },
 
 
-            addDashboardBidPurchased: function(values){
+            addDashboardBidPurchased: function (values) {
                 var item = values.item,
                     itemID = item.id,
                     itemKey = item.key,
@@ -254,21 +252,21 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 console.log(values);
                 console.log("=====------====");
                 var pattern = '<li class="row"' +
-                    'data-dashboard-price="'+(amount * quantity)+'"' +
-                    'data-dashboard-quantity="'+quantity+'"' +
-                    'data-purchased-item-id="'+itemID+'" ' +
-                    ((item.isTicket == 1)?'data-purchased-item-is-ticket="yes" ':'') +
-                    'data-purchased-purchase-id="'+purchaseID+'">' +
+                    'data-dashboard-price="' + (amount * quantity) + '"' +
+                    'data-dashboard-quantity="' + quantity + '"' +
+                    'data-purchased-item-id="' + itemID + '" ' +
+                    ((item.isTicket == 1) ? 'data-purchased-item-is-ticket="yes" ' : '') +
+                    'data-purchased-purchase-id="' + purchaseID + '">' +
                     '<div class="col-md-4 col-xs-4">' +
-                    '<a href="/auctions/'+auctionKey+'/item/'+itemKey+'"><h4>'+itemName+'</h4></a>' +
-                '</div>' +
-                '<div class="col-md-4 col-xs-4">' +
-                '<h4 class="quantity-total">'+quantity+' x '+currencySpan()+amount+'</h4>' +
-                '</div>' +
-                '<div class="col-md-4 col-xs-4">' +
-                '<span class="bid-amount winning">'+currencySpan()+'<span>'+(amount * quantity)+'</span></span>' +
-                '</div>' +
-                '</li>';
+                    '<a href="/auctions/' + auctionKey + '/item/' + itemKey + '"><h4>' + itemName + '</h4></a>' +
+                    '</div>' +
+                    '<div class="col-md-4 col-xs-4">' +
+                    '<h4 class="quantity-total">' + quantity + ' x ' + currencySpan() + amount + '</h4>' +
+                    '</div>' +
+                    '<div class="col-md-4 col-xs-4">' +
+                    '<span class="bid-amount winning">' + currencySpan() + '<span>' + (amount * quantity) + '</span></span>' +
+                    '</div>' +
+                    '</li>';
 
                 var listBidsPurchases = $(".handbid-list-of-bids-purchases").eq(0);
                 $("p", listBidsPurchases).remove();
@@ -278,9 +276,9 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 this.doesUserWantToBuyTicketsJustNow(receiptId, auctionId, receiptTotal);
             },
 
-            addItemBidsHistory: function(itemID, bidID, values, amount){
+            addItemBidsHistory: function (itemID, bidID, values, amount) {
 
-                var winnerName = (values.winnerName != undefined) ? values.winnerName : values.bidderName ;
+                var winnerName = (values.winnerName != undefined) ? values.winnerName : values.bidderName;
 
                 var pattern = '<li class="row open" data-list-bid-id="' + bidID + '">' +
                     '<div class="col-md-6">' +
@@ -288,11 +286,11 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     '<span>' + values.bidderName + '</span>' +
                     '</div>' +
                     '<div class="col-md-6">' +
-                    '<span class="bid-amount winning">'+currencySpan()+'<span>' + amount + '</span></span>' +
+                    '<span class="bid-amount winning">' + currencySpan() + '<span>' + amount + '</span></span>' +
                     '</div>' +
                     '</li>';
 
-                var listBidsHistory = $(".bid-history-item-"+itemID).eq(0);
+                var listBidsHistory = $(".bid-history-item-" + itemID).eq(0);
                 $("p", listBidsHistory).remove();
                 $("li", listBidsHistory).removeClass("open").addClass("closed");
                 listBidsHistory.prepend(pattern);
@@ -300,7 +298,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 this.recheckAndRecalculateBids();
             },
 
-            addProfileActiveAuctions: function(){
+            addProfileActiveAuctions: function () {
 
                 var bidderDashboardPlace = $("#bidder-info-load"),
                     bidderListOfActiveAuctions = $(".handbid-list-of-active-auctions").eq(0),
@@ -312,78 +310,77 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     auctionImage = bidderDashboardPlace.data("auction-image"),
                     auctionOrgKey = bidderDashboardPlace.data("auction-organization-key"),
                     auctionOrgName = bidderDashboardPlace.data("auction-organization-name"),
-                    alreadyInList = $("[data-handbid-active-profile-auction='"+auctionID+"']", bidderListOfActiveAuctions).length,
-                    alreadyInHiddenList = $("[data-hidden-active-auction='"+auctionID+"']", hiddenListOfActiveAuctions).length;
+                    alreadyInList = $("[data-handbid-active-profile-auction='" + auctionID + "']", bidderListOfActiveAuctions).length,
+                    alreadyInHiddenList = $("[data-hidden-active-auction='" + auctionID + "']", hiddenListOfActiveAuctions).length;
 
-                var pattern = '<li class="row '+auctionStatus+'" data-handbid-active-profile-auction="'+auctionID+'">' +
+                var pattern = '<li class="row ' + auctionStatus + '" data-handbid-active-profile-auction="' + auctionID + '">' +
                     ' <div class="col-md-2"><img class="full-width-image"' +
-                    'src="'+auctionImage+'"/>' +
+                    'src="' + auctionImage + '"/>' +
                     '</div>' +
                     '<div class="col-md-7">' +
-                    '<h4>'+auctionName+'</h4>' +
-                    '<a href="/organizations/'+auctionOrgKey+'"' +
-                    'class="org-link">'+auctionOrgName+'</a>' +
+                    '<h4>' + auctionName + '</h4>' +
+                    '<a href="/organizations/' + auctionOrgKey + '"' +
+                    'class="org-link">' + auctionOrgName + '</a>' +
                     '</div>' +
                     '<div class="col-md-3">' +
-                    '<a class="cta-link" href="/auctions/'+auctionKey+'">See Auction</a>' +
+                    '<a class="cta-link" href="/auctions/' + auctionKey + '">See Auction</a>' +
                     '</div>' +
                     '</li>';
 
                 $("p", bidderListOfActiveAuctions).remove();
-                if(! alreadyInList) {
+                if (!alreadyInList) {
                     bidderListOfActiveAuctions.prepend(pattern);
                 }
-                if(! alreadyInHiddenList) {
-                    hiddenListOfActiveAuctions.prepend('<input type="hidden" data-hidden-active-auction="'+auctionID+'">');
+                if (!alreadyInHiddenList) {
+                    hiddenListOfActiveAuctions.prepend('<input type="hidden" data-hidden-active-auction="' + auctionID + '">');
                 }
             },
 
 
-
-            addItemToTickets: function(values){
+            addItemToTickets: function (values) {
 
                 var ticket = values,
                     itemID = ticket.id,
                     buyNowPrice = ticket.buyNowPrice,
                     remaining = ticket.inventoryRemaining,
                     name = ticket.name,
-                    description = (ticket.description)? ticket.description: "",
-                    //step = (parseInt(ticket.ticketQuantity)) ? parseInt(ticket.ticketQuantity) : 1,
+                    description = (ticket.description) ? ticket.description : "",
+                //step = (parseInt(ticket.ticketQuantity)) ? parseInt(ticket.ticketQuantity) : 1,
                     step = 1,
-                    ticketsAreSoldStyle = (remaining == 0)? "":"display:none",
-                    ticketsAreAvailableStyle = (remaining == 0)? "display:none":"",
+                    ticketsAreSoldStyle = (remaining == 0) ? "" : "display:none",
+                    ticketsAreAvailableStyle = (remaining == 0) ? "display:none" : "",
                     ghostedButtonStyle = ((parseInt(remaining) > 0) && (remaining < step)) ? "ghosted-out" : "";
 
-                var pattern = '<div class="row ticket-row" data-handbid-ticket-row="'+itemID+'">' +
-                    '<div class="col-xs-12 ticket" data-handbid-ticket-id="'+itemID+'"' +
-                    'data-handbid-ticket-price="'+buyNowPrice+'"' +
-                    'data-handbid-ticket-step="'+step+'"' +
+                var pattern = '<div class="row ticket-row" data-handbid-ticket-row="' + itemID + '">' +
+                    '<div class="col-xs-12 ticket" data-handbid-ticket-id="' + itemID + '"' +
+                    'data-handbid-ticket-price="' + buyNowPrice + '"' +
+                    'data-handbid-ticket-step="' + step + '"' +
                     '>' +
                     '<div class="col-xs-5 ticket-part-container no-padding-left">' +
-                    '<h4 class="ticket-title"><span data-handbid-ticket-title>'+name+'</span>' +
+                    '<h4 class="ticket-title"><span data-handbid-ticket-title>' + name + '</span>' +
                     '</h4>' +
-                    '<p class="ticket-description">'+description+'</p>' +
+                    '<p class="ticket-description">' + description + '</p>' +
                     '</div>' +
                     '<div class="col-md-3 ticket-part-container">' +
-                    '<strong class="ticket-price">'+currencySpan()+'<span>'+buyNowPrice+'</span></strong>' +
+                    '<strong class="ticket-price">' + currencySpan() + '<span>' + buyNowPrice + '</span></strong>' +
                     '</div>' +
                     '<div class="col-md-4 ticket-part-container no-padding-right tickets-are-sold"' +
-                    'style="'+ticketsAreSoldStyle+'">' +
+                    'style="' + ticketsAreSoldStyle + '">' +
                     '<h4>SOLD OUT</h4>' +
                     '</div>' +
                     '<div class="col-md-4 ticket-part-container no-padding-right tickets-are-available"' +
-                    'style="'+ticketsAreAvailableStyle+'">' +
+                    'style="' + ticketsAreAvailableStyle + '">' +
                     '<div class="col-md-4 col-xs-4 no-padding">' +
                     '<a href="" class="bid-price-toggle bid-down green-button button ghosted-out"' +
                     'data-handbid-ticket-button="down">-</a>' +
                     '</div>' +
                     '<div class="buy-quantity col-md-4 col-xs-4 no-padding">' +
                     '<span data-handbid-ticket-quantity>0</span>' +
-                    '<input type="hidden" data-handbid-tickets-remaining value="'+remaining+'">' +
+                    '<input type="hidden" data-handbid-tickets-remaining value="' + remaining + '">' +
                     '</div>' +
                     '<div class="col-md-4 col-xs-4 ticket-quantity-up no-padding">' +
                     '<a href=""' +
-                    'class="bid-price-toggle bid-up green-button button '+ghostedButtonStyle+'"' +
+                    'class="bid-price-toggle bid-up green-button button ' + ghostedButtonStyle + '"' +
                     'data-handbid-ticket-button="up">+</a>' +
                     '</div>' +
                     '</div>' +
@@ -395,24 +392,23 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
             },
 
 
-
-            updateItemTicket: function(values){
+            updateItemTicket: function (values) {
 
                 var ticket = values,
                     itemID = ticket.id,
                     buyNowPrice = ticket.buyNowPrice,
                     remaining = ticket.inventoryRemaining,
                     name = ticket.name,
-                    description = (ticket.description)? ticket.description: "",
+                    description = (ticket.description) ? ticket.description : "",
                     ticketQuantity = parseInt(ticket.ticketQuantity),
-                    //step = (parseInt(ticket.ticketQuantity)) ? parseInt(ticket.ticketQuantity) : 1,
+                //step = (parseInt(ticket.ticketQuantity)) ? parseInt(ticket.ticketQuantity) : 1,
                     step = 1,
-                    rowInTickets = $("[data-handbid-ticket-row='"+itemID+"']").eq(0),
+                    rowInTickets = $("[data-handbid-ticket-row='" + itemID + "']").eq(0),
                     rowTicketBlock = $("[data-handbid-ticket-block]", rowInTickets).eq(0),
                     remainingTicketBlock = $("[data-handbid-tickets-remaining]", rowInTickets).eq(0),
                     ticketsSoldBlock = $(".tickets-are-sold", rowInTickets).eq(0),
                     ticketsSoldAvailable = $(".tickets-are-available", rowInTickets).eq(0),
-                    availableOutput = (remaining != -1) ? remaining+" available": "Unlimited quantity";
+                    availableOutput = (remaining != -1) ? remaining + " available" : "Unlimited quantity";
 
                 $("[data-handbid-ticket-title]", rowInTickets).html(name);
                 $("[data-handbid-ticket-description]", rowInTickets).html(description);
@@ -422,15 +418,15 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 rowTicketBlock.data("handbid-ticket-price", buyNowPrice);
                 rowTicketBlock.data("handbid-ticket-step", step);
                 remainingTicketBlock.val(remaining);
-                if(remaining == 0){
+                if (remaining == 0) {
                     ticketsSoldBlock.slideDown("fast");
                     ticketsSoldAvailable.slideUp("fast");
                     $("[data-handbid-ticket-quantity]", rowInTickets).html("0");
                 }
-                else{
+                else {
                     ticketsSoldBlock.slideUp("fast");
                     ticketsSoldAvailable.slideDown("fast");
-                    if(remaining != -1 && (remaining < parseInt($("[data-handbid-ticket-quantity]", rowInTickets).html()))){
+                    if (remaining != -1 && (remaining < parseInt($("[data-handbid-ticket-quantity]", rowInTickets).html()))) {
                         $("[data-handbid-ticket-quantity]", rowInTickets).html(remaining);
                     }
                 }
@@ -438,52 +434,52 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
             },
 
-            clickOnFiltersToReorder: function(){
+            clickOnFiltersToReorder: function () {
                 var initialCat = $('[data-initial-auction-category]').eq(0).val();
-                var initialCatLink = $('[data-legacy-category-id="'+initialCat+'"] a');
+                var initialCatLink = $('[data-legacy-category-id="' + initialCat + '"] a');
                 //console.log(initialCat);
                 //console.log(initialCatLink);
                 initialCatLink = initialCatLink[0];
                 //if(initialCatLink != undefined){
                 //    $('[data-initial-auction-category]').val(0);
-                    //initialCatLink.eq(0).click();
+                //initialCatLink.eq(0).click();
                 //}
                 //else {
-                    var firstCatLink = $('ul.by-category li.selected a')[0];
-                    if (firstCatLink != undefined) {
-                        firstCatLink.click();
-                    }
+                var firstCatLink = $('ul.by-category li.selected a')[0];
+                if (firstCatLink != undefined) {
+                    firstCatLink.click();
+                }
                 //}
             },
 
-            checkItemIsAvailableForPresale: function(){
+            checkItemIsAvailableForPresale: function () {
                 var availableForPreSale = $("[data-item-check-available-item-id]").val(),
                     auctionStatus = $("[data-item-check-status-auction-id]").val(),
                     itemStatus = $("[data-item-check-status-item-id]").val();
                 return ((auctionStatus == "preview" || auctionStatus == "presale") && (availableForPreSale != "1") && (itemStatus != "sold"));
             },
 
-            checkItemsAuctionIsClosed: function(){
+            checkItemsAuctionIsClosed: function () {
                 var auctionStatus = $("[data-item-check-status-auction-id]").val();
                 return (auctionStatus == "closed" || auctionStatus == "reconcile" || auctionStatus == "reconciled");
             },
 
-            checkItemIsAlreadySold: function(){
+            checkItemIsAlreadySold: function () {
                 var itemStatus = $("[data-item-check-status-item-id]").val();
                 return (itemStatus == "sold");
             },
 
-            checkItemIsLiveOnly: function(){
+            checkItemIsLiveOnly: function () {
                 var itemStatus = $("[data-item-check-is-live-item-id]").val();
                 return (itemStatus == "yes");
             },
 
-            checkItemIsBidPadOnly: function(){
+            checkItemIsBidPadOnly: function () {
                 var itemStatus = $("[data-item-check-is-bidpad-item-id]").val();
                 return (itemStatus == "yes");
             },
 
-            checkItemIsAlreadySoldOrNotAvailable: function(winnerID, itemID){
+            checkItemIsAlreadySoldOrNotAvailable: function (winnerID, itemID) {
                 var biddingBlock = $("[data-item-bidding-id]"),
                     noBiddingBlock = $("[data-item-nobidding-id]"),
                     isSoldBlock = $("[data-item-is-sold-id]"),
@@ -496,102 +492,102 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     itemIsLiveOnly = this.checkItemIsLiveOnly(),
                     itemIsBidPadOnly = this.checkItemIsBidPadOnly();
 
-                (itemCanNotBeShownInPreSale || itemIsAlreadySold || itemIsLiveOnly || itemIsBidPadOnly || itemsAuctionIsClosed) ? biddingBlock.hide(): biddingBlock.show();
-                (itemCanNotBeShownInPreSale || itemsAuctionIsClosed) ? noBiddingBlock.show(): noBiddingBlock.hide();
-                (itemIsAlreadySold) ? isSoldBlock.show(): isSoldBlock.hide();
-                (itemIsBidPadOnly) ? isBidPadBlock.show(): isBidPadBlock.hide();
-                (itemIsLiveOnly) ? isLiveBlock.show(): isLiveBlock.hide();
-                (itemIsLiveOnly) ? isNotForLiveBlock.hide(): isNotForLiveBlock.show();
+                (itemCanNotBeShownInPreSale || itemIsAlreadySold || itemIsLiveOnly || itemIsBidPadOnly || itemsAuctionIsClosed) ? biddingBlock.hide() : biddingBlock.show();
+                (itemCanNotBeShownInPreSale || itemsAuctionIsClosed) ? noBiddingBlock.show() : noBiddingBlock.hide();
+                (itemIsAlreadySold) ? isSoldBlock.show() : isSoldBlock.hide();
+                (itemIsBidPadOnly) ? isBidPadBlock.show() : isBidPadBlock.hide();
+                (itemIsLiveOnly) ? isLiveBlock.show() : isLiveBlock.hide();
+                (itemIsLiveOnly) ? isNotForLiveBlock.hide() : isNotForLiveBlock.show();
 
-                if(itemIsAlreadySold && winnerID != undefined){
+                if (itemIsAlreadySold && winnerID != undefined) {
                     var bidderDashboardPlace = $("#bidder-info-load"),
                         profileID = parseInt(bidderDashboardPlace.data("profile-id"));
-                    if(profileID == winnerID){
+                    if (profileID == winnerID) {
                         this.displayOnlyCurrentStatusOfItem(itemID, "winning");
                     }
                 }
             },
 
 
-            processAuctionChange: function(values){
+            processAuctionChange: function (values) {
 
                 var listAuctions = $(".handbid-list-of-active-auctions").eq(0);
                 var listHiddenAuctions = $(".handbid-hidden-of-active-auctions").eq(0);
                 var auctionID = values.id;
                 var auctionStatus = values.status;
 
-                if(auctionStatus != "open"){
-                    $("[data-handbid-active-profile-auction="+auctionID+"]").remove();
+                if (auctionStatus != "open") {
+                    $("[data-handbid-active-profile-auction=" + auctionID + "]").remove();
 
-                    if($("li", listAuctions).length == 0){
+                    if ($("li", listAuctions).length == 0) {
                         var noItemsText = listAuctions.data("no-items-text");
-                        listAuctions.prepend("<p>"+noItemsText+"</p>");
+                        listAuctions.prepend("<p>" + noItemsText + "</p>");
                     }
 
-                    if(auctionStatus == "closed" || auctionStatus == "reconcile" || auctionStatus == "reconciled"){
-                        var hiddenAuctionIds = $("[data-hidden-active-auction="+auctionID+"]");
+                    if (auctionStatus == "closed" || auctionStatus == "reconcile" || auctionStatus == "reconciled") {
+                        var hiddenAuctionIds = $("[data-hidden-active-auction=" + auctionID + "]");
 
-                        (hiddenAuctionIds.length) ? hiddenAuctionIds.remove() : "" ;
+                        (hiddenAuctionIds.length) ? hiddenAuctionIds.remove() : "";
                         var hasInvoices = (hiddenAuctionIds.length);
                         handbid.notifyUserAboutAuctionClosing(values, hasInvoices);
                     }
                 }
 
-                var itemsOfAuctionCanBeToggled = $("[data-handbid-item-auction='"+auctionID+"']:not(.simple-box.status-available)");
-                (auctionStatus == "preview" || auctionStatus == "presale") ? itemsOfAuctionCanBeToggled.addClass("not-available-in-presale") : itemsOfAuctionCanBeToggled.removeClass("not-available-in-presale") ;
+                var itemsOfAuctionCanBeToggled = $("[data-handbid-item-auction='" + auctionID + "']:not(.simple-box.status-available)");
+                (auctionStatus == "preview" || auctionStatus == "presale") ? itemsOfAuctionCanBeToggled.addClass("not-available-in-presale") : itemsOfAuctionCanBeToggled.removeClass("not-available-in-presale");
                 $(".filters .by-item-type li.selected a").eq(0).click();
 
                 var enableCreditCardSupport = (values.enableCreditCardSupport == "1"),
-                    receiptsOfAuction = $("[data-receipt-of-auction='"+auctionID+"']");
-                (enableCreditCardSupport)?receiptsOfAuction.removeClass("invoiceNoCCAllowed"):receiptsOfAuction.addClass("invoiceNoCCAllowed");
+                    receiptsOfAuction = $("[data-receipt-of-auction='" + auctionID + "']");
+                (enableCreditCardSupport) ? receiptsOfAuction.removeClass("invoiceNoCCAllowed") : receiptsOfAuction.addClass("invoiceNoCCAllowed");
 
 
-                $("[data-item-check-status-auction-id='"+auctionID+"']").val(auctionStatus);
+                $("[data-item-check-status-auction-id='" + auctionID + "']").val(auctionStatus);
 
                 var spendingThreshold = values.spendingThreshold;
-                spendingThreshold = (spendingThreshold != null && spendingThreshold != undefined)? spendingThreshold:0;
+                spendingThreshold = (spendingThreshold != null && spendingThreshold != undefined) ? spendingThreshold : 0;
                 $("[data-auction-spending-threshold]").val(spendingThreshold);
 
                 this.checkItemIsAlreadySoldOrNotAvailable();
             },
 
 
-            processTicketChange: function(values){
+            processTicketChange: function (values) {
                 var itemID = values.id,
                     isTicketNow = (values.isTicket == "1"),
                     inventoryRemaining = values.inventoryRemaining,
                     inventoryZero = (inventoryRemaining == 0),
-                    rowsInTickets = $("[data-handbid-ticket-row='"+itemID+"']"),
+                    rowsInTickets = $("[data-handbid-ticket-row='" + itemID + "']"),
                     rowInTickets = rowsInTickets.eq(0),
                     wasInTickets = (rowsInTickets.length != 0),
                     removingTicket = (wasInTickets && !isTicketNow),
                     addingTicket = (!wasInTickets && isTicketNow),
                     updatingTicket = (wasInTickets && isTicketNow),
-                    itemSimpleBox = $("[data-handbid-item-box='"+itemID+"']");
+                    itemSimpleBox = $("[data-handbid-item-box='" + itemID + "']");
 
-                if(removingTicket){
+                if (removingTicket) {
                     rowInTickets.slideUp("normal");
                     rowInTickets.remove();
                     this.recalculateTotalTicketsPrice();
                     itemSimpleBox.removeAttr("data-is-ticket");
                 }
-                if(addingTicket){
+                if (addingTicket) {
                     this.addItemToTickets(values);
                     this.recalculateTotalTicketsPrice();
                     itemSimpleBox.attr("data-is-ticket", "1");
                 }
-                if(updatingTicket){
+                if (updatingTicket) {
                     this.updateItemTicket(values);
                     this.recalculateTotalTicketsPrice();
                 }
-                if(removingTicket || addingTicket){
+                if (removingTicket || addingTicket) {
                     this.clickOnFiltersToReorder();
                 }
 
             },
 
 
-            processItemChange: function(values){
+            processItemChange: function (values) {
 
                 var item = values,
                     itemID = values.id,
@@ -601,32 +597,34 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     newCatID = values.categoryId,
                     newHideIfSold = (item.hideSales == 1);
 
-                var parentElem = $("[data-handbid-item-box='"+itemID+"']").eq(0);
+                var parentElem = $("[data-handbid-item-box='" + itemID + "']").eq(0);
 
                 var currentItemID = $("#bidItemId").val();
-                if(currentItemID == itemID){
-                    parentElem = $("[data-handbid-item-details-block='"+itemID+"']").eq(0);
+                if (currentItemID == itemID) {
+                    parentElem = $("[data-handbid-item-details-block='" + itemID + "']").eq(0);
                 }
 
-                $.each( values, function(attribute, value){
+                $.each(values, function (attribute, value) {
                     value = (value != undefined && value != null) ? value : 0;
-                    if(attribute == "inventoryRemaining" && value == -1) {value = "∞"}
-                    if(attribute == "categoryName") {
-                        parentElem.attr("data-tags", "|"+value.toLowerCase()+"|");
+                    if (attribute == "inventoryRemaining" && value == -1) {
+                        value = "∞"
                     }
-                    if(attribute == "quantitySold") {
+                    if (attribute == "categoryName") {
+                        parentElem.attr("data-tags", "|" + value.toLowerCase() + "|");
+                    }
+                    if (attribute == "quantitySold") {
                         $('[data-handbid-sold-of-id=' + itemID + ']').html(value);
                     }
-                    if(attribute == "bidCount") {
+                    if (attribute == "bidCount") {
                         $('[data-handbid-bids-of-id=' + itemID + ']').html(value);
                     }
                     $('[data-change-attribute=' + attribute + ']', parentElem).html(value);
                     $('[data-handbid-item-attribute=' + attribute + ']', parentElem).html(value);
                 });
 
-                if(values.inventoryRemaining != undefined &&
+                if (values.inventoryRemaining != undefined &&
                     values.inventoryRemaining != -1 &&
-                    values.inventoryRemaining != "∞"){
+                    values.inventoryRemaining != "∞") {
                     var value = values.inventoryRemaining;
                     value = (value != undefined && value != null) ? value : 0;
                     $('[data-handbid-remaining-of-id=' + itemID + ']').html(value);
@@ -634,14 +632,14 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
 
                 var needToReSort = false;
-                var paramsBoxes = $("[data-handbid-params-box='"+itemID+"']"),
+                var paramsBoxes = $("[data-handbid-params-box='" + itemID + "']"),
                     paramsBoxQuant = $("[data-is-hidden-item] [data-handbid-ticket-quantity]"),
                     isHidden = (values.isHidden == "1"),
-                    isDirectPurchaseItem  = (values.isDirectPurchaseItem == "1"),
+                    isDirectPurchaseItem = (values.isDirectPurchaseItem == "1"),
                     disableMobileBidding = (values.disableMobileBidding == "1"),
                     isBidPadOnly = (values.isBidpadOnly == "1"),
                     noBids = (!isDirectPurchaseItem && values.bidCount === 0);
-                $.map(paramsBoxes, function(val){
+                $.map(paramsBoxes, function (val) {
                     var paramsBox = $(val),
                         oldCatID = parseInt(paramsBox.attr("data-handbid-item-cat-id")),
                         isBoxHidden = (paramsBox.eq(0).attr("data-is-hidden-item") != undefined),
@@ -655,26 +653,26 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                         isHiding = ((isHidden && !isBoxHidden)),
                         differentCat = (oldCatID != undefined && newCatID != undefined && oldCatID != newCatID);
 
-                    var oldCatIDContainer = $(".countAuctionItemsForCat"+oldCatID).eq(0);
-                    var newCatIDContainer = $(".countAuctionItemsForCat"+newCatID).eq(0);
+                    var oldCatIDContainer = $(".countAuctionItemsForCat" + oldCatID).eq(0);
+                    var newCatIDContainer = $(".countAuctionItemsForCat" + newCatID).eq(0);
                     var allCatIDContainer = $(".countAuctionItemsForCatAll").eq(0);
-                    if(differentCat) {
+                    if (differentCat) {
                         paramsBox.attr("data-handbid-item-cat-id", newCatID);
 
-                        isShowing ? handbid.utilChangeCountValue(newCatIDContainer, 1): "" ;
-                        isHiding ? handbid.utilChangeCountValue(oldCatIDContainer, -1): "";
+                        isShowing ? handbid.utilChangeCountValue(newCatIDContainer, 1) : "";
+                        isHiding ? handbid.utilChangeCountValue(oldCatIDContainer, -1) : "";
 
                         if (!isShowing && !isHiding && !isHidden) {
                             handbid.utilChangeCountValue(newCatIDContainer, 1);
                             handbid.utilChangeCountValue(oldCatIDContainer, -1);
                         }
                     }
-                    else{
-                        isShowing ? handbid.utilChangeCountValue(newCatIDContainer, 1): "" ;
-                        isHiding ? handbid.utilChangeCountValue(newCatIDContainer, -1): "";
+                    else {
+                        isShowing ? handbid.utilChangeCountValue(newCatIDContainer, 1) : "";
+                        isHiding ? handbid.utilChangeCountValue(newCatIDContainer, -1) : "";
                     }
-                    isShowing ? handbid.utilChangeCountValue(allCatIDContainer, 1): "" ;
-                    isHiding ? handbid.utilChangeCountValue(allCatIDContainer, -1): "";
+                    isShowing ? handbid.utilChangeCountValue(allCatIDContainer, 1) : "";
+                    isHiding ? handbid.utilChangeCountValue(allCatIDContainer, -1) : "";
 
                     needToReSort = (isHiding || isShowing );
                     (isHidden) ? paramsBox.attr("data-is-hidden-item", "1") : paramsBox.removeAttr("data-is-hidden-item");
@@ -687,50 +685,50 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 });
                 paramsBoxQuant.html("0");
 
-                var itemDetailsBlock = $("[data-handbid-item-details-block='"+itemID+"']").eq(0);
+                var itemDetailsBlock = $("[data-handbid-item-details-block='" + itemID + "']").eq(0);
                 (newHideIfSold) ? itemDetailsBlock.attr("data-hide-if-sold", "1") : itemDetailsBlock.removeAttr("data-hide-if-sold");
 
-                var itemValueBoxes = $(".itemValueBox"+itemID),
+                var itemValueBoxes = $(".itemValueBox" + itemID),
                     itemValueHidden = (showValue != "1" && showValue != 1);
-                itemValueHidden ? itemValueBoxes.addClass("itemValueBoxHidden") : itemValueBoxes.removeClass("itemValueBoxHidden") ;
+                itemValueHidden ? itemValueBoxes.addClass("itemValueBoxHidden") : itemValueBoxes.removeClass("itemValueBoxHidden");
 
                 this.processTicketChange(values);
 
-                $("[data-item-check-status-item-id='"+itemID+"']").val(itemStatus);
-                $("[data-item-check-is-live-item-id='"+itemID+"']").val((disableMobileBidding)?"yes":"no");
-                $("[data-item-check-is-live-bidpad-id='"+itemID+"']").val((isBidPadOnly)?"yes":"no");
-                $("[data-item-check-available-item-id='"+itemID+"']").val(availableForPreSale);
+                $("[data-item-check-status-item-id='" + itemID + "']").val(itemStatus);
+                $("[data-item-check-is-live-item-id='" + itemID + "']").val((disableMobileBidding) ? "yes" : "no");
+                $("[data-item-check-is-live-bidpad-id='" + itemID + "']").val((isBidPadOnly) ? "yes" : "no");
+                $("[data-item-check-available-item-id='" + itemID + "']").val(availableForPreSale);
                 this.checkItemIsAlreadySoldOrNotAvailable(item.winnerId, item.id);
 
 
-                item.buyNowPrice = (item.buyNowPrice == null || item.buyNowPrice == undefined) ? 0: item.buyNowPrice;
+                item.buyNowPrice = (item.buyNowPrice == null || item.buyNowPrice == undefined) ? 0 : item.buyNowPrice;
                 var isBiddable = (!item.isDirectPurchaseItem);
-                var buyItNow   = (isBiddable && item.buyNowPrice > 0 && item.buyNowPrice > item.currentPrice);
-                var BINContainer = $(".BINButton.BINItem"+itemID).eq(0),
-                    BINButton = $(".BINButton.BINItem"+itemID+" a.buy-now").eq(0);
-                (buyItNow) ? BINContainer.addClass("BINAvailable"): BINContainer.removeClass("BINAvailable");
+                var buyItNow = (isBiddable && item.buyNowPrice > 0 && item.buyNowPrice > item.currentPrice);
+                var BINContainer = $(".BINButton.BINItem" + itemID).eq(0),
+                    BINButton = $(".BINButton.BINItem" + itemID + " a.buy-now").eq(0);
+                (buyItNow) ? BINContainer.addClass("BINAvailable") : BINContainer.removeClass("BINAvailable");
                 BINButton.attr("data-handbid-buynow-price", item.buyNowPrice);
 
-                if(needToReSort){
+                if (needToReSort) {
                     this.clickOnFiltersToReorder();
                 }
 
-                var simpleBox = $('[data-handbid-item-box="'+item.id+'"].simple-item-box');
+                var simpleBox = $('[data-handbid-item-box="' + item.id + '"].simple-item-box');
                 simpleBox.removeClass('status-open')
                     .removeClass('status-closed')
                     .removeClass('status-sold')
                     .removeClass('status-preview')
                     .removeClass('status-presale')
-                    .addClass('status-'+itemStatus);
+                    .addClass('status-' + itemStatus);
             },
 
-            wantToPurchaseTicketsImmediately: function(ticketsQuantity, ticketsPrice, receiptId, auctionId, receiptTotal){
+            wantToPurchaseTicketsImmediately: function (ticketsQuantity, ticketsPrice, receiptId, auctionId, receiptTotal) {
 
                 var bidderDashboardPlace = $("#bidder-info-load"),
                     nonce = bidderDashboardPlace.data("paddle-nonce");
 
                 attentionAboutTBuying = true;
-                var bidNotice =  new PNotify({
+                var bidNotice = new PNotify({
                     title: 'Pay for Tickets?',
                     text: "If you choose 'Pay Later', the Auction Staff will charge your card.",
                     icon: 'glyphicon glyphicon-question-sign',
@@ -787,22 +785,22 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                                         var type = "";
                                         var icon = "";
 
-                                        if(data.errors == undefined){
-                                            if(data.result) {
-                                                text = "Purchased by your credit card '"+data.paid_by.nameOnCard+"' (**** **** **** "+data.paid_by.lastFour+")";
+                                        if (data.errors == undefined) {
+                                            if (data.result) {
+                                                text = "Purchased by your credit card '" + data.paid_by.nameOnCard + "' (**** **** **** " + data.paid_by.lastFour + ")";
                                                 title = 'Purchasing success';
                                                 type = 'success';
                                                 icon = 'glyphicon glyphicon-ok';
-                                                $('[data-receipt-block-id="'+receiptId+'"]').removeClass("preview").addClass("open");
+                                                $('[data-receipt-block-id="' + receiptId + '"]').removeClass("preview").addClass("open");
                                             }
-                                            else{
+                                            else {
                                                 text = "Cannot pay invoice by any of your cards. Please, contact auction manager for instructions.";
                                                 title = 'Failed';
                                                 type = 'error';
                                                 icon = 'glyphicon glyphicon-remove-sign';
                                             }
                                         }
-                                        else{
+                                        else {
                                             text = data.errors.join("<br>");
                                             title = 'Failed';
                                             type = 'error';
@@ -844,7 +842,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                         }]
                     },
                     stack: false,
-                    before_open: function(PNotify) {
+                    before_open: function (PNotify) {
                         PNotify.get().css({
                             "top": ($(window).height() / 2) - (PNotify.get().height() / 2) - 80,
                             "left": ($(window).width() / 2) - (PNotify.get().width() / 2)
@@ -863,7 +861,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                             }
                         }).appendTo("body").fadeIn("fast");
                     },
-                    before_close: function() {
+                    before_close: function () {
                         handbidMain.fadeOutModalOverlay();
                     },
                     buttons: {
@@ -879,33 +877,33 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 });
             },
 
-            doesUserWantToBuyTicketsJustNow: function(receiptId, auctionId, receiptTotal){
+            doesUserWantToBuyTicketsJustNow: function (receiptId, auctionId, receiptTotal) {
                 var purchaseRows = $("[data-purchased-purchase-id]");
-                if(purchaseRows.length){
+                if (purchaseRows.length) {
                     var onlyTickets = true,
                         ticketsQuantity = 0,
                         ticketsPrice = 0;
-                    $.map(purchaseRows, function(val){
-                        if($(val).attr("data-purchased-item-is-ticket") == undefined){
+                    $.map(purchaseRows, function (val) {
+                        if ($(val).attr("data-purchased-item-is-ticket") == undefined) {
                             onlyTickets = false;
                         }
-                        else{
+                        else {
                             ticketsPrice += parseInt($(val).data("dashboard-price"));
                             ticketsQuantity += parseInt($(val).data("dashboard-quantity"));
                         }
                     });
-                    if(onlyTickets){
+                    if (onlyTickets) {
                         handbidMain.wantToPurchaseTicketsImmediately(ticketsQuantity, ticketsPrice, receiptId, auctionId, receiptTotal);
                     }
                 }
             },
 
-            utilChangeCountValue: function(container, val){
+            utilChangeCountValue: function (container, val) {
                 container.html(parseInt(container.html()) + val);
             },
 
 
-            loadActiveAuctionsToContainer: function(){
+            loadActiveAuctionsToContainer: function () {
 
                 var auctionsContainer = $(".active-auctions-list-area");
                 auctionsContainer.addClass("loading-messages");
@@ -930,7 +928,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
             },
 
 
-            loadInvoicesToContainer: function(scrolled){
+            loadInvoicesToContainer: function (scrolled) {
 
                 var unpaidInvoicesCountContainer = $(".unpaidInvoicesCountContainer");
                 var invoicesContainer = $(".receipts-list-area");
@@ -947,14 +945,14 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
                         invoicesContainer.removeClass("loading-messages");
                         unpaidInvoicesCountContainer.html(data.unpaid);
-                        (data.unpaid) ? unpaidInvoicesCountContainer.show() : unpaidInvoicesCountContainer.hide() ;
+                        (data.unpaid) ? unpaidInvoicesCountContainer.show() : unpaidInvoicesCountContainer.hide();
                         invoicesContainer.html(data.invoices);
 
                         var bidderDashboardPlace = $("#bidder-info-load"),
                             profileID = parseInt(bidderDashboardPlace.data("profile-id"));
 
-                        if(!scrolled && data.unpaid > 0){
-                            var unpaidInvoices = $.map($(".receiptRow.preview"), function(val){
+                        if (!scrolled && data.unpaid > 0) {
+                            var unpaidInvoices = $.map($(".receiptRow.preview"), function (val) {
                                 var invoiceItem = $(val),
                                     invoiceItemID = parseInt(invoiceItem.data("receipt-block-id")),
                                     invoiceItemTotal = invoiceItem.data("receipt-total"),
@@ -966,13 +964,13 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                                 };
 
                             });
-                            $.map(unpaidInvoices, function(val){
+                            $.map(unpaidInvoices, function (val) {
 
-                                var viewCookie = $.cookie("bidder-"+profileID+"-want-no-invoice-"+val.id);
+                                var viewCookie = $.cookie("bidder-" + profileID + "-want-no-invoice-" + val.id);
 
-                                if(profileID && val.id && viewCookie != "yes") {
+                                if (profileID && val.id && viewCookie != "yes") {
 
-                                    var message = "You have an unpaid invoice with a Balance of "+currencySpan() + val.total + " in " + val.title + ".  Do you want to pay it?";
+                                    var message = "You have an unpaid invoice with a Balance of " + currencySpan() + val.total + " in " + val.title + ".  Do you want to pay it?";
                                     new PNotify({
                                         title: 'Unpaid Invoice',
                                         type: 'info',
@@ -1024,7 +1022,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
             },
 
 
-            loadMessagesToContainer: function(){
+            loadMessagesToContainer: function () {
 
                 var messagesContainer = $(".messages-list-area");
                 messagesContainer.addClass("loading-messages");
@@ -1049,10 +1047,10 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
             },
 
 
-            loadBidsHistoryToContainer: function(itemID){
+            loadBidsHistoryToContainer: function (itemID) {
 
-                var bidsHistoryContainer = $(".bid-history-container-"+itemID);
-                if(bidsHistoryContainer.length) {
+                var bidsHistoryContainer = $(".bid-history-container-" + itemID);
+                if (bidsHistoryContainer.length) {
                     bidsHistoryContainer.addClass("loading-messages");
                     var nonce = bidsHistoryContainer.data("bids-nonce");
                     $.post(
@@ -1075,37 +1073,35 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
             },
 
 
-            loadAllToContainers: function(){
+            loadAllToContainers: function () {
                 this.loadActiveAuctionsToContainer();
                 this.loadInvoicesToContainer();
                 this.loadMessagesToContainer();
             },
 
 
-            scrollToInvoices: function(notice, invoiceID){
-                if(invoiceID != undefined && $("rtg-"+invoiceID).is(":visible")){
+            scrollToInvoices: function (notice, invoiceID) {
+                if (invoiceID != undefined && $("rtg-" + invoiceID).is(":visible")) {
                     return false;
                 }
                 var profileLinkVisible = $('a[data-slider-nav-key="profile-user-info"]:visible');
                 profileLinkVisible.click();
                 $('a[data-slider-nav-key="see-my-receipt"]:visible').click();
-                $('html,body').animate({scrollTop: profileLinkVisible.offset().top},'normal');
+                $('html,body').animate({scrollTop: profileLinkVisible.offset().top}, 'normal');
                 handbid.loadInvoicesToContainer(true);
                 (notice != undefined) ? notice.remove() : "";
             },
 
 
-
-
-            notifyUserAboutAuctionClosing: function(values, hasInvoices){
+            notifyUserAboutAuctionClosing: function (values, hasInvoices) {
 
                 var auctionName = values.name;
-                var noticeText = 'Auction <b>'+auctionName+'</b> is closed now.';
+                var noticeText = 'Auction <b>' + auctionName + '</b> is closed now.';
                 var buttons = [];
                 var confirm = false;
                 var hide = true;
                 var hasBidderPanel = ($("#bidder-info-load").length && $("#bidder-info-load").html() != "");
-                if(hasInvoices && hasBidderPanel){
+                if (hasInvoices && hasBidderPanel) {
                     noticeText += "<br>You may have an unpaid invoices so you can check them.";
                     buttons.push({
                         text: 'View Invoices',
@@ -1145,11 +1141,11 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
             },
 
 
-            notifyUserAboutReceipt: function(values){
+            notifyUserAboutReceipt: function (values) {
 
                 var invoiceID = values.id;
                 var hasBidderPanel = ($("#bidder-info-load").length && $("#bidder-info-load").html() != "");
-                if($("[data-receipt-block-id='"+invoiceID+"']").length == 0 && hasBidderPanel) {
+                if ($("[data-receipt-block-id='" + invoiceID + "']").length == 0 && hasBidderPanel) {
                     var auctionName = values.name;
                     var noticeText = values.name;
                     var buttons = [];
@@ -1186,102 +1182,102 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                             history: false
                         }
                     };
-                    if(auctionInvoices != undefined && auctionInvoices.animating == "out"){
+                    if (auctionInvoices != undefined && auctionInvoices.animating == "out") {
                         auctionInvoices = undefined;
                     }
-                    if(auctionInvoices != undefined){
+                    if (auctionInvoices != undefined) {
                         auctionInvoices.update(params);
                     }
-                    else{
+                    else {
                         auctionInvoices = new PNotify(params);
                     }
                 }
             },
 
 
-            removeItemFromDashboardList: function(itemID, status){
-                var listBids = $(".handbid-list-of-bids-"+status).eq(0);
-                if((status == "purchases")){
+            removeItemFromDashboardList: function (itemID, status) {
+                var listBids = $(".handbid-list-of-bids-" + status).eq(0);
+                if ((status == "purchases")) {
                     $("[data-purchased-purchase-id=" + itemID + "]").remove();
                 }
                 else {
                     $("[data-" + status + "-item-id=" + itemID + "]").remove();
                 }
-                if($("li", listBids).length == 0){
+                if ($("li", listBids).length == 0) {
                     var noItemsText = listBids.data("no-items-text");
-                    listBids.prepend("<p>"+noItemsText+"</p>");
+                    listBids.prepend("<p>" + noItemsText + "</p>");
                 }
             },
 
-            displayOnlyCurrentStatusOfItem: function(itemID, status){
-                $("[data-handbid-box-id="+itemID+"][data-handbid-item-banner]").hide();
-                $("[data-handbid-box-id="+itemID+"][data-handbid-item-banner='"+status+"']").show();
+            displayOnlyCurrentStatusOfItem: function (itemID, status) {
+                $("[data-handbid-box-id=" + itemID + "][data-handbid-item-banner]").hide();
+                $("[data-handbid-box-id=" + itemID + "][data-handbid-item-banner='" + status + "']").show();
 
-                $("[data-handbid-item-box="+itemID+"]").attr("data-handbid-item-box-status", status);
+                $("[data-handbid-item-box=" + itemID + "]").attr("data-handbid-item-box-status", status);
             },
 
-            addLosingItemRow: function(itemID, values, type){
+            addLosingItemRow: function (itemID, values, type) {
 
                 this.removeItemFromDashboardList(itemID, "losing");
 
                 var reasonStr = (type == "under_maxbid") ? " by MaxBid. " : ".";
 
-                var auctionKey = (values.auctionKey != undefined)? values.auctionKey: currentAuctionKey;
+                var auctionKey = (values.auctionKey != undefined) ? values.auctionKey : currentAuctionKey;
 
-                var itemLink = '/auctions/'+ auctionKey +'/item/' + values.item.key;
+                var itemLink = '/auctions/' + auctionKey + '/item/' + values.item.key;
 
                 var itemImage = (values.item.image != undefined) ? values.item.image : values.item.imageUrl;
 
-                this.addDashboardBidLosing(values.item.id, values.item.name, itemLink, values.amount );
+                this.addDashboardBidLosing(values.item.id, values.item.name, itemLink, values.amount);
 
                 this.removeItemFromDashboardList(itemID, "winning");
 
                 this.recheckAndRecalculateBids();
 
-                var noticeFormatting = {isBidding : true, itemLink: itemLink, itemImage: itemImage};
+                var noticeFormatting = {isBidding: true, itemLink: itemLink, itemImage: itemImage};
 
-                this.notice('You are <br>outbid</b> the item <b>' + values.item.name + ' ('+values.item.itemCode+') </b> at '+currencySpan() + values.amount + "" + reasonStr + " <a href='"+itemLink+"'>GO TO ITEM</a>", "Losing Item", "error", null, noticeFormatting);
+                this.notice('You are <br>outbid</b> the item <b>' + values.item.name + ' (' + values.item.itemCode + ') </b> at ' + currencySpan() + values.amount + "" + reasonStr + " <a href='" + itemLink + "'>GO TO ITEM</a>", "Losing Item", "error", null, noticeFormatting);
 
             },
 
-            addWinningItemRow: function(itemID, values, type){
+            addWinningItemRow: function (itemID, values, type) {
 
                 this.removeItemFromDashboardList(itemID, "winning");
 
                 var reasonStr = (type == "under_maxbid") ? " by MaxBid! " : " now!";
 
-                var auctionKey = (values.auctionKey != undefined)? values.auctionKey: currentAuctionKey;
+                var auctionKey = (values.auctionKey != undefined) ? values.auctionKey : currentAuctionKey;
 
-                var itemLink = '/auctions/'+ auctionKey +'/item/'+values.item.key;
+                var itemLink = '/auctions/' + auctionKey + '/item/' + values.item.key;
 
                 var itemImage = (values.item.image != undefined) ? values.item.image : values.item.imageUrl;
 
-                this.addDashboardBidWinning(values.item.id, values.item.name, itemLink, values.amount );
+                this.addDashboardBidWinning(values.item.id, values.item.name, itemLink, values.amount);
 
                 this.removeItemFromDashboardList(itemID, "losing");
 
                 this.recheckAndRecalculateBids();
 
-                var noticeFormatting = {isBidding : true, itemLink: itemLink, itemImage: itemImage};
+                var noticeFormatting = {isBidding: true, itemLink: itemLink, itemImage: itemImage};
 
-                var noticeMessage = 'You are <br>winning</b> the item <b>' + values.item.name + ' ('+values.item.itemCode+') </b> at '+currencySpan() + values.amount + ""+reasonStr;
+                var noticeMessage = 'You are <br>winning</b> the item <b>' + values.item.name + ' (' + values.item.itemCode + ') </b> at ' + currencySpan() + values.amount + "" + reasonStr;
 
                 noticeMessage = (type == "maxbid_auto") ? values.message : noticeMessage;
 
                 this.notice(noticeMessage, "Winning!", "success", null, noticeFormatting);
             },
 
-            checkIfBidsExistsAndChange: function(values, type){
+            checkIfBidsExistsAndChange: function (values, type) {
 
                 var profileID = $("[data-dashboard-profile-id]").eq(0).data("dashboard-profile-id");
                 var itemID = values.item.id;
                 var bidWinnerID = values.winnerId;
 
-                var isBidInWinning = $("[data-winning-item-id="+itemID+"]").length;
-                var isBidInLosing = $("[data-losing-item-id="+itemID+"]").length;
+                var isBidInWinning = $("[data-winning-item-id=" + itemID + "]").length;
+                var isBidInLosing = $("[data-losing-item-id=" + itemID + "]").length;
 
 
-                if(isBidInWinning && (bidWinnerID != profileID)){
+                if (isBidInWinning && (bidWinnerID != profileID)) {
                     // You Are Losing This Item.
                     console.log("----- LOSING ITEM -----");
 
@@ -1291,7 +1287,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
                     this.loadMessagesToContainer();
                 }
-                if(bidWinnerID == profileID){
+                if (bidWinnerID == profileID) {
                     // You Are Winning This Item.
                     console.log("----- WINNING ITEM -----");
 
@@ -1305,36 +1301,34 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
             },
 
-            userItemBiddingEvent: function(values){
+            userItemBiddingEvent: function (values) {
                 var itemID = values.item.id,
                     status = values.status,
                     statusReason = values.statusReason;
-                if(status == "losing") {
+                if (status == "losing") {
                     this.removeItemFromDashboardList(itemID, "losing");
                     this.addLosingItemRow(itemID, values, statusReason);
                 }
-                if(status == "winning" && statusReason == "maxbid_auto"){
+                if (status == "winning" && statusReason == "maxbid_auto") {
                     this.removeItemFromDashboardList(itemID, "winning");
                     this.addWinningItemRow(itemID, values, statusReason);
                     handbid.loadBidsHistoryToContainer(itemID);
                 }
             },
 
-            checkIfMaxBidIsNotAtual: function(values){
+            checkIfMaxBidIsNotAtual: function (values) {
                 var itemID = values.item.id,
-                    itemBlock = $("[data-maxbid-item-id='"+itemID+"']").eq(0),
+                    itemBlock = $("[data-maxbid-item-id='" + itemID + "']").eq(0),
                     itemBlockVal = parseInt(itemBlock.data("proxy-item-max-value"));
-                if(itemBlock != undefined && values.amount >= itemBlockVal ) {
+                if (itemBlock != undefined && values.amount >= itemBlockVal) {
                     this.removeItemFromDashboardList(itemID, "proxy");
                 }
                 this.recheckAndRecalculateBids();
             },
 
 
-
-
-            addUserPurchase: function(values){
-                if(values.isDeleted == 1){
+            addUserPurchase: function (values) {
+                if (values.isDeleted == 1) {
                     this.removeItemFromDashboardList(values.id, "purchases");
                     this.recheckAndRecalculateBids();
                 }
@@ -1347,21 +1341,19 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
             },
 
 
-
-
-            processUserReceipt: function(values){
+            processUserReceipt: function (values) {
                 var receiptID = values.id;
-                var receiptBlock = $('[data-receipt-block-id="'+receiptID+'"]').eq(0);
-                var unpaidControls = $('[data-receipt-block-id="'+receiptID+'"] .unpaidControls');
-                var paidControls = $('[data-receipt-block-id="'+receiptID+'"] .paidControls');
-                var unpaidRows = $('[data-receipt-block-id="'+receiptID+'"] .unpaidRows');
-                if(values.paid){
+                var receiptBlock = $('[data-receipt-block-id="' + receiptID + '"]').eq(0);
+                var unpaidControls = $('[data-receipt-block-id="' + receiptID + '"] .unpaidControls');
+                var paidControls = $('[data-receipt-block-id="' + receiptID + '"] .paidControls');
+                var unpaidRows = $('[data-receipt-block-id="' + receiptID + '"] .unpaidRows');
+                if (values.paid) {
                     receiptBlock.removeClass("preview").addClass("open");
                     unpaidControls.hide();
                     unpaidRows.hide();
                     paidControls.show();
                 }
-                else{
+                else {
                     receiptBlock.addClass("preview").removeClass("open");
                     unpaidControls.show();
                     unpaidRows.show();
@@ -1370,9 +1362,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
             },
 
 
-
-
-            noticeIfNoCreditCard: function(elem){
+            noticeIfNoCreditCard: function (elem) {
                 var attr = elem.attr('data-handbid-credit-cards-required');
 
                 var needCreditCard = (typeof attr !== typeof undefined && attr !== false);
@@ -1390,7 +1380,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 //    }
                 //}
 
-                if(needCreditCard && creditCardsNumber == 0 ){ // creditCardRows.length == 0 &&
+                if (needCreditCard && creditCardsNumber == 0) { // creditCardRows.length == 0 &&
                     //currentElemNeedsCard = elem;
                     $(".credit-card-form-link").eq(0).click();
                     //handbidMain.displayRequiredCardsMessage("You must supply a credit card to do this action.");
@@ -1400,20 +1390,16 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
             },
 
 
-
-
-            getCountOfPastItemPurchases: function(itemID){
+            getCountOfPastItemPurchases: function (itemID) {
                 var countOfPurchased = 0;
-                $.map($('.handbid-list-of-bids-purchases [data-purchased-item-id="'+itemID+'"]'), function(item){
+                $.map($('.handbid-list-of-bids-purchases [data-purchased-item-id="' + itemID + '"]'), function (item) {
                     countOfPurchased += parseInt($(item).data('dashboard-quantity'));
                 });
                 return countOfPurchased;
             },
 
 
-
-
-            confirmIfUserReallyWantToBuy: function(handbid){
+            confirmIfUserReallyWantToBuy: function (handbid, tickets) {
 
                 var purchaseCount = parseInt($('[data-handbid-quantity]').eq(0).html()),
                     purchasePrice = parseInt($('[data-handbid-item-attribute="buyNowPrice"]').eq(0).html()),
@@ -1423,12 +1409,22 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     isDonation = (itemDetailsBox.data('item-is-donation') == 'yes'),
                     buyAgain = isDonation ? false : handbid.getCountOfPastItemPurchases(itemID),
                     title = isDonation ? 'Donation Confirmation' : 'Purchase Confirmation',
-                    confirmText = isDonation ? 'Confirm Donation of $'+purchaseTotal+'?' : 'Confirm Purchase of '+purchaseCount+' for $'+purchaseTotal+'?',
-                    text = buyAgain ? confirmText + ' You have already purchased '+buyAgain+' of this item, are you sure you want to purchase '+purchaseCount+' more?' : confirmText;
+                    confirmText = isDonation ? 'Confirm Donation of $' + purchaseTotal + '?' : 'Confirm Purchase of ' + purchaseCount + ' for $' + purchaseTotal + '?',
+                    text = buyAgain ? confirmText + ' You have already purchased ' + buyAgain + ' of this item, are you sure you want to purchase ' + purchaseCount + ' more?' : confirmText;
 
+                if (tickets) {
+                    purchaseCount = 0;
+                    purchaseTotal = 0;
+                    $.map(tickets, function (val, i) {
+                        purchaseCount += val.quantity;
+                        purchaseTotal += val.quantity * val.price;
+                    });
+                    title = 'Purchase Confirmation';
+                    text = 'Confirm Purchase of ' + purchaseCount + ' Tickets for $' + purchaseTotal + '?';
+                }
 
                 attentionAboutBuyConf = true;
-                var bidNotice =  new PNotify({
+                var bidNotice = new PNotify({
                     title: title,
                     text: text,
                     icon: 'glyphicon glyphicon-question-sign',
@@ -1444,7 +1440,12 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                             click: function (notice) {
                                 attentionAboutBuyConf = false;
                                 notice.remove();
-                                handbid.confirmedPurchase();
+                                if (tickets) {
+                                    handbid.confirmedTicketsPurchase(tickets);
+                                }
+                                else {
+                                    handbid.confirmedPurchase();
+                                }
                             }
                         }, {
                             text: 'No, thanks',
@@ -1456,7 +1457,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                         }]
                     },
                     stack: false,
-                    before_open: function(PNotify) {
+                    before_open: function (PNotify) {
                         PNotify.get().css({
                             "top": ($(window).height() / 2) - (PNotify.get().height() / 2) - 80,
                             "left": ($(window).width() / 2) - (PNotify.get().width() / 2)
@@ -1475,7 +1476,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                             }
                         }).appendTo("body").fadeIn("fast");
                     },
-                    before_close: function() {
+                    before_close: function () {
                         handbidMain.fadeOutModalOverlay();
                     },
                     buttons: {
@@ -1491,20 +1492,20 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 });
             },
 
-            alreadyHaveMaxBidForItem: function(values){
+            alreadyHaveMaxBidForItem: function (values) {
                 var currentBidderID = parseInt($("[data-dashboard-profile-id]").eq(0).data("dashboard-profile-id"));
                 var winnerBidderID = values.item.winnerId;
-                if(winnerBidderID == currentBidderID && values) {
+                if (winnerBidderID == currentBidderID && values) {
                     var itemName = values.item.name;
                     var newMax = values.proxyBid;
                     var oldMax = values.item.highestProxyBid;
-                    handbidMain.notice("Cannot create MaxBid at <b>" + itemName + "</b> at "+currencySpan() + newMax + ". You already have a maxbid for this item at "+currencySpan() + oldMax + " . Please remove the current maxbid to create a new one.", "Already Have MaxBid", "error");
+                    handbidMain.notice("Cannot create MaxBid at <b>" + itemName + "</b> at " + currencySpan() + newMax + ". You already have a maxbid for this item at " + currencySpan() + oldMax + " . Please remove the current maxbid to create a new one.", "Already Have MaxBid", "error");
                 }
             },
 
-            messageToAuctionManager: function(){
+            messageToAuctionManager: function () {
 
-                $("[data-handbid-mail-to-manager]").live("click", function(e){
+                $("[data-handbid-mail-to-manager]").live("click", function (e) {
                     var emailTo = $(this).data("handbid-mail-to-manager");
                     var auction = $(this).data("handbid-auction");
                     var auctionID = $(this).data("handbid-auction-id");
@@ -1531,62 +1532,62 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                             history: false
                         }
                     });
-                    messageNotice.get().on('pnotify.confirm', function(e, notice, val) {
-                            notice.cancelRemove().update({
-                                title: 'Sending Your Message',
-                                text: $('<div/>').text(val).html() + '<br><br><div class="progress progress-striped active" style="margin:0">\
+                    messageNotice.get().on('pnotify.confirm', function (e, notice, val) {
+                        notice.cancelRemove().update({
+                            title: 'Sending Your Message',
+                            text: $('<div/>').text(val).html() + '<br><br><div class="progress progress-striped active" style="margin:0">\
 	                                            <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">\
 		                                        <span class="sr-only">100%</span>\
 	                                            </div>\
                                                 </div>',
-                                icon: true,
-                                type: 'info',
-                                hide: false,
-                                confirm: {
-                                    prompt: false
-                                },
-                                buttons: {
-                                    closer: false,
-                                    sticker: false
-                                }
-                            });
-                            $.post(
-                                ajaxurl,
-                                {
-                                    action: "handbid_ajax_send_message",
-                                    text: val,
-                                    email: emailTo,
-                                    auction: auction,
-                                    auctionID: auctionID,
-                                    auctionOrg: auctionOrg,
-                                    nonce: nonce
-                                },
-                                function (data) {
-                                    console.log(data);
-                                    notice.cancelRemove().update({
-                                        title: '<b>Message Sent</b>',
-                                        text: "<b>Thank you, your message has been sent</b>",
-                                        icon: true,
-                                        type: 'success',
-                                        hide: true,
-                                        delay: 3000,
-                                        confirm: {
-                                            prompt: false
-                                        },
-                                        buttons: {
-                                            closer: true,
-                                            sticker: false
-                                        }
-                                    });
-                                }
-                            );
+                            icon: true,
+                            type: 'info',
+                            hide: false,
+                            confirm: {
+                                prompt: false
+                            },
+                            buttons: {
+                                closer: false,
+                                sticker: false
+                            }
                         });
+                        $.post(
+                            ajaxurl,
+                            {
+                                action: "handbid_ajax_send_message",
+                                text: val,
+                                email: emailTo,
+                                auction: auction,
+                                auctionID: auctionID,
+                                auctionOrg: auctionOrg,
+                                nonce: nonce
+                            },
+                            function (data) {
+                                console.log(data);
+                                notice.cancelRemove().update({
+                                    title: '<b>Message Sent</b>',
+                                    text: "<b>Thank you, your message has been sent</b>",
+                                    icon: true,
+                                    type: 'success',
+                                    hide: true,
+                                    delay: 3000,
+                                    confirm: {
+                                        prompt: false
+                                    },
+                                    buttons: {
+                                        closer: true,
+                                        sticker: false
+                                    }
+                                });
+                            }
+                        );
+                    });
                 });
 
             },
 
 
-            disableAllBiddingButtonsIfSold: function(){
+            disableAllBiddingButtonsIfSold: function () {
 
                 $('[data-handbid-bid-button="up"]').addClass("disabled-button");
                 $('[data-handbid-bid-button="down"]').addClass("disabled-button");
@@ -1597,31 +1598,31 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
             },
 
-            isButtonDisabledOrAlreadyActive: function(button){
+            isButtonDisabledOrAlreadyActive: function (button) {
 
                 return button.hasClass("disabled-button") || button.hasClass("active");
 
             },
 
-            goBackToItem: function(){
+            goBackToItem: function () {
                 var hash = window.location.hash;
-                if(hash) {
+                if (hash) {
                     hash = hash.split('-').pop();
                     $('html, body').animate({
-                        scrollTop: jQuery('[data-handbid-item-box="'+hash+'"]').offset().top
+                        scrollTop: jQuery('[data-handbid-item-box="' + hash + '"]').offset().top
                     }, 900);
                 }
             },
 
-            getStatusReasonByCode: function(code){
+            getStatusReasonByCode: function (code) {
 
                 return (statusReasons[code] != undefined) ? statusReasons[code] : code;
 
             },
 
-            cannotDoIfUnauthorized: function(){
+            cannotDoIfUnauthorized: function () {
                 var sessionCookie = $.cookie("handbid-auth");
-                if(! sessionCookie){
+                if (!sessionCookie) {
                     $("[data-handbid-connect]").eq(0).click();
                     //this.notice("You should register or login to bid", "Unauthorized", "error");
 
@@ -1634,7 +1635,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 return !this.loggedIn;
             },
 
-            confirmedPurchase: function(){
+            confirmedPurchase: function () {
 
                 var hbUserIDs = $('[data-handbid-user-id]'),
                     hbAuctionIDs = $('[data-handbid-auction-id]'),
@@ -1657,13 +1658,13 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 var quantity = parseInt(amount[0].innerHTML);
                 button.addClass("active");
                 var data = {
-                    action:    "handbid_ajax_createbid",
-                    nonce:     nonce,
-                    userId:    userId,
+                    action: "handbid_ajax_createbid",
+                    nonce: nonce,
+                    userId: userId,
                     auctionId: auctionId,
-                    itemId:    itemId,
-                    amount:    perItem,
-                    quantity:  quantity
+                    itemId: itemId,
+                    amount: perItem,
+                    quantity: quantity
                 };
 
                 $.post(
@@ -1678,7 +1679,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
                         button.removeClass("active");
                         var message = "";
-                        if(data.status == "failed"){
+                        if (data.status == "failed") {
                             message = handbid.getStatusReasonByCode(data.statusReason);
                             handbidMain.notice(message, data.status.toUpperCase(), data.status);
                         }
@@ -1694,8 +1695,8 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                             amount.html(startCount);
 
                             var isAppeal = (data.item.isAppeal != undefined && data.item.isAppeal == 1);
-                            var noticeTitle = (isAppeal)?"Thank You!":"Congratulations!";
-                            message = (isAppeal)?"You donated "+currencySpan()+(data.currentAmount*data.quantity) :"You purchased " + quantity + " <br>of Item #" + data.item.id + " <br><b>" + data.item.name + "</b>";
+                            var noticeTitle = (isAppeal) ? "Thank You!" : "Congratulations!";
+                            message = (isAppeal) ? "You donated " + currencySpan() + (data.currentAmount * data.quantity) : "You purchased " + quantity + " <br>of Item #" + data.item.id + " <br><b>" + data.item.name + "</b>";
                             handbidMain.notice(message, noticeTitle, "success");
 
                             handbidMain.removeItemFromDashboardList(itemId, "proxy");
@@ -1705,6 +1706,96 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                             handbid.reloadPageIfForceRefresh();
                         }
 
+                        return false;
+                    }
+                );
+            },
+
+            confirmedTicketsPurchase: function (prices) {
+
+                var closeModal = $(".handbid-modal.tickets-modal .modal-close").eq(0);
+                var button = $('[data-handbid-tickets-button="purchase"]').eq(0);
+                var nonce = button.data("handbid-buy-tickets-nonce");
+                var auctionId = button.data("handbid-auction-id");
+                var userId = button.data("handbid-profile-id");
+                button.addClass("active");
+                closeModal.hide();
+                var data = {
+                    action: "handbid_ajax_buy_tickets",
+                    nonce: nonce,
+                    userId: userId,
+                    auctionId: auctionId,
+                    items: prices
+                };
+                $.post(
+                    ajaxurl,
+                    data,
+                    function (data) {
+
+                        console.log("---------------------------");
+                        console.log("----Buy Tickets success----");
+                        data = JSON.parse(data);
+                        console.log(data);
+
+                        $.map($("[data-handbid-ticket-id]"), function (val, i) {
+                            var parentBlock = $(val),
+                                quantityBlock = $("[data-handbid-ticket-quantity]", parentBlock).eq(0),
+                                remainingBlock = $("[data-handbid-tickets-remaining]", parentBlock).eq(0),
+                                quantity = parseInt(quantityBlock.html()),
+                                ticketID = parseInt(parentBlock.data("handbid-ticket-id")),
+                                remainingSymb = remainingBlock.val(),
+                                remaining = parseInt(remainingBlock.val());
+                            quantityBlock.html(0);
+                            if (!connectedToSocket && remainingSymb != "-1" && remainingSymb != "∞" && handbid.in_array(data.successID, ticketID)) {
+                                remainingBlock.val(remaining - quantity);
+                            }
+                            return null;
+                        });
+                        $("[data-handbid-tickets-total]").html(0);
+
+                        var messages = [];
+                        if (data.failID.length) {
+                            messages = $.map(prices, function (val, i) {
+                                if (handbid.in_array(data.failID, val.id)) {
+                                    var reason = "";
+                                    if (data.fail[val.id].data != undefined && data.fail[val.id].data.error != undefined) {
+                                        var reasons = $.map(data.fail[val.id].data.error, function (val, i) {
+                                            return val.join(", ");
+                                        });
+                                        reason = "<br> Reason: " + reasons.join(", ");
+                                    }
+                                    else {
+                                        reason = "<br> Reason: Something wrong. Please, try again later";
+                                    }
+                                    return (!handbid.in_array(data.failID, val.id)) ? null : "Item #" + val.id + " <br><b>" + val.name + "</b>" + reason;
+
+                                }
+                                else return null;
+                            });
+                            handbidMain.notice("<b>Cannot Buy:</b> <br><br>" + messages.join(" <br><br>"), "Cannot Buy Tickets", "error");
+                        }
+
+                        if (data.successID.length) {
+                            messages = $.map(prices, function (val, i) {
+                                if ((handbid.in_array(data.successID, val.id))) {
+
+                                    var itemData = data.success[val.id];
+
+                                    var amount = itemData.amount;
+                                    var quantity = itemData.quantity;
+                                    var name = itemData.name;
+                                    return (!handbid.in_array(data.successID, val.id)) ? null : "<b>" + val.quantity + "</b> of Item #" + val.id + " <br><b>" + val.name + "</b>";
+                                }
+                                else {
+                                    return null;
+                                }
+                            });
+                            handbid.loadInvoicesToContainer(true);
+                            handbidMain.notice("You purchased <br>" + messages.join("; <br>"), "Congratulations!", "success");
+                        }
+                        button.removeClass("active");
+                        closeModal.show();
+                        closeModal.click();
 
                         return false;
                     }
@@ -1712,7 +1803,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
             },
 
             // Setup bidding
-            setupBidding:             function (handbid) {
+            setupBidding: function (handbid) {
 
 
                 var userId = ($('[data-handbid-user-id]').length > 0) ? $('[data-handbid-user-id]').attr('data-handbid-user-id') : (parseInt($("#bidUserId").val()) ? parseInt($("#bidUserId").val()) : null),
@@ -1726,7 +1817,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
                     var inventoryRemaining = parseInt($('[data-handbid-item-attribute="inventoryRemaining"]').eq(0).html());
 
-                    if(handbid.isButtonDisabledOrAlreadyActive($(this)) || handbid.cannotDoIfUnauthorized() || handbid.noticeIfNoCreditCard($(this)) || inventoryRemaining == 0){
+                    if (handbid.isButtonDisabledOrAlreadyActive($(this)) || handbid.cannotDoIfUnauthorized() || handbid.noticeIfNoCreditCard($(this)) || inventoryRemaining == 0) {
                         return false;
                     }
 
@@ -1741,13 +1832,13 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     var isMaxBidButton = $(this).hasClass("max-bid-up");
                     var isDirectPurchaseButton = $(this).hasClass("isDirectPurchase");
 
-                    if(!isDirectPurchaseButton) {
+                    if (!isDirectPurchaseButton) {
                         amountContainer = (isMaxBidButton) ? $('[data-handbid-maxbid-amount]') : $('[data-handbid-onlybid-amount]');
                     }
 
                     var value = parseInt(amountContainer[0].innerHTML) + increment;
 
-                    if(isDirectPurchaseButton) {
+                    if (isDirectPurchaseButton) {
                         var inventoryRemaining = ($('[data-handbid-item-attribute="inventoryRemaining"]').length > 0 ) ? parseInt($('[data-handbid-item-attribute="inventoryRemaining"]')[0].innerHTML) : -1;
                         inventoryRemaining = (inventoryRemaining) ? inventoryRemaining : -1;
                         var totalSoldItems = ($('[data-handbid-item-attribute="totalSoldItems"]').length > 0 ) ? parseInt($('[data-handbid-item-attribute="totalSoldItems"]')[0].innerHTML) : 0;
@@ -1755,19 +1846,19 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                         canBeUp = ((inventoryRemaining == -1 ) || ((inventoryRemaining != -1) && (value <= inventoryRemaining)));
 
                     }
-                    else{
+                    else {
                         console.log('maxb burchase');
                         var buyNowPrice = ($('[data-handbid-buynow-price]').length > 0 ) ? $('[data-handbid-buynow-price]').eq(0).data("handbid-buynow-price") : -1;
                         buyNowPrice = (buyNowPrice != "" ) ? parseInt(buyNowPrice) : -1;
 
                         var maxBidCondition = isMaxBidButton ? (value < buyNowPrice) : (value <= buyNowPrice);
-                        canBeUp = ((buyNowPrice <=0 ) || ((buyNowPrice > 0) && maxBidCondition));
-                        maxCanBeUp = ((buyNowPrice <=0 ) || ((buyNowPrice > 0) && (value < buyNowPrice)));
+                        canBeUp = ((buyNowPrice <= 0 ) || ((buyNowPrice > 0) && maxBidCondition));
+                        maxCanBeUp = ((buyNowPrice <= 0 ) || ((buyNowPrice > 0) && (value < buyNowPrice)));
 
                     }
-                    if(canBeUp) {
+                    if (canBeUp) {
                         amountContainer.html(value);
-                        if(!isDirectPurchaseButton && !isMaxBidButton && maxCanBeUp){
+                        if (!isDirectPurchaseButton && !isMaxBidButton && maxCanBeUp) {
                             $('[data-handbid-maxbid-amount]').html(value);
                         }
                     }
@@ -1776,7 +1867,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
                 $('[data-handbid-bid-button="down"]').live('click', function (e) {
 
-                    if(handbid.isButtonDisabledOrAlreadyActive($(this)) || handbid.cannotDoIfUnauthorized() || handbid.noticeIfNoCreditCard($(this))){
+                    if (handbid.isButtonDisabledOrAlreadyActive($(this)) || handbid.cannotDoIfUnauthorized() || handbid.noticeIfNoCreditCard($(this))) {
                         return false;
                     }
 
@@ -1787,26 +1878,26 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     var isMaxBidButton = $(this).hasClass("max-bid-down");
                     var isDirectPurchaseButton = $(this).hasClass("isDirectPurchase");
 
-                    if(! isDirectPurchaseButton) {
+                    if (!isDirectPurchaseButton) {
                         amountContainer = (isMaxBidButton) ? $('[data-handbid-maxbid-amount]') : $('[data-handbid-onlybid-amount]');
                     }
 
-                        var value = parseInt(amountContainer[0].innerHTML) - increment;
+                    var value = parseInt(amountContainer[0].innerHTML) - increment;
 
 
                     minimalBidAmount = ($('.minimalBidAmount span[data-change-attribute="minimumBidAmount"]').length > 0 ) ? parseInt($('.minimalBidAmount span[data-change-attribute="minimumBidAmount"]')[0].innerHTML) : 1;
-                        if(value >= minimalBidAmount) {
-                            amountContainer.html(value);
-                            if(!isDirectPurchaseButton && !isMaxBidButton){
-                                $('[data-handbid-maxbid-amount]').html(value);
-                            }
+                    if (value >= minimalBidAmount) {
+                        amountContainer.html(value);
+                        if (!isDirectPurchaseButton && !isMaxBidButton) {
+                            $('[data-handbid-maxbid-amount]').html(value);
                         }
+                    }
 
                 });
 
                 $('[data-handbid-bid-button="bid"]').live('click', function (e) {
 
-                    if(handbid.isButtonDisabledOrAlreadyActive($(this)) || handbid.cannotDoIfUnauthorized() || handbid.noticeIfNoCreditCard($(this))){
+                    if (handbid.isButtonDisabledOrAlreadyActive($(this)) || handbid.cannotDoIfUnauthorized() || handbid.noticeIfNoCreditCard($(this))) {
                         return false;
                     }
 
@@ -1814,10 +1905,10 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     var currentButton = $(this);
 
                     var needToConfirm = handbid.checkIfWantToShowBidConfirmation();
-                    if(needToConfirm){
+                    if (needToConfirm) {
                         handbid.notConfirmedBidAction(currentButton, userId, auctionId, itemId);
                     }
-                    else{
+                    else {
                         handbid.confirmedBidAction(currentButton, userId, auctionId, itemId);
                     }
 
@@ -1829,7 +1920,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
                 $('[data-handbid-bid-button="proxy"]').live('click', function (e) {
 
-                    if(handbid.isButtonDisabledOrAlreadyActive($(this)) || handbid.cannotDoIfUnauthorized() || handbid.noticeIfNoCreditCard($(this))){
+                    if (handbid.isButtonDisabledOrAlreadyActive($(this)) || handbid.cannotDoIfUnauthorized() || handbid.noticeIfNoCreditCard($(this))) {
                         return false;
                     }
                     var amountContainer = $('[data-handbid-maxbid-amount]');
@@ -1839,11 +1930,11 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     button.addClass("active");
                     $(".proxy-bid-dialog-close").hide();
                     var data = {
-                        action:    "handbid_ajax_createbid",
-                        nonce:     nonce,
-                        userId:    userId,
+                        action: "handbid_ajax_createbid",
+                        nonce: nonce,
+                        userId: userId,
                         auctionId: auctionId,
-                        itemId:    itemId,
+                        itemId: itemId,
                         maxAmount: total
                     };
                     $.post(
@@ -1857,7 +1948,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                             data = JSON.parse(data);
                             console.log(data);
 
-                            if(data.status == undefined){
+                            if (data.status == undefined) {
                                 handbid.notice("Something went wrong. Please, try again later", "No response from server", "error");
                             }
                             else {
@@ -1904,14 +1995,14 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
                     var inventoryRemaining = parseInt($('[data-handbid-item-attribute="inventoryRemaining"]').eq(0).html());
 
-                    if(handbid.isButtonDisabledOrAlreadyActive($(this))
+                    if (handbid.isButtonDisabledOrAlreadyActive($(this))
                         || handbid.cannotDoIfUnauthorized()
                         || handbid.noticeIfNoCreditCard($(this))
-                        || inventoryRemaining == 0){
+                        || inventoryRemaining == 0) {
                         return false;
                     }
 
-                    handbid.confirmIfUserReallyWantToBuy(handbid);
+                    handbid.confirmIfUserReallyWantToBuy(handbid, false);
 
 
                     return false;
@@ -1919,7 +2010,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
                 $('[data-handbid-bid-button="buyItNow"]').live('click', function (e) {
 
-                    if(handbid.isButtonDisabledOrAlreadyActive($(this)) || handbid.cannotDoIfUnauthorized() || handbid.noticeIfNoCreditCard($(this))){
+                    if (handbid.isButtonDisabledOrAlreadyActive($(this)) || handbid.cannotDoIfUnauthorized() || handbid.noticeIfNoCreditCard($(this))) {
                         return false;
                     }
 
@@ -1930,12 +2021,12 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     var button = $(this);
                     button.addClass("active");
                     var data = {
-                        action:    "handbid_ajax_createbid",
-                        nonce:     nonce,
-                        userId:    userId,
+                        action: "handbid_ajax_createbid",
+                        nonce: nonce,
+                        userId: userId,
                         auctionId: auctionId,
-                        itemId:    itemId,
-                        amount:    total
+                        itemId: itemId,
+                        amount: total
                     };
                     $.post(
                         ajaxurl,
@@ -1962,7 +2053,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 });
 
                 $('[data-handbid-delete-proxy]').live('click', function (e) {
-                    if(handbid.isButtonDisabledOrAlreadyActive($(this)) || handbid.cannotDoIfUnauthorized() || handbid.noticeIfNoCreditCard($(this))){
+                    if (handbid.isButtonDisabledOrAlreadyActive($(this)) || handbid.cannotDoIfUnauthorized() || handbid.noticeIfNoCreditCard($(this))) {
                         return false;
                     }
                     e.preventDefault();
@@ -1975,9 +2066,9 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     var itemID = button.data("item-id");
                     button.addClass("active");
                     var data = {
-                        action:    "handbid_ajax_removebid",
-                        nonce:     nonce,
-                        bidID:     bidID
+                        action: "handbid_ajax_removebid",
+                        nonce: nonce,
+                        bidID: bidID
                     };
                     $.post(
                         ajaxurl,
@@ -2003,13 +2094,13 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
                 });
             },
-            notConfirmedBidAction: function(currentButton, userId, auctionId, itemId){
+            notConfirmedBidAction: function (currentButton, userId, auctionId, itemId) {
                 attentionAboutConfirm = true;
                 var minimumBidAmount = $('[data-change-attribute="minimumBidAmount"]').eq(0).html();
                 var currency = $('.handbidAuctionCurrency').eq(0).html();
                 var confirmNotify = new PNotify({
                     title: '',
-                    text: '<b>Place a bid for '+currency+'<span data-change-attribute="minimumBidAmount">'+minimumBidAmount+'</span> on this item?</b>',
+                    text: '<b>Place a bid for ' + currency + '<span data-change-attribute="minimumBidAmount">' + minimumBidAmount + '</span> on this item?</b>',
                     icon: 'glyphicon glyphicon-question-sign',
                     type: "info",
                     hide: false,
@@ -2017,14 +2108,14 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                         confirm: true,
                         buttons: [{
                             text: 'Yes',
-                            click: function(notice) {
+                            click: function (notice) {
                                 attentionAboutConfirm = false;
                                 notice.remove();
                                 handbidMain.confirmedBidAction(currentButton, userId, auctionId, itemId);
                             }
                         }, {
                             text: 'No',
-                            click: function(notice) {
+                            click: function (notice) {
                                 attentionAboutConfirm = false;
                                 notice.remove();
                             }
@@ -2037,7 +2128,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     history: {
                         history: false
                     },
-                    before_open: function(noticeK) {
+                    before_open: function (noticeK) {
                         noticeK.get().css({
                             //"top": ($(window).height() / 2) - (noticeK.get().height() / 2) - 80,
                             //"left": ($(window).width() / 2) - (noticeK.get().width() / 2)
@@ -2056,13 +2147,13 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                             }
                         }).appendTo("body").fadeIn("fast");
                     },
-                    before_close: function() {
+                    before_close: function () {
                         confirm_bid_overlay.fadeOut("fast");
                     }
                 });
 
             },
-            confirmedBidAction: function(currentButton, userId, auctionId, itemId){
+            confirmedBidAction: function (currentButton, userId, auctionId, itemId) {
 
                 var amountContainer = $('[data-handbid-onlybid-amount]');
 
@@ -2072,12 +2163,12 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 var message = "";
                 button.addClass("active");
                 var data = {
-                    action:    "handbid_ajax_createbid",
-                    nonce:     nonce,
-                    userId:    userId,
+                    action: "handbid_ajax_createbid",
+                    nonce: nonce,
+                    userId: userId,
                     auctionId: auctionId,
-                    itemId:    itemId,
-                    amount:    total
+                    itemId: itemId,
+                    amount: total
                 };
                 $.post(
                     ajaxurl,
@@ -2089,14 +2180,14 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                         console.log("----Bid Now success----");
                         data = JSON.parse(data);
                         console.log(data);
-                        if(data.status == "failed"){
+                        if (data.status == "failed") {
                             message = handbid.getStatusReasonByCode(data.statusReason);
                             handbid.notice(message, data.status.toUpperCase(), data.status);
                         }
-                        else{
+                        else {
                             $('[data-handbid-item-attribute="bidCount"]').html(data.item.bidCount);
                             $('[data-handbid-item-attribute="minimumBidAmount"]').html(currencySpan() + data.item.minimumBidAmount);
-                            if(data.statusReason == "under_maxbid"){
+                            if (data.statusReason == "under_maxbid") {
                                 handbid.addLosingItemRow(data.item.id, data, data.statusReason);
                                 handbid.loadBidsHistoryToContainer(data.item.id);
                             }
@@ -2109,14 +2200,14 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     }
                 );
             },
-            reloadPageIfForceRefresh: function(){
-                if(forcePageRefreshAfterBids){
+            reloadPageIfForceRefresh: function () {
+                if (forcePageRefreshAfterBids) {
                     location.reload();
                 }
             },
-            recalculateTotalTicketsPrice: function(){
+            recalculateTotalTicketsPrice: function () {
                 var totalPrice = 0;
-                var prices = $.map($("[data-handbid-ticket-id]"), function(val, i){
+                var prices = $.map($("[data-handbid-ticket-id]"), function (val, i) {
                     var parentBlock = $(val),
                         quantityBlock = $("[data-handbid-ticket-quantity]", parentBlock).eq(0),
                         quantity = parseInt(quantityBlock.html()),
@@ -2124,7 +2215,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                         itemPrice = parseInt(parentBlock.data("handbid-ticket-price")),
                         itemTitle = $("[data-handbid-ticket-title]", parentBlock).eq(0).html();
                     totalPrice += quantity * itemPrice;
-                    return (quantity > 0) ? {id : itemID, price : itemPrice, quantity : quantity, name : itemTitle} : null;
+                    return (quantity > 0) ? {id: itemID, price: itemPrice, quantity: quantity, name: itemTitle} : null;
                 });
                 totalPrice = handbid.number_format(totalPrice, 0, ".", ",");
                 $("[data-handbid-tickets-total]").html(totalPrice);
@@ -2132,13 +2223,13 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
             },
 
             // Setup tickets
-            setupTicketsPurchasing:  function (handbid) {
+            setupTicketsPurchasing: function (handbid) {
 
                 $('[data-handbid-ticket-button="up"]').live('click', function (e) {
 
                     e.preventDefault();
 
-                    var parentBlock = $(this).parents( "[data-handbid-ticket-id]").eq(0),
+                    var parentBlock = $(this).parents("[data-handbid-ticket-id]").eq(0),
                         otherButton = $("[data-handbid-ticket-button='down']", parentBlock).eq(0),
                         quantityBlock = $("[data-handbid-ticket-quantity]", parentBlock).eq(0),
                         remainingBlock = $("[data-handbid-tickets-remaining]", parentBlock).eq(0),
@@ -2150,12 +2241,12 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                         itemPrice = parseInt(parentBlock.data("handbid-ticket-price"));
 
                     var newValue = quantity + itemStep;
-                    if(newValue <= remaining || (remainingSymb == "-1" || remainingSymb == "∞")){
+                    if (newValue <= remaining || (remainingSymb == "-1" || remainingSymb == "∞")) {
                         quantityBlock.html(newValue);
                         handbid.recalculateTotalTicketsPrice();
                         otherButton.removeClass("ghosted-out");
 
-                        if(newValue + itemStep > remaining && !(remainingSymb == "-1" || remainingSymb == "∞")){
+                        if (newValue + itemStep > remaining && !(remainingSymb == "-1" || remainingSymb == "∞")) {
                             $(this).addClass("ghosted-out");
                         }
                     }
@@ -2166,7 +2257,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
                     e.preventDefault();
 
-                    var parentBlock = $(this).parents( "[data-handbid-ticket-id]").eq(0),
+                    var parentBlock = $(this).parents("[data-handbid-ticket-id]").eq(0),
                         otherButton = $("[data-handbid-ticket-button='up']", parentBlock).eq(0),
                         quantityBlock = $("[data-handbid-ticket-quantity]", parentBlock).eq(0),
                         remainingBlock = $("[data-handbid-tickets-remaining]", parentBlock).eq(0),
@@ -2177,12 +2268,12 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                         itemPrice = parseInt(parentBlock.data("handbid-ticket-price"));
 
                     var newValue = quantity - itemStep;
-                    if(newValue >= 0){
+                    if (newValue >= 0) {
                         quantityBlock.html(newValue);
                         handbid.recalculateTotalTicketsPrice();
                         otherButton.removeClass("ghosted-out");
 
-                        if(newValue - itemStep < 0){
+                        if (newValue - itemStep < 0) {
                             $(this).addClass("ghosted-out");
                         }
                     }
@@ -2196,108 +2287,26 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
                     var prices = handbid.recalculateTotalTicketsPrice();
 
-                    if(handbid.isButtonDisabledOrAlreadyActive($(this)) || handbid.cannotDoIfUnauthorized() || handbid.noticeIfNoCreditCard($(this)) || prices.length == 0){
+                    if (handbid.isButtonDisabledOrAlreadyActive($(this))
+                        || handbid.cannotDoIfUnauthorized()
+                        || handbid.noticeIfNoCreditCard($(this))
+                        || prices.length == 0) {
                         return false;
                     }
 
-                    var closeModal = $(".handbid-modal.tickets-modal .modal-close").eq(0);
-                    var button = $(this);
-                    var nonce = button.data("handbid-buy-tickets-nonce");
-                    var auctionId = button.data("handbid-auction-id");
-                    var userId = button.data("handbid-profile-id");
-                    button.addClass("active");
-                    closeModal.hide();
-                    var data = {
-                        action:    "handbid_ajax_buy_tickets",
-                        nonce:     nonce,
-                        userId:    userId,
-                        auctionId: auctionId,
-                        items:     prices
-                    };
-                    $.post(
-                        ajaxurl,
-                        data,
-                        function (data) {
+                    handbid.confirmIfUserReallyWantToBuy(handbid, prices);
 
-                            console.log("---------------------------");
-                            console.log("----Buy Tickets success----");
-                            data = JSON.parse(data);
-                            console.log(data);
-
-                            $.map($("[data-handbid-ticket-id]"), function(val, i){
-                                var parentBlock = $(val),
-                                    quantityBlock = $("[data-handbid-ticket-quantity]", parentBlock).eq(0),
-                                    remainingBlock = $("[data-handbid-tickets-remaining]", parentBlock).eq(0),
-                                    quantity = parseInt(quantityBlock.html()),
-                                    ticketID = parseInt(parentBlock.data("handbid-ticket-id")),
-                                    remainingSymb = remainingBlock.val(),
-                                    remaining = parseInt(remainingBlock.val());
-                                quantityBlock.html(0);
-                                if(!connectedToSocket && remainingSymb != "-1" && remainingSymb != "∞" && handbid.in_array(data.successID, ticketID)){
-                                    remainingBlock.val(remaining - quantity);
-                                }
-                                return null;
-                            });
-                            $("[data-handbid-tickets-total]").html(0);
-
-                            var messages = [];
-                            if(data.failID.length){
-                                messages = $.map(prices, function(val, i){
-                                    if(handbid.in_array(data.failID, val.id)) {
-                                        var reason = "";
-                                        if(data.fail[val.id].data != undefined && data.fail[val.id].data.error != undefined) {
-                                            var reasons = $.map(data.fail[val.id].data.error, function (val, i) {
-                                                return val.join(", ");
-                                            });
-                                            reason = "<br> Reason: " + reasons.join(", ");
-                                        }
-                                        else{
-                                            reason = "<br> Reason: Something wrong. Please, try again later";
-                                        }
-                                        return (!handbid.in_array(data.failID, val.id)) ? null : "Item #" + val.id + " <br><b>" + val.name + "</b>" + reason;
-
-                                    }
-                                    else return null;
-                                });
-                                handbidMain.notice("<b>Cannot Buy:</b> <br><br>"+ messages.join(" <br><br>"), "Cannot Buy Tickets", "error");
-                            }
-
-                            if(data.successID.length){
-                                messages = $.map(prices, function(val, i){
-                                    if((handbid.in_array(data.successID, val.id))){
-
-                                        var itemData = data.success[val.id];
-
-                                        var amount = itemData.amount;
-                                        var quantity = itemData.quantity;
-                                        var name = itemData.name;
-                                        return (! handbid.in_array(data.successID, val.id)) ? null : "<b>"+val.quantity+"</b> of Item #"+val.id+" <br><b>"+val.name+"</b>";
-                                    }
-                                    else{
-                                        return null;
-                                    }
-                                });
-                                handbid.loadInvoicesToContainer(true);
-                                handbidMain.notice("You purchased <br>"+ messages.join("; <br>"), "Congratulations!", "success");
-                            }
-                            button.removeClass("active");
-                            closeModal.show();
-                            closeModal.click();
-
-                            return false;
-                        }
-                    );
                     return false;
 
                 });
 
             },
-            makePaymentForReceipt : function() {
+            makePaymentForReceipt: function () {
                 $('.make-payment-button').live('click', function (e) {
 
                     e.preventDefault();
 
-                    if(handbid.isButtonDisabledOrAlreadyActive($(this)) || handbid.cannotDoIfUnauthorized() || handbid.noticeIfNoCreditCard($(this))){
+                    if (handbid.isButtonDisabledOrAlreadyActive($(this)) || handbid.cannotDoIfUnauthorized() || handbid.noticeIfNoCreditCard($(this))) {
                         return false;
                     }
 
@@ -2314,9 +2323,9 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     button.addClass("active");
 
                     var data = {
-                        action:    "handbid_ajax_make_receipt_payment",
-                        nonce:     nonce,
-                        cardId:    cardId,
+                        action: "handbid_ajax_make_receipt_payment",
+                        nonce: nonce,
+                        cardId: cardId,
                         receiptId: receiptId,
                         auctionId: auctionId
                     };
@@ -2330,7 +2339,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                             data = JSON.parse(data);
                             console.log(data);
 
-                            if(data.result.paid){
+                            if (data.result.paid) {
                                 paidControls.slideDown();
                                 unpaidControls.remove();
                                 receiptBlock.addClass("open").removeClass("preview");
@@ -2338,10 +2347,10 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
                                 var unpaidInvoicesCountContainer = $(".unpaidInvoicesCountContainer");
                                 var unpaidInvoices = $(".receipts-list-area li.preview").length;
-                                (unpaidInvoices)?unpaidInvoicesCountContainer.show():unpaidInvoicesCountContainer.hide();
+                                (unpaidInvoices) ? unpaidInvoicesCountContainer.show() : unpaidInvoicesCountContainer.hide();
                                 unpaidInvoicesCountContainer.html(unpaidInvoices);
                             }
-                            else{
+                            else {
                                 handbidMain.notice(data.result.description, "Payment Error", "error");
                             }
 
@@ -2355,12 +2364,13 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
                 });
             },
-            submitBid : function(data) {},
-            setupConnect:             function () {
+            submitBid: function (data) {
+            },
+            setupConnect: function () {
 
                 var body = $('body');
 
-                if(! $('#handbid-confirmation-underlay').length) {
+                if (!$('#handbid-confirmation-underlay').length) {
                     var underlayContainer = '<div id="handbid-confirmation-underlay" ' +
                         'style="position: fixed; top:0px; bottom:0px; left: 0px; right: 0px; z-index: 8; display: none;"> ';
                     body.append(underlayContainer);
@@ -2377,7 +2387,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     $('[data-handbid-connect]').live('click', function (e) {
                         e.preventDefault();
                         var isRegisterButton = $(this).hasClass("register");
-                        if(isRegisterButton){
+                        if (isRegisterButton) {
                             $(".active-container").eq(0).removeClass("active-container").hide();
                             $("[data-tab-name='register-form']").eq(0).addClass("active-container").show();
                         }
@@ -2400,47 +2410,47 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
                 }
             },
-            setupTutorialPopup:             function () {
+            setupTutorialPopup: function () {
 
                 var body = $('body');
 
-                if(! $('#handbid-confirmation-underlay').length) {
+                if (!$('#handbid-confirmation-underlay').length) {
                     var underlayContainer = '<div id="handbid-confirmation-underlay" ' +
                         'style="position: fixed; top:0px; bottom:0px; left: 0px; right: 0px; z-index: 8; display: none;"> ';
                     body.append(underlayContainer);
                 }
-                    var loginModal = $('[data-handbid-modal-key="login-modal"]');
+                var loginModal = $('[data-handbid-modal-key="login-modal"]');
 
-                    var underlay = $('#handbid-confirmation-underlay');
+                var underlay = $('#handbid-confirmation-underlay');
 
-                    $('[data-handbid-tutorial]').live('click', function (e) {
-                        e.preventDefault();
-                        if(handbidLoginMain != undefined){
-                            handbidLoginMain.changeToTutorialTabState();
-                        }
-                        loginModal.css('display', 'block');
-                        underlay.css('display', 'block');
-                    });
+                $('[data-handbid-tutorial]').live('click', function (e) {
+                    e.preventDefault();
+                    if (handbidLoginMain != undefined) {
+                        handbidLoginMain.changeToTutorialTabState();
+                    }
+                    loginModal.css('display', 'block');
+                    underlay.css('display', 'block');
+                });
 
                 $('.modal-close', loginModal).live('click', function () {
                     underlay.css('display', 'none');
                 });
 
-                    //$('.modal-close', loginModal).live('click', function () {
-                    //    underlay.css('display', 'none');
-                    //});
+                //$('.modal-close', loginModal).live('click', function () {
+                //    underlay.css('display', 'none');
+                //});
             },
-            setupBidderDashboard: function() {
-                $('.bidder-info-container .stats-bar').live('click.ajax-load', function() {
+            setupBidderDashboard: function () {
+                $('.bidder-info-container .stats-bar').live('click.ajax-load', function () {
 
                     $.ajax({
-                        url : '/wp-admin/admin-ajax.php',
-                        type : 'POST',
-                        data : {
-                            action : 'load_bidder_dashboard'
+                        url: '/wp-admin/admin-ajax.php',
+                        type: 'POST',
+                        data: {
+                            action: 'load_bidder_dashboard'
                         },
                         dataType: 'html',
-                        success: function(response) {
+                        success: function (response) {
                             $(response).appendTo($('.bidder-dashboard-inner'));
 
                             // Open bider profile by default
@@ -2453,10 +2463,10 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     $(this).off('.ajax-load');
                 })
             },
-            setupDeleteCreditCard : function() {
+            setupDeleteCreditCard: function () {
 
 
-                $("[data-handbid-delete-credit-card]").live('click', function(e) {
+                $("[data-handbid-delete-credit-card]").live('click', function (e) {
 
                     e.preventDefault();
                     var button = $(this);
@@ -2479,25 +2489,26 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                             console.log("-----------------------------");
                             console.log("----Remove Credit Card Success----");
                             console.log(data);
-                            try{
+                            try {
                                 data = JSON.parse(data);
                                 console.log(data);
                             }
-                            catch(e){}
+                            catch (e) {
+                            }
 
                             button.removeClass("active");
 
-                            if(data.error == undefined){
+                            if (data.error == undefined) {
 
-                                if(data.resp != undefined && data.resp.data != undefined && data.resp.data.message != undefined
-                                    && data.resp.success != undefined && !data.resp.success){
+                                if (data.resp != undefined && data.resp.data != undefined && data.resp.data.message != undefined
+                                    && data.resp.success != undefined && !data.resp.success) {
                                     handbid.notice(data.resp.data.message, "Card Error", "error");
                                 }
                                 else {
                                     $('[data-handbid-card-row="' + cardID + '"]').remove();
                                     handbid.notice('Your card has been deleted', "Card Success", "success");
                                     var footerCardsCountHolder = $("#footer-credit-cards-count");
-                                    if(footerCardsCountHolder != undefined) {
+                                    if (footerCardsCountHolder != undefined) {
                                         var creditCardFooterNumber = parseInt(footerCardsCountHolder.val()) + 1;
                                         footerCardsCountHolder.val(creditCardFooterNumber);
                                     }
@@ -2511,7 +2522,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                                     }
                                 }
                             }
-                            else{
+                            else {
                                 handbid.notice('Something wrong. Please, try again later', "Card Error", "error");
                             }
 
@@ -2522,7 +2533,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     return false;
                 });
             },
-            setupAddCreditCardCallback : function(status, response) {
+            setupAddCreditCardCallback: function (status, response) {
                 var $form = currentCCForm,
                     container = $('.bidder-info-container.credit-card ul'),
                     modalClose = $('[data-handbid-modal-key="credit-card-form"] .modal-close'),
@@ -2534,24 +2545,24 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 var isAddingSuccessMessage = "";
                 var simpleErrorMessage = "Something wrong. Please, try again later";
 
-                if(response.error != undefined){
+                if (response.error != undefined) {
                     isAddingError = true;
-                    if(response.error.message != undefined){
+                    if (response.error.message != undefined) {
                         isAddingErrorMessage = response.error.message;
                         handbid.notice(isAddingErrorMessage, "Card Error", "error");
                     }
-                    else{
+                    else {
                         isAddingErrorMessage = simpleErrorMessage;
                         handbid.notice(simpleErrorMessage, "Card Error", "error");
                     }
                 }
-                else{
-                    if(response.card == undefined){
+                else {
+                    if (response.card == undefined) {
                         isAddingError = true;
                         isAddingErrorMessage = simpleErrorMessage;
                         handbid.notice(simpleErrorMessage, "Card Error", "error");
                     }
-                    else{
+                    else {
 
                         var dataPost = {
                             action: "handbid_ajax_add_credit_card",
@@ -2570,15 +2581,16 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                             dataPost,
                             function (resp) {
 
-                                try{
+                                try {
                                     resp = JSON.parse(resp);
                                 }
-                                catch(e){}
+                                catch (e) {
+                                }
                                 resp = resp.resp;
                                 console.log(resp);
 
-                                if(resp.success != undefined && !resp.success && resp.data != undefined && resp.data.error != undefined) {
-                                   var messageParts = $.map(resp.data.error, function (val, i) {
+                                if (resp.success != undefined && !resp.success && resp.data != undefined && resp.data.error != undefined) {
+                                    var messageParts = $.map(resp.data.error, function (val, i) {
                                         return val.join("<br>");
                                     });
                                     isAddingErrorMessage = "<b>" + messageParts.join("<br>") + "</b>";
@@ -2590,7 +2602,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                                     handbid.notice("Your card has been added successfully", "Card Success", "success");
 
                                     var footerCardsCountHolder = $("#footer-credit-cards-count");
-                                    if(footerCardsCountHolder != undefined) {
+                                    if (footerCardsCountHolder != undefined) {
                                         var creditCardFooterNumber = parseInt(footerCardsCountHolder.val()) + 1;
                                         footerCardsCountHolder.val(creditCardFooterNumber);
                                     }
@@ -2629,7 +2641,6 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                             });
 
 
-
                     }
                 }
 
@@ -2637,12 +2648,12 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 $form.find('.submit-cc-button').prop('disabled', false);
                 $form.parent().parent().removeClass("processing");
 
-                if(isAddingError){
+                if (isAddingError) {
                     statusPlace.removeClass("card-success").addClass("card-error");
                     statusPlace.html(isAddingErrorMessage);
                 }
-                else{
-                    if(isAddingSuccess){
+                else {
+                    if (isAddingSuccess) {
                         statusPlace.removeClass("card-error").addClass("card-success");
                         statusPlace.html(isAddingSuccessMessage);
                     }
@@ -2654,10 +2665,10 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
 
             },
-            setupAddCreditCard : function() {
+            setupAddCreditCard: function () {
                 var form = $('.creditcard-template');
 
-                form.live('submit', function(event) {
+                form.live('submit', function (event) {
                     var $form = $(this);
                     currentCCForm = $form;
 
@@ -2670,36 +2681,36 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 });
 
             },
-            showCardErrorsIfExists : function() {
+            showCardErrorsIfExists: function () {
 
                 var ccErrorCookieKey = "handbid-cc-error",
                     ccErrorCookie = $.cookie(ccErrorCookieKey);
-                if(ccErrorCookie != undefined && ccErrorCookie != null && ccErrorCookie != "null" && ccErrorCookie.trim() != ""){
+                if (ccErrorCookie != undefined && ccErrorCookie != null && ccErrorCookie != "null" && ccErrorCookie.trim() != "") {
                     handbidMain.notice(ccErrorCookie, "Card Error", "error");
-                    $.removeCookie(ccErrorCookieKey, { path: '/' });
+                    $.removeCookie(ccErrorCookieKey, {path: '/'});
                 }
                 var ccSuccessCookieKey = "handbid-cc-success",
                     ccSuccessCookie = $.cookie(ccSuccessCookieKey);
-                if(ccSuccessCookie != undefined && ccSuccessCookie != null && ccSuccessCookie != "null" && ccSuccessCookie.trim() != ""){
+                if (ccSuccessCookie != undefined && ccSuccessCookie != null && ccSuccessCookie != "null" && ccSuccessCookie.trim() != "") {
                     handbidMain.notice(ccSuccessCookie, "Card Success", "success");
-                    $.removeCookie(ccSuccessCookieKey, { path: '/' });
+                    $.removeCookie(ccSuccessCookieKey, {path: '/'});
                 }
 
             },
 
-            setupProvincesSelect : function() {
+            setupProvincesSelect: function () {
 
                 var countriesSelect = $("#userAddressCountryId");
                 var provincesSelect = $("#userAddressProvinceId");
                 var provincesSelectRow = $(".provincesRow");
                 var provincesByCountries = $("#provincesCountByCountry");
 
-                countriesSelect.live("change", function(e){
+                countriesSelect.live("change", function (e) {
                     var countryID = parseInt(countriesSelect.val());
                     var countryPrevID = parseInt(provincesByCountries.data("current-country"));
-                    if(countryID != countryPrevID){
-                        var countryProvinces = provincesByCountries.data("provinces-"+countryID);
-                        if(countryProvinces != undefined){
+                    if (countryID != countryPrevID) {
+                        var countryProvinces = provincesByCountries.data("provinces-" + countryID);
+                        if (countryProvinces != undefined) {
 
                             var nonce = countriesSelect.data("provinces-nonce");
 
@@ -2722,9 +2733,9 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                                     $.each(data, function (i, item) {
                                         provincesSelect.append($('<option>', {
                                             value: item.value,
-                                            text : item.text
+                                            text: item.text
                                         }));
-                                        if(i == 0){
+                                        if (i == 0) {
                                             provincesSelect.val(item.value);
                                         }
                                     });
@@ -2734,7 +2745,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                             );
 
                         }
-                        else{
+                        else {
                             provincesSelectRow.slideUp("fast");
                             provincesSelect.find('option')
                                 .remove()
@@ -2748,22 +2759,21 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 });
 
 
-
             },
             setupEditProfile: function () {
                 var form = $('.edit-profile');
 
-                form.on('submit', function(e) {
+                form.on('submit', function (e) {
 
                     e.preventDefault();
 
                     var _data = $(this).serialize();
 
                     $.ajax({
-                        url:     restEndpoint + 'bidder/update',
+                        url: restEndpoint + 'bidder/update',
                         method: 'PUT',
                         data: _data,
-                        success: function(data) {
+                        success: function (data) {
                             handbid.notice('Your profile has been updated');
 
                             return false;
@@ -2797,13 +2807,13 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 }
 
             },
-            oldNotice:                   function (msg) {
+            oldNotice: function (msg) {
 
                 handbid.noticeContainer = $('<div class="handbid-growl-container"></div>');
                 handbid.noticeContainer.appendTo('body');
                 handbid.noticeTemplate = '<div class="handbid-growl"><div class="message">Notice Message</div></div>';
 
-                if(msg.indexOf('&') > -1) {
+                if (msg.indexOf('&') > -1) {
                     msg = msg.split('&')[0];
                 }
 
@@ -2819,7 +2829,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
                 }, 5000);
             },
-            notice:  function (msg, title, type, hide, formatting) {
+            notice: function (msg, title, type, hide, formatting) {
 
                 title = (title != undefined) ? title : 'Notice Message';
                 hide = (hide != undefined) ? hide : true;
@@ -2827,14 +2837,14 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 type = (type == "failed") ? "error" : type;
 
                 var isBiddingNotice = (formatting != undefined && formatting.isBidding != undefined && formatting.isBidding);
-                if(isBiddingNotice){
+                if (isBiddingNotice) {
                     var itemLink = (formatting.itemLink != undefined) ? formatting.itemLink : "#";
                     var itemImage = (formatting.itemImage != undefined && formatting.itemImage != "/images/default_photo-75px-white.png")
                         ? formatting.itemImage
-                        : $("[data-default-item-image]").eq(0).val() ;
+                        : $("[data-default-item-image]").eq(0).val();
                     msg = "<div class='col-xs-4 handbid-notice-image-container'>" +
-                    "<a href='"+itemLink+"'>" +
-                    "<img src='"+itemImage+"'>" +
+                    "<a href='" + itemLink + "'>" +
+                    "<img src='" + itemImage + "'>" +
                     "</a>" +
                     "</div>" +
                     "<div class='col-xs-8 handbid-notice-text-container'>" +
@@ -2854,11 +2864,11 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                         sticker: false
                     }
                 };
-                if(title == "Broadcast Message"){
+                if (title == "Broadcast Message") {
                     params.icon = " glyphicon glyphicon-envelope ";
                     params.addclass += " handbid-broadcast-notice";
                 }
-                if(isBiddingNotice){
+                if (isBiddingNotice) {
                     params.icon = "";
                     params.addclass += " handbid-bidding-notice";
                 }
@@ -2879,7 +2889,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
             },
 
 
-            detectIfUserWantToBid: function(){
+            detectIfUserWantToBid: function () {
 
                 var bidderDashboardPlace = $("#bidder-info-load"),
                     auctionID = parseInt(bidderDashboardPlace.data("auction")),
@@ -2887,19 +2897,19 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     profileID = parseInt(bidderDashboardPlace.data("profile-id")),
                     paddleNumber = bidderDashboardPlace.data("profile-paddle-number"),
                     nonce = bidderDashboardPlace.data("paddle-nonce"),
-                    viewCookieKey = "bidder-"+profileID+"-just-view-auction-"+auctionID,
+                    viewCookieKey = "bidder-" + profileID + "-just-view-auction-" + auctionID,
                     viewCookie = $.cookie(viewCookieKey),
-                    bidCookieKey = "bidder-"+profileID+"-bidding-in-auction-"+auctionID,
+                    bidCookieKey = "bidder-" + profileID + "-bidding-in-auction-" + auctionID,
                     bidCookie = $.cookie(bidCookieKey),
                     paddleNumberIsUndefined = (paddleNumber == "N/A" && bidCookie == undefined);
 
-                if(paddleNumber != "N/A" && bidCookie == undefined){
-                    $.cookie(bidCookieKey, paddleNumber, { expires: cookieExpire, path: '/' });
+                if (paddleNumber != "N/A" && bidCookie == undefined) {
+                    $.cookie(bidCookieKey, paddleNumber, {expires: cookieExpire, path: '/'});
                 }
 
-                if(auctionID && profileID && paddleNumberIsUndefined && viewCookie != "yes" && auctionStatus != "closed" && auctionStatus != "reconcile" && auctionStatus != "reconciled") {
+                if (auctionID && profileID && paddleNumberIsUndefined && viewCookie != "yes" && auctionStatus != "closed" && auctionStatus != "reconcile" && auctionStatus != "reconciled") {
                     attentionAboutBidding = true;
-                    var bidNotice =  new PNotify({
+                    var bidNotice = new PNotify({
                         title: 'Register to Bid?',
                         text: 'Do you want to bid in this auction or just browse for now?',
                         icon: 'glyphicon glyphicon-question-sign',
@@ -2954,11 +2964,14 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                                             var type = "";
                                             var icon = "";
 
-                                            if(data.paddleId != undefined){
-                                                $("[data-paddle-for-auction-"+auctionID+"]").html(data.paddleId);
+                                            if (data.paddleId != undefined) {
+                                                $("[data-paddle-for-auction-" + auctionID + "]").html(data.paddleId);
                                                 currentPaddleNumber = data.paddleId;
-                                                $.cookie(bidCookieKey, currentPaddleNumber, { expires: cookieExpire, path: '/' });
-                                                text = 'Your paddle number for this auction is <b>'+data.paddleId+'</b>';
+                                                $.cookie(bidCookieKey, currentPaddleNumber, {
+                                                    expires: cookieExpire,
+                                                    path: '/'
+                                                });
+                                                text = 'Your paddle number for this auction is <b>' + data.paddleId + '</b>';
                                                 title = 'Done';
                                                 type = 'success';
                                                 icon = 'glyphicon glyphicon-ok';
@@ -2967,7 +2980,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                                                 $.removeCookie(viewCookieKey);
 
                                             }
-                                            else{
+                                            else {
                                                 text = data.errors.join("<br>");
                                                 title = 'Failed';
                                                 type = 'error';
@@ -3008,13 +3021,13 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                                 addClass: 'browse-here-button',
                                 click: function (notice) {
                                     attentionAboutBidding = false;
-                                    $.cookie(viewCookieKey, "yes", { expires: cookieExpire, path: '/' });
+                                    $.cookie(viewCookieKey, "yes", {expires: cookieExpire, path: '/'});
                                     notice.remove();
                                 }
                             }]
                         },
                         stack: false,
-                        before_open: function(PNotify) {
+                        before_open: function (PNotify) {
                             PNotify.get().css({
                                 "top": ($(window).height() / 2) - (PNotify.get().height() / 2) - 80,
                                 "left": ($(window).width() / 2) - (PNotify.get().width() / 2)
@@ -3033,7 +3046,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                                 }
                             }).appendTo("body").fadeIn("fast");
                         },
-                        before_close: function() {
+                        before_close: function () {
                             handbidMain.fadeOutModalOverlay();
                         },
                         buttons: {
@@ -3045,16 +3058,14 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                         }
                     });
                     bidNotice.get().on('pnotify.cancel', function () {
-                            return false;
-                        });
+                        return false;
+                    });
                 }
 
             },
 
 
-
-
-            detectIfUserWantToBuyTickets: function(){
+            detectIfUserWantToBuyTickets: function () {
 
                 var bidderDashboardPlace = $("#bidder-info-load"),
                     haveTickets = $("[data-handbid-tickets]").length,
@@ -3062,11 +3073,11 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     auctionStatus = bidderDashboardPlace.data("auction-status"),
                     profileID = parseInt(bidderDashboardPlace.data("profile-id"));
 
-                var viewCookie = $.cookie("bidder-"+profileID+"-want-no-tickets-"+auctionID);
+                var viewCookie = $.cookie("bidder-" + profileID + "-want-no-tickets-" + auctionID);
 
-                if(auctionID && profileID && haveTickets && viewCookie != "yes" && auctionStatus != "closed" && auctionStatus != "reconcile" && auctionStatus != "reconciled") {
+                if (auctionID && profileID && haveTickets && viewCookie != "yes" && auctionStatus != "closed" && auctionStatus != "reconcile" && auctionStatus != "reconciled") {
                     attentionAboutTickets = true;
-                    var bidNotice =  new PNotify({
+                    var bidNotice = new PNotify({
                         title: 'Auction Tickets',
                         text: 'Current Auction has tickets. Do you want to purchase one of them?',
                         icon: 'glyphicon glyphicon-question-sign',
@@ -3089,13 +3100,16 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                                 addClass: 'browse-here-button',
                                 click: function (notice) {
                                     attentionAboutTickets = false;
-                                    $.cookie("bidder-"+profileID+"-want-no-tickets-"+auctionID, "yes", { expires: cookieExpire, path: '/' });
+                                    $.cookie("bidder-" + profileID + "-want-no-tickets-" + auctionID, "yes", {
+                                        expires: cookieExpire,
+                                        path: '/'
+                                    });
                                     notice.remove();
                                 }
                             }]
                         },
                         stack: false,
-                        before_open: function(PNotify) {
+                        before_open: function (PNotify) {
                             PNotify.get().css({
                                 "top": ($(window).height() / 2) - (PNotify.get().height() / 2) - 80,
                                 "left": ($(window).width() / 2) - (PNotify.get().width() / 2)
@@ -3114,7 +3128,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                                 }
                             }).appendTo("body").fadeIn("fast");
                         },
-                        before_close: function() {
+                        before_close: function () {
                             handbidMain.fadeOutModalOverlay();
                         },
                         buttons: {
@@ -3126,29 +3140,29 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                         }
                     });
                     bidNotice.get().on('pnotify.cancel', function () {
-                            return false;
-                        });
+                        return false;
+                    });
                 }
 
             },
 
-            detectIfUserCanDownloadApps: function(){
+            detectIfUserCanDownloadApps: function () {
 
                 var bidderDashboardPlace = $("#bidder-info-load"),
                     profileID = parseInt(bidderDashboardPlace.data("profile-id")),
-                    cookieName = "bidder-"+profileID+"-want-no-apps",
+                    cookieName = "bidder-" + profileID + "-want-no-apps",
                     viewCookie = $.cookie(cookieName),
                     isIPhone = isMobile.iPhone(),
                     isIPad = isMobile.iPad(),
                     isAndroid = isMobile.Android(),
                     mobileDeviceName = (isAndroid) ? "Android" : ((isIPhone) ? "iPhone" : "iPad"),
                     mobileDeviceLinkContainer = (isAndroid) ? "data-handbid-app-googleplay" : ((isIPhone) ? "data-handbid-app-appstore" : "data-handbid-app-appstore-ipad"),
-                    mobileDeviceLink = $("["+mobileDeviceLinkContainer+"]").eq(0).val();
+                    mobileDeviceLink = $("[" + mobileDeviceLinkContainer + "]").eq(0).val();
 
 
-                if((isIPhone || isIPad || isAndroid) && viewCookie != "yes") {
+                if ((isIPhone || isIPad || isAndroid) && viewCookie != "yes") {
                     attentionAboutMobiles = true;
-                    var bidNotice =  new PNotify({
+                    var bidNotice = new PNotify({
                         title: 'Download Handbid App?',
                         text: mobileDeviceName + ' detected. Do you want to download our app special for your device?',
                         icon: 'glyphicon glyphicon-phone',
@@ -3163,7 +3177,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                                 addClass: 'bid-here-button',
                                 click: function (notice) {
                                     attentionAboutMobiles = false;
-                                    $.cookie(cookieName, "yes", { expires: cookieExpire, path: '/' });
+                                    $.cookie(cookieName, "yes", {expires: cookieExpire, path: '/'});
                                     notice.remove();
                                     window.location = mobileDeviceLink;
                                 }
@@ -3172,13 +3186,13 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                                 addClass: 'browse-here-button',
                                 click: function (notice) {
                                     attentionAboutMobiles = false;
-                                    $.cookie(cookieName, "yes", { expires: cookieExpire, path: '/' });
+                                    $.cookie(cookieName, "yes", {expires: cookieExpire, path: '/'});
                                     notice.remove();
                                 }
                             }]
                         },
                         stack: false,
-                        before_open: function(PNotify) {
+                        before_open: function (PNotify) {
                             PNotify.get().css({
                                 "top": ($(window).height() / 2) - (PNotify.get().height() / 2) - 80,
                                 "left": ($(window).width() / 2) - (PNotify.get().width() / 2)
@@ -3197,7 +3211,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                                 }
                             }).appendTo("body").fadeIn("fast");
                         },
-                        before_close: function() {
+                        before_close: function () {
                             handbidMain.fadeOutModalOverlay();
                         },
                         buttons: {
@@ -3209,27 +3223,27 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                         }
                     });
                     bidNotice.get().on('pnotify.cancel', function () {
-                            return false;
-                        });
+                        return false;
+                    });
                 }
 
             },
 
 
-            displayRequiredCardsMessage: function(msg){
+            displayRequiredCardsMessage: function (msg) {
 
                 // Woody added this to prevent the message showing when pages load in the wrong order
                 var cards_exist = $("div.credit-card ul").children("li.row");
                 var creditCardFooterNumber = parseInt($("#footer-credit-cards-count").val());
                 if (cards_exist.length || creditCardFooterNumber) {
-                        return true;
+                    return true;
                 }
                 msg = (msg != undefined) ? msg : "You must supply a credit card to bid in this auction.";
 
                 new PNotify({
                     title: 'Credit cards required',
                     type: 'error',
-                    text: '<b>'+msg+'</b>',
+                    text: '<b>' + msg + '</b>',
                     icon: 'glyphicon glyphicon-exclamation-sign',
                     addclass: 'handbid-message-notice',
                     hide: false,
@@ -3256,20 +3270,20 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 });
             },
 
-            lazyShowMoreMessages: function(button){
+            lazyShowMoreMessages: function (button) {
                 var currentChunk = parseInt(button.data("current-chunk")) + 1,
                     chunksCount = parseInt(button.data("chunks-count")),
-                    messagesOfCurrentChunk = $(".messages-part-"+currentChunk);
+                    messagesOfCurrentChunk = $(".messages-part-" + currentChunk);
                 messagesOfCurrentChunk.slideDown("normal");
                 $(".load-less-messages").show();
                 button.data("current-chunk", currentChunk);
-                if(currentChunk >= chunksCount){
+                if (currentChunk >= chunksCount) {
                     button.hide();
                 }
 
             },
 
-            lazyShowLessMessages : function(button){
+            lazyShowLessMessages: function (button) {
                 var allMessages = $(".message-row"),
                     messagesOfCurrentChunk = $(".messages-part-0");
                 allMessages.hide();
@@ -3282,13 +3296,13 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
             },
 
 
-            setCircleTimer: function(time){
+            setCircleTimer: function (time) {
 
                 var timeMs = time * 1000;
                 var startColor = '#6FD57F';
                 var endColor = '#FC5B3F';
 
-                var element = document.getElementById('handbid-circle-timer-'+time);
+                var element = document.getElementById('handbid-circle-timer-' + time);
                 element.innerHTML = "";
                 circleTimer = new ProgressBar.Circle(element, {
                     color: startColor,
@@ -3296,7 +3310,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     trailWidth: 10,
                     duration: timeMs,
                     strokeWidth: 15,
-                    step: function(state, circle) {
+                    step: function (state, circle) {
                         circle.path.setAttribute('stroke', state.color);
                     }
                 });
@@ -3312,7 +3326,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
             startTimer: function (handbid) {
 
                 var continueTimer = true;
-                $.map($("[data-handbid-timer]"), function(timer){
+                $.map($("[data-handbid-timer]"), function (timer) {
                     timer = $(timer);
                     var time = timer.html();
                     var arr = time.split(":");
@@ -3339,37 +3353,37 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     if (h < 10) h = "0" + h;
                     if (h == "000") h = "00";
                     if (m == "000") m = "00";
-                    timer.html(h+":"+m+":"+s);
+                    timer.html(h + ":" + m + ":" + s);
                     $(".timer-hours-number").html(h);
                     $(".timer-mins-number").html(m);
                     $(".timer-secs-number").html(s);
                 });
 
 
-                if(continueTimer) {
+                if (continueTimer) {
                     setTimeout(function () {
                         handbid.startTimer(handbid)
                     }, 1000);
                 }
             },
 
-            setTimerRemaining: function(handbid){
+            setTimerRemaining: function (handbid) {
                 var timerRemaining = $("#timerRemaining");
-                if(timerRemaining.val() != undefined) {
+                if (timerRemaining.val() != undefined) {
                     var timerTime = parseInt(timerRemaining.val()),
                         timerTitle = timerRemaining.data("auction-name");
                     //handbid.showTimerRemainingNotice(timerTime, timerTitle);
-                    if(timerTime) {
+                    if (timerTime) {
                         handbid.changeAuctionTimer(timerTime, true);
                     }
                 }
 
             },
 
-            formatTimerTime: function(time){
+            formatTimerTime: function (time) {
                 var timeH = Math.floor(time / 3600),
-                    timeM = Math.floor((time - timeH*3600) / 60),
-                    timeS = time - timeH*3600 - timeM*60;
+                    timeM = Math.floor((time - timeH * 3600) / 60),
+                    timeS = time - timeH * 3600 - timeM * 60;
                 if (timeS < 10) timeS = "0" + timeS;
                 if (timeM < 10) timeM = "0" + timeM;
                 if (timeH < 10) timeH = "0" + timeH;
@@ -3378,20 +3392,20 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 return timeH + ":" + timeM + ":" + timeS;
             },
 
-            showTimerRemainingNotice: function(timerTime, timerTitle){
-                timerTitle = (timerTitle != undefined) ? " <b>"+timerTitle+"</b>" : "";
+            showTimerRemainingNotice: function (timerTime, timerTitle) {
+                timerTitle = (timerTitle != undefined) ? " <b>" + timerTitle + "</b>" : "";
                 var timeFormatted = this.formatTimerTime(timerTime);
                 (timerNotice != undefined) ? timerNotice.remove() : '';
                 timerNotice = undefined;
-                timerNotice = handbid.notice("Auction "+timerTitle+"<br>closes after <b><div data-handbid-timer>" + timeFormatted + "</div></b>", "Closing Auction Timer");
+                timerNotice = handbid.notice("Auction " + timerTitle + "<br>closes after <b><div data-handbid-timer>" + timeFormatted + "</div></b>", "Closing Auction Timer");
                 this.changeAuctionTimer(timerTime, true);
             },
 
             changeAuctionTimer: function (time, timerIsRunning) {
                 var timeFormatted = this.formatTimerTime(time);
                 var timerLayoutPattern = '<div class="auction-timer-place">' +
-                    '<div class="circle-place col-xs-3"><div class="handbid-circle-timer" id="handbid-circle-timer-'+time+'"></div></div>' +
-                    '<div class="numbers-place col-xs-9" id="handbid-numbers-timer-'+time+'">' +
+                    '<div class="circle-place col-xs-3"><div class="handbid-circle-timer" id="handbid-circle-timer-' + time + '"></div></div>' +
+                    '<div class="numbers-place col-xs-9" id="handbid-numbers-timer-' + time + '">' +
                     '<div class="col-xs-4 number-cont"><em class="timer-hours-number">00</em><span>hours</span></div>' +
                     '<div class="col-xs-4 number-cont"><em class="timer-mins-number">00</em><span>mins</span></div>' +
                     '<div class="col-xs-4 number-cont secs-number-cont"><em class="timer-secs-number">00</em><span>secs</span></div>' +
@@ -3405,11 +3419,11 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     '<b>Auction Closes After' +
                     '&nbsp;&nbsp;&nbsp;&nbsp;<span data-handbid-timer>' + timeFormatted + '</span>' +
                     '</b></h3>' + toggleButtonPattern;
-                if(timerMessage != undefined && timerMessage.animating == "out"){
+                if (timerMessage != undefined && timerMessage.animating == "out") {
                     timerMessage = undefined;
                 }
-                if(timerIsRunning){
-                    if(timerMessage == undefined ){
+                if (timerIsRunning) {
+                    if (timerMessage == undefined) {
                         timerMessage = new PNotify({
                             title: titleTimerPattern,
                             type: 'error',
@@ -3431,7 +3445,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                         });
                         this.setCircleTimer(time);
                     }
-                    else{
+                    else {
                         timerMessage.update({
                             title: titleTimerPattern,
                             text: timerLayoutPattern
@@ -3439,15 +3453,15 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                         this.setCircleTimer(time);
                     }
                 }
-                else{
-                    if(timerMessage != undefined){
+                else {
+                    if (timerMessage != undefined) {
                         timerMessage.update({
                             title: '<h3 class="notice-connection-title">' +
                             '<b>Auction Closed</b></h3>',
                             text: '',
                             hide: true,
                             delay: 5000,
-                            before_close: function() {
+                            before_close: function () {
                                 handbidMain.loadAllToContainers();
                             }
                         });
@@ -3455,9 +3469,9 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 }
             },
 
-            showExpiredNotice: function(){
+            showExpiredNotice: function () {
 
-                var bidNotice =  new PNotify({
+                var bidNotice = new PNotify({
                     title: 'Session Expired',
                     text: 'Your user session has expired. Please, relogin.',
                     icon: 'glyphicon glyphicon-off',
@@ -3468,7 +3482,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     delay: 3000,
                     confirm: false,
                     stack: false,
-                    before_open: function(PNotify) {
+                    before_open: function (PNotify) {
                         PNotify.get().css({
                             "top": ($(window).height() / 2) - (PNotify.get().height() / 2) - 80,
                             "left": ($(window).width() / 2) - (PNotify.get().width() / 2)
@@ -3490,7 +3504,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                         //    location.reload();
                         //},3000);
                     },
-                    before_close: function() {
+                    before_close: function () {
                         reload_overlay.fadeOut("fast");
                         location.reload();
                     },
@@ -3508,11 +3522,11 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
             },
 
-            reloadBidderProfile: function(){
+            reloadBidderProfile: function () {
                 var bidderInfo = jQuery("#bidder-info-load"),
                     bidderAuction = parseInt(bidderInfo.data("auction"));
 
-                if(bidderInfo.html() != undefined && bidderInfo.html().trim() != "") {
+                if (bidderInfo.html() != undefined && bidderInfo.html().trim() != "") {
                     if (bidderAuction) {
                         $.post(ajaxurl, {
                                 action: "handbid_profile_load",
@@ -3521,7 +3535,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                             },
                             function (resp) {
                                 if (bidderInfo.html().trim() != "" && resp.trim() == "") {
-                                  //  handbid.showExpiredNotice();
+                                    //  handbid.showExpiredNotice();
                                 }
                                 else {
                                     bidderInfo.html(resp);
@@ -3535,7 +3549,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                                     // ($('input[name="action"]').val() == 'handbid_ajax_add_credit_card') ? handbid.setupAddCreditCard() : '';
 
                                     handbid.setupAddCreditCard();
-                                    
+
                                     handbid.setupProvincesSelect();
 
                                     handbid.loadAllToContainers();
@@ -3548,7 +3562,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                         // ($('input[name="action"]').val() == 'handbid_ajax_add_credit_card') ? handbid.setupAddCreditCard() : '';
 
                         handbid.setupAddCreditCard();
-                        
+
                         handbid.setupProvincesSelect();
                         handbid.loadAllToContainers();
                     }
@@ -3558,39 +3572,39 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
             },
 
-            applyBidConfirmationChecking: function(data){
-                $("#bidConfirmationsEnabled").live("change", function(e){
+            applyBidConfirmationChecking: function (data) {
+                $("#bidConfirmationsEnabled").live("change", function (e) {
                     var confirmBids = $(this).val();
                     var currentBidderID = parseInt($("[data-dashboard-profile-id]").eq(0).data("dashboard-profile-id"));
-                    var cookieName = currentBidderID+"_bid_confirmations";
-                    $.cookie(cookieName, confirmBids, { expires: cookieExpire, path: '/' });
+                    var cookieName = currentBidderID + "_bid_confirmations";
+                    $.cookie(cookieName, confirmBids, {expires: cookieExpire, path: '/'});
                 });
             },
 
-            checkIfWantToShowBidConfirmation: function(){
+            checkIfWantToShowBidConfirmation: function () {
                 var currentBidderID = parseInt($("[data-dashboard-profile-id]").eq(0).data("dashboard-profile-id"));
-                var cookieName = currentBidderID+"_bid_confirmations";
+                var cookieName = currentBidderID + "_bid_confirmations";
                 var cookie = $.cookie(cookieName);
                 var needToConfirm = (cookie == undefined || cookie == "yes");
-                needToConfirm = (currentBidderID != 0 && currentBidderID != undefined)?needToConfirm:false;
+                needToConfirm = (currentBidderID != 0 && currentBidderID != undefined) ? needToConfirm : false;
                 return needToConfirm;
             },
 
-            redirectFromResetedAuctions: function(data){
+            redirectFromResetedAuctions: function (data) {
                 window.location = "/auctions/?auction-reset"
             },
 
 
-            redirectFromResetedAuctionsCheck: function(){
-                if($("[data-auction-reset-sign]").length > 0){
+            redirectFromResetedAuctionsCheck: function () {
+                if ($("[data-auction-reset-sign]").length > 0) {
                     this.notice("<b>This auction has been reset, please select another one</b>", "Auction Reset", "info");
                 }
             },
 
             checkSocketConnection: function (handbid) {
-               socket_retry += socket_retry;
-                if(!connectedToSocket && socket_retry <= socket_retry_limit){
-                    if(connectMessage == undefined){
+                socket_retry += socket_retry;
+                if (!connectedToSocket && socket_retry <= socket_retry_limit) {
+                    if (connectMessage == undefined) {
                         connectMessage = new PNotify({
                             title: '<h3 class="notice-connection-title"><b>Unable to connect for real-time updates</b>' +
                             '<span class="notice-connection-switch">?</span>' +
@@ -3619,15 +3633,15 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                         });
                     }
                 }
-                else{
-                    if(connectMessage != undefined){
+                else {
+                    if (connectMessage != undefined) {
                         connectMessage.remove();
                         connectMessage = undefined;
                     }
                 }
-                    setTimeout(function () {
-                        handbid.checkSocketConnection(handbid,socket_retry)
-                    }, 3000);
+                setTimeout(function () {
+                    handbid.checkSocketConnection(handbid, socket_retry)
+                }, 3000);
             }
         };
 
@@ -3660,13 +3674,13 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
         //console.log(this.loggedIn);
 
         //if(this.loggedIn) {
-            ($('.bidder-info-container').length > 0) ? handbid.setupBidderDashboard() : '';
-            handbid.setupDeleteCreditCard();
-            //handbid.setupAddCreditCard();
-            //($('.edit-profile').length > 0) ? handbid.setupEditProfile() : '';
+        ($('.bidder-info-container').length > 0) ? handbid.setupBidderDashboard() : '';
+        handbid.setupDeleteCreditCard();
+        //handbid.setupAddCreditCard();
+        //($('.edit-profile').length > 0) ? handbid.setupEditProfile() : '';
         //}
         //else {
-            ($('[data-handbid-connect]').length > 0) ? handbid.setupConnect() : '';
+        ($('[data-handbid-connect]').length > 0) ? handbid.setupConnect() : '';
         //}
         handbid.setupTutorialPopup();
 
@@ -3681,11 +3695,10 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
         handbid.showCardErrorsIfExists();
 
 
-
-        $(".handbid-logout a, a.handbid-logout-link").live("click", function(e){
+        $(".handbid-logout a, a.handbid-logout-link").live("click", function (e) {
             e.preventDefault();
             var path = $(this).attr("href");
-            var logoutNotice =  new PNotify({
+            var logoutNotice = new PNotify({
                 title: 'Logout Confirmation',
                 text: 'Are you sure want to logout?',
                 icon: 'glyphicon glyphicon-question-sign',
@@ -3704,64 +3717,63 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     history: false
                 }
             });
-            logoutNotice.get().on('pnotify.confirm', function() {
-                    window.location = path;
-                }).on('pnotify.cancel', function() {
-                    return false;
-                });
+            logoutNotice.get().on('pnotify.confirm', function () {
+                window.location = path;
+            }).on('pnotify.cancel', function () {
+                return false;
+            });
         });
 
 
-
-        $(".notice-connection-switch").live("click", function(e){
+        $(".notice-connection-switch").live("click", function (e) {
             e.preventDefault();
             $(".notice-connection-tip").slideToggle("normal");
             $(".handbid-no-connection-notice").toggleClass("notice-collapsed");
         });
 
 
-        $(".toggle-timer-notice").live("click", function(e){
+        $(".toggle-timer-notice").live("click", function (e) {
             e.preventDefault();
             $(".handbid-timer-top-notice").toggleClass("notice-collapsed");
         });
 
-        $("[data-toggle-invoice-link]").live("click", function(e){
+        $("[data-toggle-invoice-link]").live("click", function (e) {
             e.preventDefault();
             var invoiceID = $(this).data("toggle-invoice-link");
             $(this).toggleClass("opened-invoice");
-            $("[data-receipt-block-id="+invoiceID+"] .invoice-details-container").slideToggle("normal");
+            $("[data-receipt-block-id=" + invoiceID + "] .invoice-details-container").slideToggle("normal");
         });
 
-        $("[data-toggle-invoice-more-link]").live("click", function(e){
+        $("[data-toggle-invoice-more-link]").live("click", function (e) {
             e.preventDefault();
             var invoiceID = $(this).data("toggle-invoice-more-link");
             $(this).toggleClass("opened-invoice");
-            $("[data-receipt-block-id="+invoiceID+"] .invoice-more-details-container").slideToggle("normal");
+            $("[data-receipt-block-id=" + invoiceID + "] .invoice-more-details-container").slideToggle("normal");
         });
 
-        $(".load-more-messages").live("click", function(e){
+        $(".load-more-messages").live("click", function (e) {
             e.preventDefault();
             var button = $(this);
             handbid.lazyShowMoreMessages(button);
         });
 
-        $(".load-less-messages").live("click", function(e){
+        $(".load-less-messages").live("click", function (e) {
             e.preventDefault();
             var button = $(this);
             handbid.lazyShowLessMessages(button);
         });
         $(".global-footer").prepend("<span class='toggle-info'>Show Footer Info</span>");
-        $(".global-footer span.toggle-info").live("click", function(e){
+        $(".global-footer span.toggle-info").live("click", function (e) {
             e.preventDefault();
             $(".global-footer").toggleClass("show-all");
         });
 
-        $('[data-slider-nav-id="auction-details"]').live("click", function(e){
+        $('[data-slider-nav-id="auction-details"]').live("click", function (e) {
             handbid.clickOnFiltersToReorder();
         });
 
-        $('.map-holder-item').live("click", function(e){
-            if(!mapsAreActivated){
+        $('.map-holder-item').live("click", function (e) {
+            if (!mapsAreActivated) {
                 auctionGoogleMapsInit();
             }
         });
