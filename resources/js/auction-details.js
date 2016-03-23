@@ -7,7 +7,7 @@
  * @author Master of Code (worldclass@masterofcode.com)
  */
 
-var timerForSearch, timerToLoad, isotopeWasFiltered = false, wasNotVisible = true, needToMoveToItem = false;
+var timerForSearch, timerToLoad, isotopeWasFiltered = false, wasNotVisible = true, needToMoveToItem = false, checkIS;
 (function ($) {
 
 
@@ -291,6 +291,29 @@ var timerForSearch, timerToLoad, isotopeWasFiltered = false, wasNotVisible = tru
             var container = $('.container[data-slider-nav-key="items"]');
             var isVisible = container.is(":visible");
             if (isVisible) {
+
+                var initialCategory = handbidMain.getCategoryForInitialFilter();
+                if((initialCategory != undefined) && (initialCategory != 'all')) {
+
+                    var neededElement = $('.by-category li[data-legacy-category-id="'+initialCategory+'"]');
+                    var allElements = $('.by-category li[data-selector]');
+
+                    if(neededElement.length){
+                        allElements.removeClass('selected');
+                        neededElement.addClass('selected');
+
+                        var selector = neededElement.attr('data-selector');
+
+                        var key = 'category';
+
+                        if (selector === '*') {
+                            delete filterItems[key];
+                        } else {
+                            filterItems[key] = selector;
+                        }
+                    }
+                }
+
                 checkAndUpdateIsotope();
                 wasNotVisible = false;
                 setTimeout(function(){
@@ -347,6 +370,7 @@ var timerForSearch, timerToLoad, isotopeWasFiltered = false, wasNotVisible = tru
     $(document).ready(function () {
 
         var searchEnabled = true;
+        //checkIS = checkAndUpdateIsotope;
         //alert("ready");
         //prepareIsotope();
         //refreshSearchResults();

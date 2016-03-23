@@ -61,7 +61,7 @@ $currencySymbol = (isset($auction->currencySymbol)) ? $auction->currencySymbol :
 $isDonation = (!empty($item->isAppeal) and $item->isAppeal);
 ?>
 
-<div onclick="if(event.metaKey) { return; } window.location.href='<?php echo $url; ?>'"
+<div onclick="handbidMain.goToSingleItemPage('<?php echo $url; ?>', <?php echo $item->id; ?>);"
      class="simple-item-box simple-box status-<?php echo $item->status; ?>
      <?php echo ($itemCanNotBeShownInPresale or $hideItemIfSold) ? " not-available-in-presale " : ""; ?>"
      data-handbid-item-key="<?php echo $item->key; ?>"

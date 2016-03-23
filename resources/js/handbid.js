@@ -113,6 +113,21 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 return false;
             },
 
+            setCookie: function (title, value, expires, path) {
+                $.cookie(title, value, {
+                    expires: expires ? expires : cookieExpire,
+                    path: path ? path : '/'
+                });
+            },
+
+            getCookie: function (title) {
+                return $.cookie(title);
+            },
+
+            getCookieNameForItem: function (id) {
+                return "go-to-" + id + "-from";
+            },
+
 
             recalculateDashboardPrice: function () {
                 var dashboardTotal = 0;
@@ -122,6 +137,16 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     dashboardTotal += pricePart;
                 });
                 $("[data-handbid-stats-grand-total]").html(dashboardTotal);
+            },
+
+            goToSingleItemPage: function (url, id) {
+
+                var current_category = $('[data-legacy-category-id].selected').data('legacy-category-id');
+                current_category = (current_category) ? current_category : 'all' ;
+
+                this.setCookie(this.getCookieNameForItem(id), current_category);
+
+                window.location.href = url;
             },
 
 
@@ -1604,15 +1629,49 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
             },
 
+            scrollBodyToTopOfElement: function (top, time) {
+
+                time = time ? time : 900;
+                $('html, body').animate({
+                    scrollTop: top
+                }, time);
+
+            },
+
+            getCategoryForInitialFilter: function () {
+                var comes_from = 'all';
+                var hash = window.location.hash;
+                if (hash) {
+                    hash = hash.split('-').pop();
+                    console.log(hash);
+                    comes_from = this.getCookie(this.getCookieNameForItem(hash));
+                    //this.setCookie(this.getCookieNameForItem(hash), 'all');
+                }
+                return comes_from;
+            },
+
             goBackToItem: function () {
                 var hash = window.location.hash;
                 if (hash) {
                     hash = hash.split('-').pop();
                     var topElementOffset = $('[data-handbid-item-box="' + hash + '"]').offset();
                     if(topElementOffset != undefined) {
-                        $('html, body').animate({
-                            scrollTop: topElementOffset.top
-                        }, 900);
+
+                        var comes_from = this.getCategoryForInitialFilter();
+
+                        if(comes_from != 'all'){
+                            setTimeout(function(){
+                                $('[data-legacy-category-id="'+hash+'"] a').click();
+                                setTimeout(function(){
+                                    handbidMain.scrollBodyToTopOfElement(topElementOffset.top);
+                                }, 500);
+                            }, 500);
+
+                        }
+                        else{
+                            this.scrollBodyToTopOfElement(topElementOffset.top);
+                        }
+
                     }
                 }
             },
