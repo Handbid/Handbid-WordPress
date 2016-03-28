@@ -534,12 +534,12 @@ class Handbid
         <meta property="al:web:url"
           content="'.$dataLink.'" />
 
-        <meta property="og:title" content="'.$og_title.'" />
+        <meta property="og:title" content="'.esc_attr($og_title).'" />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="'.$og_page_url.'" />
-        <meta property="og:image" content="'.$og_image.'" />
-        <meta property="og:description" content="'.$og_description.'" />
-        <meta property="fb:app_id" content="'. get_option('handbidFacebookAppId') .'" />
+        <meta property="og:url" content="'.esc_attr($og_page_url).'" />
+        <meta property="og:image" content="'.esc_attr($og_image).'" />
+        <meta property="og:description" content="'.esc_attr($og_description).'" />
+        <meta property="fb:app_id" content="'. esc_attr(get_option('handbidFacebookAppId')) .'" />
         ';
         echo $output;
 
