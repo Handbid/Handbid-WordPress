@@ -456,6 +456,11 @@ class Handbid
 
     function onRenderHeader() {
 
+        global $post;
+        $is_auction = ($post->post_name == 'auction');
+        $is_item = ($post->post_name == 'auction-item');
+        $is_organization = ($post->post_name == 'organization');
+
         $affiliateIOS = "http://www.apple.com/itunes/affiliates/";
         $affiliateGoogle = "";
 
@@ -464,8 +469,41 @@ class Handbid
 
         $auction = $this->state()->currentAuction();
 
+        $og_page_url = get_bloginfo("url") . '/';
+        $site_title = get_bloginfo('title');
+        $og_description = get_bloginfo("description");
+        $og_title = $site_title;
+        $og_image = $imageGoogle;
+
+        if($is_auction){
+            $og_page_url = $og_page_url . 'auctions/' . $auction->key . '/';
+            $og_title = implode(' | ', [$site_title, $auction->name]);
+            $og_image = (!empty($auction->imageUrl)) ? $auction->imageUrl : $og_image;
+            $og_description = (!empty($auction->description)) ? $auction->description : $og_description;
+        }
+        elseif($is_item){
+            $current_item = $this->state()->currentItem();
+            $og_page_url = $og_page_url . 'auctions/' . $current_item->auction->key . '/item/' . $current_item->key . '/';
+            $og_title = implode(' | ', [$site_title, $current_item->auction->name, $current_item->name]);
+            $og_image = (!empty($current_item->imageUrl)) ? $current_item->imageUrl : $og_image;
+            $og_description = (!empty($current_item->description)) ? $current_item->description : $og_description;
+
+        }
+        elseif($is_organization){
+            $current_org = $this->state()->currentOrg();
+            $og_page_url = $og_page_url . 'organizations/' . $current_org->key . '/';
+            $og_title = implode(' | ', [$site_title, $current_org->name]);
+            $og_image = (!empty($current_org->logo)) ? $current_org->logo : $og_image;
+            $og_description = (!empty($current_org->description)) ? $current_org->description : $og_description;
+        }
+
+        if(!defined('HANDBID_FB_SHARE_URL')){
+            define('HANDBID_FB_SHARE_URL', $og_page_url);
+        }
+
         $bidderToken = isset($_COOKIE["handbid-auth"])? str_replace("Authorization: Bearer ","",$_COOKIE["handbid-auth"]):"";
         $auctionGuid = isset($auction->auctionGuid) ? $auction->auctionGuid : "";
+
         $dataLink = add_query_arg(
             [
                 "id" => $bidderToken,
@@ -479,6 +517,7 @@ class Handbid
         }
 
         $dataLinkIos = str_replace(["https", "http"], "handbid", $dataLink);
+
 
         $output='
         <meta name="apple-itunes-app" content="app-id='.HANDBID_APP_APPSTORE_ID.', app-argument='.$dataLinkIos.'" >
@@ -495,8 +534,12 @@ class Handbid
         <meta property="al:web:url"
           content="'.$dataLink.'" />
 
-        <meta property="og:title" content="Handbid" />
+        <meta property="og:title" content="'.$og_title.'" />
         <meta property="og:type" content="website" />
+        <meta property="og:url" content="'.$og_page_url.'" />
+        <meta property="og:image" content="'.$og_image.'" />
+        <meta property="og:description" content="'.$og_description.'" />
+        <meta property="fb:app_id" content="'. get_option('handbidFacebookAppId') .'" />
         ';
         echo $output;
 
