@@ -469,7 +469,7 @@ class Handbid
 
         $auction = $this->state()->currentAuction();
 
-        $og_page_url = get_bloginfo("url") . '/';
+        $og_page_url = ($is_auction or $is_item or $is_organization or is_home()) ? get_bloginfo("url") . '/' : get_permalink();
         $site_title = get_bloginfo('title');
         $og_description = get_bloginfo("description");
         $og_title = $site_title;
@@ -540,6 +540,7 @@ class Handbid
         <meta property="og:image" content="'.esc_attr($og_image).'" />
         <meta property="og:description" content="'.esc_attr($og_description).'" />
         <meta property="fb:app_id" content="'. esc_attr(get_option('handbidFacebookAppId')) .'" />
+        <link rel="canonical" href="'.esc_attr($og_page_url).'" />
         ';
         echo $output;
 
