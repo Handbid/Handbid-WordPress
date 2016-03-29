@@ -204,9 +204,11 @@
     margin-bottom: 10px;
     position: relative;
 
-    a.profile-opener::after {
-      top: 50%;
-      margin-top: -8px;
+    a.profile-opener {
+      padding-right: 0;
+      &::after {
+        content: none;
+      }
     }
 
     .total-spent {
@@ -378,7 +380,7 @@
       padding: 0;
     }
     .bidder-image-wrapper {
-      margin-bottom: 10px
+      display: none;
     }
   }
 }
