@@ -9,7 +9,8 @@
  */
 
 
-$url = 'https://' . $_SERVER['SERVER_NAME'] . '/' . $_SERVER['REQUEST_URI'];
+//$url = 'https://' . $_SERVER['SERVER_NAME'] . '/' . $_SERVER['REQUEST_URI'];
+$url = urlencode(HANDBID_FB_SHARE_URL);
 $openInJavascript = "javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;";
 ?>
 
