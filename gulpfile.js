@@ -24,10 +24,10 @@ gulp.task('js', function() {
         //'resources/js/smart-app-banner-init.js',
         'resources/js/photoGallery.js',
         'resources/js/slider.js',
+        'resources/js/handbid.js',
         'resources/js/auction-details.js',
         'resources/js/tooltip.js',
         'resources/js/login.js',
-        'resources/js/handbid.js',
         'resources/js/mobile-menu.js',
         'resources/js/modal.js'
     ])

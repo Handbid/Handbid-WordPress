@@ -40,11 +40,7 @@ var timerForSearch, timerToLoad, isotopeWasFiltered = false, wasNotVisible = tru
                                                                      // margin-top makes sense, but we are
                                                                      // setting the "top" property, so we'll
                                                                      // call it topOffset
-            if (!topOffset) {
-                topOffset = 0;
-            } else {
-                topOffset = parseInt(topOffset);
-            }
+            topOffset = topOffset ? parseInt(topOffset) : 0;
 
 
             //lets only kick in if have scrolled far enough
@@ -62,8 +58,8 @@ var timerForSearch, timerToLoad, isotopeWasFiltered = false, wasNotVisible = tru
                     return;
                 }
 
-                //if we are on a mobile device, turn sticky off
-                if(mobilecheck()) {
+               
+                if(document.body.clientWidth <= 992) {
                     return;
                 }
 
