@@ -132,9 +132,13 @@
                 hideOnly   = toggleMode && nav.hasClass('active-slide'),
                 ignore     = $('.slider-content[data-slider-nav-id="' + id + '"] [data-slider-nav-key] [data-slider-nav-key]');
 
+            
+            
             // Clearing all active slides & navs
             $('.slider-content[data-slider-nav-id="' + id + '"] [data-slider-nav-key], .slider-nav[data-slider-nav-id="' + id + '"] [data-slider-nav-key]').not(ignore).removeClass('active-slide');
             $('.slider-content[data-slider-nav-id="' + id + '"] [data-slider-close]').hide();
+            
+            
 
             // Set the selected elements class to active-slide
             if(!hideOnly) {
@@ -143,6 +147,10 @@
 
                 if(childNav && !hasActiveSlide) {
                     $(childNav).click();
+                }
+
+                if ((id = 'bidder-dashboard') && ($('#bidder-info-load').hasClass('sticking'))) {
+                    $("html, body").animate({ scrollTop: 0 }, "fast");
                 }
 
                 $(content).addClass('active-slide');
