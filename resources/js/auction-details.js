@@ -42,6 +42,8 @@ var timerForSearch, timerToLoad, isotopeWasFiltered = false, wasNotVisible = tru
                                                                      // call it topOffset
             topOffset = topOffset ? parseInt(topOffset) : 0;
 
+            topOffset = ($("body").hasClass('handbid-logged-in')) ? (topOffset + 104) : topOffset;
+
 
             //lets only kick in if have scrolled far enough
             $(window).scroll(function () {
@@ -54,15 +56,26 @@ var timerForSearch, timerToLoad, isotopeWasFiltered = false, wasNotVisible = tru
                     scrollDistance = scrollTop - lastScroll;
 
 
-                if (!visible) {
+                if ((!visible) || (document.body.clientWidth <= 992) || ($('.slider-nav[data-slider-nav-id="bidder-dashboard"]').has('.active-slide').length)) {
+                    $(child).css({
+                        position: '',
+                        top: '',
+                        marginTop: '',
+                        width: '',
+                        height: '',
+                        zIndex: '',
+                        backgroundColor: ''
+                    });
+
+                    marginTop = 0;
+                    $(child).removeClass('sticking');
+                    $(sticky).css({
+                        height: ''
+                    });
+                    sticking = false;
+                    
                     return;
                 }
-
-               
-                if(document.body.clientWidth <= 992) {
-                    return;
-                }
-
 
                 height = $(child).height() + parseInt($(child).css('padding-top')) + parseInt($(child).css('padding-bottom'));
 
@@ -99,6 +112,9 @@ var timerForSearch, timerToLoad, isotopeWasFiltered = false, wasNotVisible = tru
 
                     marginTop = 0;
                     $(child).removeClass('sticking');
+                    $(sticky).css({
+                        height: ''
+                    });
                     sticking = false;
                 }
 

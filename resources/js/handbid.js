@@ -1491,8 +1491,9 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     isTicket = (itemDetailsBox.data('item-is-ticket') == 'yes'),
                     buyAgain = isDonation ? false : handbid.getCountOfPastItemPurchases(itemID),
                     title = isDonation ? 'Donation Confirmation' : 'Purchase Confirmation',
-                    confirmText = isDonation ? 'Confirm Donation of $' + purchaseTotal + '?' : 'Confirm Purchase of ' + purchaseCount + ' for $' + purchaseTotal + '?',
-                    text = buyAgain ? ' You have already purchased ' + buyAgain + ' of this item, are you sure you want to purchase ' + purchaseCount + ' more?' + '<br><br><b>' + confirmText + '</b>' : confirmText;
+                    confirmText = isDonation ? 'Confirm Donation of $' + purchaseTotal + '?' : 'Add ' + purchaseCount + ' for $' + purchaseTotal + ' to your cart?',
+                    text = buyAgain ? confirmText + '<br /><br /> Hey! You have already purchased ' + buyAgain + ' of this item, are you sure you want to purchase ' + purchaseCount + ' more?' : confirmText;
+
 
                 if (tickets) {
                     purchaseCount = 0;
