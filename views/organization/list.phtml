@@ -93,7 +93,6 @@ $selected = isset($_GET['auction_list']) ? $_GET['auction_list'] : 'current';
 
                         <li class="total-auctions"><span class="icon"></span><?php
                             $totalAuctions = (int) $organization->totalAuctions;
-                            $totalAuctions = rand(0,4);
 
                             echo $totalAuctions . ' Auction';
                             if($totalAuctions > 1 or $totalAuctions == 0) {
