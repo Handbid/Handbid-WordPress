@@ -6,26 +6,31 @@
  * @link http://www.handbid.com/
  * @author Master of Code (worldclass@masterofcode.com)
  */
+var handbidModalsMain;
 
 (function ($) {
-    $(document).ready(function () {
 
-        var overlay = $('.handbid-overlay');
+    var handbidModals = {
 
-        $('.handbid-modal-link').live('click', function(e) {
+        showOverlay: function () {
 
-            e.preventDefault();
+            var overlay = $('.handbid-overlay');
+            overlay.css('display', 'block');
+        },
 
-            if(handbidMain.noticeIfNoCreditCard($(this))){
-                return false;
-            }
+        hideOverlay: function () {
 
-            var key    = $(this).attr('data-handbid-modal-key'),
-                modal  = $('.handbid-modal[data-handbid-modal-key="' + key + '"]');
+            var overlay = $('.handbid-overlay');
+            overlay.css('display', 'none');
+        },
+
+        showSingleModal: function (modal_slug) {
+
+            var modal  = $('.handbid-modal[data-handbid-modal-key="' + modal_slug + '"]');
 
             $('body').append(modal);
 
-            overlay.css('display', 'block');
+            handbidModals.showOverlay();
 
             modal.css('display', 'block');
 
@@ -35,24 +40,24 @@
                 height = modal.outerHeight(),
                 width  = modal.outerWidth();
             var   styles = {
-                    //'margin-top'  : (windowHeight - height) / 2,
-                    'margin-top'  : 30,
-                    'margin-left' : (windowWidth - width) / 2
-                };
+                //'margin-top'  : (windowHeight - height) / 2,
+                'margin-top'  : 30,
+                'margin-left' : (windowWidth - width) / 2
+            };
 
             modal.css(styles);
+        },
 
-        });
+        hideSingleModal: function (modal_slug) {
 
-        $('.modal-close').live('click', function(e) {
-            e.preventDefault();
             var modals = $('.handbid-modal');
-            var parentModal = $(this).parents(".handbid-modal").eq(0);
-            parentModal.css('display', 'none');
-            if(parentModal.hasClass("credit-card-form-modal")){
-                parentModal.find('.credit-card-status').eq(0).html("")
+            var modal  = $('.handbid-modal[data-handbid-modal-key="' + modal_slug + '"]');
+
+            modal.css('display', 'none');
+            if(modal.hasClass("credit-card-form-modal")){
+                modal.find('.credit-card-status').eq(0).html("")
                     .removeClass("card-success").removeClass("card-error");
-                parentModal.find('input[type=text]').val("");
+                modal.find('input[type=text]').val("");
             }
             var modalsOpened = false;
             $.map(modals, function(val){
@@ -61,12 +66,13 @@
                 }
             });
             if(!modalsOpened) {
-                overlay.css('display', 'none');
+                handbidModals.hideOverlay();
             }
-        });
+            handbidModals.doClassesCleanupAfterModalsCloses();
+        },
 
-        overlay.live('click', function(e) {
-            e.preventDefault();
+        hideAllModals: function () {
+
             var modals = $('.handbid-modal');
             var modalsOpened = false;
             $.map(modals, function(val){
@@ -82,8 +88,54 @@
                 }
             });
             if(!modalsOpened) {
-                overlay.css('display', 'none');
+                handbidModals.hideOverlay();
             }
+            handbidModals.doClassesCleanupAfterModalsCloses();
+        },
+
+        doClassesCleanupAfterModalsCloses: function () {
+
+            var elem = $('[data-handbid-tickets-button="purchase"]');
+            if(! elem.is(':visible')){
+                ticketsPopupWasOpened = false;
+            }
+        }
+
+    };
+
+    $(document).ready(function () {
+
+        $('.handbid-modal-link').live('click', function(e) {
+
+            e.preventDefault();
+
+            if(handbidMain.noticeIfNoCreditCard($(this))){
+                return false;
+            }
+
+            var key    = $(this).attr('data-handbid-modal-key');
+
+            handbidModals.showSingleModal(key);
+
         });
+
+        $('.modal-close').live('click', function(e) {
+
+            e.preventDefault();
+
+            var key = $(this).parents(".handbid-modal").eq(0).attr('data-handbid-modal-key');
+
+            handbidModals.hideSingleModal(key);
+
+        });
+
+        $('.handbid-overlay').live('click', function(e) {
+            e.preventDefault();
+
+            handbidModals.hideAllModals();
+
+        });
+
+        handbidModalsMain = handbidModals;
     });
 }(jQuery));

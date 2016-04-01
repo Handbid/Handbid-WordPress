@@ -11,7 +11,7 @@
 
 var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_overlay, timerNotice, timerMessage,
     circleTimer, auctionInvoices, currentPaddleNumber, currentElemNeedsCard, timerTimeout = 890,
-    currentCCForm, cookieExpire = 7;
+    currentCCForm, cookieExpire = 7, ticketsPopupWasOpened = false, addingCCState = false;
 (function ($) {
 
     attentionAboutTickets = false;
@@ -20,6 +20,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
     attentionAboutConfirm = false;
     attentionAboutTBuying = false;
     attentionAboutBuyConf = false;
+    attentionAboutUnpaidI = false;
 
     var isMobile = {
         getUserAgent: function () {
@@ -150,12 +151,34 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
             },
 
 
+            fadeInModalOverlayAndPositionModal: function (PNotify) {
+                PNotify.get().css({
+                    "top": ($(window).height() / 2) - (PNotify.get().height() / 2) - 80,
+                    "left": ($(window).width() / 2) - (PNotify.get().width() / 2)
+                });
+                if (modal_overlay) modal_overlay.fadeIn("fast");
+                else modal_overlay = $("<div />", {
+                    "class": "ui-widget-overlay",
+                    "css": {
+                        "display": "none",
+                        "position": "fixed",
+                        "background": "rgba(0, 0, 0, 0.7)",
+                        "top": "0",
+                        "bottom": "0",
+                        "right": "0",
+                        "left": "0"
+                    }
+                }).appendTo("body").fadeIn("fast");
+            },
+
+
             fadeOutModalOverlay: function () {
                 if (!attentionAboutBidding
                     && !attentionAboutTickets
                     && !attentionAboutMobiles
                     && !attentionAboutConfirm
                     && !attentionAboutTBuying
+                    && !attentionAboutUnpaidI
                     && !attentionAboutBuyConf) {
                     modal_overlay.fadeOut("fast");
                 }
@@ -868,23 +891,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     },
                     stack: false,
                     before_open: function (PNotify) {
-                        PNotify.get().css({
-                            "top": ($(window).height() / 2) - (PNotify.get().height() / 2) - 80,
-                            "left": ($(window).width() / 2) - (PNotify.get().width() / 2)
-                        });
-                        if (modal_overlay) modal_overlay.fadeIn("fast");
-                        else modal_overlay = $("<div />", {
-                            "class": "ui-widget-overlay",
-                            "css": {
-                                "display": "none",
-                                "position": "fixed",
-                                "background": "rgba(0, 0, 0, 0.7)",
-                                "top": "0",
-                                "bottom": "0",
-                                "right": "0",
-                                "left": "0"
-                            }
-                        }).appendTo("body").fadeIn("fast");
+                        handbidMain.fadeInModalOverlayAndPositionModal(PNotify);
                     },
                     before_close: function () {
                         handbidMain.fadeOutModalOverlay();
@@ -902,24 +909,35 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 });
             },
 
-            doesUserWantToBuyTicketsJustNow: function (receiptId, auctionId, receiptTotal) {
-                var purchaseRows = $("[data-purchased-purchase-id]");
+            detectIfUserHasOnlyTicketsInPurchases: function (rows) {
+                var onlyTickets = false;
+                var purchaseRows = (rows) ? rows : $("[data-purchased-purchase-id]");
                 if (purchaseRows.length) {
-                    var onlyTickets = true,
-                        ticketsQuantity = 0,
-                        ticketsPrice = 0;
+                    onlyTickets = true;
                     $.map(purchaseRows, function (val) {
                         if ($(val).attr("data-purchased-item-is-ticket") == undefined) {
                             onlyTickets = false;
                         }
-                        else {
-                            ticketsPrice += parseInt($(val).data("dashboard-price"));
-                            ticketsQuantity += parseInt($(val).data("dashboard-quantity"));
-                        }
                     });
-                    if (onlyTickets) {
-                        handbidMain.wantToPurchaseTicketsImmediately(ticketsQuantity, ticketsPrice, receiptId, auctionId, receiptTotal);
-                    }
+                }
+                return onlyTickets;
+            },
+
+            doesUserWantToBuyTicketsJustNow: function (receiptId, auctionId, receiptTotal) {
+
+                var purchaseRows = $("[data-purchased-purchase-id]"),
+                    ticketsQuantity = 0,
+                    ticketsPrice = 0;
+
+                if(handbidMain.detectIfUserHasOnlyTicketsInPurchases(purchaseRows)) {
+
+                    $.map(purchaseRows, function (val) {
+                        ticketsPrice += parseInt($(val).data("dashboard-price"));
+                        ticketsQuantity += parseInt($(val).data("dashboard-quantity"));
+                    });
+
+                    handbidMain.wantToPurchaseTicketsImmediately(ticketsQuantity, ticketsPrice, receiptId, auctionId, receiptTotal);
+
                 }
             },
 
@@ -953,6 +971,80 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
             },
 
 
+            showUnpaidInvoicesToUser: function (profileID, auctionID, isTicketPage, val) {
+
+                var viewCookie = $.cookie("bidder-" + profileID + "-want-no-invoice-" + val.id);
+                var showUnpaidInvoiceAlert = (profileID && val.id && viewCookie != "yes");
+
+
+                var isRequiredAlert = ((auctionID == val.auction) && isTicketPage);
+
+                if (showUnpaidInvoiceAlert || isRequiredAlert) {
+
+                    if(isRequiredAlert) {
+                        attentionAboutUnpaidI = true;
+                    }
+                    var message = "You have an unpaid invoice with a Balance of " + currencySpan() + val.total + " in " + val.title + ".  Do you want to pay it?";
+                    new PNotify({
+                        title: 'Unpaid Invoice',
+                        type: 'info',
+                        text: message,
+                        icon: 'glyphicon glyphicon-off',
+                        addclass: 'handbid-message-notice',
+                        hide: !isRequiredAlert,
+                        delay: 10000,
+                        mouse_reset: false,
+                        confirm: {
+                            confirm: true,
+                            buttons: [{
+                                text: 'View Invoice',
+                                addClass: 'view-invoices-button',
+                                click: function (notice) {
+                                    if(isRequiredAlert) {
+                                        attentionAboutUnpaidI = false;
+                                    }
+                                    handbid.scrollToInvoices(notice, val.id);
+                                    notice.remove();
+                                }
+                            }, {
+                                text: 'Cancel',
+                                addClass: 'browse-here-button',
+                                click: function (notice) {
+                                    if(isRequiredAlert) {
+                                        attentionAboutUnpaidI = false;
+                                    }
+                                    attentionAboutBidding = false;
+                                    $.cookie("bidder-" + profileID + "-want-no-invoice-" + val.id, "yes", {
+                                        expires: cookieExpire,
+                                        path: '/'
+                                    });
+                                    notice.remove();
+                                }
+                            }]
+                        },
+                        before_open: function (PNotify) {
+                            if(isRequiredAlert) {
+                                handbidMain.fadeInModalOverlayAndPositionModal(PNotify);
+                            }
+                        },
+                        before_close: function () {
+                            if(isRequiredAlert) {
+                                handbidMain.fadeOutModalOverlay();
+                            }
+                        },
+                        buttons: {
+                            closer: false,
+                            sticker: false
+                        },
+                        history: {
+                            history: false
+                        }
+                    });
+                }
+
+            },
+
+
             loadInvoicesToContainer: function (scrolled) {
 
                 var unpaidInvoicesCountContainer = $(".unpaidInvoicesCountContainer");
@@ -974,68 +1066,27 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                         invoicesContainer.html(data.invoices);
 
                         var bidderDashboardPlace = $("#bidder-info-load"),
-                            profileID = parseInt(bidderDashboardPlace.data("profile-id"));
+                            profileID = parseInt(bidderDashboardPlace.data("profile-id")),
+                            itemDetailsBlock = $('.item-details'),
+                            hasOnlyTickets = handbidMain.detectIfUserHasOnlyTicketsInPurchases(),
+                            auctionID = (itemDetailsBlock.length) ? parseInt(itemDetailsBlock.data("item-auction-id")) : false,
+                            isTicketPage = (itemDetailsBlock.length) ? ((itemDetailsBlock.data("item-is-ticket") == 'yes') && hasOnlyTickets) : false;
 
                         if (!scrolled && data.unpaid > 0) {
-                            var unpaidInvoices = $.map($(".receiptRow.preview"), function (val) {
+
+                            $.map($(".receiptRow.preview"), function (val) {
                                 var invoiceItem = $(val),
                                     invoiceItemID = parseInt(invoiceItem.data("receipt-block-id")),
                                     invoiceItemTotal = invoiceItem.data("receipt-total"),
+                                    invoiceAuctionId = invoiceItem.data("receipt-of-auction"),
                                     invoiceItemTitle = $(".invoice-title", invoiceItem).eq(0).html();
-                                return {
+
+                                handbidMain.showUnpaidInvoicesToUser(profileID, auctionID, isTicketPage, {
                                     id: invoiceItemID,
                                     total: invoiceItemTotal,
-                                    title: invoiceItemTitle
-                                };
-
-                            });
-                            $.map(unpaidInvoices, function (val) {
-
-                                var viewCookie = $.cookie("bidder-" + profileID + "-want-no-invoice-" + val.id);
-
-                                if (profileID && val.id && viewCookie != "yes") {
-
-                                    var message = "You have an unpaid invoice with a Balance of " + currencySpan() + val.total + " in " + val.title + ".  Do you want to pay it?";
-                                    new PNotify({
-                                        title: 'Unpaid Invoice',
-                                        type: 'info',
-                                        text: message,
-                                        icon: 'glyphicon glyphicon-off',
-                                        addclass: 'handbid-message-notice',
-                                        hide: true,
-                                        delay: 10000,
-                                        mouse_reset: false,
-                                        confirm: {
-                                            confirm: true,
-                                            buttons: [{
-                                                text: 'View Invoice',
-                                                addClass: 'view-invoices-button',
-                                                click: function (notice) {
-                                                    handbid.scrollToInvoices(notice, val.id);
-                                                    notice.remove();
-                                                }
-                                            }, {
-                                                text: 'Cancel',
-                                                addClass: 'browse-here-button',
-                                                click: function (notice) {
-                                                    attentionAboutBidding = false;
-                                                    $.cookie("bidder-" + profileID + "-want-no-invoice-" + val.id, "yes", {
-                                                        expires: cookieExpire,
-                                                        path: '/'
-                                                    });
-                                                    notice.remove();
-                                                }
-                                            }]
-                                        },
-                                        buttons: {
-                                            closer: false,
-                                            sticker: false
-                                        },
-                                        history: {
-                                            history: false
-                                        }
-                                    });
-                                }
+                                    title: invoiceItemTitle,
+                                    auction: invoiceAuctionId
+                                });
 
                             });
                         }
@@ -1387,7 +1438,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
             },
 
 
-            noticeIfNoCreditCard: function (elem) {
+            noticeIfNoCreditCard: function (elem, tickets, force) {
                 var attr = elem.attr('data-handbid-credit-cards-required');
 
                 var needCreditCard = (typeof attr !== typeof undefined && attr !== false);
@@ -1405,13 +1456,18 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 //    }
                 //}
 
-                if (needCreditCard && creditCardsNumber == 0) { // creditCardRows.length == 0 &&
+                if ((needCreditCard && creditCardsNumber == 0) || force) { // creditCardRows.length == 0 &&
                     //currentElemNeedsCard = elem;
-                    $(".credit-card-form-link").eq(0).click();
+
+                    if(tickets){
+                        ticketsPopupWasOpened = true;
+                    }
+
+                    handbidModalsMain.showSingleModal('credit-card-form');
                     //handbidMain.displayRequiredCardsMessage("You must supply a credit card to do this action.");
                     //handbidMain.notice("Please add credit card to your profile for this action", "Credit Card Required", "error");
                 }
-                return needCreditCard;
+                return needCreditCard || force;
             },
 
 
@@ -1432,10 +1488,11 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     itemDetailsBox = $('.item-details').eq(0),
                     itemID = itemDetailsBox.data('item-id'),
                     isDonation = (itemDetailsBox.data('item-is-donation') == 'yes'),
+                    isTicket = (itemDetailsBox.data('item-is-ticket') == 'yes'),
                     buyAgain = isDonation ? false : handbid.getCountOfPastItemPurchases(itemID),
                     title = isDonation ? 'Donation Confirmation' : 'Purchase Confirmation',
                     confirmText = isDonation ? 'Confirm Donation of $' + purchaseTotal + '?' : 'Confirm Purchase of ' + purchaseCount + ' for $' + purchaseTotal + '?',
-                    text = buyAgain ? confirmText + ' You have already purchased ' + buyAgain + ' of this item, are you sure you want to purchase ' + purchaseCount + ' more?' : confirmText;
+                    text = buyAgain ? ' You have already purchased ' + buyAgain + ' of this item, are you sure you want to purchase ' + purchaseCount + ' more?' + '<br><br><b>' + confirmText + '</b>' : confirmText;
 
                 if (tickets) {
                     purchaseCount = 0;
@@ -1444,8 +1501,10 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                         purchaseCount += val.quantity;
                         purchaseTotal += val.quantity * val.price;
                     });
-                    title = 'Purchase Confirmation';
-                    text = 'Confirm Purchase of ' + purchaseCount + ' Tickets for $' + purchaseTotal + '?';
+                }
+                if(isTicket || tickets){
+                    title = 'Ticket Confirmation';
+                    text = 'Confirm addition of ' + purchaseCount + ' ticket' + ((purchaseCount > 1)? 's' : '') + ' for $' + purchaseTotal + ' to purchases?';
                 }
 
                 attentionAboutBuyConf = true;
@@ -1454,7 +1513,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     text: text,
                     icon: 'glyphicon glyphicon-question-sign',
                     type: 'info',
-                    addclass: 'handbid-message-notice',
+                    addclass: 'handbid-message-notice handbid-left-padding-notice',
                     hide: false,
                     mouse_reset: false,
                     confirm: {
@@ -1483,23 +1542,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     },
                     stack: false,
                     before_open: function (PNotify) {
-                        PNotify.get().css({
-                            "top": ($(window).height() / 2) - (PNotify.get().height() / 2) - 80,
-                            "left": ($(window).width() / 2) - (PNotify.get().width() / 2)
-                        });
-                        if (modal_overlay) modal_overlay.fadeIn("fast");
-                        else modal_overlay = $("<div />", {
-                            "class": "ui-widget-overlay",
-                            "css": {
-                                "display": "none",
-                                "position": "fixed",
-                                "background": "rgba(0, 0, 0, 0.7)",
-                                "top": "0",
-                                "bottom": "0",
-                                "right": "0",
-                                "left": "0"
-                            }
-                        }).appendTo("body").fadeIn("fast");
+                        handbidMain.fadeInModalOverlayAndPositionModal(PNotify);
                     },
                     before_close: function () {
                         handbidMain.fadeOutModalOverlay();
@@ -2351,7 +2394,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
                     if (handbid.isButtonDisabledOrAlreadyActive($(this))
                         || handbid.cannotDoIfUnauthorized()
-                        || handbid.noticeIfNoCreditCard($(this))
+                        || handbid.noticeIfNoCreditCard($(this), true, $(this))
                         || prices.length == 0) {
                         return false;
                     }
@@ -2459,7 +2502,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                         //window.location = "/log-in/";
                     });
 
-                    $('.modal-close', loginModal).live('click', function (e) {
+                    $('[data-handbid-modal-key="login-modal"] .modal-close').live('click', function (e) {
                         e.preventDefault();
                         loginModal.css('display', 'none');
                         underlay.css('display', 'none');
@@ -2596,6 +2639,8 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 });
             },
             setupAddCreditCardCallback: function (status, response) {
+
+                addingCCState = false;
                 var $form = currentCCForm,
                     container = $('.bidder-info-container.credit-card ul'),
                     modalClose = $('[data-handbid-modal-key="credit-card-form"] .modal-close'),
@@ -2612,10 +2657,14 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     if (response.error.message != undefined) {
                         isAddingErrorMessage = response.error.message;
                         handbid.notice(isAddingErrorMessage, "Card Error", "error");
+
+                        handbidLoginMain.requestToAddCCAfter(false);
                     }
                     else {
                         isAddingErrorMessage = simpleErrorMessage;
                         handbid.notice(simpleErrorMessage, "Card Error", "error");
+
+                        handbidLoginMain.requestToAddCCAfter(false);
                     }
                 }
                 else {
@@ -2623,6 +2672,8 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                         isAddingError = true;
                         isAddingErrorMessage = simpleErrorMessage;
                         handbid.notice(simpleErrorMessage, "Card Error", "error");
+
+                        handbidLoginMain.requestToAddCCAfter(false);
                     }
                     else {
 
@@ -2659,6 +2710,8 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                                     statusPlace.removeClass("card-success").addClass("card-error");
                                     statusPlace.html(isAddingErrorMessage);
                                     handbid.notice(isAddingErrorMessage, "Card Error", "error");
+
+                                    handbidLoginMain.requestToAddCCAfter(false);
                                 }
                                 else {
                                     handbid.notice("Your card has been added successfully", "Card Success", "success");
@@ -2699,6 +2752,14 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                                     $('[data-handbid-modal-key="credit-card-form"] .modal-close').click();
                                     statusPlace.removeClass("card-error").removeClass("card-success");
                                     statusPlace.html("");
+
+                                    handbidLoginMain.requestToAddCCAfter(true);
+
+                                    if(ticketsPopupWasOpened){
+                                        var prices = handbid.recalculateTotalTicketsPrice();
+                                        handbid.confirmIfUserReallyWantToBuy(handbid, prices);
+                                        ticketsPopupWasOpened = false;
+                                    }
                                 }
                             });
 
@@ -2731,13 +2792,16 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 var form = $('.creditcard-template');
 
                 form.live('submit', function (event) {
-                    var $form = $(this);
-                    currentCCForm = $form;
+                    if(! addingCCState) {
+                        addingCCState = true;
+                        var $form = $(this);
+                        currentCCForm = $form;
 
-                    $form.find('.submit-cc-button').prop('disabled', true);
-                    $form.parent().parent().addClass("processing");
+                        $form.find('.submit-cc-button').prop('disabled', true);
+                        $form.parent().parent().addClass("processing");
 
-                    Stripe.card.createToken($form, handbidMain.setupAddCreditCardCallback);
+                        Stripe.card.createToken($form, handbidMain.setupAddCreditCardCallback);
+                    }
 
                     return false;
                 });
@@ -3090,23 +3154,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                         },
                         stack: false,
                         before_open: function (PNotify) {
-                            PNotify.get().css({
-                                "top": ($(window).height() / 2) - (PNotify.get().height() / 2) - 80,
-                                "left": ($(window).width() / 2) - (PNotify.get().width() / 2)
-                            });
-                            if (modal_overlay) modal_overlay.fadeIn("fast");
-                            else modal_overlay = $("<div />", {
-                                "class": "ui-widget-overlay",
-                                "css": {
-                                    "display": "none",
-                                    "position": "fixed",
-                                    "background": "rgba(0, 0, 0, 0.7)",
-                                    "top": "0",
-                                    "bottom": "0",
-                                    "right": "0",
-                                    "left": "0"
-                                }
-                            }).appendTo("body").fadeIn("fast");
+                            handbidMain.fadeInModalOverlayAndPositionModal(PNotify);
                         },
                         before_close: function () {
                             handbidMain.fadeOutModalOverlay();
@@ -3172,23 +3220,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                         },
                         stack: false,
                         before_open: function (PNotify) {
-                            PNotify.get().css({
-                                "top": ($(window).height() / 2) - (PNotify.get().height() / 2) - 80,
-                                "left": ($(window).width() / 2) - (PNotify.get().width() / 2)
-                            });
-                            if (modal_overlay) modal_overlay.fadeIn("fast");
-                            else modal_overlay = $("<div />", {
-                                "class": "ui-widget-overlay",
-                                "css": {
-                                    "display": "none",
-                                    "position": "fixed",
-                                    "background": "rgba(0, 0, 0, 0.7)",
-                                    "top": "0",
-                                    "bottom": "0",
-                                    "right": "0",
-                                    "left": "0"
-                                }
-                            }).appendTo("body").fadeIn("fast");
+                            handbidMain.fadeInModalOverlayAndPositionModal(PNotify);
                         },
                         before_close: function () {
                             handbidMain.fadeOutModalOverlay();
@@ -3255,23 +3287,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                         },
                         stack: false,
                         before_open: function (PNotify) {
-                            PNotify.get().css({
-                                "top": ($(window).height() / 2) - (PNotify.get().height() / 2) - 80,
-                                "left": ($(window).width() / 2) - (PNotify.get().width() / 2)
-                            });
-                            if (modal_overlay) modal_overlay.fadeIn("fast");
-                            else modal_overlay = $("<div />", {
-                                "class": "ui-widget-overlay",
-                                "css": {
-                                    "display": "none",
-                                    "position": "fixed",
-                                    "background": "rgba(0, 0, 0, 0.7)",
-                                    "top": "0",
-                                    "bottom": "0",
-                                    "right": "0",
-                                    "left": "0"
-                                }
-                            }).appendTo("body").fadeIn("fast");
+                            handbidMain.fadeInModalOverlayAndPositionModal(PNotify);
                         },
                         before_close: function () {
                             handbidMain.fadeOutModalOverlay();
@@ -3316,7 +3332,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                             text: 'Add a card',
                             addClass: 'add-credit-card-button',
                             click: function (notice) {
-                                $(".credit-card-form-link").eq(0).click();
+                                handbidModalsMain.showSingleModal('credit-card-form');
                                 notice.remove();
 
                             }
@@ -3562,9 +3578,6 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                                 "left": "0"
                             }
                         }).appendTo("body").fadeIn("fast");
-                        //setTimeout(function(){
-                        //    location.reload();
-                        //},3000);
                     },
                     before_close: function () {
                         reload_overlay.fadeOut("fast");

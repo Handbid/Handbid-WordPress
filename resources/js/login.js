@@ -333,6 +333,13 @@ var handbidLoginMain, cookieExpire = 7;
                             closeButton.attr("data-reload-href", auctionUrl);
                             paddleContainer.hide();
                         }
+
+                        var addNewCCBlock = $('#reg-complete-add-card');
+
+                        var auctionRequiresCC = addNewCCBlock.hasClass('add-new-cc-to-register');
+
+                        handbidLogin.requestToAddCCAfter(!auctionRequiresCC);
+
                         handbidLogin.displaySpecifiedTabOfLoginPopup("register-complete");
                     }
                     else{
@@ -375,6 +382,20 @@ var handbidLoginMain, cookieExpire = 7;
                 }
             );
 
+        },
+
+        requestToAddCC: function(){
+            handbidModalsMain.showSingleModal('credit-card-form');
+        },
+
+        requestToAddCCAfter: function(cardAdded){
+
+            var startBiddingBlock = $('#reg-complete-start-bidding'),
+                addNewCCBlock = $('#reg-complete-add-card');
+
+            (cardAdded) ? addNewCCBlock.hide() : addNewCCBlock.show();
+            (cardAdded) ? startBiddingBlock.show() : startBiddingBlock.hide();
+
         }
     };
 
@@ -405,7 +426,7 @@ var handbidLoginMain, cookieExpire = 7;
             }
         });
 
-        $('.handbid-modal .modal-close').on('click', function () {
+        $('[data-handbid-modal-key="login-modal"] .modal-close').on('click', function () {
             handbidLogin.restoreInitialTabState();
             var reloadHref = $(this).data("reload-href");
             if(reloadHref != undefined){
@@ -445,6 +466,10 @@ var handbidLoginMain, cookieExpire = 7;
 
         $('.reset-password-link').on('click', function (e) {
             handbidLogin.resendPasswordLink($(this));
+        });
+
+        $('#start-enter-card-button').on('click', function (e) {
+            handbidLogin.requestToAddCC($(this));
         });
 
         $('.exit-tutorial-link').on('click', function (e) {
