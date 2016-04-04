@@ -130,14 +130,15 @@ $isDonation = (!empty($item->isAppeal) and $item->isAppeal);
     </div>
 </div>
 
-<div class="handbid-modal proxy-bid-dialog" data-handbid-modal-key="proxy" data-handbid-bid data-handbid-item-key="<?php echo $item->key; ?>">
+<div class="handbid-modal modal fade proxy-bid-dialog" tabindex="-1" role="dialog"  data-handbid-modal-key="proxy" data-handbid-bid data-handbid-item-key="<?php echo $item->key; ?>">
+    <div class="modal-dialog">
     <div class="row">
         <h3>Set a Max Bid<br/>on this item</h3>
-        <a href="#" class="modal-close proxy-bid-dialog-close">X</a>
+        <a href="#" class="modal-close proxy-bid-dialog-close" data-dismiss="modal" aria-label="Close">&times;</a>
         <p>Handbid will bid for you up to this amount</p>
     </div>
     <div class="row bid-controls">
-        <div class="col-md-12">
+        <div class="col-xs-12">
             <ul class="horizontal-details row">
 
                 <?php if($isBiddable) { ?>
@@ -151,19 +152,19 @@ $isDonation = (!empty($item->isAppeal) and $item->isAppeal);
                 <?php } ?>
             </ul>
         </div>
-        <div class="col-md-2 col-xs-3 bid-down">
+        <div class="col-xs-3 bid-down">
             <a href="" class="green-button button max-bid-down" data-handbid-bid-button="down">-</a>
         </div>
 
         <?php if ($isBiddable) { ?>
-            <div class="bid-amount minimalBidAmount col-md-8 col-xs-6"><span class="handbidAuctionCurrency" title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span><span
+            <div class="bid-amount minimalBidAmount col-xs-6"><span class="handbidAuctionCurrency" title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span><span
                     data-handbid-bid-amount data-handbid-maxbid-amount data-change-attribute="minimumBidAmount"><?php echo $item->minimumBidAmount; ?></span></div>
         <?php } else { ?>
 <!--            <div class="buy-quantity col-md-8 col-xs-7"><span data-handbid-quantity>--><?php //echo ($item->inventoryRemaining != 0) ? 1 : 0 ;?><!--</span></div>-->
-            <div class="buy-quantity col-md-8 col-xs-7"><span data-handbid-quantity><?php echo $item->inventoryRemaining;?></span></div>
+            <div class="buy-quantity col-xs-6"><span data-handbid-quantity><?php echo $item->inventoryRemaining;?></span></div>
 
         <?php } ?>
-        <div class="col-md-2 col-xs-3 bid-up">
+        <div class="col-xs-3 bid-up">
             <a href="" class="green-button button max-bid-up" data-handbid-bid-button="up">+</a>
         </div>
 
@@ -171,7 +172,7 @@ $isDonation = (!empty($item->isAppeal) and $item->isAppeal);
 
     <div class="row">
 
-        <div class="submit-proxy-bid col-md-12 col-xs-12">
+        <div class="submit-proxy-bid col-xs-12">
             <a class="proxy-bid button green-solid-button  loading-span-button"
                href=""
                 <?php echo $creditCardsRequired; ?>
@@ -180,6 +181,7 @@ $isDonation = (!empty($item->isAppeal) and $item->isAppeal);
                 ><span><?php echo __('Set Max Bid'); ?></span></a>
         </div>
 
+    </div>
     </div>
 </div>
 

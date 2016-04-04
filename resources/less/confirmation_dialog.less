@@ -1,0 +1,32 @@
+
+
+/**
+ * Confirmation dialog
+ */
+#handbid-confirmation-underlay {
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
+#handbid-confirmation-dialog {
+  background-color: @white;
+  padding: 50px;
+  box-shadow: 5px 5px 0 0 rgba(0, 0, 0, 0.3);
+  text-align: center;
+
+  .handbid-message {
+    font-weight: bold;
+    max-width: 300px;
+    font-size: 150%;
+    padding-bottom: 30px;
+  }
+
+  a.handbid-cancel {
+    .gray-solid-button;
+  }
+
+  a {
+    .green-solid-button;
+  }
+
+}

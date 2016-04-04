@@ -78,9 +78,10 @@ if(!function_exists("handbid_popup_inline_links")){
 ?>
 
 
-<div class="handbid-modal handbid-simplified-login-modal simplified-login-new <?php echo ($in_page) ? "handbid-modal-in-page" : "" ; ?> user-modal contact-body login-modal-tab" data-handbid-modal-key="login-modal">
+<div class="handbid-modal modal fade handbid-simplified-login-modal simplified-login-new <?php echo ($in_page) ? "handbid-modal-in-page" : "" ; ?> user-modal contact-body login-modal-tab" tabindex="-1" role="dialog" data-handbid-modal-key="login-modal">
+<div class="modal-dialog modal-lg">
 <?php if(!$in_page){?>
-    <a href="#" class="modal-close">&times;</a>
+    <a href="#" class="modal-close" data-dismiss="modal" aria-label="Close">&times;</a>
 <?php }?>
 
 <div class="page-body connect-page">
@@ -120,7 +121,7 @@ if(!function_exists("handbid_popup_inline_links")){
                     <?php if(!$is_logged_in){?>
                         <div class="row">
                             <div class="form-group col-md-10 col-md-offset-1 col-xs-12">
-                                <input placeholder="Email*" type="text" name="username" value=""
+                                <input placeholder="Email*" type="email" name="username" value=""
                                        class="form-control cleanable-input" id="hb-login-form-username">
                             </div>
                         </div>
@@ -128,7 +129,7 @@ if(!function_exists("handbid_popup_inline_links")){
 
                         <div class="row">
                             <div class="form-group col-md-10 col-md-offset-1 col-xs-12">
-                                <input placeholder="Password or Pin*" type="text" name="pin" value=""
+                                <input placeholder="Password or Pin*" type="password" name="pin" value=""
                                        class="form-control cleanable-input"  id="hb-login-form-password">
 
                             </div>
@@ -147,7 +148,7 @@ if(!function_exists("handbid_popup_inline_links")){
                         </div>
                     </div>
 
-                    <?php handbid_popup_inline_links("login");?>
+                    <?php if(!$is_logged_in) handbid_popup_inline_links("login");?>
 
                     <div class="row">
                         <div class="col-md-10 col-md-offset-1 col-xs-12 modal-footer center-aligned-text">
@@ -443,7 +444,7 @@ if(!function_exists("handbid_popup_inline_links")){
 
                     <div class="row">
                         <div class="form-group col-xs-12">
-                            <input id="reg-email" placeholder="eMail" type="text" name="email" value=""
+                            <input id="reg-email" placeholder="eMail" type="email" name="email" value=""
                                    class="col-xs-12 has-question-icon has-popover cleanable-input copyable-field is-email"
                                    data-copy-to="confirm-email"
                                    data-not-email-message="Please, provide valid email address"
@@ -461,7 +462,7 @@ if(!function_exists("handbid_popup_inline_links")){
                             </a>
                         </div>
                         <div class="form-group col-md-6 col-xs-12">
-                            <input id="reg-password" placeholder="Password (for use only on the webSite)" type="text"
+                            <input id="reg-password" placeholder="Password (for use only on the webSite)" type="password"
                                    name="password" value=""
                                    class="col-xs-12 has-question-icon has-popover cleanable-input copyable-field"
                                    data-copy-to="confirm-password"
@@ -479,7 +480,7 @@ if(!function_exists("handbid_popup_inline_links")){
                             </a>
                         </div>
                         <div class="form-group col-md-6 col-xs-12">
-                            <input id="reg-password-confirm" placeholder="Confirm your Password" type="text"
+                            <input id="reg-password-confirm" placeholder="Confirm your Password" type="password"
                                    name="password-confirm" value=""
                                    class="col-xs-12 has-question-icon has-popover cleanable-input"
                                    data-mismatch-message="Password mismatch">
@@ -590,7 +591,7 @@ if(!function_exists("handbid_popup_inline_links")){
                 </div>
                 <div class="row">
                     <div class="form-group col-xs-12">
-                        <input id="confirm-email" placeholder="eMail" type="text" name="email" value=""
+                        <input id="confirm-email" placeholder="eMail" type="email" name="email" value=""
                                class="col-xs-12 cleanable-input is-email"
                                data-not-email-message="Please, provide valid email address" >
                     </div>
@@ -912,5 +913,5 @@ if(!function_exists("handbid_popup_inline_links")){
     </div>
 
 <?php }?>
-
+</div>
 </div>

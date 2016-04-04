@@ -31,64 +31,6 @@
     overflow-x: hidden;
   }
 
-  #credit-card-required-banner {
-    top: auto;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 15px;
-    height: auto;
-    margin: 0;
-    width: auto;
-    box-shadow: none;
-    .green-solid-button {
-      margin-bottom: 5px;
-      margin-top: 15px;
-    }
-  }
-
-  // carefully selecting credit card modal
-  div.handbid-modal[data-handbid-modal-key="credit-card-form"] {
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    margin: 0 !important; // Inline styles on modal :(
-    .creditcard {
-      width: 100%;
-      padding: 0;
-      background: none;
-      border: 0;
-    }
-    .bottom-row {
-      margin: 0;
-    }
-    .cc-section {
-      width: 100%;
-      clear: both;
-      margin-bottom: 15px;
-      input {
-        width: 100%
-      }
-      .checkout-exp {
-        width: 48%
-      }
-      .checkout-exp[name="expMonth"] {
-        margin-right: 3.9%;
-      }
-      input.checkout-cvc {
-        width: 96%;
-      }
-    }
-    .cc-section:last-of-type {
-      margin: 0;
-    }
-    .simple-tooltip-content {
-      left: -200px;
-    }
-  }
-
   .handbid-growl-container {
     position: fixed;
     top: 0;
@@ -126,47 +68,6 @@
       .images .image-holder {
         height: 290px;
       }
-    }
-
-    .proxy-bid-dialog,
-    div#handbid-confirmation-dialog {
-      padding: 15px;
-      left: 0 !important;
-      top: 0 !important;
-      right: 0;
-      bottom: 0;
-      width: auto;
-      margin: 0 !important;
-      .handbid-message {
-        margin: 0;
-        display: inline-block;
-      }
-      a.modal-close {
-        top: 12px;
-        right: 15px;
-      }
-    }
-  }
-
-  div.handbid-modal.tickets-modal {
-    width: 100%;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    margin-left: 0 !important;
-    margin-top: 0 !important;
-    .ticket-row {
-      border: none;
-    }
-    .ticket {
-      border-top: 1px solid @dropShadow;
-    }
-    .ticket:last-of-type {
-      border-bottom: 1px solid @dropShadow;
-    }
-    .ticket:nth-child(even) {
-      border-left: none;
     }
   }
 }
@@ -207,8 +108,7 @@
     }
   }
 
-  .item-details,
-  .proxy-bid-dialog {
+  .item-details {
     h2.name {
       font-size: 24px;
     }

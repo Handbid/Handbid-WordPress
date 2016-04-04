@@ -50,50 +50,50 @@ if(isset($_GET['expYear'])) {
         <?php } ?>
 
     </div>
-    <div class="handbid-modal credit-card-form-modal" data-handbid-modal-key="credit-card-form">
+    <div class="handbid-modal modal fade credit-card-form-modal" tabindex="-1" role="dialog" data-handbid-modal-key="credit-card-form">
+        <div class="modal-dialog">
         <h3>Add Credit Card</h3>
-        <a href="#" class="modal-close">X</a>
+        <a href="#" class="modal-close" data-dismiss="modal" aria-label="Close">&times;</a>
 
-        <div class="creditcard-wrapper">
-            <form id="creditcard-template" class="creditcard-template" action="<?php echo get_admin_url() . 'admin-post.php'; ?>" method="post"
-                  enctype="multipart/form-data">
-                <div class="credit-card-status"></div>
-                <div class="creditcard">
-                    <div class="cc-section">
-                        <label>Name on Card</label>
-                        <input type="text" name="nameOnCard" value="<?php echo $this->get('nameOnCard'); ?>" class="ccNameOnCard checkout-input checkout-name"
-                               placeholder="Name on Card">
-                    </div>
-                    <div class="cc-section">
-                        <label>Expiration</label>
-                        <input type="text" name="expMonth" class="checkout-input checkout-exp"  data-stripe="exp-month" value="<?php echo $this->get('expMonth'); ?>" placeholder="MM">
-                        <input type="text" name="expYear" class="checkout-input checkout-exp" data-stripe="exp-year" value="<?php echo $this->get('expYear'); ?>" placeholder="YYYY">
-                    </div>
-                    <br/>
-
-                    <div class="cc-section bottom-row">
-                        <label>Card Number</label>
-                        <input type="text" name="cardNum" class="checkout-input checkout-card"
-                               placeholder="Credit Card Number"  data-stripe="number">
-                    </div>
-                    <div class="cc-section bottom-row">
-                        <label>CVC</label>
-
-                        <input type="text" name="cvc" class="checkout-input checkout-cvc" placeholder="CVC"  data-stripe="cvc">
-
-                        <span data-tooltip-wrapper>
-                            <a class="cvc-info" data-tooltip-activate title="cvc">?</a>
-                            <div class="simple-tooltip-content" data-tooltip-content>On most cards, the 3-digit security code is on the back, to the right of the signature. On American Express cards, the 4-digit security code is on the front, to the top-right of the card number.</div>
-                        </span>
-
-                    </div>
+        <form id="creditcard-template" class="creditcard-template" action="<?php echo get_admin_url() . 'admin-post.php'; ?>" method="post"
+              enctype="multipart/form-data">
+            <div class="credit-card-status"></div>
+            <div class="creditcard">
+                <div class="cc-section">
+                    <label>Name on Card</label>
+                    <input type="text" name="nameOnCard" value="<?php echo $this->get('nameOnCard'); ?>" class="ccNameOnCard checkout-input checkout-name"
+                           placeholder="Name on Card">
                 </div>
-                <input type="submit" class="green-solid-button submit-cc-button" value="submit"/>
-                <input type='hidden' name='nonce' value='<?php echo apply_filters("handbid_create_nonce", date("d.m.Y") . "credit_card");?>' id="hb-credit-card-nonce"/>
-                <input type='hidden' name='action' value='handbid_ajax_add_credit_card'/>
-                <input type='hidden' name='redirect' value='<?php echo $_SERVER["HTTP_REFERER"] ?>'/>
+                <div class="cc-section">
+                    <label>Expiration</label>
+                    <input type="text" name="expMonth" class="checkout-input checkout-exp"  data-stripe="exp-month" value="<?php echo $this->get('expMonth'); ?>" placeholder="MM">
+                    <input type="text" name="expYear" class="checkout-input checkout-exp" data-stripe="exp-year" value="<?php echo $this->get('expYear'); ?>" placeholder="YYYY">
+                </div>
+                <br/>
 
-            </form>
+                <div class="cc-section bottom-row">
+                    <label>Card Number</label>
+                    <input type="text" name="cardNum" class="checkout-input checkout-card"
+                           placeholder="Credit Card Number"  data-stripe="number">
+                </div>
+                <div class="cc-section bottom-row cvc-section">
+                    <label>CVC</label>
+
+                    <input type="text" name="cvc" class="checkout-input checkout-cvc" placeholder="CVC"  data-stripe="cvc">
+
+                    <span class="cvc-help" data-tooltip-wrapper>
+                        <a class="cvc-info" data-tooltip-activate title="cvc">?</a>
+                        <div class="simple-tooltip-content" data-tooltip-content>On most cards, the 3-digit security code is on the back, to the right of the signature. On American Express cards, the 4-digit security code is on the front, to the top-right of the card number.</div>
+                    </span>
+
+                </div>
+            </div>
+            <input type="submit" class="green-solid-button submit-cc-button" value="submit"/>
+            <input type='hidden' name='nonce' value='<?php echo apply_filters("handbid_create_nonce", date("d.m.Y") . "credit_card");?>' id="hb-credit-card-nonce"/>
+            <input type='hidden' name='action' value='handbid_ajax_add_credit_card'/>
+            <input type='hidden' name='redirect' value='<?php echo $_SERVER["HTTP_REFERER"] ?>'/>
+
+        </form>
         </div>
     </div>
 

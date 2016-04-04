@@ -1,0 +1,117 @@
+@import "variables.less";
+@import "buttons.less";
+
+.tickets-modal {
+  .modal-dialog {
+    padding: 25px 0;
+    background: @white;
+    h3 {
+      margin-top: 0;
+      text-transform: none;
+      &.total {
+        color: @green;
+        margin: 0;
+      }
+    }
+  }
+
+  h4 {
+    color: @lightBlue;
+    &.ticket-title {
+      margin: 0;
+      text-align: left;
+      font-size: 1.5em;
+    }
+  }
+
+  h5 {
+    margin: 10px 0 0 0;
+    text-transform: uppercase;
+    color: @gray;
+  }
+
+  .tickets-container {
+    padding: 15px 15px 25px;
+  }
+
+  .ticket-row {
+    border-bottom: 1px solid @dropShadow;
+    &:first-of-type {
+      border-top: 1px solid @dropShadow;
+    }
+  }
+
+  .ticket {
+    padding: 0 0 0 15px;
+  }
+  .tickets-are-available {
+    text-align: center;
+  }
+  .tickets-are-sold h4 {
+    font-weight: bold;
+    color: #c73936;
+    font-size: 23px;
+  }
+
+  .ticket-description {
+    color: @gray;
+    font-size: 15px;
+  }
+  .ticket-quantity {
+    color: @gray;
+    font-size: 13px;
+  }
+  .ticket-part-container {
+    padding: 15px;
+  }
+
+  .ticket-price {
+    font-size: 26px;
+    font-weight: normal;
+  }
+
+  [data-handbid-tickets-button] {
+    margin-top: 5px;
+    &:hover {
+      color: @green;
+      border-color: @green;
+    }
+  }
+
+  .buy-quantity {
+    font-size: 2em;
+  }
+  [data-handbid-ticket-quantity] {
+    color: @green;
+  }
+
+  .bid-price-toggle {
+    width: 30px;
+    padding: 0 !important;
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
+  }
+
+  .buy-quantity {
+    height: 30px;
+    line-height: 30px;
+  }
+}
+
+@media (max-width: 768px) {
+  .tickets-modal {
+    .ticket-part-container {
+      padding: 15px 0 0;
+      margin-right: 15px;
+    }
+    .ticket-row {
+      padding-bottom: 10px;
+    }
+  }
+  .tickets-footer-row {
+    margin: -15px -15px -5px;
+    text-align: center;
+  }
+}
+

@@ -40,9 +40,10 @@ if(!function_exists("handbid_app_links")){
 ?>
 
 
-<div class="handbid-modal handbid-simplified-login-modal <?php echo ($in_page) ? "handbid-modal-in-page" : "" ; ?> user-modal contact-body login-modal-tab" data-handbid-modal-key="login-modal">
+<div class="handbid-modal modal fade handbid-simplified-login-modal <?php echo ($in_page) ? "handbid-modal-in-page" : "" ; ?> user-modal contact-body login-modal-tab" tabindex="-1" role="dialog" data-handbid-modal-key="login-modal">
+<div class="modal-dialog modal-lg">
 <?php if(!$in_page){?>
-<a href="#" class="modal-close">X</a>
+<a href="#" class="modal-close" data-dismiss="modal" aria-label="Close">&times;</a>
 <?php }?>
 
 <div class="page-body connect-page">
@@ -315,7 +316,7 @@ if(!function_exists("handbid_app_links")){
         </div>
     </div>
     <?php }?>
-
+</div>
 </div>
 
 <div class="container-fluid container-tab invite-code-tab" style="display: none" data-tab-name="use-invite-code">
@@ -431,7 +432,7 @@ if(!function_exists("handbid_app_links")){
 
                     <div class="row">
                         <div class="form-group col-xs-12">
-                            <input id="reg-email" placeholder="eMail" type="text" name="email" value=""
+                            <input id="reg-email" placeholder="eMail" type="email" name="email" value=""
                                    class="col-xs-12 has-question-icon has-popover cleanable-input copyable-field is-email"
                                    data-copy-to="confirm-email"
                                    data-not-email-message="Please, provide valid email address"
@@ -449,7 +450,7 @@ if(!function_exists("handbid_app_links")){
                             </a>
                         </div>
                         <div class="form-group col-md-6 col-xs-12">
-                            <input id="reg-password" placeholder="Password (for use only on the webSite)" type="text"
+                            <input id="reg-password" placeholder="Password (for use only on the webSite)" type="password"
                                    name="password" value=""
                                    class="col-xs-12 has-question-icon has-popover cleanable-input copyable-field"
                                    data-copy-to="confirm-password"
@@ -467,7 +468,7 @@ if(!function_exists("handbid_app_links")){
                             </a>
                         </div>
                         <div class="form-group col-md-6 col-xs-12">
-                            <input id="reg-password-confirm" placeholder="Confirm your Password" type="text"
+                            <input id="reg-password-confirm" placeholder="Confirm your Password" type="password"
                                    name="password-confirm" value=""
                                    class="col-xs-12 has-question-icon has-popover cleanable-input"
                                    data-mismatch-message="Password mismatch">
@@ -580,7 +581,7 @@ if(!function_exists("handbid_app_links")){
                 </div>
                 <div class="row">
                     <div class="form-group col-xs-12">
-                        <input id="confirm-email" placeholder="eMail" type="text" name="email" value=""
+                        <input id="confirm-email" placeholder="eMail" type="email" name="email" value=""
                                class="col-xs-12 cleanable-input is-email"
                                data-not-email-message="Please, provide valid email address" >
                     </div>

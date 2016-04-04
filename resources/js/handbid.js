@@ -2432,19 +2432,12 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
                 var body = $('body');
 
-                if (!$('#handbid-confirmation-underlay').length) {
-                    var underlayContainer = '<div id="handbid-confirmation-underlay" ' +
-                        'style="position: fixed; top:0px; bottom:0px; left: 0px; right: 0px; z-index: 8; display: none;"> ';
-                    body.append(underlayContainer);
-                }
-
                 if (body.hasClass('handbid-logged-out')) {
 
                     this.loggedIn = false;
 
                     var loginModal = $('[data-handbid-modal-key="login-modal"]');
 
-                    var underlay = $('#handbid-confirmation-underlay');
 
                     $('[data-handbid-connect]').live('click', function (e) {
                         e.preventDefault();
@@ -2453,18 +2446,16 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                             $(".active-container").eq(0).removeClass("active-container").hide();
                             $("[data-tab-name='register-form']").eq(0).addClass("active-container").show();
                         }
-                        loginModal.css('display', 'block');
-                        underlay.css('display', 'block');
+
+                        loginModal.modal('show');
 
                         //window.location = "/log-in/";
                     });
 
-                    $('.modal-close', loginModal).live('click', function (e) {
-                        e.preventDefault();
-                        loginModal.css('display', 'none');
-                        underlay.css('display', 'none');
+                    loginModal.on('hidden.bs.modal', function (e) {
                         handbidLoginMain.restoreInitialTabState();
                     });
+
                 }
                 else {
                     this.loggedIn = true;
@@ -2476,31 +2467,16 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
                 var body = $('body');
 
-                if (!$('#handbid-confirmation-underlay').length) {
-                    var underlayContainer = '<div id="handbid-confirmation-underlay" ' +
-                        'style="position: fixed; top:0px; bottom:0px; left: 0px; right: 0px; z-index: 8; display: none;"> ';
-                    body.append(underlayContainer);
-                }
                 var loginModal = $('[data-handbid-modal-key="login-modal"]');
-
-                var underlay = $('#handbid-confirmation-underlay');
 
                 $('[data-handbid-tutorial]').live('click', function (e) {
                     e.preventDefault();
                     if (handbidLoginMain != undefined) {
                         handbidLoginMain.changeToTutorialTabState();
                     }
-                    loginModal.css('display', 'block');
-                    underlay.css('display', 'block');
+                    loginModal.modal('show');
                 });
 
-                $('.modal-close', loginModal).live('click', function () {
-                    underlay.css('display', 'none');
-                });
-
-                //$('.modal-close', loginModal).live('click', function () {
-                //    underlay.css('display', 'none');
-                //});
             },
             setupBidderDashboard: function () {
                 $('.bidder-info-container .stats-bar').live('click.ajax-load', function () {

@@ -1,0 +1,49 @@
+@import "variables.less";
+@import "buttons.less";
+
+.handbid-modal.proxy-bid-dialog {
+  .modal-dialog {
+    max-width: 450px;
+    padding: 25px 20px;
+    background: @white;
+  }
+  .modal-close {
+    top: 0;
+    right: 12px;
+  }
+
+  p {
+    text-align: center;
+  }
+  .submit-proxy-bid {
+    text-align: center;
+    display: block;
+  }
+  .proxy-bid {
+    display: inline-block;
+    width: auto;
+    padding: 15px;
+  }
+  h3 {
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 767px) {
+  .proxy-bid-dialog {
+    h2.name {
+      font-size: 24px;
+    }
+    h3.category {
+      text-transform: uppercase;
+      font-size: 125%;
+      font-weight: 400;
+    }
+    .horizontal-details{
+      padding: 0;
+    }
+    .bid-controls{
+      padding-bottom: 10px;
+    }
+  }
+}

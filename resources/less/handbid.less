@@ -121,96 +121,6 @@ h3.no-results {
 }
 
 /**
- * Confirmation dialog
- */
-#handbid-confirmation-underlay {
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 999;
-}
-
-#handbid-confirmation-dialog {
-  background-color: @white;
-  padding: 50px;
-  box-shadow: 5px 5px 0 0 rgba(0, 0, 0, 0.3);
-  text-align: center;
-
-  .handbid-message {
-    font-weight: bold;
-    max-width: 300px;
-    font-size: 150%;
-    padding-bottom: 30px;
-  }
-
-  a.handbid-cancel {
-    .gray-solid-button;
-  }
-
-  a {
-    .green-solid-button;
-  }
-
-}
-
-.tickets-modal {
-  width: 525px;
-  text-align: center;
-  h3 {
-    margin: 25px 0;
-    text-transform: none;
-  }
-  h3.total {
-    color: @green;
-    margin: 0;
-  }
-  h4 {
-    color: @lightBlue;
-  }
-  h4.ticket-title {
-    font-size: 1.5em;
-    margin-bottom: 15px;
-  }
-  h5 {
-    margin: 25px 0 0 0;
-    text-transform: uppercase;
-    color: @gray;
-  }
-  .bid-price-toggle {
-    padding: 10px 15px;
-  }
-  .buy-quantity {
-    font-size: 2em;
-  }
-  .ticket-quantity-up {
-    text-align: right;
-  }
-  [data-handbid-ticket-quantity] {
-    color: @green;
-  }
-  [data-handbid-tickets-button] {
-    margin-top: 10px;
-  }
-  [data-handbid-tickets-button]:hover {
-    color: @green;
-    border-color: @green;
-  }
-  .ticket-row:first-of-type {
-    border-top: 1px solid @dropShadow;
-  }
-  .ticket-row {
-    border-bottom: 1px solid @dropShadow;
-  }
-
-  .ticket-container {
-    padding: 15px 0 25px 0;
-    display: inline-block;
-  }
-  .ticket:nth-child(even) {
-    //        border-left: 1px solid @dropShadow;
-  }
-}
-
-
-/**
  * Filters
  */
 .filter-wrapper {
@@ -387,26 +297,6 @@ h3.no-results {
   }
 }
 
-#credit-card-required-banner {
-  position: fixed;
-  left: 50%;
-  top: 50%;
-  padding: 20px 0;
-  width: 450px;
-  height: 140px;
-  margin-left: -225px;
-  margin-top: -125px;
-  text-align: center;
-  background-color: @pink;
-  color: @white;
-  box-shadow: 5px 5px 0 0 rgba(0, 0, 0, 0.2);
-
-  .button {
-    margin: 20px 0;
-    cursor: pointer;
-  }
-}
-
 #ui-datepicker-div {
   margin: 0;
 }
@@ -469,115 +359,6 @@ h3.no-results {
   }
 }
 
-.creditcard-wrapper {
-  width: 100%;
-  text-align: left;
-}
-
-.creditcard-template {
-  text-align: center;
-  .creditcard {
-    border-radius: .75em;
-    display: inline-block;
-    padding: 25px;
-    box-sizing: content-box;
-    background: #fafafa;
-    font-size: 16px;
-    font-family: 'Source Sans Pro', Helvtica, Arial, sans-serif;
-    text-align: left;
-    position: relative;
-    z-index: 10000;
-    margin: 0 auto;
-    border: 1px solid #dbdbdb;
-    width: 300px;
-    p {
-      display: inline-block;
-      clear: both;
-      margin-bottom: 15px;
-      &:last-of-type {
-        margin: 0;
-      }
-    }
-    input {
-      margin: 0;
-      line-height: normal;
-      font-family: inherit;
-      font-size: 100%;
-      box-sizing: border-box;
-    }
-
-    .checkout-input {
-      float: left;
-      padding: 0 7px;
-      height: 32px;
-    }
-
-    .checkout-name {
-      width: 150px;
-      margin-right: 15px;
-    }
-
-    .checkout-card {
-      width: 212px;
-      margin-right: 15px;
-    }
-
-    .checkout-exp[name="expMonth"] {
-      margin-right: 15px;
-    }
-    .checkout-exp,
-    .checkout-cvc {
-      width: 58px;
-    }
-    .cvc-info {
-      margin-left: 6px;
-      line-height: 2;
-      cursor: pointer;
-      float: left;
-    }
-    .cc-section {
-      float: left;
-      label {
-        display: block;
-        clear: both;
-      }
-    }
-    .bottom-row {
-      margin-top: 15px;
-    }
-  }
-  input.button {
-    display: block;
-    clear: both;
-    margin-top: 25px;
-    outline: 0;
-    background: @white;
-  }
-
-  .credit-card-status {
-    display: none;
-  }
-  .credit-card-status.card-error,
-  .credit-card-status.card-success {
-    display: block;
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 10px;
-    padding: 5px;
-    border-radius: 12px;
-    text-align: center;
-  }
-  .credit-card-status.card-error {
-    color: @pink !important;
-    background-color: @lightPink !important;
-  }
-  .credit-card-status.card-success {
-    color: #4cb0ce !important;
-    background-color: rgba(76, 176, 206, 0.2) !important;
-  }
-}
-
-
 .handbid-growl-container {
   position: fixed;
   top: 0;
@@ -601,28 +382,6 @@ h3.no-results {
 .receipt-iframe {
   width: 100%;
   height: 350px;
-}
-
-.proxy-bid-dialog {
-  width: 450px;
-  a.modal-close {
-    right: 25px;
-  }
-  p {
-    text-align: center;
-  }
-  .submit-proxy-bid {
-    text-align: center;
-    display: block;
-  }
-  .proxy-bid {
-    display: inline-block;
-    width: auto;
-    padding: 15px;
-  }
-  h3 {
-    margin-top: 0;
-  }
 }
 
 .handbid-progress {
@@ -676,14 +435,6 @@ h3.no-results {
 }
 
 // Tooltip visibility
-div.handbid-modal[data-handbid-modal-key="credit-card-form"] {
-  overflow: visible;
-  input[type="submit"] {
-    clear: both;
-    display: block;
-    margin-top: 25px;
-  }
-}
 
 .mobile-cvc-tooltip {
   display: none;
