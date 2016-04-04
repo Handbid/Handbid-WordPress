@@ -71,7 +71,6 @@ class HandbidAdminActionController
             'handbidStripeMode',
             'handbidForceRefresh',
             'handbidDisplayProfileDashboardOn',
-            'handbidDisplayVariantOfLoginPopup',
         ];
 
         forEach ($settings as $setting) {

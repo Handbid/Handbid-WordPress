@@ -285,7 +285,7 @@ class HandbidActionController
                 $result["profile"] = $profile;
                 if (!$result["success"]) {
                     $result["error"] = str_replace("/auth/", "", $profile->data->error->message);
-                    $result["error"] = trim(strpos($result["error"], "use login") === false) ? $result["error"] : $result["error"] . '<a class="btn btn-info signup login-popup-link" data-target-tab="login-form">Sign In</a>';
+                    $result["error"] = trim(strpos($result["error"], "use login") === false) ? $result["error"] : $result["error"] . '<a class="btn btn-info signup login-popup-link" data-target-tab="login-form-new">Sign In</a>';
                     $result["error"] = trim($result["error"]) ? $result["error"] : $baseError;
                 }
             }

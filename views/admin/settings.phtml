@@ -53,14 +53,6 @@ $is_local = $this->get("is_local");
                     <label for="handbidDisplayProfileDashboardOn1"><input type="checkbox" id="handbidDisplayProfileDashboardOn1" name="handbidDisplayProfileDashboardOn[]" value="other" <?php checked(in_array("other", $profileDashboardOn), true);?>/> All Other Pages</label>
                 </td>
             </tr>
-            <tr valign="top">
-                <?php $loginPopup = get_option('handbidDisplayVariantOfLoginPopup', 'old');?>
-                <th scope="row"><?php echo('Variant of Login Popup'); ?></th>
-                <td>
-                    <label for="handbidDisplayVariantOfLoginPopup1"><input type="radio" id="handbidDisplayVariantOfLoginPopup1" name="handbidDisplayVariantOfLoginPopup" value="old" <?php checked($loginPopup, "old");?>/> Old</label>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <label for="handbidDisplayVariantOfLoginPopup2"><input type="radio" id="handbidDisplayVariantOfLoginPopup2" name="handbidDisplayVariantOfLoginPopup" value="new" <?php checked($loginPopup, "new");?>/> New</label>
-                </td>
-            </tr>
 
             <tr valign="top">
                 <th scope="row"><?php echo('Facebook App Id ( For Comments )'); ?></th>

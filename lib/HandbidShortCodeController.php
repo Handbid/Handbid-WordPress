@@ -1232,7 +1232,7 @@ class HandbidShortCodeController {
         $auction = $this->state->currentAuction();
         $auctionID = (isset($auction->id))?$auction->id:0;
 	    $profile  = $this->state->currentBidder($auctionID);
-        $template = ($this->state->getVariantOfLoginPopup() == "old")?'views/bidder/login-form-simple':'views/bidder/login-form-new';
+        $template = 'views/bidder/login-form-new';
         $auctionRequiresCC = isset( $attributes['auction_requires_cc'] ) ? $attributes['auction_requires_cc'] == 'true' : false;
         return $this->viewRenderer->render(
             $template,

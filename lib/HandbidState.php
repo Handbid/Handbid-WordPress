@@ -279,10 +279,6 @@ class HandbidState
         return trim($slug) ? trim($slug) : false;
     }
 
-    public function getVariantOfLoginPopup(){
-        return get_option('handbidDisplayVariantOfLoginPopup', 'old');
-    }
-
     public function setMapVisibility($mapVisibility)
     {
         $this->mapVisibility = $mapVisibility;
