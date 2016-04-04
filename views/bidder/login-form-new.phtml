@@ -12,6 +12,7 @@ $countries = $this->get("countries");
 $in_page = $this->get("in_page");
 $is_logged_in = $this->get("is_logged_in");
 $auction = $this->get("auction");
+$auctionRequiresCC = $this->get("auctionRequiresCC");
 if($in_page){
     $redirectLink = (isset($_SERVER["HTTP_REFERER"]) and $_SERVER["HTTP_REFERER"] != get_permalink()) ? $_SERVER["HTTP_REFERER"] : "/auctions/";
 }
@@ -667,9 +668,15 @@ if(!function_exists("handbid_popup_inline_links")){
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <div id="reg-complete-start-bidding" class="row">
                     <div class="col-xs-12 col-md-4 col-md-offset-4">
                         <a class="btn btn-info signup" id="start-bidding-button" href="/auctions/">Start Bidding</a>
+                    </div>
+                </div>
+                <div id="reg-complete-add-card" class="row <?php echo ($auctionRequiresCC)? 'add-new-cc-to-register' : '';?>">
+                    <h4>The auction you are registering for requires a credit card. <br>Please add one now.</h4>
+                    <div class="col-xs-12 col-md-4 col-md-offset-4">
+                        <a class="btn btn-info signup" id="start-enter-card-button" href="#">Add New Card</a>
                     </div>
                 </div>
 

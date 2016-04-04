@@ -123,7 +123,7 @@ $isDonation = (!empty($item->isAppeal) and $item->isAppeal);
                 <a class="buy-now green-solid-button  loading-span-button"
                    href=""
                     <?php echo $creditCardsRequired; ?>
-                   data-handbid-bid-button="purchase" data-handbid-buynow-price="<?php echo (int) $item->buyNowPrice;?>"><span><?php echo ($isDonation ? __('Donate Now') : __('Buy Now')); ?></span></a>
+                   data-handbid-bid-button="purchase" data-handbid-buynow-price="<?php echo (int) $item->buyNowPrice;?>"><span><?php echo ($isDonation ? __('Donate Now') : __('Add to Cart')); ?></span></a>
             </div>
         <?php } ?>
 

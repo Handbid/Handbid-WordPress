@@ -1154,7 +1154,7 @@ class HandbidShortCodeController {
 				[
 					'profile'                       => $profile,
 					'auction'                       => $auction,
-                                        'inventory'                       => $inventory,
+                    'inventory'                       => $inventory,
 					'redirect'                      => $redirect,
 					'countries'                      => $countries,
 					'countryIDs'                      => $countryIDs,
@@ -1233,13 +1233,15 @@ class HandbidShortCodeController {
         $auctionID = (isset($auction->id))?$auction->id:0;
 	    $profile  = $this->state->currentBidder($auctionID);
         $template = ($this->state->getVariantOfLoginPopup() == "old")?'views/bidder/login-form-simple':'views/bidder/login-form-new';
+        $auctionRequiresCC = isset( $attributes['auction_requires_cc'] ) ? $attributes['auction_requires_cc'] == 'true' : false;
         return $this->viewRenderer->render(
             $template,
             [
                 "auction" => $auction,
                 "countries" => $countries,
                 "in_page" => !!(trim($atts["in_page"])),
-                "is_logged_in" => !!($profile)
+                "is_logged_in" => !!($profile),
+                "auctionRequiresCC" => $auctionRequiresCC
             ]
         );
     }

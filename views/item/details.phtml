@@ -28,7 +28,7 @@ $isLosing = count( array_filter( $losing, function ( $bid ) use ( $item ) {
 if ( ! $item ) {
 	return;
 }
-$itemIsTicket = (isset($item->isTicket)) ? (bool) $item->isTicket : false;
+$itemIsTicket = (isset($item->isTicket)) ? (bool) $item->isTicket : (strpos(strtolower($item->name), 'ticket') !== false);
 if ( $itemIsTicket ) {
 	$item->isDirectPurchaseItem = true;
 }
@@ -63,6 +63,8 @@ $isDonation = (!empty($item->isAppeal) and $item->isAppeal);
 	     data-handbid-auction-guid="<?php echo $auction->auctionGuid; ?>"
 	     <?php if ($itemHideIfSold) { ?>data-hide-if-sold<?php } ?>
          data-item-id="<?php echo $item->id; ?>"
+         data-item-auction-id="<?php echo $auction->id; ?>"
+         data-item-is-ticket="<?php echo ($itemIsTicket)?'yes':'no'; ?>"
          data-item-is-donation="<?php echo ($isDonation)?'yes':'no'; ?>">
 
 

@@ -42,7 +42,7 @@ var timerForSearch, timerToLoad, isotopeWasFiltered = false, wasNotVisible = tru
                                                                      // call it topOffset
             topOffset = topOffset ? parseInt(topOffset) : 0;
 
-            topOffset = ($("body").hasClass('handbid-logged-in')) ? (topOffset + 104) : topOffset;
+            topOffset = ($("body").hasClass('handbid-logged-in')) ? (topOffset + 94) : topOffset;
 
 
             //lets only kick in if have scrolled far enough
