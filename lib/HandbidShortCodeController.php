@@ -1241,7 +1241,7 @@ class HandbidShortCodeController {
                 "countries" => $countries,
                 "in_page" => !!(trim($atts["in_page"])),
                 "is_logged_in" => !!($profile),
-                // "auctionRequiresCC" => $auctionRequiresCC
+                "auctionRequiresCC" => $auctionRequiresCC
             ]
         );
     }
