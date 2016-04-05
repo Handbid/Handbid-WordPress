@@ -71,6 +71,21 @@ if(!defined("HANDBID_DEFAULT_CURRENCY")){
 if(!defined("HANDBID_DEFAULT_CURRENCY_SYMBOL")){
 	define("HANDBID_DEFAULT_CURRENCY_SYMBOL", "$");
 }
+    
+/**
+ * Add async attributes to enqueued scripts where needed.
+ * The ability to filter script tags was added in WordPress 4.1 for this purpose.
+ */
+function my_async_scripts( $tag, $handle, $src ) {
+    // the handles of the enqueued scripts we want to async
+    $async_scripts = array( 'fonts-google-lato', 'fonts-google-oswald' );
+
+    if ( in_array( $handle, $async_scripts ) ) {
+        return '<script type="text/javascript" src="' . $src . '" async="async"></script>' . "\n";
+    }
+
+    return $tag;
+}
 
 class Handbid
 {
@@ -328,21 +343,6 @@ class Handbid
             wp_enqueue_style($key);
         }
 
-    }
-    
-    /**
-     * Add async attributes to enqueued scripts where needed.
-     * The ability to filter script tags was added in WordPress 4.1 for this purpose.
-     */
-    function my_async_scripts( $tag, $handle, $src ) {
-        // the handles of the enqueued scripts we want to async
-        $async_scripts = array( 'fonts-google-lato', 'fonts-google-oswald' );
-
-        if ( in_array( $handle, $async_scripts ) ) {
-            return '<script type="text/javascript" src="' . $src . '" async="async"></script>' . "\n";
-        }
-
-        return $tag;
     }
 
     function createHandbid()
