@@ -120,9 +120,9 @@ $currencySymbol = (isset($auction->currencySymbol))? $auction->currencySymbol : 
         <div class="col-sm-3">
             <a href="#" class="button green-solid-button   loading-span-button"
                data-handbid-tickets-button="purchase"
-                <?php if (!count($cards)) {
-                    echo " data-handbid-credit-cards-required data-handbid-credit-cards-need ";
-                } ?> 
+                <?php if (!count($profile->creditCards)) {
+                    echo " data-handbid-credit-cards-required ";
+                } ?>  data-handbid-credit-cards-need
                data-handbid-buy-tickets-nonce="<?php echo apply_filters("handbid_create_nonce", date("d.m.Y") . "buy_tickets_array"); ?>"
                data-handbid-auction-id="<?php echo $auction->id; ?>"
                data-handbid-profile-id="<?php echo $profile->id; ?>"

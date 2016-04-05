@@ -557,7 +557,7 @@ class Handbid
         $bidder = $this->state()->currentBidder($auctionID);
 
         //if(!$bidder) {
-            echo do_shortcode('[handbid_bidder_login_form]');
+            echo do_shortcode('[handbid_bidder_login_form  auction_requires_cc='.(($auction->requireCreditCard)?'true':'false').']');
         //}
 
         if (!$displayBidderProfile) {
