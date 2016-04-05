@@ -1,67 +1,72 @@
 @import "variables.less";
 
-.button(@color: rgba(233, 77, 112, 1)) {
-    padding: 15px 35px;
-    color: @color;
-    border: 1px solid @color;
-    -webkit-border-radius: 3px;
-    border-radius: 3px;
-    display: inline-block;
-    text-transform: uppercase;
-    font-weight: 700;
-    -webkit-transition: all 0.2s ease-in-out;
-    -moz-transition: all 0.2s ease-in-out;
-    -ms-transition: all 0.2s ease-in-out;
-    -o-transition: all 0.2s ease-in-out;
-    transition: all 0.2s ease-in-out;
-    &:hover {
-        color: #fff;
-        background: @color;
-        cursor: pointer;
-    }
+.button(@color: @pink) {
+  padding: 15px 35px;
+  color: @color;
+  border: 1px solid @color;
+  border-radius: 3px;
+  display: inline-block;
+  text-transform: uppercase;
+  font-weight: 700;
+  transition: all 0.2s ease-in-out;
+  &:hover {
+    color: @white;
+    background: @color;
+    cursor: pointer;
+  }
 }
 
-.solid-button(@color: rgba(233, 77, 112, 1)) {
-    .button(@color);
-    background: @color;
-    color: #fff;
-    &:hover {
-        background: #fff;
-        color: @color;
-    }
+.solid-button(@color: @pink) {
+  .button(@color);
+  background: @color;
+  color: @white;
+  &:hover {
+    background: @white;
+    color: @color;
+  }
 }
 
 .pink-button {
-    .button;
+  .button;
 }
 
 .white-button {
-    .button(#fff);
+  .button(@white);
 }
+
 .white-button:hover {
-    color: @pink;
+  color: @pink;
 }
 
 .green-button {
-    .button(@green);
+  .button(@green);
 }
 
 .pink-solid-button {
-    .solid-button;
+  .solid-button;
 }
 
 .green-solid-button {
-    .solid-button(@green);
+  .solid-button(@green);
 }
 
 .gray-solid-button {
-    .solid-button(@mediumGray);
+  .solid-button(@mediumGray);
 }
 
 .light-blue-button {
-    .button(@lightBlue);
+  .button(@lightBlue);
 }
 
 .light-blue-solid-button {
-    .solid-button(@lightBlue);
+  .solid-button(@lightBlue);
+}
+
+.btn.btn-info.active {
+  background-image: url("../images/ajax-loader.gif");
+  background-position: center;
+  background-repeat: no-repeat;
+  span {
+    opacity: 0;
+  }
 }

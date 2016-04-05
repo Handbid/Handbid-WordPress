@@ -25,12 +25,12 @@ var handbidLoginMain, cookieExpire = 7;
         registerFieldsValidation: function (tabName) {
             var valid = true;
             var field, fieldType, passField, passConfirm;
-            var errorRow = $("." + tabName + " .errorsRow").eq(0);
-            var errorsContainer = $("." + tabName + " .errorsContainer").eq(0);
+            var errorRow = $("[data-tab-name=" + tabName + "] .errorsRow").eq(0);
+            var errorsContainer = $("[data-tab-name=" + tabName + "] .errorsContainer").eq(0);
             errorsContainer.html("");
 
 
-            $("." + tabName + " input[required]").each(function () {
+            $("[data-tab-name=" + tabName + "] input[required]").each(function () {
                 field = $(this);
                 fieldType = field.attr("type");
                 if ((field.val().trim() == "")
@@ -45,7 +45,7 @@ var handbidLoginMain, cookieExpire = 7;
             });
 
 
-            $("." + tabName + " input.is-email").each(function () {
+            $("[data-tab-name=" + tabName + "] input.is-email").each(function () {
                 field = $(this);
                 if (field.val().trim() != "" && ! handbidLogin.validEmail(field.val())) {
                     field.addClass("validation-email-error");
@@ -58,7 +58,7 @@ var handbidLoginMain, cookieExpire = 7;
             });
 
 
-            if (tabName == "register-tab") {
+            if (tabName == "register-form") {
                 passField = $("#reg-password");
                 passConfirm = $("#reg-password-confirm");
                 if (passField.val() != passConfirm.val()) {
@@ -226,7 +226,7 @@ var handbidLoginMain, cookieExpire = 7;
 
             var isCurrentlyLoggingIn = $(".isCurrentlyLoggingIn");
 
-            var errorBlock = $(".login-modal-tab .errorsRow");
+            var errorBlock = $("[data-handbid-modal-key='login-modal'] .errorsRow");
 
             if(!handbidLogin.validEmail(username)){
                 username = handbidLogin.getPhoneNumber(username);
@@ -275,8 +275,8 @@ var handbidLoginMain, cookieExpire = 7;
             var auctionName = $("#confirm-add-to-auction-name").val();
             var nonce = $("#hb-reg-form-nonce").val();
 
-            var errorRow = $(".register-confirm-tab .errorsRow").eq(0);
-            var errorsContainer = $(".register-confirm-tab .errorsContainer").eq(0);
+            var errorRow = $("[data-tab-name='register-form-confirm'] .errorsRow").eq(0);
+            var errorsContainer = $("[data-tab-name='register-form-confirm'] .errorsContainer").eq(0);
 
 
             button.addClass("active");
@@ -307,7 +307,7 @@ var handbidLoginMain, cookieExpire = 7;
                         var auctionNameContainer = $("#reg-complete-auction");
                         var paddleNumberContainer = $("#reg-paddle-number");
                         var paddleContainer = $("#reg-complete-have-paddle-number");
-                        var closeButton = $(".handbid-modal.user-modal.login-modal-tab .modal-close").eq(0);
+                        var closeButton = $("[data-handbid-modal-key='login-modal'] .modal-close").eq(0);
                         var startBiddingButton = $("#start-bidding-button");
                         nameContainer.html(data.values.firstname + " " + data.values.lastname);
                         if((auctionSlug == undefined || auctionSlug.trim() == "") && currentAuctionKey != undefined){
@@ -357,7 +357,7 @@ var handbidLoginMain, cookieExpire = 7;
                 emailOrPhone = handbidLogin.getPhoneNumber(emailOrPhone);
             }
             var nonce = button.data("change-pass-nonce");
-            var errorBlock = $(".forgot-pass-tab .errorsRow");
+            var errorBlock = $("[data-tab-name='forgot-pass'] .errorsRow");
             //console.log(nonce);
             button.addClass("active");
             $.post(ajaxurl,
@@ -395,7 +395,6 @@ var handbidLoginMain, cookieExpire = 7;
 
             (cardAdded) ? addNewCCBlock.hide() : addNewCCBlock.show();
             (cardAdded) ? startBiddingBlock.show() : startBiddingBlock.hide();
-
         }
     };
 
@@ -440,7 +439,7 @@ var handbidLoginMain, cookieExpire = 7;
 
         $('.login-popup-link.register-next').on('click', function (e) {
             e.preventDefault();
-            if (handbidLogin.registerFieldsValidation("register-tab")) {
+            if (handbidLogin.registerFieldsValidation("register-form")) {
                 var tabName = $(this).data("target-tab");
                 handbidLogin.displaySpecifiedTabOfLoginPopup(tabName);
             }
@@ -448,7 +447,7 @@ var handbidLoginMain, cookieExpire = 7;
 
         $('.login-popup-link.register-confirm').on('click', function (e) {
             e.preventDefault();
-            if (handbidLogin.registerFieldsValidation("register-confirm-tab")) {
+            if (handbidLogin.registerFieldsValidation("register-form-confirm")) {
                 handbidLogin.tryToRegister($(this));
                 var tabName = $(this).data("target-tab");
                 //handbidLogin.displaySpecifiedTabOfLoginPopup(tabName);
@@ -473,7 +472,7 @@ var handbidLoginMain, cookieExpire = 7;
         });
 
         $('.exit-tutorial-link').on('click', function (e) {
-            $(".handbid-simplified-login-modal .modal-close").click();
+            $("[data-handbid-modal-key='login-modal'] .modal-close").click();
         });
 
         $('.change-auto-complete-auction').on('click', function (e) {

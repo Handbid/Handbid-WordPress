@@ -1,0 +1,250 @@
+
+
+.handbid-modal.handbid-login-modal [data-tab-name="get-started"] {
+  text-shadow: none;
+  h5 {
+    font-size: 18px;
+    font-weight: normal;
+    &.footer-message {
+      font-size: 24px;
+    }
+  }
+  .col-lg-4 {
+    h2 {
+      margin-bottom: 10px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    h4 {
+      margin-top: 15px;
+      font-size: 14px;
+      font-style: normal;
+      font-weight: normal;
+    }
+  }
+  .buttons {
+    h4 {
+      font-size: 18px;
+      font-weight: 300;
+      font-style: normal;
+    }
+    .btn, .btn:hover {
+      padding: 10px 0;
+      margin: 0 auto;
+      width: 190px;
+      font-size: 18px;
+      border: none;
+      color: @white;
+      text-decoration: none;
+      &[data-target-tab=use-invite-code] {
+        background-color: @darkBlue;
+      }
+      &[data-target-tab=register-form] {
+        background-color: @orange;
+      }
+    }
+  }
+}
+[data-tab-name=tutorial-info-1] {
+  .tutorialTabsContainer {
+    padding: 10px;
+    min-height: 80px;
+    a {
+      display: block;
+    }
+    .img-circle {
+      width: 60px;
+      height: 60px;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    h2 {
+      display: inline-block;
+      padding: 0;
+      vertical-align: middle;
+      font-size: 24px;
+      font-weight: normal;
+    }
+  }
+  .tab-pane {
+    min-height: 455px;
+    h4 {
+      margin-bottom: 0;
+      font-size: 24px;
+      font-weight: normal;
+    }
+    h5 {
+      margin-top: 0;
+      font-size: 18px;
+      font-weight: normal;
+    }
+    p {
+      margin-bottom: 10px;
+      font-size: 16px;
+      font-weight: bold;
+    }
+    button.btn, button.btn:hover {
+      padding: 8px 0;
+      margin: 0;
+    }
+    &#your-comp h4 {
+      margin-top: 100px;
+    }
+  }
+}
+[data-tab-name=tutorial-info-1], [data-tab-name=tutorial-info-2], [data-tab-name=tutorial-info-3] {
+  h3 {
+    text-transform: uppercase;
+  }
+  .handbid-tips {
+    margin: 20px 0 40px;
+    li {
+      padding-left: 35px;
+      margin-bottom: 20px;
+      h2 {
+        margin-bottom: 10px;
+        text-align: left;
+        text-transform: uppercase;
+        font-size: 18px;
+        font-weight: bold;
+      }
+      p {
+        padding: 0;
+        font-size: 14px;
+        font-weight: normal;
+      }
+      &:before {
+        color: @white;
+        background: #A2BD4C;
+        width: 22px;
+        height: 22px;
+        border-radius: 5px;
+        line-height: 22px;
+      }
+    }
+  }
+  .modal-footer {
+    position: relative;
+    .action-link {
+      position: absolute;
+      width: 150px;
+      text-transform: uppercase;
+      color: @white;
+      font-weight: normal;
+      font-size: 20px;
+      top: -12px;
+      display: block;
+      opacity: 0.5;
+      text-decoration: none;
+      &:hover {
+        opacity: 1;
+      }
+      &.go-back-button {
+        left: -160px;
+        text-align: right;
+      }
+      &.go-next-button {
+        right: -160px;
+        text-align: left;
+      }
+    }
+  }
+}
+[data-tab-name=tutorial-info-2] {
+  .handbid-tips {
+    li {
+      &:before {
+        content: "\e013";
+        display: inline-block;
+        font-family: 'Glyphicons Halflings';
+        font-style: normal;
+        font-size: 12px;
+        font-weight: 400;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+    }
+  }
+}
+[data-tab-name=tutorial-info-3] {
+  .handbid-tips {
+    li {
+      &:before {
+        background: @pink;
+        font-weight: bold;
+        font-size: 20px;
+      }
+    }
+  }
+}
+
+.tutorialTabsContainer {
+  padding: 20px 10px;
+  min-height: 250px;
+  margin: 15px 0;
+  border-radius: 20px;
+  &.active {
+    border: 2px dashed @white;
+  }
+
+  a {
+    text-decoration: none !important;
+  }
+}
+
+.handbid-tips {
+  li {
+    position: relative;
+    padding-left: 25px;
+    margin-bottom: 15px;
+    &:before {
+      content: "?";
+      color: #333ebf;
+      background: #52bc5f;
+      width: 20px;
+      height: 20px;
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      border-radius: 20px;
+      line-height: 20px;
+      text-align: center;
+    }
+
+    h2 {
+      padding: 0;
+    }
+    p {
+      text-align: left;
+    }
+  }
+}
+
+.handbid-login-modal {
+  .tab-pane#your-comp h4 {
+    margin-top: 30px;
+  }
+  .tutorialTabs h2.center-aligned-text {
+    display: block !important;
+    font-size: 18px !important;
+  }
+}
+
+@media (max-width: 992px) {
+  [data-tab-name=tutorial-info-1] {
+    .modal-footer {
+      .action-link {
+        top: 5px;
+        &.go-back-button {
+          left: 30px;
+          text-align: left;
+        }
+        &.go-next-button {
+          right: 30px;
+          text-align: right;
+        }
+      }
+    }
+  }
+}

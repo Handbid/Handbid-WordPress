@@ -79,21 +79,17 @@ if(!function_exists("handbid_popup_inline_links")){
 ?>
 
 
-<div class="handbid-modal modal fade handbid-simplified-login-modal simplified-login-new <?php echo ($in_page) ? "handbid-modal-in-page" : "" ; ?> user-modal contact-body login-modal-tab" tabindex="-1" role="dialog" data-handbid-modal-key="login-modal">
-<div class="modal-dialog modal-lg">
-<?php if(!$in_page){?>
-    <a href="#" class="modal-close" data-dismiss="modal" aria-label="Close">&times;</a>
-<?php }?>
+<div class="handbid-modal modal fade handbid-login-modal <?php echo ($in_page) ? "handbid-modal-in-page" : "" ; ?>" tabindex="-1" role="dialog" data-handbid-modal-key="login-modal">
+    <div class="modal-dialog modal-lg">
+        <?php if(!$in_page){?>
+            <a href="#" class="modal-close" data-dismiss="modal" aria-label="Close">&times;</a>
+        <?php }?>
 
-<div class="page-body connect-page">
-
-<div class="container-fluid container-tab active-container" data-tab-name="login-form">
-    <?php get_login_popup_header("Sign in to Handbid");?>
-    <div class="row">
-        <div class="col-xs-12 signup-form">
-            <div class="handbid-form signup-form">
-                <div class="row no-margin " style="display: none">
-                    <div class="col-md-10 col-md-offset-1 col-xs-12">
+        <div class="container-fluid container-tab active-container" data-tab-name="login-form">
+            <?php get_login_popup_header("Sign in to Handbid");?>
+            <div class="handbid-form row">
+                <div class="row no-margin" style="display: none">
+                    <div class="col-sm-8 col-sm-offset-2 col-xs-12">
                         <h3>Handbid Bidder Login</h3>
                         <?php if($is_logged_in){?>
                             <h4>You are already logged in</h4>
@@ -109,50 +105,51 @@ if(!function_exists("handbid_popup_inline_links")){
                 <form id="hb-login-form" class="form" method="POST" action="<?php echo get_admin_url() . 'admin-post.php'; ?>"
                       enctype="multipart/form-data">
 
-
-                    <div class="row isCurrentlyLoggingIn to-hide-block" style="display: none;">
-                        <h3 class="col-xs-12 ">
-                            Logging in. Please wait.
-                        </h3>
-                    </div><div class="row errorsRow to-hide-block" style="display: none;">
-                        <div class="col-md-10 col-md-offset-1 col-xs-12 errorsContainer">
-                            Specified combination not found.
-                        </div>
-                    </div>
-                    <?php if(!$is_logged_in){?>
-                        <div class="row">
-                            <div class="form-group col-md-10 col-md-offset-1 col-xs-12">
-                                <input placeholder="Email*" type="email" name="username" value=""
-                                       class="form-control cleanable-input" id="hb-login-form-username">
+                    <div class="col-md-10 col-md-offset-1 col-xs-12 handbid-form-area">
+                        <div class="row isCurrentlyLoggingIn to-hide-block" style="display: none;">
+                            <h3 class="col-xs-12 ">
+                                Logging in. Please wait.
+                            </h3>
+                        </div><div class="row errorsRow to-hide-block" style="display: none;">
+                            <div class="col-md-10 col-md-offset-1 col-xs-12 errorsContainer">
+                                Specified combination not found.
                             </div>
                         </div>
+                        <?php if(!$is_logged_in){?>
+                            <div class="row">
+                                <div class="form-group col-md-6 col-md-offset-3 col-xs-12">
+                                    <input placeholder="Email*" type="email" name="username" value=""
+                                           class="form-control cleanable-input" id="hb-login-form-username">
+                                </div>
+                            </div>
 
+
+                            <div class="row">
+                                <div class="form-group col-md-6 col-md-offset-3 col-xs-12">
+                                    <input placeholder="Password or Pin*" type="password" name="pin" value=""
+                                           class="form-control cleanable-input"  id="hb-login-form-password">
+
+                                </div>
+                            </div>
+                        <?php }?>
 
                         <div class="row">
-                            <div class="form-group col-md-10 col-md-offset-1 col-xs-12">
-                                <input placeholder="Password or Pin*" type="password" name="pin" value=""
-                                       class="form-control cleanable-input"  id="hb-login-form-password">
+                            <div class="form-group col-md-10 col-md-offset-1 col-xs-12 buttons">
+                                <?php if($is_logged_in){?>
+                                    <a class="btn handbid-logout-link" href="/handbid-logout/">Logout</a>
+                                <?php }else{ ?>
 
+                                    <input type="hidden" id="login-add-to-auction" value="<?php echo (isset($auction->auctionGuid))?trim($auction->auctionGuid):"";?>">
+                                    <button type="submit" class="btn signup" id="hb-login-form-submit"><span>Sign In</span></button>
+                                <?php }?>
                             </div>
-                        </div>
-                    <?php }?>
-
-                    <div class="row">
-                        <div class="form-group col-md-10 col-md-offset-1 col-xs-12 buttons">
-                            <?php if($is_logged_in){?>
-                                <a class="btn btn-info handbid-logout-link" href="/handbid-logout/">Logout</a>
-                            <?php }else{ ?>
-
-                                <input type="hidden" id="login-add-to-auction" value="<?php echo (isset($auction->auctionGuid))?trim($auction->auctionGuid):"";?>">
-                                <button type="submit" class="btn btn-info signup" id="hb-login-form-submit"><span>Sign In</span></button>
-                            <?php }?>
                         </div>
                     </div>
 
                     <?php if(!$is_logged_in) handbid_popup_inline_links("login");?>
 
                     <div class="row">
-                        <div class="col-md-10 col-md-offset-1 col-xs-12 modal-footer center-aligned-text">
+                        <div class="col-md-10 col-md-offset-1 col-xs-12 modal-footer">
                             <?php handbid_app_links();?>
                         </div>
                     </div>
@@ -162,47 +159,43 @@ if(!function_exists("handbid_popup_inline_links")){
                     <input type='hidden' name='nonce' value='<?php echo apply_filters("handbid_create_nonce", date("d.m.Y") . "login");?>' id="hb-login-form-nonce"/>
                     <input type='hidden' name='action' value='handbid_ajax_login' id="hb-login-form-action"/>
                 </form>
-
             </div>
         </div>
-    </div>
-</div>
 
-<div class="container-fluid container-tab forgot-pass-tab" style="display: none" data-tab-name="forgot-pass">
-    <?php get_login_popup_header("Forgot Password?");?>
-    <div class="row">
-        <div class="col-xs-12 signup-form">
-            <div class="handbid-form signup-form">
+        <div class="container-fluid container-tab" style="display: none" data-tab-name="forgot-pass">
+            <?php get_login_popup_header("Forgot Password?");?>
+            <div class="handbid-form row">
 
                 <form class="form" method="POST" action="<?php echo get_admin_url() . 'admin-post.php'; ?>"
                       enctype="multipart/form-data">
-
-                    <div class="row errorsRow to-hide-block" style="display: none;">
-                        <div class="col-md-10 col-md-offset-1 col-xs-12 errorsContainer">
-                            User with specified email was not found.
+                    <div class="col-md-10 col-md-offset-1 col-xs-12 center-aligned-text handbid-form-area">
+                        <div class="row errorsRow to-hide-block" style="display: none;">
+                            <div class="col-md-10 col-md-offset-1 col-xs-12 errorsContainer">
+                                User with specified email was not found.
+                            </div>
                         </div>
-                    </div>
 
 
-                    <div class="row">
-                        <div class="form-group col-md-10 col-md-offset-1 col-xs-12">
-                            <h5>Enter your email and we will send you instructions on how to get
-                                logged in.</h5>
+                        <h5>Enter your email and we will send you instructions on how to get
+                            logged in.</h5>
 
-                            <input placeholder="Email" type="text" id="emailOrPhoneToResetPass"
-                                   name="username" value=""
-                                   class="form-control cleanable-input">
-
-                            <button type="submit" class="btn btn-info signup login-popup-link reset-password-link loading-span-button"
-                                    data-change-pass-nonce="<?php echo apply_filters("handbid_create_nonce", date("d.m.Y") . "reset_pass");?>"
-                                ><span>Send Instructions</span></button>
+                        <div class="row">
+                            <div class="form-group col-md-6 col-md-offset-3 col-xs-12">
+                                <input placeholder="Email" type="text" id="emailOrPhoneToResetPass"
+                                       name="username" value=""
+                                       class="form-control cleanable-input">
+                           </div>
                         </div>
+
+                        <button type="submit" class="btn signup login-popup-link reset-password-link loading-span-button"
+                                data-change-pass-nonce="<?php echo apply_filters("handbid_create_nonce", date("d.m.Y") . "reset_pass");?>"
+                            ><span>Send Instructions</span></button>
                     </div>
 
                     <?php handbid_popup_inline_links("forgot");?>
 
                     <div class="row">
-                        <div class="col-md-10 col-md-offset-1 col-xs-12 modal-footer center-aligned-text">
+                        <div class="col-md-10 col-md-offset-1 col-xs-12 modal-footer">
                             <?php handbid_app_links();?>
                         </div>
                     </div>
@@ -211,38 +204,29 @@ if(!function_exists("handbid_popup_inline_links")){
 
             </div>
         </div>
-    </div>
-</div>
 
-<div class="container-fluid container-tab" style="display: none" data-tab-name="forgot-pass-sent">
-    <?php get_login_popup_header("Login Info has been Sent");?>
-    <div class="row">
-        <div class="col-xs-12 signup-form">
-            <div class="handbid-form signup-form">
+        <div class="container-fluid container-tab" style="display: none" data-tab-name="forgot-pass-sent">
+            <?php get_login_popup_header("Login Info has been Sent");?>
 
+            <div class="handbid-form row">
                 <div class="row">
                     <div class="form-group col-md-10 col-md-offset-1 col-xs-12">
-                        <h2 class="center-aligned-text">Check your email for the information.</h2>
+                        <h3 class="center-aligned-text">Check your email for the information.</h3>
                     </div>
                 </div>
 
                 <div class="row">
-                    <div class="col-md-10 col-md-offset-1 col-xs-12 modal-footer center-aligned-text">
-                        <a class="btn btn-info signup login-popup-link" data-target-tab="login-form">Start Over</a>
+                    <div class="col-md-10 col-md-offset-1 col-xs-12 modal-footer">
+                        <a class="btn signup login-popup-link" data-target-tab="login-form">Start Over</a>
                         <?php handbid_app_links();?>
                     </div>
                 </div>
-
             </div>
         </div>
-    </div>
-</div>
 
-<?php if(defined("HANDBID_SHOW_TUTORIAL") and HANDBID_SHOW_TUTORIAL){?>
-    <div class="container-fluid container-tab" style="display: none" data-tab-name="get-started">
-        <div class="row">
-            <div class="col-xs-12 signup-form">
-                <div class="handbid-form signup-form">
+        <?php if(defined("HANDBID_SHOW_TUTORIAL") and HANDBID_SHOW_TUTORIAL){?>
+            <div class="container-fluid container-tab" style="display: none" data-tab-name="get-started">
+                <div class="handbid-form row">
                     <h3>GETTING STARTED</h3>
                     <h4 class="sub-title">with <span>Handbid</span></h4>
 
@@ -320,27 +304,18 @@ if(!function_exists("handbid_popup_inline_links")){
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-10 col-md-offset-1 col-xs-12 modal-footer center-aligned-text">
+                            <div class="col-md-10 col-md-offset-1 col-xs-12 modal-footer">
                                 <?php handbid_app_links();?>
                             </div>
                         </div>
-
                     </form>
-
                 </div>
             </div>
-        </div>
-    </div>
-<?php }?>
+        <?php }?>
 
-</div>
-
-<div class="container-fluid container-tab invite-code-tab" style="display: none" data-tab-name="use-invite-code">
-    <?php get_login_popup_header("Use Invite Code");?>
-    <div class="row">
-        <div class="col-xs-12 signup-form">
-            <div class="handbid-form signup-form">
-
+        <div class="container-fluid container-tab invite-code-tab" style="display: none" data-tab-name="use-invite-code">
+            <?php get_login_popup_header("Use Invite Code");?>
+            <div class="handbid-form row">
                 <div class="row">
                     <div class="form-group col-md-10 col-md-offset-1 col-xs-12">
                         <h2 class="center-aligned-text">You were invited to use Handbid!</h2>
@@ -361,14 +336,12 @@ if(!function_exists("handbid_popup_inline_links")){
                         <input placeholder="Enter code" type="text" name="code" value=""
                                id="inviteShortCodeInput"
                                class="form-control cleanable-input">
-
-
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="form-group col-md-10 col-md-offset-1 col-xs-12 center-aligned-text">
-                        <a class="btn btn-info signup login-popup-link inviteShortCodeButton loading-span-button"
+                        <a class="btn signup login-popup-link inviteShortCodeButton loading-span-button"
                            data-check-invite-nonce="<?php echo apply_filters("handbid_create_nonce", date("d.m.Y") . "check_invite_code");?>"
                             ><span>Find My Auction</span></a>
                     </div>
@@ -383,23 +356,19 @@ if(!function_exists("handbid_popup_inline_links")){
                 </div>
 
                 <div class="row">
-                    <div class="modal-footer center-aligned-text col-md-10 col-md-offset-1 col-xs-12">
+                    <div class="modal-footer col-md-10 col-md-offset-1 col-xs-12">
                         <?php handbid_app_links();?>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
 
-<div class="container-fluid container-tab register-tab" style="display: none" data-tab-name="register-form">
-    <?php get_login_popup_header("Getting Started!");?>
-    <div class="row">
-        <div class="col-xs-12 signup-form">
-            <div class="handbid-form signup-form row">
+        <div class="container-fluid container-tab register-tab" style="display: none" data-tab-name="register-form">
+            <?php get_login_popup_header("Getting Started!");?>
+            <div class="handbid-form row">
                 <h4>Creating Your Bidder Account<br></h4>
 
-                <div class="col-md-10 col-md-offset-1 col-xs-12 center-aligned-text" style="float: none;">
+                <div class="col-md-10 col-md-offset-1 col-xs-12 center-aligned-text handbid-form-area">
                     <div class="row errorsRow" style="display: none;">
                         <div class="col-xs-12 errorsContainer">
 
@@ -552,105 +521,94 @@ if(!function_exists("handbid_popup_inline_links")){
                 <?php handbid_popup_inline_links("register");?>
 
                 <div class="row">
-                    <div class="modal-footer center-aligned-text col-md-10 col-md-offset-1 col-xs-12">
+                    <div class="modal-footer col-md-10 col-md-offset-1 col-xs-12">
                         <?php handbid_app_links();?>
                     </div>
                 </div>
 
             </div>
         </div>
-    </div>
-</div>
 
 
-<div class="container-fluid container-tab register-confirm-tab" style="display: none" data-tab-name="register-form-confirm">
-    <?php get_login_popup_header("Confirm Registration");?>
-    <div class="row">
-        <div class="col-xs-12 col-md-10 col-md-offset-1 signup-form">
-            <div class="handbid-form signup-form">
+        <div class="container-fluid container-tab" style="display: none" data-tab-name="register-form-confirm">
+            <?php get_login_popup_header("Confirm Registration");?>
+            <div class="handbid-form row">
                 <h4>Your Handbid Account is SETUP<br>please confirm your information below</h4>
+                <div class="col-md-10 col-md-offset-1 col-xs-12 handbid-form-area">
+                    <div class="row errorsRow" style="display: none;">
+                        <div class="col-xs-12 errorsContainer">
 
-                <div class="row errorsRow" style="display: none;">
-                    <div class="col-xs-12 errorsContainer">
-
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="form-group col-xs-12">
-                        <input id="confirm-firstname" placeholder="First Name" type="text" name="firstname" value=""
-                               class="col-xs-12  cleanable-input"
-                               required
-                               data-required-message="First Name field is required">
-                    </div>
-                    <div class="form-group col-xs-12">
-                        <input id="confirm-lastname" placeholder="Last Name" type="text" name="lastname" value=""
-                               class="col-xs-12 cleanable-input"
-                               required
-                               data-required-message="Last Name field is required">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-xs-12">
-                        <input id="confirm-email" placeholder="eMail" type="email" name="email" value=""
-                               class="col-xs-12 cleanable-input is-email"
-                               data-not-email-message="Please, provide valid email address" >
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-xs-12">
-                        <select id="confirm-phone-code" name="phone-code"
-                                class="col-xs-4">
-                            <?php
-                            foreach($countries as $country){
-                                echo "<option value='" . $country["code"] . "' " . selected("US", $country["code"], false) . ">" . $country["name"] . "</option>";
-                            }
-                            ?>
-                        </select>
-                        <input id="confirm-phone-number" placeholder="Cell Phone" type="text" name="phone-number"
-                               value=""
-                               class="col-xs-8 has-question-icon has-popover cleanable-input">
-                        <input type="hidden" name="phone-type" value="other">
+                        </div>
                     </div>
 
-                    <input type="hidden" class="" id="confirm-add-to-auction-id" name="add-to-auction-id" value="<?php echo (isset($auction->id))?trim($auction->id):"";?>">
-                    <input type="hidden" class="" id="confirm-add-to-auction" name="add-to-auction" value="<?php echo (isset($auction->auctionGuid))?trim($auction->auctionGuid):"";?>">
-                    <input type="hidden" class="" id="confirm-add-to-auction-slug" name="add-to-auction-slug" value="<?php echo (isset($auction->key))?trim($auction->key):"";?>">
-                    <input type="hidden" class="" id="confirm-add-to-auction-name" name="add-to-auction-name" value="<?php echo (isset($auction->name))?esc_attr(trim($auction->name)):"";?>">
-                </div>
+                    <div class="row">
+                        <div class="form-group col-xs-12">
+                            <input id="confirm-firstname" placeholder="First Name" type="text" name="firstname" value=""
+                                   class="col-xs-12  cleanable-input"
+                                   required
+                                   data-required-message="First Name field is required">
+                        </div>
+                        <div class="form-group col-xs-12">
+                            <input id="confirm-lastname" placeholder="Last Name" type="text" name="lastname" value=""
+                                   class="col-xs-12 cleanable-input"
+                                   required
+                                   data-required-message="Last Name field is required">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-xs-12">
+                            <input id="confirm-email" placeholder="eMail" type="email" name="email" value=""
+                                   class="col-xs-12 cleanable-input is-email"
+                                   data-not-email-message="Please, provide valid email address" >
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-xs-12">
+                            <select id="confirm-phone-code" name="phone-code"
+                                    class="col-xs-4">
+                                <?php
+                                foreach($countries as $country){
+                                    echo "<option value='" . $country["code"] . "' " . selected("US", $country["code"], false) . ">" . $country["name"] . "</option>";
+                                }
+                                ?>
+                            </select>
+                            <input id="confirm-phone-number" placeholder="Cell Phone" type="text" name="phone-number"
+                                   value=""
+                                   class="col-xs-8 has-question-icon has-popover cleanable-input">
+                            <input type="hidden" name="phone-type" value="other">
+                        </div>
 
-                <input type="hidden" id="confirm-password" name="password">
+                        <input type="hidden" class="" id="confirm-add-to-auction-id" name="add-to-auction-id" value="<?php echo (isset($auction->id))?trim($auction->id):"";?>">
+                        <input type="hidden" class="" id="confirm-add-to-auction" name="add-to-auction" value="<?php echo (isset($auction->auctionGuid))?trim($auction->auctionGuid):"";?>">
+                        <input type="hidden" class="" id="confirm-add-to-auction-slug" name="add-to-auction-slug" value="<?php echo (isset($auction->key))?trim($auction->key):"";?>">
+                        <input type="hidden" class="" id="confirm-add-to-auction-name" name="add-to-auction-name" value="<?php echo (isset($auction->name))?esc_attr(trim($auction->name)):"";?>">
+                    </div>
 
-                <div class="row">
-                    <div class="col-xs-12 center-aligned-text">
-                        <a class="btn btn-info signup login-popup-link register-confirm" data-target-tab="register-complete"><span>COMPLETE</span></a>
+                    <input type="hidden" id="confirm-password" name="password">
+                    <div class="row">
+                        <div class="col-xs-12 center-aligned-text">
+                            <a class="btn btn-info signup login-popup-link register-confirm" data-target-tab="register-complete"><span>COMPLETE</span></a>
+                        </div>
                     </div>
                 </div>
 
                 <?php handbid_popup_inline_links("register");?>
 
-                <div class="row">
-                    <div class="col-md-12 modal-footer center-aligned-text">
-                        <?php handbid_app_links();?>
+                <div class="modal-footer">
+                    <?php handbid_app_links();?>
 
-                        <!--                    <input type='hidden' name='redirect' value='--><?php //echo $_SERVER["REQUEST_URI"] ?><!--' id="hb-reg-form-redirect"/>-->
-                        <input type='hidden' name='form-id' value='handbid-register'/>
-                        <input type='hidden' name='nonce' value='<?php echo apply_filters("handbid_create_nonce", date("d.m.Y") . "register");?>' id="hb-reg-form-nonce"/>
-                        <input type='hidden' name='action' value='handbid_ajax_registration' id="hb-reg-form-action"/>
-                    </div>
+                    <!--                    <input type='hidden' name='redirect' value='--><?php //echo $_SERVER["REQUEST_URI"] ?><!--' id="hb-reg-form-redirect"/>-->
+                    <input type='hidden' name='form-id' value='handbid-register'/>
+                    <input type='hidden' name='nonce' value='<?php echo apply_filters("handbid_create_nonce", date("d.m.Y") . "register");?>' id="hb-reg-form-nonce"/>
+                    <input type='hidden' name='action' value='handbid_ajax_registration' id="hb-reg-form-action"/>
                 </div>
-
             </div>
         </div>
-    </div>
-</div>
 
 
-<div class="container-fluid container-tab" style="display: none" data-tab-name="register-complete">
-    <?php get_login_popup_header("Registration Complete!");?>
-    <div class="row">
-        <div class="col-xs-12 col-md-10 col-md-offset-1 signup-form">
-            <div class="handbid-form signup-form">
+        <div class="container-fluid container-tab" style="display: none" data-tab-name="register-complete">
+            <?php get_login_popup_header("Registration Complete!");?>
+            <div class="handbid-form row">
 
                 <div class="row">
                     <div class="col-md-10 col-md-offset-1 col-xs-12">
@@ -662,7 +620,7 @@ if(!function_exists("handbid_popup_inline_links")){
                             <h3 class="auction-name" id="reg-complete-auction">Night at the Museum</h3>
 
                             <h1 class="paddle-number" id="reg-paddle-number">192</h1>
-                            <div class="center-aligned-text bottom-margin">
+                            <div class="center-aligned-text">
                                 <span class="what-is-paddle-number">What is a <a href="#" target="_blank">Paddle Number</a>?</span>
                             </div>
                         </div>
@@ -682,24 +640,19 @@ if(!function_exists("handbid_popup_inline_links")){
 
 
                 <div class="row">
-                    <div class="col-md-10 col-md-offset-1 modal-footer center-aligned-text">
-
+                    <div class="col-md-10 col-md-offset-1 modal-footer">
                         <?php handbid_app_links();?>
                     </div>
                 </div>
 
             </div>
         </div>
-    </div>
-</div>
 
-<?php if(defined("HANDBID_SHOW_TUTORIAL") and HANDBID_SHOW_TUTORIAL){?>
+        <?php if(defined("HANDBID_SHOW_TUTORIAL") and HANDBID_SHOW_TUTORIAL){?>
 
-    <div class="container-fluid container-tab" style="display: none" data-tab-name="tutorial-info-1">
-        <?php get_login_popup_header("Tutorial. Step 1");?>
-        <div class="row">
-            <div class="row signup-form">
-                <div class="handbid-form signup-form">
+            <div class="container-fluid container-tab" style="display: none" data-tab-name="tutorial-info-1">
+                <?php get_login_popup_header("Tutorial. Step 1");?>
+                <div class="handbid-form row">
                     <h3>GETTING STARTED</h3>
                     <h4 class="sub-title">with <span>Handbid</span></h4>
                     <h4 class="help-title">HANDBID 101<br></h4>
@@ -802,23 +755,19 @@ if(!function_exists("handbid_popup_inline_links")){
                     </div>
 
                 </div>
-            </div>
-            <div class="row">
-                <div class="modal-footer center-aligned-text col-xs-12 col-md-8 col-md-offset-2">
-                    <!--   <a class="action-link go-back-button login-popup-link" data-target-tab="register-complete">< Go Back</a>-->
-                    <a class="action-link go-next-button login-popup-link" data-target-tab="tutorial-info-2">Next ></a>
-                    <?php handbid_app_links();?>
+                <div class="row">
+                    <div class="modal-footer col-xs-12 col-md-8 col-md-offset-2">
+                        <!--   <a class="action-link go-back-button login-popup-link" data-target-tab="register-complete">< Go Back</a>-->
+                        <a class="action-link go-next-button login-popup-link" data-target-tab="tutorial-info-2">Next ></a>
+                        <?php handbid_app_links();?>
+                    </div>
                 </div>
             </div>
 
-        </div>
-    </div>
 
-    <div class="container-fluid container-tab" style="display: none" data-tab-name="tutorial-info-2">
-        <?php get_login_popup_header("Tutorial. Step 2");?>
-        <div class="row">
-            <div class="row col-xs-12 col-md-10 col-md-offset-1 signup-form">
-                <div class="handbid-form signup-form">
+            <div class="container-fluid container-tab" style="display: none" data-tab-name="tutorial-info-2">
+                <?php get_login_popup_header("Tutorial. Step 2");?>
+                <div class="handbid-form row">
                     <h3>GETTING STARTED</h3>
                     <h4 class="sub-title">with <span>Handbid</span></h4>
                     <h4 class="help-title">HANDBID 101<br></h4>
@@ -858,24 +807,18 @@ if(!function_exists("handbid_popup_inline_links")){
 
 
                 </div>
-            </div>
-
-            <div class="row">
-                <div class="modal-footer center-aligned-text col-xs-12 col-md-8 col-md-offset-2">
-                    <a class="action-link go-back-button login-popup-link" data-target-tab="tutorial-info-1">< Go Back</a>
-                    <a class="action-link go-next-button login-popup-link" data-target-tab="tutorial-info-3">Next ></a>
-                    <?php handbid_app_links();?>
+                <div class="row">
+                    <div class="modal-footer col-xs-12 col-md-8 col-md-offset-2">
+                        <a class="action-link go-back-button login-popup-link" data-target-tab="tutorial-info-1">< Go Back</a>
+                        <a class="action-link go-next-button login-popup-link" data-target-tab="tutorial-info-3">Next ></a>
+                        <?php handbid_app_links();?>
+                    </div>
                 </div>
             </div>
 
-        </div>
-    </div>
-
-    <div class="container-fluid container-tab" style="display: none" data-tab-name="tutorial-info-3">
-        <?php get_login_popup_header("Tutorial. Step 3");?>
-        <div class="row">
-            <div class="row col-xs-12 col-md-10 col-md-offset-1 signup-form">
-                <div class="handbid-form signup-form">
+            <div class="container-fluid container-tab" style="display: none" data-tab-name="tutorial-info-3">
+                <?php get_login_popup_header("Tutorial. Step 3");?>
+                <div class="handbid-form row">
                     <h3>GETTING STARTED</h3>
                     <h4 class="sub-title">with <span>Handbid</span></h4>
                     <h4 class="help-title">HANDBID 101<br></h4>
@@ -907,18 +850,14 @@ if(!function_exists("handbid_popup_inline_links")){
                     </div>
 
                 </div>
-            </div>
-
-            <div class="row">
-                <div class="modal-footer center-aligned-text col-xs-12 col-md-8 col-md-offset-2">
-                    <a class="action-link go-back-button login-popup-link" data-target-tab="tutorial-info-2">< Go Back</a>
-                    <?php handbid_app_links();?>
+                <div class="row">
+                    <div class="modal-footer col-xs-12 col-md-8 col-md-offset-2">
+                        <a class="action-link go-back-button login-popup-link" data-target-tab="tutorial-info-2">< Go Back</a>
+                        <?php handbid_app_links();?>
+                    </div>
                 </div>
             </div>
 
-        </div>
+        <?php }?>
     </div>
-
-<?php }?>
-</div>
 </div>
