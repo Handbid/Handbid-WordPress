@@ -1233,8 +1233,7 @@ class HandbidShortCodeController {
         $auctionID = (isset($auction->id))?$auction->id:0;
 	    $profile  = $this->state->currentBidder($auctionID);
         $template = 'views/bidder/login-form-new';
-        $cards = $profile->creditCards;
-        $auctionRequiresCC = count($cards) ? false : !empty( $attributes['auction_requires_cc'] ) ? true : false;
+        $auctionRequiresCC = !empty( $attributes['auction_requires_cc'] ) ? true : false;
         return $this->viewRenderer->render(
             $template,
             [
