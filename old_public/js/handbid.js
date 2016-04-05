@@ -1379,7 +1379,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 //    }
                 //}
 
-                if(needCreditCard && creditCardsNumber == 0 ){ // creditCardRows.length == 0 &&
+                if(needCreditCard && creditCardsNumber == 0 && creditCardRows.length == 0 ) {
                     //currentElemNeedsCard = elem;
                     $(".credit-card-form-link").eq(0).click();
                     //handbidMain.displayRequiredCardsMessage("You must supply a credit card to do this action.");
