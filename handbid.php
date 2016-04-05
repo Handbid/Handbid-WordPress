@@ -329,7 +329,7 @@ class Handbid
         }
 
     }
-z
+
     function createHandbid()
     {
         $endpoint = get_option('handbidRestEndpoint');
