@@ -136,7 +136,6 @@
             
             // Clearing all active slides & navs
             $('.slider-content[data-slider-nav-id="' + id + '"] [data-slider-nav-key], .slider-nav[data-slider-nav-id="' + id + '"] [data-slider-nav-key]').not(ignore).removeClass('active-slide');
-            $('.slider-content[data-slider-nav-id="' + id + '"] [data-slider-close]').hide();
             
             
 
@@ -156,7 +155,6 @@
                 $(content).addClass('active-slide');
                 $(nav).addClass('active-slide');
                 resetProgressBar(nav);
-                $('.slider-content[data-slider-nav-id="' + id + '"] [data-slider-close]').show();
             }
 
         });
@@ -168,7 +166,6 @@
 
             // Clearing all active slides & navs
             $('.slider-content[data-slider-nav-id="' + id + '"] [data-slider-nav-key], .slider-nav[data-slider-nav-id="' + id + '"] [data-slider-nav-key]').not(ignore).removeClass('active-slide');
-            $('.slider-content[data-slider-nav-id="' + id + '"] [data-slider-close]').hide();
         });
 
         // slide navigation should be given the "data-slider-nav-item" attribute

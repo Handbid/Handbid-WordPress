@@ -112,10 +112,8 @@ if (!is_null($this->get('profile'))) {
         <div class="container container-fluid">
             <div class="slider-content" data-slider-nav-id="bidder-dashboard">
 
-                <button class="close-bidder-slider" data-slider-close="bidder-dashboard">x</button>
-
                 <div class="row" data-slider-nav-key="profile-user-info">
-
+                    <button class="close-bidder-slider" data-slider-close="bidder-dashboard">&times;</button>
                     <?php echo $this->partial('user-info.phtml', [
                         'profile'    => $profile,
                         'auction'    => $auction,
@@ -130,6 +128,7 @@ if (!is_null($this->get('profile'))) {
                 </div>
 
                 <div class="row" data-slider-nav-key="profile-max-bids">
+                    <button class="close-bidder-slider" data-slider-close="bidder-dashboard">&times;</button>
                     <div class="col-md-12 simple-list-container">
                         <ul class="simple-list handbid-list-of-bids handbid-list-of-bids-proxy" data-no-items-text="You have not set any max bids on items.">
                             <?php
@@ -164,6 +163,7 @@ if (!is_null($this->get('profile'))) {
                 </div>
 
                 <div class="row" data-slider-nav-key="profile-winning">
+                    <button class="close-bidder-slider" data-slider-close="bidder-dashboard">&times;</button>
                     <div class="col-md-12 simple-list-container">
                         <ul class="simple-list handbid-list-of-bids handbid-list-of-bids-winning" data-no-items-text="You are currently not winning any items.">
                             <?php
@@ -192,6 +192,7 @@ if (!is_null($this->get('profile'))) {
                 </div>
 
                 <div class="row" data-slider-nav-key="profile-losing">
+                    <button class="close-bidder-slider" data-slider-close="bidder-dashboard">&times;</button>
                     <div class="col-md-12 simple-list-container">
                         <ul class="simple-list handbid-list-of-bids handbid-list-of-bids-losing" data-no-items-text="You are currently not losing any items.">
                             <?php
@@ -220,6 +221,7 @@ if (!is_null($this->get('profile'))) {
                 </div>
 
                 <div class="row" data-slider-nav-key="profile-purchases">
+                    <button class="close-bidder-slider" data-slider-close="bidder-dashboard">&times;</button>
                     <div class="col-md-12 simple-list-container">
                         <ul class="simple-list handbid-list-of-bids handbid-list-of-bids-purchases" data-no-items-text="You have not purchased any items.">
                             <?php
