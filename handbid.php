@@ -246,7 +246,7 @@ class Handbid
         }
 
         $scripts = array(
-//            'handbid-details-map-js'   => 'public/js/details-map.js',
+            //'handbid-details-map-js'   => 'public/js/details-map.js',
 
             //'smart-app-banner-js'      => 'public/js/smart-app-banner.js',
             //'smart-app-banner-init-js' => 'public/js/smart-app-banner-init.js',
@@ -257,20 +257,20 @@ class Handbid
 
             'handbid-notices-js'       => 'public/js/pnotify.custom.min.js',      // Probably should be changed on newest version, but there is problems with plugin docs
 
-//            'progress-bar-js'          => 'public/js/progress-bar.js',
-//            'cookie-plugin-js'         => 'public/js/jquery.cookie.js',
-//            'visible-plugin-js'        => 'public/js/jquery.visible.min.js',
-//            'handbid-isotope-js'       => 'public/js/isotope.pkgd.min.js',
-//            'handbid-unslider-js'      => 'public/js/unslider.min.js',
-//            'handbid-photo-gallery-js' => 'public/js/photoGallery.js',
-//            'handbid-tab-slider-js'    => 'public/js/slider.js',
-//            'handbid-auction-page-js'  => 'public/js/auction-details.js',
-//            'handbid-tooltip-js'       => 'public/js/tooltip.js',
-//            'handbid-bootstrap-js'     => 'public/js/bootstrap.js',
-//            'handbid-select2-js'       => 'public/js/select2.full.js',
-//            'handbid-login-js'         => 'public/js/login.js',
-//            'handbid-plugin-js'        => 'public/js/handbid.js',
-//            'handbid-modal-js'         => 'public/js/modal.js',
+            //'progress-bar-js'          => 'public/js/progress-bar.js',
+            //'cookie-plugin-js'         => 'public/js/jquery.cookie.js',
+            //'visible-plugin-js'        => 'public/js/jquery.visible.min.js',
+            //'handbid-isotope-js'       => 'public/js/isotope.pkgd.min.js',
+            //'handbid-unslider-js'      => 'public/js/unslider.min.js',
+            //'handbid-photo-gallery-js' => 'public/js/photoGallery.js',
+            //'handbid-tab-slider-js'    => 'public/js/slider.js',
+            //'handbid-auction-page-js'  => 'public/js/auction-details.js',
+            //'handbid-tooltip-js'       => 'public/js/tooltip.js',
+            //'handbid-bootstrap-js'     => 'public/js/bootstrap.js',
+            //'handbid-select2-js'       => 'public/js/select2.full.js',
+            //'handbid-login-js'         => 'public/js/login.js',
+            //'handbid-plugin-js'        => 'public/js/handbid.js',
+            //'handbid-modal-js'         => 'public/js/modal.js',
 
         
             'progress-bar-js'          => 'public/plugins/progressbar.js/progressbar.min.js',
@@ -292,20 +292,20 @@ class Handbid
 
 
         $styles = array(
-//            'smart-app-banner-css'       => 'public/css/smart-app-banner.css',
-//            'handid-bootstrap-css'       => 'public/css/bootstrap.min.css',
-//            'handid-modal-css'           => 'public/css/modal.css',
-//            'handid-modal-connect-css'   => 'public/css/modal-connect.css',
-//            'handbid-select2-css'        => 'public/css/select2.css',
-//            'handbid-generic-styles-css' => 'public/css/handbid.css',
-//            'handbid-less-buttons-css'   => 'public/less/buttons.less',
-//            'handbid-less-modal-css'     => 'public/less/modal.less',
-//            'handbid-less-css'           => 'public/less/handbid.less',
-//            'handbid-less-responsive-css'=> 'public/less/responsive-fix.less',
+            //'smart-app-banner-css'       => 'public/css/smart-app-banner.css',
+            //'handid-bootstrap-css'       => 'public/css/bootstrap.min.css',
+            //'handid-modal-css'           => 'public/css/modal.css',
+            //'handid-modal-connect-css'   => 'public/css/modal-connect.css',
+            //'handbid-select2-css'        => 'public/css/select2.css',
+            //'handbid-generic-styles-css' => 'public/css/handbid.css',
+            //'handbid-less-buttons-css'   => 'public/less/buttons.less',
+            //'handbid-less-modal-css'     => 'public/less/modal.less',
+            //'handbid-less-css'           => 'public/less/handbid.less',
+            //'handbid-less-responsive-css'=> 'public/less/responsive-fix.less',
 
 
             'handid-notices-css'         => 'public/css/pnotify.custom.min.css', // Probably should be changed on newest version, but there is problems with plugin docs
-//            'smart-app-banner-css'       => 'public/plugins/smart-app-banner/smart-app-banner.css',
+            //'smart-app-banner-css'       => 'public/plugins/smart-app-banner/smart-app-banner.css',
             'handid-bootstrap-css'       => 'public/plugins/bootstrap/css/bootstrap.min.css',
             'handbid-select2-css'        => 'public/plugins/select2/css/select2.min.css',
 
@@ -319,8 +319,8 @@ class Handbid
         }
 
         $outerStyles = array(
-            'fonts-google-lato'          => 'https://fonts.googleapis.com/css?family=Lato:300,400,500',
-            'fonts-google-oswald'          => 'https://fonts.googleapis.com/css?family=Oswald',
+            //'fonts-google-lato'          => 'https://fonts.googleapis.com/css?family=Lato:300,400,500',
+            //'fonts-google-oswald'          => 'https://fonts.googleapis.com/css?family=Oswald',
         );
 
         foreach ($outerStyles as $key => $sc) {
@@ -597,6 +597,29 @@ class Handbid
                 s.src=l+n+".js";k=h.getElementsByTagName(i)[0];k.parentNode.insertBefore(s,k);
             })(document,"//cdn.hokolinks.com/banner/v1/","script","af303d2c3f3fb386");
         </script>
+        <script type="text/javascript">
+            WebFontConfig = {
+                google: { families: [ 'Lato:300,400,500', 'Oswald' ] }
+            };
+            (function() {
+                var wf = document.createElement('script');
+                wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+                '://ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont.js';
+                wf.type = 'text/javascript';
+                wf.async = 'true';
+                var s = document.getElementsByTagName('script')[0];
+                s.parentNode.insertBefore(wf, s);
+            })(); </script>
+
+        <?php if(!defined(HANDBID_PAGE_TYPE) or (defined(HANDBID_PAGE_TYPE) and HANDBID_PAGE_TYPE == 'auction-item')){?>
+        <script>(function(d, s, id) {
+                var js, fjs = d.getElementsByTagName(s)[0];
+                if (d.getElementById(id)) return;
+                js = d.createElement(s); js.id = id;
+                js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&appId=<?php echo get_option('handbidFacebookAppId'); ?>&version=v2.0";
+                fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'facebook-jssdk'));</script>
+        <?php } ?>
         <?php
 
         $currencyCode = (isset($auction->currencyCode))? $auction->currencyCode : HANDBID_DEFAULT_CURRENCY;

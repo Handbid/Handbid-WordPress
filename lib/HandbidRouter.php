@@ -114,6 +114,10 @@ class HandbidRouter
 
         $auctionID = 0;
 
+        if(!defined('HANDBID_PAGE_TYPE')){
+            define('HANDBID_PAGE_TYPE', $post->post_name);
+        }
+
         if($post->post_name == 'apple-app-site-association') {
             $this->outputAppleAssociationFile();
         }
