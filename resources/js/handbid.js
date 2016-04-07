@@ -2395,7 +2395,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
                     if (handbid.isButtonDisabledOrAlreadyActive($(this))
                         || handbid.cannotDoIfUnauthorized()
-                        || handbid.noticeIfNoCreditCard($(this), true, $(this))
+                        || handbid.noticeIfNoCreditCard($(this), true, false)
                         || prices.length == 0) {
                         return false;
                     }
