@@ -611,7 +611,7 @@ class Handbid
                 s.parentNode.insertBefore(wf, s);
             })(); </script>
 
-        <?php if(!defined(HANDBID_PAGE_TYPE) or (defined(HANDBID_PAGE_TYPE) and HANDBID_PAGE_TYPE == 'auction-item')){?>
+        <?php if(!defined('HANDBID_PAGE_TYPE') or (defined('HANDBID_PAGE_TYPE') and HANDBID_PAGE_TYPE == 'auction-item')){?>
         <script>(function(d, s, id) {
                 var js, fjs = d.getElementsByTagName(s)[0];
                 if (d.getElementById(id)) return;
