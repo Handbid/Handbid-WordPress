@@ -166,7 +166,8 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                         "top": "0",
                         "bottom": "0",
                         "right": "0",
-                        "left": "0"
+                        "left": "0",
+                        "z-index": "9999"
                     }
                 }).appendTo("body").fadeIn("fast");
             },
@@ -2249,7 +2250,8 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                                 "top": "0",
                                 "bottom": "0",
                                 "right": "0",
-                                "left": "0"
+                                "left": "0",
+                                "z-index": "9999"
                             }
                         }).appendTo("body").fadeIn("fast");
                     },
@@ -3552,7 +3554,8 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                                 "top": "0",
                                 "bottom": "0",
                                 "right": "0",
-                                "left": "0"
+                                "left": "0",
+                                "z-index": "9999"
                             }
                         }).appendTo("body").fadeIn("fast");
                     },
