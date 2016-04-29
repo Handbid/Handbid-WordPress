@@ -43,6 +43,21 @@ class HandbidRouter
                     ), admin_url("admin-post.php")));
                     exit;
                 }
+                if (strpos($_SERVER["REQUEST_URI"], "sharedauction") !== false) {
+                    wp_safe_redirect(add_query_arg(array(
+                        "action" => "sharedauction",
+                        "auid" => $_REQUEST["auid"],
+                    ), admin_url("admin-post.php")));
+                    exit;
+                }
+                if (strpos($_SERVER["REQUEST_URI"], "shareditem") !== false) {
+                    wp_safe_redirect(add_query_arg(array(
+                        "action" => "shareditem",
+                        "auid" => $_REQUEST["auid"],
+                        "id" => $_REQUEST["id"],
+                    ), admin_url("admin-post.php")));
+                    exit;
+                }
             }
         );
     }

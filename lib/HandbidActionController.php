@@ -153,6 +153,8 @@ class HandbidActionController
         $postActions = [
             "handbid_post_update_bidder",
             "autologin",
+            "shareditem",
+            "sharedauction",
         ];
         foreach($postActions as $postAction){
             add_action("admin_post_".$postAction, [$this, $postAction."_callback"]);
@@ -969,6 +971,42 @@ class HandbidActionController
 
         }
         wp_redirect("/auctions/".$auctionSlug);
+    }
+
+    function sharedauction_callback(){
+        $auid = $_REQUEST["auid"];
+        $auctionSlug = "";
+        try {
+            $auctions = $this->handbid->store('Auction')->all($page = 0, $pageSize = 255, null, null, []);
+            if(count($auctions)) {
+                foreach($auctions as $auction) {
+                    if(trim(strtolower($auction->auctionGuid)) == trim(strtolower($auid))) {
+                        $auctionSlug = $auction->key;
+                    }
+                }
+            }
+        }
+        catch(Exception $e){
+
+        }
+        wp_redirect('/auctions' . (!empty($auctionSlug) ? '/'.$auctionSlug : ''));
+    }
+
+    function shareditem_callback(){
+        $id = $_REQUEST["id"];
+        $auctionSlug = "";
+        $itemSlug = "";
+        try {
+            $item = $this->handbid->store('Item')->byID($id);
+            if(!empty($item->auction)){
+                $itemSlug = $item->key;
+                $auctionSlug = $item->auction->key;
+            }
+        }
+        catch(Exception $e){
+
+        }
+        wp_redirect('/auctions' . (!empty($auctionSlug) ? '/'.$auctionSlug : '') . (!empty($itemSlug) ? '/item/'.$itemSlug : ''));
     }
 
 
