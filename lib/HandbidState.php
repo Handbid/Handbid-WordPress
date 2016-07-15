@@ -18,8 +18,10 @@
 class HandbidState
 {
 
-    private $stripeApiKey = "pk_Yidx0zkypJ6stL4BO6VnDfslNBYXF";
+    private $stripeApiKey     = "pk_Yidx0zkypJ6stL4BO6VnDfslNBYXF";
     private $stripeApiKeyLive = "pk_hHpGKGGc39SSpUlP2TwghF4hONv1v";
+
+    private $smoochToken = "3hnfyxyhjbs459794216b8qjw";
 
     public $basePath;
     public $handbid;
@@ -30,46 +32,60 @@ class HandbidState
     public $inventory;
     public $bidder;
     public $bidderNotAvailable = false;
-    public $bidderAuctionID = null;
+    public $bidderAuctionID    = null;
     public $countriesAndProvinces;
     public $mapVisibility;
 
     public function __construct($basePath, $handbid)
     {
         $this->basePath = $basePath;
-        $this->handbid = $handbid;
+        $this->handbid  = $handbid;
     }
 
-    public function getStripeApiKey(){
-	    $stripeMode = get_option('handbidStripeMode', 'test');
-        return ($stripeMode == "test")?$this->stripeApiKey:$this->stripeApiKeyLive;
+    public function getSmoochToken()
+    {
+        return $this->smoochToken;
+    }
+
+    public function getStripeApiKey()
+    {
+        $stripeMode = get_option('handbidStripeMode', 'test');
+
+        return ($stripeMode == "test") ? $this->stripeApiKey : $this->stripeApiKeyLive;
     }
 
     public function currentOrg($attributes = null)
     {
 
-        try {
+        try
+        {
 
             $profile = $this->currentBidder();
-            $this->handbid->store('Organization')->setBasePublicity(! $profile);
+            $this->handbid->store('Organization')->setBasePublicity(!$profile);
 
-            if (!$this->org) {
-                $orgKey = (isset($attributes['organization']) && $attributes['organization']) ? $attributes['organization'] : get_query_var(
-                    'organization'
-                );
+            if (!$this->org)
+            {
+                $orgKey = (isset($attributes['organization']) && $attributes['organization'])
+                    ? $attributes['organization']
+                    : get_query_var(
+                        'organization'
+                    );
 
-                if (!$orgKey) {
+                if (!$orgKey)
+                {
                     $orgKey = get_option('handbidDefaultOrganizationKey');
                 }
 
-                if ($orgKey) {
+                if ($orgKey)
+                {
                     $this->org = $this->handbid->store('Organization')->byKey($orgKey);
                 }
 
             }
 
             return $this->org;
-        } catch (Exception $e) {
+        } catch (Exception $e)
+        {
 
             return null;
         }
@@ -78,44 +94,53 @@ class HandbidState
     public function currentAuction($attributes = null)
     {
 
-        try {
+        try
+        {
 
             $profile = $this->currentBidder();
-            $this->handbid->store('Auction')->setBasePublicity(! $profile);
+            $this->handbid->store('Auction')->setBasePublicity(!$profile);
 
-            if ($this->auction && !$attributes) {
+            if ($this->auction && !$attributes)
+            {
+                return $this->auction;
+            } elseif ($this->item and isset($this->item->auction))
+            {
+                $this->auction = $this->item->auction;
+
                 return $this->auction;
             }
-	        elseif($this->item and isset($this->item->auction)){
-		        $this->auction = $this->item->auction;
-		        return $this->auction;
-	        }
 
-            $auctionKey = (isset($attributes['key']) && $attributes['key']) ? $attributes['key'] : get_query_var(
-                'auction'
-            );
+            $auctionKey = (isset($attributes['key']) && $attributes['key'])
+                ? $attributes['key']
+                : get_query_var(
+                    'auction'
+                );
 
             $auctionID = (isset($attributes['id']) && $attributes['id']) ? $attributes['id'] : false;
 
-            if (!$auctionKey) {
+            if (!$auctionKey)
+            {
                 $auctionKey = get_option('handbidDefaultAuctionKey');
             }
 
-            if ($auctionKey) {
+            if ($auctionKey)
+            {
 
                 $query = ['options' => []];
 
-                if (isset($attributes['thumb_width'])) {
+                if (isset($attributes['thumb_width']))
+                {
                     $query['options']['images'] = ['w' => $attributes['thumb_width']];
                 }
 
-                if (isset($attributes['thumb_height'])) {
+                if (isset($attributes['thumb_height']))
+                {
                     $query['options']['images'] = ['h' => $attributes['thumb_height']];
                 }
 
                 $this->auction = $this->handbid->store('Auction')->byKey($auctionKey, $query, false);
-            }
-            elseif ($auctionID) {
+            } elseif ($auctionID)
+            {
 
                 $query = ['options' => []];
 
@@ -124,21 +149,29 @@ class HandbidState
 
             return $this->auction;
 
-        } catch (Exception $e) {
+        } catch (Exception $e)
+        {
 
             return null;
         }
     }
 
-    public function getCurrentAuctionTickets($attributes = null){
-        $auction = $this->currentAuction($attributes);
+    public function getCurrentAuctionTickets($attributes = null)
+    {
+        $auction            = $this->currentAuction($attributes);
         $auctionTicketItems = [];
-        if($auction->enableTicketSales) {
-            if (count($auction->categories)) {
-                foreach ($auction->categories as $category) {
-                    if (count($category->items)) {
-                        foreach ($category->items as $item) {
-                            if ($item->isTicket) {
+        if ($auction->enableTicketSales)
+        {
+            if (count($auction->categories))
+            {
+                foreach ($auction->categories as $category)
+                {
+                    if (count($category->items))
+                    {
+                        foreach ($category->items as $item)
+                        {
+                            if ($item->isTicket)
+                            {
                                 $auctionTicketItems[] = $item;
                             }
                         }
@@ -146,88 +179,110 @@ class HandbidState
                 }
             }
         }
+
         return $auctionTicketItems;
     }
 
     public function currentItem($attributes = null)
     {
-        try {
+        try
+        {
 
             $profile = $this->currentBidder();
-            $this->handbid->store('Item')->setBasePublicity(! $profile);
+            $this->handbid->store('Item')->setBasePublicity(!$profile);
 
-            if (!$this->item || $attributes) {
+            if (!$this->item || $attributes)
+            {
 
-                $itemKey = (isset($attributes['key']) && $attributes['key']) ? $attributes['key'] : get_query_var(
-                    'item'
-                );
-                $auctionKey = (isset($attributes['auction']) && $attributes['auction']) ? $attributes['auction'] : get_query_var(
-                    'auction'
-                );
+                $itemKey    = (isset($attributes['key']) && $attributes['key'])
+                    ? $attributes['key']
+                    : get_query_var(
+                        'item'
+                    );
+                $auctionKey = (isset($attributes['auction']) && $attributes['auction'])
+                    ? $attributes['auction']
+                    : get_query_var(
+                        'auction'
+                    );
 
-                if ($itemKey) {
+                if ($itemKey)
+                {
 
                     $query = ['options' => []];
 
-                    if (isset($attributes['thumb_width'])) {
+                    if (isset($attributes['thumb_width']))
+                    {
                         $query['options']['images'] = ['w' => $attributes['thumb_width']];
                     }
 
-                    if (isset($attributes['thumb_height'])) {
+                    if (isset($attributes['thumb_height']))
+                    {
 
-                        if (!isset($query['options']['images'])) {
+                        if (!isset($query['options']['images']))
+                        {
                             $query['options']['images'] = [];
                         }
 
                         $query['options']['images']['h'] = $attributes['thumb_height'];
                     }
 
-                    $itemKey = $itemKey . '?auction='. $auctionKey;
+                    $itemKey = $itemKey . '?auction=' . $auctionKey;
 
                     $this->item = $this->handbid->store('Item')->byKey($itemKey, $query);
 
-	                if(isset($this->item->auction)){
-		                $this->auction = $this->item->auction;
-	                }
-	                if(isset($this->item->bids)){
-		                $this->itemBids = $this->item->bids;
-	                }
+                    if (isset($this->item->auction))
+                    {
+                        $this->auction = $this->item->auction;
+                    }
+                    if (isset($this->item->bids))
+                    {
+                        $this->itemBids = $this->item->bids;
+                    }
                 }
             }
 
             return $this->item;
 
-        } catch (Exception $e) {
+        } catch (Exception $e)
+        {
 
             return null;
         }
 
     }
 
-    public function currentItemBids($itemID = null){
-	    if(!is_array($this->itemBids)){
-		    $this->itemBids = $this->handbid->store( 'Bid' )->itemBids( $itemID );
-	    }
-	    return $this->itemBids;
+    public function currentItemBids($itemID = null)
+    {
+        if (!is_array($this->itemBids))
+        {
+            $this->itemBids = $this->handbid->store('Bid')->itemBids($itemID);
+        }
+
+        return $this->itemBids;
     }
 
 
     public function currentBidder($auction_id = null)
     {
-        try {
-            if (($this->bidder and $auction_id == null) or ($this->bidder and $auction_id == $this->bidderAuctionID) or $this->bidderNotAvailable) {
+        try
+        {
+            if (($this->bidder and $auction_id == null) or ($this->bidder and $auction_id == $this->bidderAuctionID) or $this->bidderNotAvailable)
+            {
                 return $this->bidder;
             }
-            $this->bidder =  $this->handbid->store('Bidder')->myProfile($auction_id);
+            $this->bidder          = $this->handbid->store('Bidder')->myProfile($auction_id);
             $this->bidderAuctionID = $auction_id;
 
-            if(!$this->bidder){
+            if (!$this->bidder)
+            {
                 $this->bidderNotAvailable = true;
                 setcookie('handbid-auth', null, -1, COOKIEPATH, COOKIE_DOMAIN);
             }
+
             return $this->bidder;
 
-        } catch (Exception $e) {
+        } catch (Exception $e)
+        {
 
             return null;
         }
@@ -236,19 +291,23 @@ class HandbidState
 
     public function currentInventory($auctionID, $attributes = null)
     {
-        try {
+        try
+        {
 
-            if ($this->inventory && !$attributes) {
+            if ($this->inventory && !$attributes)
+            {
                 return $this->inventory;
             }
 
-            if ($auctionID) {
-                $this->inventory = $this->handbid->store( 'Auction' )->auctionMyInventory( $auctionID );
+            if ($auctionID)
+            {
+                $this->inventory = $this->handbid->store('Auction')->auctionMyInventory($auctionID);
             }
 
             return $this->inventory;
 
-        } catch (Exception $e) {
+        } catch (Exception $e)
+        {
 
             return null;
         }
@@ -258,24 +317,29 @@ class HandbidState
     public function getGridColsCount($default = 0, $type = "")
     {
         $colCount = (int)get_option('handbidDefaultColCount' . $type);
-        if (!$colCount) {
+        if (!$colCount)
+        {
             $colCount = ($default) ? $default : 4;
         }
+
         return $colCount;
     }
 
     public function getPageSize($default = 0, $type = "")
     {
-	    if($default){
-		    return $default;
-	    }
-        $colCount = (int) get_option('handbidDefaultPageSize', 25);
+        if ($default)
+        {
+            return $default;
+        }
+        $colCount = (int)get_option('handbidDefaultPageSize', 25);
+
         return $colCount;
     }
 
     public function getLocalOrganizationSlug()
     {
         $slug = get_option('handbidShowOnlyMyOrganization');
+
         return trim($slug) ? trim($slug) : false;
     }
 
@@ -530,46 +594,60 @@ class HandbidState
             array("code" => "ZM", "name" => "Zambia", "d_code" => "+260"),
             array("code" => "ZW", "name" => "Zimbabwe", "d_code" => "+263"),
         );
+
         return $countries;
     }
 
-    function getCountriesAndProvinces(){
-        $countriesFileName = str_replace("\\","/",HANDBID_PLUGIN_PATH . "public/json/countriesAndProvinces.json");
-        if($this->countriesAndProvinces){
+    function getCountriesAndProvinces()
+    {
+        $countriesFileName = str_replace("\\", "/", HANDBID_PLUGIN_PATH . "public/json/countriesAndProvinces.json");
+        if ($this->countriesAndProvinces)
+        {
             return $this->countriesAndProvinces;
-        }
-        else{
+        } else
+        {
 
-            if(is_file($countriesFileName) and is_readable($countriesFileName)){
-                try{
+            if (is_file($countriesFileName) and is_readable($countriesFileName))
+            {
+                try
+                {
                     $countriesAndProvinces = json_decode(file_get_contents($countriesFileName));
-                    if(is_array($countriesAndProvinces)){
+                    if (is_array($countriesAndProvinces))
+                    {
                         $this->countriesAndProvinces = $countriesAndProvinces;
+
                         return $this->countriesAndProvinces;
                     }
+                } catch (Exception $e)
+                {
                 }
-                catch(Exception $e){ }
             }
 
-            $countryIDs   = $this->handbid->store( 'Bidder' )->getCountries();
-            $provinceIDs  = $this->handbid->store( 'Bidder' )->getProvinces();
+            $countryIDs         = $this->handbid->store('Bidder')->getCountries();
+            $provinceIDs        = $this->handbid->store('Bidder')->getProvinces();
             $provincesByCountry = [];
-            if(count($countryIDs)) {
-                foreach ($provinceIDs as $provinceID) {
-                    $countriesId = $provinceID->countriesId;
+            if (count($countryIDs))
+            {
+                foreach ($provinceIDs as $provinceID)
+                {
+                    $countriesId                        = $provinceID->countriesId;
                     $provincesByCountry[$countriesId][] = $provinceID;
                 }
-                foreach ($countryIDs as $i => $countryID) {
+                foreach ($countryIDs as $i => $countryID)
+                {
                     $countryId = $countryID->id;
-                    if (isset($provincesByCountry[$countryId])) {
+                    if (isset($provincesByCountry[$countryId]))
+                    {
                         $countryIDs[$i]->provinces = $provincesByCountry[$countryId];
                     }
                 }
             }
-            if(is_array($countryIDs)){
+            if (is_array($countryIDs))
+            {
                 file_put_contents($countriesFileName, json_encode($countryIDs));
             }
             $this->countriesAndProvinces = $countryIDs;
+
             return $this->countriesAndProvinces;
         }
 

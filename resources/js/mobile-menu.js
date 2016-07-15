@@ -19,7 +19,6 @@
             }
 
             $('.slider-nav[data-slider-nav-id="bidder-dashboard-inner"] [data-slider-nav-key="' + key + '"]')[0].click();
-
             $('html,body').animate({scrollTop: profileLinkVisible.offset().top},'normal');
         });
     });

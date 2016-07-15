@@ -25,49 +25,62 @@ class HandbidActionController
     public function __construct(HandbidViewRenderer $viewRenderer, $handbid, $state)
     {
         $this->viewRenderer = $viewRenderer;
-        $this->handbid = $handbid;
-        $this->state = $state;
+        $this->handbid      = $handbid;
+        $this->state        = $state;
     }
 
     function init()
     {
         add_feed('handbid-logout', [$this, 'handbid_logout_callback']);
 
-        $titleForPost = function ($title, $post, $sep = null) {
+        $titleForPost = function ($title, $post, $sep = null)
+        {
 
-            if ($post && $post->post_name == 'auction-item') {
+            if ($post && $post->post_name == 'auction-item')
+            {
 
                 $item = $this->state->currentItem();
-                if ($item) {
-                    $post->post_title = (isset($item->name))?$item->name:get_the_title();
-                    if ($sep) {
+                if ($item)
+                {
+                    $post->post_title = (isset($item->name)) ? $item->name : get_the_title();
+                    if ($sep)
+                    {
                         $title = ' ' . $sep . ' ' . $post->post_title;
-                    } else {
+                    } else
+                    {
                         $title = $post->post_title;
                     }
 
                 }
 
-            } else if ($post && $post->post_name == 'auction') {
+            } else if ($post && $post->post_name == 'auction')
+            {
 
                 $auction = $this->state->currentAuction();
-                if ($auction) {
+                if ($auction)
+                {
                     $post->post_title = $auction->name;
-                    if ($sep) {
+                    if ($sep)
+                    {
                         $title = $post->post_title . ' ' . $sep . ' ' . esc_attr(get_bloginfo('name'));
-                    } else {
+                    } else
+                    {
                         $title = $post->post_title;
                     }
                 }
 
-            } else if ($post && $post->post_name == 'organization') {
+            } else if ($post && $post->post_name == 'organization')
+            {
 
                 $org = $this->state->currentOrg();
-                if ($org) {
+                if ($org)
+                {
                     $post->post_title = $org->name;
-                    if ($sep) {
+                    if ($sep)
+                    {
                         $title = $post->post_title . ' ' . $sep . ' ' . esc_attr(get_bloginfo('name'));
-                    } else {
+                    } else
+                    {
                         $title = $post->post_title;
                     }
                 }
@@ -77,7 +90,8 @@ class HandbidActionController
             return $title;
         };
 
-        add_filter('wp_title', function ($title, $sep, $seplocation) use ($titleForPost) {
+        add_filter('wp_title', function ($title, $sep, $seplocation) use ($titleForPost)
+        {
 
             global $post;
 
@@ -90,11 +104,13 @@ class HandbidActionController
         //modify currently loaded post to match auction or item name
         add_filter(
             'the_title',
-            function ($pageTitle, $id) use ($titleForPost) {
+            function ($pageTitle, $id) use ($titleForPost)
+            {
 
                 global $post;
 
-                if (isset($post) && $post->ID != $id) {
+                if (isset($post) && $post->ID != $id)
+                {
                     return $pageTitle;
                 }
 
@@ -104,15 +120,18 @@ class HandbidActionController
             }, 10, 2
         );
 
-        add_action('wp_head', function () {
+        add_action('wp_head', function ()
+        {
 
             global $post;
 
-            if ($post && $post->post_name == 'auction-item') {
+            if ($post && $post->post_name == 'auction-item')
+            {
 
                 $item = $this->state->currentItem();
-                if ($item) {
-                    $item->imageUrl = (isset($item->imageUrl))?$item->imageUrl:"";
+                if ($item)
+                {
+                    $item->imageUrl = (isset($item->imageUrl)) ? $item->imageUrl : "";
                     echo '<meta property="og:image" content="' . get_option('handbidCdnEndpoint') . $item->imageUrl . '" />';
                     echo '<link rel=”image_src” href=”' . get_option('handbidCdnEndpoint') . $item->imageUrl . '” />';
                 }
@@ -145,9 +164,10 @@ class HandbidActionController
             "handbid_ajax_customizer_css",
             "handbid_ajax_get_testimonial",
         ];
-        foreach($ajaxActions as $ajaxAction){
-            add_action("wp_ajax_".$ajaxAction, [$this, $ajaxAction."_callback"]);
-            add_action("wp_ajax_nopriv_".$ajaxAction, [$this, $ajaxAction."_callback"]);
+        foreach ($ajaxActions as $ajaxAction)
+        {
+            add_action("wp_ajax_" . $ajaxAction, [$this, $ajaxAction . "_callback"]);
+            add_action("wp_ajax_nopriv_" . $ajaxAction, [$this, $ajaxAction . "_callback"]);
         }
 
         $postActions = [
@@ -156,9 +176,10 @@ class HandbidActionController
             "shareditem",
             "sharedauction",
         ];
-        foreach($postActions as $postAction){
-            add_action("admin_post_".$postAction, [$this, $postAction."_callback"]);
-            add_action("admin_post_nopriv_".$postAction, [$this, $postAction."_callback"]);
+        foreach ($postActions as $postAction)
+        {
+            add_action("admin_post_" . $postAction, [$this, $postAction . "_callback"]);
+            add_action("admin_post_nopriv_" . $postAction, [$this, $postAction . "_callback"]);
         }
 
         add_action("admin_post_handbid_ajax_add_credit_card", [$this, "handbid_ajax_add_credit_card_post_callback"]);
@@ -171,37 +192,42 @@ class HandbidActionController
 
         $redirect = isset($_POST['redirect']) ? $_POST['redirect'] : '/bidder';
 
-        if (preg_match('/\?/', $redirect)) {
+        if (preg_match('/\?/', $redirect))
+        {
             $questionMarkOrAmpersand = '&';
             list($url, $query) = explode('?', $redirect);
             parse_str($query, $query);
             unset($query['handbid-error'], $query['handbid-notice']);
             $redirect = $url . '?' . http_build_query($query);
 
-        } else {
+        } else
+        {
             $questionMarkOrAmpersand = '?';
         }
 
-        if($_POST['form-id'] == 'handbid-login') {
+        if ($_POST['form-id'] == 'handbid-login')
+        {
 
             $values = [
-              'username' => $_POST['username'],
-              'password' => $_POST['pin']
+                'username' => $_POST['username'],
+                'password' => $_POST['pin'],
             ];
 
             $this->handbid->store('Bidder')->login($values);
 
-        } else if($_POST['form-id'] == 'handbid-register') {
+        } else if ($_POST['form-id'] == 'handbid-register')
+        {
 
             $values = [
                 'firstname' => $_POST['firstname'],
                 'lastname'  => $_POST['lastname'],
-                'mobile'    => $_POST['mobile']
+                'mobile'    => $_POST['mobile'],
             ];
 
             $profile = $this->handbid->store('Bidder')->register($values);
 
-            if($profile->success == false) {
+            if ($profile->success == false)
+            {
                 $redirect .= $questionMarkOrAmpersand . 'handbid-notice=' . urlencode('Your phone number is already in use.');
             }
 
@@ -220,57 +246,63 @@ class HandbidActionController
         wp_redirect($redirect);
     }
 
-    function handbid_create_nonce($action = -1){
-        return wp_create_nonce($_SERVER["SERVER_SIGNATURE"]." ". $action);
+    function handbid_create_nonce($action = -1)
+    {
+        return wp_create_nonce($_SERVER["SERVER_SIGNATURE"] . " " . $action);
     }
 
-    function handbid_verify_nonce($nonce, $action = -1){
+    function handbid_verify_nonce($nonce, $action = -1)
+    {
 //        return wp_verify_nonce($nonce, $_SERVER["SERVER_SIGNATURE"]." ". $action);
         return true;
     }
 
     // ---------------- AJAX CALLBACKS ------------------
 
-    function handbid_ajax_login_callback(){
-        $nonce = isset($_POST['nonce']) ? $_POST['nonce'] : 'nonce';
+    function handbid_ajax_login_callback()
+    {
+        $nonce  = isset($_POST['nonce']) ? $_POST['nonce'] : 'nonce';
         $result = [
             "success" => 0,
-            "error" => "no",
+            "error"   => "no",
         ];
-        if($this->handbid_verify_nonce($nonce, date("d.m.Y") . "login")){
+        if ($this->handbid_verify_nonce($nonce, date("d.m.Y") . "login"))
+        {
 
             $values = [
-                'username' => $_POST['username'],
-                'password' => $_POST['password'],
+                'username'    => $_POST['username'],
+                'password'    => $_POST['password'],
                 'auctionGuid' => $_POST['auctionGuid'],
-                'pin' => $_POST['password']
+                'pin'         => $_POST['password'],
             ];
 
             $resp = $this->handbid->store('Bidder')->login($values);
 
             $result["success"] = (isset($resp->success) and $resp->success) ? $resp->success : 0;
-            $result["resp"] = $resp;
+            $result["resp"]    = $resp;
         }
         echo json_encode($result);
         exit;
     }
 
-    function handbid_ajax_registration_callback(){
-        $nonce = isset($_POST['nonce']) ? $_POST['nonce'] : 'nonce';
+    function handbid_ajax_registration_callback()
+    {
+        $nonce  = isset($_POST['nonce']) ? $_POST['nonce'] : 'nonce';
         $result = [
             "success" => 0,
-            "error" => "no",
+            "error"   => "no",
         ];
 
-        if($this->handbid_verify_nonce($nonce, date("d.m.Y") . "register")){
+        if ($this->handbid_verify_nonce($nonce, date("d.m.Y") . "register"))
+        {
 
             $values = [
-                'firstname' => $_POST['firstname'],
-                'lastname'  => $_POST['lastname'],
-                'mobile'    => $_POST['mobile'],
-                'password'  => $_POST['password'],
-                'email'     => $_POST['email'],
-                'deviceType'=> (isset($_POST['deviceType']))? $_POST['deviceType'] : "other",
+                'firstname'   => $_POST['firstname'],
+                'lastname'    => $_POST['lastname'],
+                'mobile'      => $_POST['mobile'],
+                'password'    => $_POST['password'],
+                'email'       => $_POST['email'],
+                'deviceType'  => (isset($_POST['deviceType'])) ? $_POST['deviceType'] : "other",
                 'countryCode' => $_POST['countryCode'],
                 'auctionGuid' => $_POST['auctionGuid'],
             ];
@@ -278,14 +310,16 @@ class HandbidActionController
             $profile = $this->handbid->store('Bidder')->register($values);
 
             $baseError = "Something went wrong. Please, try again later.";
-            if(!$profile){
+            if (!$profile)
+            {
                 $result["error"] = $baseError;
-            }
-            else {
+            } else
+            {
                 $result["success"] = (isset($profile->success) and $profile->success) ? $profile->success : 0;
-                $result["values"] = $values;
+                $result["values"]  = $values;
                 $result["profile"] = $profile;
-                if (!$result["success"]) {
+                if (!$result["success"])
+                {
                     $result["error"] = str_replace("/auth/", "", $profile->data->error->message);
                     $result["error"] = trim(strpos($result["error"], "use login") === false) ? $result["error"] : $result["error"] . '<a class="btn btn-info signup login-popup-link" data-target-tab="login-form-new">Sign In</a>';
                     $result["error"] = trim($result["error"]) ? $result["error"] : $baseError;
@@ -298,12 +332,14 @@ class HandbidActionController
     }
 
 
-    function handbid_ajax_reset_password_callback(){
-        $nonce = isset($_POST['nonce']) ? $_POST['nonce'] : 'nonce';
+    function handbid_ajax_reset_password_callback()
+    {
+        $nonce        = isset($_POST['nonce']) ? $_POST['nonce'] : 'nonce';
         $emailOrPhone = $_POST["emailOrPhone"];
-        $result = [];
+        $result       = [];
 
-        if($this->handbid_verify_nonce($nonce, date("d.m.Y") . "reset_pass")){
+        if ($this->handbid_verify_nonce($nonce, date("d.m.Y") . "reset_pass"))
+        {
 
             $profile = $this->handbid->store('Bidder')->resetPass($emailOrPhone);
 
@@ -315,15 +351,16 @@ class HandbidActionController
     }
 
 
-    function handbid_ajax_get_paddle_number_callback(){
+    function handbid_ajax_get_paddle_number_callback()
+    {
         $result = [];
 
-        $nonce = isset($_POST['nonce']) ? $_POST['nonce'] : 'nonce';
+        $nonce     = isset($_POST['nonce']) ? $_POST['nonce'] : 'nonce';
         $auctionID = isset($_POST['auctionID']) ? $_POST['auctionID'] : 0;
 
 //        if($this->handbid_verify_nonce($nonce, date("d.m.Y") . "add_paddle")){
 
-            $result = $this->handbid->store('Bidder')->addActiveAuction($auctionID);
+        $result = $this->handbid->store('Bidder')->addActiveAuction($auctionID);
 
 //        }
 //        else{
@@ -333,43 +370,51 @@ class HandbidActionController
         exit;
     }
 
-    function handbid_ajax_createbid_callback(){
-        $nonce = isset($_POST['nonce']) ? $_POST['nonce'] : 'nonce';
+    function handbid_ajax_createbid_callback()
+    {
+        $nonce  = isset($_POST['nonce']) ? $_POST['nonce'] : 'nonce';
         $result = [
-            "status" => "failed",
+            "status"       => "failed",
             "statusReason" => "no_response",
         ];
 
-        if($this->handbid_verify_nonce($nonce, date("d.m.Y") . "bid")){
+        if ($this->handbid_verify_nonce($nonce, date("d.m.Y") . "bid"))
+        {
 
             $values = [
-                'userId' => (int) $_POST['userId'],
-                'auctionId'  => (int) $_POST['auctionId'],
-                'itemId'    => (int) $_POST['itemId']
+                'userId'    => (int)$_POST['userId'],
+                'auctionId' => (int)$_POST['auctionId'],
+                'itemId'    => (int)$_POST['itemId'],
             ];
-            if(isset($_POST["amount"])){
-                $values["amount"] = (int) $_POST["amount"];
+            if (isset($_POST["amount"]))
+            {
+                $values["amount"] = (int)$_POST["amount"];
             }
-            if(isset($_POST["maxAmount"])){
-                $values["maxAmount"] = (int) $_POST["maxAmount"];
+            if (isset($_POST["maxAmount"]))
+            {
+                $values["maxAmount"] = (int)$_POST["maxAmount"];
             }
-            if(isset($_POST["quantity"])){
-                $values["quantity"] = (int) $_POST["quantity"];
+            if (isset($_POST["quantity"]))
+            {
+                $values["quantity"] = (int)$_POST["quantity"];
             }
 
-            try {
-                $resp = $this->handbid->store('Bid')->createBid($values);
+            try
+            {
+                $resp   = $this->handbid->store('Bid')->createBid($values);
                 $result = $resp;
-                if(isset($result->data->error)){
+                if (isset($result->data->error))
+                {
                     $result->status = "failed";
-                    $reasons = [];
-                    foreach((array) $result->data->error as $error){
+                    $reasons        = [];
+                    foreach ((array)$result->data->error as $error)
+                    {
                         $reasons[] = implode("<br>", $error);
                     }
                     $result->statusReason = implode("<br>", $reasons);
                 }
-            }
-            catch(Exception $e){
+            } catch (Exception $e)
+            {
 
             }
         }
@@ -377,37 +422,42 @@ class HandbidActionController
         exit;
     }
 
-    function handbid_ajax_buy_tickets_callback(){
-        $nonce = isset($_POST['nonce']) ? $_POST['nonce'] : 'nonce';
+    function handbid_ajax_buy_tickets_callback()
+    {
+        $nonce  = isset($_POST['nonce']) ? $_POST['nonce'] : 'nonce';
         $result = [
-            "success" => [],
-            "fail" => [],
+            "success"   => [],
+            "fail"      => [],
             "successID" => [],
-            "failID" => [],
+            "failID"    => [],
         ];
 
-        if($this->handbid_verify_nonce($nonce, date("d.m.Y") . "buy_tickets_array")){
+        if ($this->handbid_verify_nonce($nonce, date("d.m.Y") . "buy_tickets_array"))
+        {
             $items = $_POST["items"];
-            if(count($items)){
-                foreach($items as $item){
+            if (count($items))
+            {
+                foreach ($items as $item)
+                {
                     $values = [
-                        'userId' => (int) $_POST['userId'],
-                        'auctionId'  => (int) $_POST['auctionId'],
-                        'itemId'    => (int) $item['id'],
-                        'amount'    => (int) $item['price'],
-                        'quantity'    => (int) $item['quantity']
+                        'userId'    => (int)$_POST['userId'],
+                        'auctionId' => (int)$_POST['auctionId'],
+                        'itemId'    => (int)$item['id'],
+                        'amount'    => (int)$item['price'],
+                        'quantity'  => (int)$item['quantity'],
                     ];
-                    try{
-                        $resp = $this->handbid->store( 'Bid' )->createBid( $values );
-                        $arr = ((isset($resp->status) and $resp->status == "purchase" and !isset($resp->success) ) or $resp->success) ? "success" : "fail" ;
-                        $itemId = $values["itemId"];
+                    try
+                    {
+                        $resp                  = $this->handbid->store('Bid')->createBid($values);
+                        $arr                   = ((isset($resp->status) and $resp->status == "purchase" and !isset($resp->success)) or $resp->success) ? "success" : "fail";
+                        $itemId                = $values["itemId"];
                         $result[$arr][$itemId] = $resp;
-                        $result[$arr."ID"][] = $itemId;
-                    }
-                    catch(Exception $e){
-                        $itemId = $values["itemId"];
+                        $result[$arr . "ID"][] = $itemId;
+                    } catch (Exception $e)
+                    {
+                        $itemId                  = $values["itemId"];
                         $result["fail"][$itemId] = $e;
-                        $result["failID"][] = $itemId;
+                        $result["failID"][]      = $itemId;
                     }
                 }
             }
@@ -417,40 +467,46 @@ class HandbidActionController
     }
 
 
-    function handbid_ajax_pay_for_tickets_callback(){
-        $nonce = isset($_POST['nonce']) ? $_POST['nonce'] : 'nonce';
+    function handbid_ajax_pay_for_tickets_callback()
+    {
+        $nonce    = isset($_POST['nonce']) ? $_POST['nonce'] : 'nonce';
         $response = [];
-        $values = [
-            "receiptId" => (int) $_POST["receiptId"],
-            "auctionId" => (int) $_POST["auctionId"],
+        $values   = [
+            "receiptId" => (int)$_POST["receiptId"],
+            "auctionId" => (int)$_POST["auctionId"],
         ];
-        if($this->handbid_verify_nonce($nonce, date("d.m.Y") . "paddle-nonce")){
-            $profile = $this->state->currentBidder( );
+        if ($this->handbid_verify_nonce($nonce, date("d.m.Y") . "paddle-nonce"))
+        {
+            $profile = $this->state->currentBidder();
 
-            if(count($profile->creditCards)){
+            if (count($profile->creditCards))
+            {
                 $ccCount = count($profile->creditCards);
                 $ccIndex = 0;
-                $paid = false;
-                while(!$paid and $ccIndex < $ccCount){
+                $paid    = false;
+                while (!$paid and $ccIndex < $ccCount)
+                {
                     $card = $profile->creditCards[$ccIndex];
                     $ccIndex++;
                     //foreach($profile->creditCards as $card){
                     $tempValues = [
-                        "cardId" => $card->id,
-                        "stripeId" => $card->stripeId,
+                        "cardId"           => $card->id,
+                        "stripeId"         => $card->stripeId,
                         "creditCardHandle" => $card->creditCardHandle,
-                        "receiptId" => $values["receiptId"],
-                        "auctionId" => $values["auctionId"],
+                        "receiptId"        => $values["receiptId"],
+                        "auctionId"        => $values["auctionId"],
                     ];
-                    try {
-                        $resp = $this->handbid->store('Receipt')->makePayment($tempValues);
+                    try
+                    {
+                        $resp               = $this->handbid->store('Receipt')->makePayment($tempValues);
                         $response["result"] = $resp->paid;
-                        if($resp->paid){
-                            $paid = true;
+                        if ($resp->paid)
+                        {
+                            $paid                = true;
                             $response["paid_by"] = $card;
                         }
-                    }
-                    catch(Exception $e) {
+                    } catch (Exception $e)
+                    {
                         $response["errors"] = ["Something went wrong. Please, try again later"];
                     }
                 }
@@ -460,29 +516,35 @@ class HandbidActionController
         exit;
     }
 
-    function handbid_ajax_make_receipt_payment_callback(){
-        $nonce = isset($_POST['nonce']) ? $_POST['nonce'] : 'nonce';
+    function handbid_ajax_make_receipt_payment_callback()
+    {
+        $nonce    = isset($_POST['nonce']) ? $_POST['nonce'] : 'nonce';
         $response = [];
-        $values = [
-            "cardId" => (int) $_POST["cardId"],
-            "receiptId" => (int) $_POST["receiptId"],
-            "auctionId" => (int) $_POST["auctionId"],
+        $values   = [
+            "cardId"    => (int)$_POST["cardId"],
+            "receiptId" => (int)$_POST["receiptId"],
+            "auctionId" => (int)$_POST["auctionId"],
         ];
-        if($this->handbid_verify_nonce($nonce, date("d.m.Y") . "make_receipt_payment")){
-            $profile = $this->state->currentBidder( );
-            if(count($profile->creditCards)){
-                foreach($profile->creditCards as $card){
-                    if($card->id == $values["cardId"]){
-                        $values["stripeId"] = $card->stripeId;
+        if ($this->handbid_verify_nonce($nonce, date("d.m.Y") . "make_receipt_payment"))
+        {
+            $profile = $this->state->currentBidder();
+            if (count($profile->creditCards))
+            {
+                foreach ($profile->creditCards as $card)
+                {
+                    if ($card->id == $values["cardId"])
+                    {
+                        $values["stripeId"]         = $card->stripeId;
                         $values["creditCardHandle"] = $card->creditCardHandle;
                     }
                 }
             }
-            try {
-                $resp = $this->handbid->store('Receipt')->makePayment($values);
+            try
+            {
+                $resp               = $this->handbid->store('Receipt')->makePayment($values);
                 $response["result"] = $resp;
-            }
-            catch(Exception $e) {
+            } catch (Exception $e)
+            {
                 $response["error"] = $e;
             }
         }
@@ -491,20 +553,22 @@ class HandbidActionController
     }
 
 
-    function handbid_ajax_removebid_callback(){
-        $nonce = isset($_POST['nonce']) ? $_POST['nonce'] : 'nonce';
+    function handbid_ajax_removebid_callback()
+    {
+        $nonce  = isset($_POST['nonce']) ? $_POST['nonce'] : 'nonce';
         $result = [
-            "status" => "failed",
+            "status"       => "failed",
             "statusReason" => "no_response",
         ];
 
-        if($this->handbid_verify_nonce($nonce, date("d.m.Y") . "bid")){
+        if ($this->handbid_verify_nonce($nonce, date("d.m.Y") . "bid"))
+        {
 
-            $bidID = (int) $_POST["bidID"];
+            $bidID = (int)$_POST["bidID"];
 
-            $resp    = $this->handbid->store( 'Bid' )->removeBid( $bidID );
+            $resp = $this->handbid->store('Bid')->removeBid($bidID);
 //            if(isset($resp->status)){
-                $result = $resp;
+            $result = $resp;
 //            }
         }
         echo json_encode($result);
@@ -512,139 +576,150 @@ class HandbidActionController
     }
 
 
+    function handbid_ajax_add_credit_card_callback()
+    {
 
-    function handbid_ajax_add_credit_card_callback(){
-
-        $nonce = isset($_POST['nonce']) ? $_POST['nonce'] : 'nonce';
-        $stripeId = isset($_POST['stripeId']) ? $_POST['stripeId'] : '';
+        $nonce            = isset($_POST['nonce']) ? $_POST['nonce'] : 'nonce';
+        $stripeId         = isset($_POST['stripeId']) ? $_POST['stripeId'] : '';
         $creditCardHandle = isset($_POST['creditCardHandle']) ? $_POST['creditCardHandle'] : '';
-        $nameOnCard = isset($_POST['nameOnCard']) ? $_POST['nameOnCard'] : '';
-        
+        $nameOnCard       = isset($_POST['nameOnCard']) ? $_POST['nameOnCard'] : '';
+
         $params = [
-            "stripeId" => $stripeId,
+            "stripeId"         => $stripeId,
             "creditCardHandle" => $creditCardHandle,
-            "nameOnCard" => $nameOnCard,
+            "nameOnCard"       => $nameOnCard,
         ];
         $result = [
             "opts" => $params,
         ];
 
-        if($this->handbid_verify_nonce($nonce, date("d.m.Y") . "credit_card")){
+        if ($this->handbid_verify_nonce($nonce, date("d.m.Y") . "credit_card"))
+        {
 
-                try {
-                    $resp    = $this->handbid->store( 'CreditCard' )->add( $params );
-                    $result["resp"] = $resp;
-                }
-                catch(Exception $e){
-                    $result["error"] = $e;
-                }
+            try
+            {
+                $resp           = $this->handbid->store('CreditCard')->add($params);
+                $result["resp"] = $resp;
+            } catch (Exception $e)
+            {
+                $result["error"] = $e;
+            }
         }
         echo json_encode($result);
         exit;
     }
 
 
+    function handbid_ajax_add_credit_card_post_callback()
+    {
 
-    function handbid_ajax_add_credit_card_post_callback(){
-
-        $opts = $_POST;
-        $nonce = $opts["nonce"];
-        $nonce = isset($opts['nonce']) ? $opts['nonce'] : 'nonce';
+        $opts   = $_POST;
+        $nonce  = $opts["nonce"];
+        $nonce  = isset($opts['nonce']) ? $opts['nonce'] : 'nonce';
         $result = [
             "opts" => $opts,
         ];
 
-        if($this->handbid_verify_nonce($nonce, date("d.m.Y") . "credit_card")){
+        if ($this->handbid_verify_nonce($nonce, date("d.m.Y") . "credit_card"))
+        {
 
             $cardNum = $opts["cardNum"];
 
             \Stripe\Stripe::setApiKey($this->state->getStripeApiKey());
 
-            try {
+            try
+            {
                 $tok = \Stripe\Token::create(array(
-                    "card" => array(
-                        "number" => $cardNum,
-                        "exp_month" => (int)$opts["expMonth"],
-                        "exp_year" => (int)$opts["expYear"],
-                        "cvc" => $opts["cvc"],
-                        "name" => $opts["nameOnCard"]
-                    )
-                ));
+                                                 "card" => array(
+                                                     "number"    => $cardNum,
+                                                     "exp_month" => (int)$opts["expMonth"],
+                                                     "exp_year"  => (int)$opts["expYear"],
+                                                     "cvc"       => $opts["cvc"],
+                                                     "name"      => $opts["nameOnCard"],
+                                                 ),
+                                             ));
 
-                $stripeId = $tok->id;
+                $stripeId         = $tok->id;
                 $creditCardHandle = $tok->card->id;
 
                 $params = [
-                    "stripeId" => $stripeId,
+                    "stripeId"         => $stripeId,
                     "creditCardHandle" => $creditCardHandle,
-                    "nameOnCard" => $opts["nameOnCard"],
+                    "nameOnCard"       => $opts["nameOnCard"],
                 ];
 
-                try {
-                    $resp    = $this->handbid->store( 'CreditCard' )->add( $params );
+                try
+                {
+                    $resp           = $this->handbid->store('CreditCard')->add($params);
                     $result["resp"] = $resp;
-                }
-                catch(Exception $e){
+                } catch (Exception $e)
+                {
                     $result["error"] = $e;
                 }
-            }
-            catch(Exception $e){
-                if(isset($e->jsonBody["error"]["message"])){
+            } catch (Exception $e)
+            {
+                if (isset($e->jsonBody["error"]["message"]))
+                {
                     $result["error"]["message"] = $e->jsonBody["error"]["message"];
-                }
-                else{
+                } else
+                {
                     $result["error"] = $e;
                 }
             }
         }
         $cookieLifeTime = time() + 3600;
-        if(isset($result["error"]["message"])){
-            setcookie("handbid-cc-error", $result["error"]["message"], $cookieLifeTime, COOKIEPATH, COOKIE_DOMAIN );
-        }
-        elseif(isset($result["error"])){
-            setcookie("handbid-cc-error", "Something wrong. Please, try again later", $cookieLifeTime, COOKIEPATH, COOKIE_DOMAIN );
-        }
-        else{
-            setcookie("handbid-cc-success", "Your card has been added successfully", $cookieLifeTime, COOKIEPATH, COOKIE_DOMAIN );
+        if (isset($result["error"]["message"]))
+        {
+            setcookie("handbid-cc-error", $result["error"]["message"], $cookieLifeTime, COOKIEPATH, COOKIE_DOMAIN);
+        } elseif (isset($result["error"]))
+        {
+            setcookie("handbid-cc-error", "Something wrong. Please, try again later", $cookieLifeTime, COOKIEPATH, COOKIE_DOMAIN);
+        } else
+        {
+            setcookie("handbid-cc-success", "Your card has been added successfully", $cookieLifeTime, COOKIEPATH, COOKIE_DOMAIN);
         }
         $redirect = (!empty($_POST["redirect"])) ? $_POST["redirect"] : get_permalink(get_page_by_title("Auctions"));
         wp_redirect($redirect);
     }
 
 
-
-    function handbid_ajax_get_invoices_callback(){
+    function handbid_ajax_get_invoices_callback()
+    {
 
         $result = [
-            "unpaid" => 0,
+            "unpaid"   => 0,
             "invoices" => "",
         ];
 
         $nonce = isset($_POST['nonce']) ? $_POST['nonce'] : 'nonce';
 
-        if($this->handbid_verify_nonce($nonce, date("d.m.Y") . "get_invoices")) {
+        if ($this->handbid_verify_nonce($nonce, date("d.m.Y") . "get_invoices"))
+        {
 
-            $auction = $this->state->currentAuction();
-            $auctionID = (isset($auction->id))?$auction->id:0;
-            $profile = $this->state->currentBidder($auctionID);
+            $auction   = $this->state->currentAuction();
+            $auctionID = (isset($auction->id)) ? $auction->id : 0;
+            $profile   = $this->state->currentBidder($auctionID);
 
             $myInvoices = $this->handbid->store('Receipt')->allReceipts();
 
             $unpaidInvoices = 0;
-            if (count($myInvoices)) {
-                foreach ($myInvoices as $invoice) {
-                    if (!$invoice->paid) {
+            if (count($myInvoices))
+            {
+                foreach ($myInvoices as $invoice)
+                {
+                    if (!$invoice->paid)
+                    {
                         $unpaidInvoices++;
                     }
                 }
             }
-            $result["unpaid"] = $unpaidInvoices;
+            $result["unpaid"]   = $unpaidInvoices;
             $result["invoices"] = $this->viewRenderer->render(
                 'views/bidder/receipt',
                 [
-                    'profile' => $profile,
-                    'auction' => $auction,
-                    'myInvoices' => $myInvoices
+                    'profile'    => $profile,
+                    'auction'    => $auction,
+                    'myInvoices' => $myInvoices,
                 ]
             );
         }
@@ -655,8 +730,8 @@ class HandbidActionController
     }
 
 
-
-    function handbid_ajax_get_messages_callback(){
+    function handbid_ajax_get_messages_callback()
+    {
 
         $result = [
             "messages" => "",
@@ -664,9 +739,10 @@ class HandbidActionController
 
         $nonce = isset($_POST['nonce']) ? $_POST['nonce'] : 'nonce';
 
-        if($this->handbid_verify_nonce($nonce, date("d.m.Y") . "get_messages")) {
+        if ($this->handbid_verify_nonce($nonce, date("d.m.Y") . "get_messages"))
+        {
 
-            $myMessages = $this->handbid->store( 'Notification' )->allMessages( 0, 255 );
+            $myMessages = $this->handbid->store('Notification')->allMessages(0, 255);
 
             $result["messages"] = $this->viewRenderer->render(
                 'views/bidder/notifications',
@@ -682,9 +758,8 @@ class HandbidActionController
     }
 
 
-
-
-    function handbid_ajax_get_active_auctions_callback(){
+    function handbid_ajax_get_active_auctions_callback()
+    {
 
         $result = [
             "auctions" => "",
@@ -692,9 +767,10 @@ class HandbidActionController
 
         $nonce = isset($_POST['nonce']) ? $_POST['nonce'] : 'nonce';
 
-        if($this->handbid_verify_nonce($nonce, date("d.m.Y") . "get_active_auctions")) {
+        if ($this->handbid_verify_nonce($nonce, date("d.m.Y") . "get_active_auctions"))
+        {
 
-            $myAuctions = $this->handbid->store( 'Bidder' )->getMyAuctions();
+            $myAuctions = $this->handbid->store('Bidder')->getMyAuctions();
 
             $result["auctions"] = $this->viewRenderer->render(
                 'views/bidder/active-auctions',
@@ -710,8 +786,8 @@ class HandbidActionController
     }
 
 
-
-    function handbid_ajax_get_bid_history_callback(){
+    function handbid_ajax_get_bid_history_callback()
+    {
 
         $result = [
             "history" => "",
@@ -719,18 +795,20 @@ class HandbidActionController
 
         $nonce = isset($_POST['nonce']) ? $_POST['nonce'] : 'nonce';
 
-        $itemID = (int) $_REQUEST["itemID"];
+        $itemID = (int)$_REQUEST["itemID"];
 
-        if($this->handbid_verify_nonce($nonce, date("d.m.Y") . "get_bids_".$itemID)) {
+        if ($this->handbid_verify_nonce($nonce, date("d.m.Y") . "get_bids_" . $itemID))
+        {
 
-            if($itemID) {
+            if ($itemID)
+            {
                 $bids = $this->handbid->store('Bid')->itemBids($itemID);
 
                 $result["history"] = $this->viewRenderer->render(
                     'views/item/bids',
                     [
-                        'itemID'    => $itemID,
-                        'bids'    => $bids
+                        'itemID' => $itemID,
+                        'bids'   => $bids,
                     ]
                 );
             }
@@ -742,34 +820,36 @@ class HandbidActionController
     }
 
 
+    function handbid_ajax_send_message_callback()
+    {
 
-    function handbid_ajax_send_message_callback(){
-
-        $body = $_POST["text"];
-        $nonce = isset($_POST['nonce']) ? $_POST['nonce'] : 'nonce';
+        $body       = $_POST["text"];
+        $nonce      = isset($_POST['nonce']) ? $_POST['nonce'] : 'nonce';
         $auctionOrg = $_POST["auctionOrg"];
-        $bidder   = $this->state->currentBidder();
-        $result = "";
+        $bidder     = $this->state->currentBidder();
+        $result     = "";
 
-        if($this->handbid_verify_nonce($nonce, date("d.m.Y") . "send_message")) {
+        if ($this->handbid_verify_nonce($nonce, date("d.m.Y") . "send_message"))
+        {
 
-            $name = $bidder->firstName . " " . $bidder->lastName;
-            $from = $bidder->email;
+            $name          = $bidder->firstName . " " . $bidder->lastName;
+            $from          = $bidder->email;
             $userCellPhone = $bidder->userCellPhone;
 
             $params = [
-                "name" => $name,
-                "email" => $from,
-                "phone" => $userCellPhone."",
-                "orgName" => $auctionOrg,
+                "name"     => $name,
+                "email"    => $from,
+                "phone"    => $userCellPhone . "",
+                "orgName"  => $auctionOrg,
                 "comments" => $body,
             ];
 
-            try {
-                $result = $this->handbid->store( 'Bidder' )->createLead( $params );
+            try
+            {
+                $result = $this->handbid->store('Bidder')->createLead($params);
 
-            }
-            catch(Exception $e){
+            } catch (Exception $e)
+            {
                 $result = $e;
             }
         }
@@ -778,143 +858,161 @@ class HandbidActionController
     }
 
 
+    function handbid_ajax_remove_credit_card_callback()
+    {
 
-    function handbid_ajax_remove_credit_card_callback(){
-
-        $nonce = isset($_POST['nonce']) ? $_POST['nonce'] : 'nonce';
+        $nonce  = isset($_POST['nonce']) ? $_POST['nonce'] : 'nonce';
         $cardID = $_POST["cardID"];
         $result = [
             "id" => $cardID,
         ];
 
-        if($this->handbid_verify_nonce($nonce, date("d.m.Y") . "delete_card")){
+        if ($this->handbid_verify_nonce($nonce, date("d.m.Y") . "delete_card"))
+        {
 
-                try {
-                    $resp = $this->handbid->store( 'CreditCard' )->delete( $cardID );
-                    $result["resp"] = $resp;
-                }
-                catch(Exception $e){
-                    $result["resp"] = $e;
-                }
+            try
+            {
+                $resp           = $this->handbid->store('CreditCard')->delete($cardID);
+                $result["resp"] = $resp;
+            } catch (Exception $e)
+            {
+                $result["resp"] = $e;
+            }
         }
         echo json_encode($result);
         exit;
     }
 
 
+    function handbid_load_auto_complete_auctions_callback()
+    {
 
-    function handbid_load_auto_complete_auctions_callback(){
-
-        $nonce = isset($_REQUEST['nonce']) ? $_REQUEST['nonce'] : 'nonce';
-        $inputIt = $_REQUEST["inputIt"];
+        $nonce    = isset($_REQUEST['nonce']) ? $_REQUEST['nonce'] : 'nonce';
+        $inputIt  = $_REQUEST["inputIt"];
         $selectIt = $_REQUEST["selectIt"];
-        $search = $_REQUEST["q"];
-        $result = [];
-        if($this->handbid_verify_nonce($nonce, date("d.m.Y") . "auto_complete")){
+        $search   = $_REQUEST["q"];
+        $result   = [];
+        if ($this->handbid_verify_nonce($nonce, date("d.m.Y") . "auto_complete"))
+        {
             $result["items"] = [];
-                try {
-                    $auctions = $this->handbid->store('Auction')->all($page = 0, $pageSize = 255, null, null, ["search" => urlencode($search)]);
-                    if(count($auctions)) {
-                    foreach($auctions as $auction) {
+            try
+            {
+                $auctions = $this->handbid->store('Auction')->all($page = 0, $pageSize = 255, null, null, ["search" => urlencode($search)]);
+                if (count($auctions))
+                {
+                    foreach ($auctions as $auction)
+                    {
                         $result["items"][] = [
-                            "id" => $auction->id,
-                            "key" => $auction->key,
-                            "name" => $auction->name,
-                            "auctionGuid" => $auction->auctionGuid,
-                            "status" => $auction->status,
-                            "totalItems" => $auction->totalItems,
+                            "id"           => $auction->id,
+                            "key"          => $auction->key,
+                            "name"         => $auction->name,
+                            "auctionGuid"  => $auction->auctionGuid,
+                            "status"       => $auction->status,
+                            "totalItems"   => $auction->totalItems,
                             "totalBidders" => $auction->totalBidders,
                             "organization" => $auction->organization->name,
-                            "inputIt" => $inputIt,
-                            "selectIt" => $selectIt,
+                            "inputIt"      => $inputIt,
+                            "selectIt"     => $selectIt,
                         ];
                     }
-                    }
                 }
-                catch(Exception $e){
+            } catch (Exception $e)
+            {
 
-                }
+            }
         }
         echo json_encode($result);
         exit;
     }
 
 
+    function handbid_load_shortcode_auctions_callback()
+    {
 
-    function handbid_load_shortcode_auctions_callback(){
-
-        $nonce = isset($_REQUEST['nonce']) ? $_REQUEST['nonce'] : 'nonce';
+        $nonce      = isset($_REQUEST['nonce']) ? $_REQUEST['nonce'] : 'nonce';
         $inviteCode = $_REQUEST["inviteCode"];
-        $result = [];
-        if($this->handbid_verify_nonce($nonce, date("d.m.Y") . "check_invite_code") and trim($inviteCode)){
+        $result     = [];
+        if ($this->handbid_verify_nonce($nonce, date("d.m.Y") . "check_invite_code") and trim($inviteCode))
+        {
             $result["items"] = [];
-                try {
-                    $auctions = $this->handbid->store('Auction')->all($page = 0, $pageSize = 255, null, null, []);
-                    if(count($auctions)) {
-                    foreach($auctions as $auction) {
-                        if($auction->shortCode == $inviteCode)
-                        $result["items"][] = [
-                            "id" => $auction->id,
-                            "key" => $auction->key,
-                            "name" => $auction->name,
-                            "auctionGuid" => $auction->auctionGuid,
-                            "status" => $auction->status,
-                            "totalItems" => $auction->totalItems,
-                            "totalBidders" => $auction->totalBidders,
-                            "organization" => $auction->organization->name,
-                        ];
-                    }
+            try
+            {
+                $auctions = $this->handbid->store('Auction')->all($page = 0, $pageSize = 255, null, null, []);
+                if (count($auctions))
+                {
+                    foreach ($auctions as $auction)
+                    {
+                        if ($auction->shortCode == $inviteCode)
+                            $result["items"][] = [
+                                "id"           => $auction->id,
+                                "key"          => $auction->key,
+                                "name"         => $auction->name,
+                                "auctionGuid"  => $auction->auctionGuid,
+                                "status"       => $auction->status,
+                                "totalItems"   => $auction->totalItems,
+                                "totalBidders" => $auction->totalBidders,
+                                "organization" => $auction->organization->name,
+                            ];
                     }
                 }
-                catch(Exception $e){
+            } catch (Exception $e)
+            {
 
-                }
+            }
         }
         echo json_encode($result);
         exit;
     }
 
 
-    function handbid_ajax_get_countries_provinces_callback(){
+    function handbid_ajax_get_countries_provinces_callback()
+    {
 
         $countryID = $_REQUEST["countryID"];
-        $nonce = isset($_REQUEST['nonce']) ? $_REQUEST['nonce'] : 'nonce';
-        $result = [];
-        if($this->handbid_verify_nonce($nonce, date("d.m.Y") . "country_provinces")){
-                try {
-                    $countriesIDs = $this->state->getCountriesAndProvinces();
-                    if(count($countriesIDs)) {
-                        foreach ($countriesIDs as $countriesID) {
-                            if($countryID == $countriesID->id and isset($countriesID->provinces)) {
-                                foreach ($countriesID->provinces as $countryProvince) {
-                                    $result[] = [
-                                        "value" => $countryProvince->id,
-                                        "text" => $countryProvince->countriesRegionsName,
-                                    ];
-                                }
+        $nonce     = isset($_REQUEST['nonce']) ? $_REQUEST['nonce'] : 'nonce';
+        $result    = [];
+        if ($this->handbid_verify_nonce($nonce, date("d.m.Y") . "country_provinces"))
+        {
+            try
+            {
+                $countriesIDs = $this->state->getCountriesAndProvinces();
+                if (count($countriesIDs))
+                {
+                    foreach ($countriesIDs as $countriesID)
+                    {
+                        if ($countryID == $countriesID->id and isset($countriesID->provinces))
+                        {
+                            foreach ($countriesID->provinces as $countryProvince)
+                            {
+                                $result[] = [
+                                    "value" => $countryProvince->id,
+                                    "text"  => $countryProvince->countriesRegionsName,
+                                ];
                             }
                         }
                     }
                 }
-                catch(Exception $e){
+            } catch (Exception $e)
+            {
 
-                }
+            }
         }
         echo json_encode($result);
         exit;
     }
 
 
-    public function handbid_ajax_get_testimonial_callback() {
+    public function handbid_ajax_get_testimonial_callback()
+    {
 
-        $postID = (int) $_POST["testimonial_id"];
-        $testimonial = get_post( $postID );
+        $postID      = (int)$_POST["testimonial_id"];
+        $testimonial = get_post($postID);
 
         echo $this->viewRenderer->render(
             "views/social/single-testimonial",
             [
                 "testimonial" => $testimonial,
-                "is_initial" => false,
+                "is_initial"  => false,
             ]
         );
         exit;
@@ -924,94 +1022,99 @@ class HandbidActionController
 
     // ---------------- POST CALLBACKS ------------------
 
-    function handbid_post_update_bidder_callback(){
-        $profile  = $this->handbid->store( 'Bidder' )->myProfile();
+    function handbid_post_update_bidder_callback()
+    {
+        $profile        = $this->handbid->store('Bidder')->myProfile();
         $fieldsToUpdate = [];
 
-        if(isset($_POST["password"]) and ($_POST["password"] != $_POST["password2"])){
+        if (isset($_POST["password"]) and ($_POST["password"] != $_POST["password2"]))
+        {
             unset($_POST["password"]);
             unset($_POST["password2"]);
         }
 
-        foreach($_POST as $postField => $postFieldValue){
-            if(!in_array($postField, ["redirect", "action", "password2"]) and trim($postFieldValue) and ($profile->{$postField} != $postFieldValue)){
+        foreach ($_POST as $postField => $postFieldValue)
+        {
+            if (!in_array($postField, ["redirect", "action", "password2"]) and trim($postFieldValue) and ($profile->{$postField} != $postFieldValue))
+            {
                 $fieldsToUpdate[$postField] = $postFieldValue;
             }
         }
 
-        if(isset($_FILES["profile_photo"]) and ! $_FILES["profile_photo"]["error"] ){
+        if (isset($_FILES["profile_photo"]) and !$_FILES["profile_photo"]["error"])
+        {
             $fieldsToUpdate["imageName"] = $_FILES["profile_photo"]["name"];
-            $fieldsToUpdate["image"] = base64_encode(file_get_contents($_FILES["profile_photo"]["tmp_name"]));
+            $fieldsToUpdate["image"]     = base64_encode(file_get_contents($_FILES["profile_photo"]["tmp_name"]));
         }
 
-        if(count($fieldsToUpdate)){
-            $this->handbid->store( 'Bidder' )->updateProfileData($fieldsToUpdate);
+        if (count($fieldsToUpdate))
+        {
+            $this->handbid->store('Bidder')->updateProfileData($fieldsToUpdate);
         }
-        if(isset($_POST["redirect"])){
+        if (isset($_POST["redirect"]))
+        {
             wp_redirect($_POST["redirect"]);
         }
 
     }
 
-    function autologin_callback(){
-         $this->handbid->store( 'Bidder' )->setCookie($_REQUEST["id"]);
-        $uuid = $_REQUEST["uuid"];
-        $auid = $_REQUEST["auid"];
+    function autologin_callback()
+    {
+        $this->handbid->store('Bidder')->setCookie($_REQUEST["id"]);
+        $uuid        = $_REQUEST["uuid"];
+        $auid        = $_REQUEST["auid"];
         $auctionSlug = "";
-        try {
-            $auctions = $this->handbid->store('Auction')->all($page = 0, $pageSize = 255, null, null, []);
-            if(count($auctions)) {
-                foreach($auctions as $auction) {
-                    if(trim(strtolower($auction->auctionGuid)) == trim(strtolower($auid)))
-                        $auctionSlug = $auction->key;
-                }
-            }
-        }
-        catch(Exception $e){
+        try
+        {
+            $auction = $this->handbid->store('Auction')->byGuid($auid);
+            $auctionSlug = $auction->key;
+            
+        } catch (Exception $e)
+        {
 
         }
-        wp_redirect("/auctions/".$auctionSlug);
+        wp_redirect("/auctions/" . $auctionSlug);
     }
 
-    function sharedauction_callback(){
-        $auid = $_REQUEST["auid"];
+    function sharedauction_callback()
+    {
+        $auid        = $_REQUEST["auid"];
         $auctionSlug = "";
-        try {
-            $auctions = $this->handbid->store('Auction')->all($page = 0, $pageSize = 255, null, null, []);
-            if(count($auctions)) {
-                foreach($auctions as $auction) {
-                    if(trim(strtolower($auction->auctionGuid)) == trim(strtolower($auid))) {
-                        $auctionSlug = $auction->key;
-                    }
-                }
-            }
-        }
-        catch(Exception $e){
+        try
+        {
+            $auction = $this->handbid->store('Auction')->byGuid($auid);
+            $auctionSlug = $auction->key;
+
+        } catch (Exception $e)
+        {
 
         }
-        wp_redirect('/auctions' . (!empty($auctionSlug) ? '/'.$auctionSlug : ''));
+        wp_redirect('/auctions' . (!empty($auctionSlug) ? '/' . $auctionSlug : ''));
     }
 
-    function shareditem_callback(){
-        $id = $_REQUEST["id"];
+    function shareditem_callback()
+    {
+        $id          = $_REQUEST["id"];
         $auctionSlug = "";
-        $itemSlug = "";
-        try {
+        $itemSlug    = "";
+        try
+        {
             $item = $this->handbid->store('Item')->byID($id);
-            if(!empty($item->auction)){
-                $itemSlug = $item->key;
+            if (!empty($item->auction))
+            {
+                $itemSlug    = $item->key;
                 $auctionSlug = $item->auction->key;
             }
-        }
-        catch(Exception $e){
+        } catch (Exception $e)
+        {
 
         }
-        wp_redirect('/auctions' . (!empty($auctionSlug) ? '/'.$auctionSlug : '') . (!empty($itemSlug) ? '/item/'.$itemSlug : ''));
+        wp_redirect('/auctions' . (!empty($auctionSlug) ? '/' . $auctionSlug : '') . (!empty($itemSlug) ? '/item/' . $itemSlug : ''));
     }
 
 
-
-    function handbid_ajax_customizer_css_callback(){
+    function handbid_ajax_customizer_css_callback()
+    {
         header("Content-type: text/css");
         echo $this->viewRenderer->render(
             'views/admin/customizer', []

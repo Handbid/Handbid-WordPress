@@ -17,7 +17,6 @@ $col = 1;
 $newRow = false;
 $total = count($organizations);
 
-
 $mdClass = sprintf('col-md-%d',  12 / $cols); //12 total cols in bootstrap
 $mdClass .= ' ' . sprintf('col-sm-%d',  12 / $cols * 2); //12 total cols in bootstrap
 $mdClass .= ' ' . sprintf('col-xs-%d',  12); //12 total cols in bootstrap
@@ -92,10 +91,10 @@ $selected = isset($_GET['auction_list']) ? $_GET['auction_list'] : 'current';
                     <ul class="details">
 
                         <li class="total-auctions"><span class="icon"></span><?php
-                            $totalAuctions = (int) $organization->totalAuctions;
+                            $countAuctions = (int) $organization->activeAuctions;
 
-                            echo $totalAuctions . ' Auction';
-                            if($totalAuctions > 1 or $totalAuctions == 0) {
+                            echo $countAuctions . ' Auction';
+                            if($countAuctions > 1 or $countAuctions == 0) {
                                 echo 's';
                             }
 

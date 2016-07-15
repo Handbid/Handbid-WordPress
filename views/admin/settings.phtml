@@ -44,6 +44,14 @@ $is_local = $this->get("is_local");
                 </td>
             </tr>
             <tr valign="top">
+                <?php $forceRefreshAfterPurchases = get_option('handbidForceRefreshAfterPurchases', 'no');?>
+                <th scope="row"><?php echo('Force page refresh after each Purchase'); ?></th>
+                <td>
+                    <label for="handbidForceRefreshAfterPurchases1"><input type="radio" id="handbidForceRefreshAfterPurchases1" name="handbidForceRefreshAfterPurchases" value="no" <?php checked($forceRefreshAfterPurchases, "no");?>/> No</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <label for="handbidForceRefreshAfterPurchases2"><input type="radio" id="handbidForceRefreshAfterPurchases2" name="handbidForceRefreshAfterPurchases" value="yes" <?php checked($forceRefreshAfterPurchases, "yes");?>/> Yes</label>
+                </td>
+            </tr>
+            <tr valign="top">
                 <?php $profileDashboardOn = get_option('handbidDisplayProfileDashboardOn', array("other", "auction", "auction-item"));
                 ?>
                 <th scope="row"><?php echo('Display Profile Dashboard On'); ?>:</th>

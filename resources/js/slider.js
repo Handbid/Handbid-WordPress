@@ -148,7 +148,7 @@
                     $(childNav).click();
                 }
 
-                if ((id = 'bidder-dashboard') && ($('#bidder-info-load').hasClass('sticking'))) {
+                if ((id == 'bidder-dashboard') && ($('#bidder-info-load').hasClass('sticking'))) {
                     $("html, body").animate({ scrollTop: 0 }, "fast");
                 }
 

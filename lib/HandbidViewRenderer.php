@@ -29,19 +29,24 @@ class HandbidViewRenderer
     {
         $templates = is_array($templatePath) ? $templatePath : [$templatePath];
         // $templates = array_reverse($templates);
-        foreach ($templates as $template) {
+        foreach ($templates as $template)
+        {
 
             $path = '';
-            if ($template[0] == '/') {
+            if ($template[0] == '/')
+            {
                 $path = $template;
-            } else {
+            } else
+            {
                 $path = $this->basePath . '/' . $template;
             }
 
             $path .= '.phtml';
 
-            if (file_exists($path)) {
+            if (file_exists($path))
+            {
                 $view = new HandbidView($path, $vars);
+
                 return $view->render();
             }
 

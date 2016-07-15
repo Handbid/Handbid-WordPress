@@ -15,17 +15,20 @@
  * Handles the actual rendering of the templates as well as variable mixins
  *
  */
-class HandbidView {
+class HandbidView
+{
 
     public $fullPath;
     public $context;
 
-    function __construct($fullPath, $context) {
+    function __construct($fullPath, $context)
+    {
         $this->fullPath = $fullPath;
-        $this->context = $context;
+        $this->context  = $context;
     }
 
-    function render() {
+    function render()
+    {
 
         ob_start();
 
@@ -44,24 +47,28 @@ class HandbidView {
         return $this->context[$name];
     }
 
-    function has($name) {
+    function has($name)
+    {
         return array_key_exists($name, $this->context);
     }
 
-    public function set($name, $value) {
+    public function set($name, $value)
+    {
         $this->context[$name] = $value;
     }
 
-    public function get($name, $default = null) {
+    public function get($name, $default = null)
+    {
         return isset($this->context[$name]) ? $this->$name : $default;
     }
 
-    public function partial($filePath, $context = null) {
+    public function partial($filePath, $context = null)
+    {
 
-        $path = str_replace("/", DIRECTORY_SEPARATOR, $this->fullPath);
+        $path  = str_replace("/", DIRECTORY_SEPARATOR, $this->fullPath);
         $parts = explode(DIRECTORY_SEPARATOR, $path);
         array_pop($parts);
-        $path =  implode(DIRECTORY_SEPARATOR, $parts) . DIRECTORY_SEPARATOR . $filePath;
+        $path = implode(DIRECTORY_SEPARATOR, $parts) . DIRECTORY_SEPARATOR . $filePath;
 
         $view = new HandbidView($path, $context);
 
@@ -69,16 +76,18 @@ class HandbidView {
 
     }
 
-    public function url($href, $query = [], $options = []) {
+    public function url($href, $query = [], $options = [])
+    {
 
         $url = (isset($href)) ? $href : $_SERVER['REQUEST_URI'];
 
         @list($url, $_query) = explode('?', $url);
 
-        if($_query != null) {
+        if ($_query != null)
+        {
             parse_str($_query, $_query);
-        }
-        else {
+        } else
+        {
             $_query = [];
         }
 
@@ -89,16 +98,18 @@ class HandbidView {
         return $url;
     }
 
-    public function trueUrl($href, $params = [], $options = [], $trueUrl = false) {
+    public function trueUrl($href, $params = [], $options = [], $trueUrl = false)
+    {
 
-        if($trueUrl) {
+        if ($trueUrl)
+        {
 
             $href = ($href) ? $href : get_permalink();
 
             return add_query_arg($params, $href);
 
-        }
-        else{
+        } else
+        {
 
             return $this->url($href, $params, $options);
 

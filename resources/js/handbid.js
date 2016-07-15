@@ -10,7 +10,7 @@
 
 
 var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_overlay, timerNotice, timerMessage,
-    circleTimer, auctionInvoices, currentPaddleNumber, currentElemNeedsCard, timerTimeout = 890,
+    circleTimer, auctionInvoices, currentPaddleNumber, currentElemNeedsCard, timerTimeout = 1000, timerElements, timerTime,
     currentCCForm, cookieExpire = 7, ticketsPopupWasOpened = false, addingCCState = false;
 (function ($) {
 
@@ -396,8 +396,9 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     description = (ticket.description) ? ticket.description : "",
                 //step = (parseInt(ticket.ticketQuantity)) ? parseInt(ticket.ticketQuantity) : 1,
                     step = 1,
-                    ticketsAreSoldStyle = (remaining == 0) ? "" : "display:none",
-                    ticketsAreAvailableStyle = (remaining == 0) ? "display:none" : "",
+                    ticketsAreSold = ((remaining == 0) || (ticket.status == 'sold')),
+                    ticketsAreSoldStyle = ticketsAreSold ? "" : "display:none",
+                    ticketsAreAvailableStyle = ticketsAreSold ? "display:none" : "",
                     ghostedButtonStyle = ((parseInt(remaining) > 0) && (remaining < step)) ? "ghosted-out" : "";
 
                 var pattern = '<div class="row ticket-row" data-handbid-ticket-row="' + itemID + '">' +
@@ -445,6 +446,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
                 var ticket = values,
                     itemID = ticket.id,
+                    itemStatus = ticket.status,
                     buyNowPrice = ticket.buyNowPrice,
                     remaining = ticket.inventoryRemaining,
                     name = ticket.name,
@@ -467,7 +469,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 rowTicketBlock.data("handbid-ticket-price", buyNowPrice);
                 rowTicketBlock.data("handbid-ticket-step", step);
                 remainingTicketBlock.val(remaining);
-                if (remaining == 0) {
+                if ((remaining == 0) || (itemStatus == 'sold')) {
                     ticketsSoldBlock.slideDown("fast");
                     ticketsSoldAvailable.slideUp("fast");
                     $("[data-handbid-ticket-quantity]", rowInTickets).html("0");
@@ -614,11 +616,14 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     updatingTicket = (wasInTickets && isTicketNow),
                     itemSimpleBox = $("[data-handbid-item-box='" + itemID + "']");
 
+                var itemDetailsBlock = $('[data-handbid-item-details-block="'+itemID+'"]');
+
                 if (removingTicket) {
                     rowInTickets.slideUp("normal");
                     rowInTickets.remove();
                     this.recalculateTotalTicketsPrice();
                     itemSimpleBox.removeAttr("data-is-ticket");
+                    itemDetailsBlock.removeAttr("data-ticket-inventory");
                 }
                 if (addingTicket) {
                     this.addItemToTickets(values);
@@ -631,6 +636,9 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 }
                 if (removingTicket || addingTicket) {
                     this.clickOnFiltersToReorder();
+                }
+                if (updatingTicket || addingTicket) {
+                    itemDetailsBlock.attr("data-ticket-inventory", inventoryRemaining);
                 }
 
             },
@@ -1675,7 +1683,6 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
             },
 
             scrollBodyToTopOfElement: function (top, time) {
-
                 time = time ? time : 900;
                 $('html, body').animate({
                     scrollTop: top
@@ -2310,6 +2317,11 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
             },
             reloadPageIfForceRefresh: function () {
                 if (forcePageRefreshAfterBids) {
+                    location.reload();
+                }
+            },
+            reloadPageAfterPurchasesIfForceRefresh: function () {
+                if (forcePageRefreshAfterPurchases) {
                     location.reload();
                 }
             },
@@ -3382,45 +3394,48 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
             startTimer: function (handbid) {
 
-                var continueTimer = true;
-                $.map($("[data-handbid-timer]"), function (timer) {
-                    timer = $(timer);
-                    var time = timer.html();
-                    var arr = time.split(":");
-                    var h = parseInt(arr[0]);
-                    var m = parseInt(arr[1]);
-                    var s = parseInt(arr[2]);
-                    if (s == 0) {
-                        if (m == 0) {
-                            if (h == 0) {
-                                handbidMain.changeAuctionTimer(0, false);
-                                return;
+                var testing = false;
+                if(!testing) {
+                    var continueTimer = true;
+                    $.map($("[data-handbid-timer]"), function (timer) {
+                        timer = $(timer);
+                        var time = timer.html(); 
+                        var arr = time.split(":");
+                        var h = parseInt(arr[0]);
+                        var m = parseInt(arr[1]);
+                        var s = parseInt(arr[2]);
+                        if (s == 0) {
+                            if (m == 0) {
+                                if (h == 0) {
+                                    handbidMain.changeAuctionTimer(0, false);
+                                    return;
+                                }
+                                h--;
+                                m = 60;
+                                if (h < 10) h = "0" + h;
                             }
-                            h--;
-                            m = 60;
-                            if (h < 10) h = "0" + h;
+                            m--;
+                            if (m < 10) m = "0" + m;
+                            s = 59;
                         }
-                        m--;
+                        else s--;
+                        if (s < 10) s = "0" + s;
                         if (m < 10) m = "0" + m;
-                        s = 59;
+                        if (h < 10) h = "0" + h;
+                        if (h == "000") h = "00";
+                        if (m == "000") m = "00";
+                        timer.html(h + ":" + m + ":" + s);
+                        $(".timer-hours-number").html(h);
+                        $(".timer-mins-number").html(m);
+                        $(".timer-secs-number").html(s);
+                    });
+
+
+                    if (continueTimer) {
+                        setTimeout(function () {
+                            handbid.startTimer(handbid)
+                        }, timerTimeout);
                     }
-                    else s--;
-                    if (s < 10) s = "0" + s;
-                    if (m < 10) m = "0" + m;
-                    if (h < 10) h = "0" + h;
-                    if (h == "000") h = "00";
-                    if (m == "000") m = "00";
-                    timer.html(h + ":" + m + ":" + s);
-                    $(".timer-hours-number").html(h);
-                    $(".timer-mins-number").html(m);
-                    $(".timer-secs-number").html(s);
-                });
-
-
-                if (continueTimer) {
-                    setTimeout(function () {
-                        handbid.startTimer(handbid)
-                    }, timerTimeout);
                 }
             },
 
@@ -3740,7 +3755,11 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
         handbid.setupTutorialPopup();
 
         ($('[data-handbid-bid]').length > 0 || $('.handbid-list-of-bids-proxy').length > 0 ) ? handbid.setupBidding(handbid) : '';
-        ($('[data-handbid-timer]').length > 0) ? handbid.startTimer(handbid) : '';
+        if($('[data-handbid-timer]').length > 0)
+        {
+            timerElements = $("[data-handbid-timer]");
+            handbid.startTimer(handbid)
+        }
         ($('[data-handbid-tickets]').length > 0) ? handbid.setupTicketsPurchasing(handbid) : '';
         handbid.setTimerRemaining(handbid);
 

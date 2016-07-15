@@ -11,6 +11,7 @@
 
 $auctions = $this->get('auctions');
 $cols = $this->get('cols_count');
+$search = $this->get('search');
 $col = 1;
 $newRow = false;
 $total = count($auctions);
@@ -33,6 +34,21 @@ $selected = isset($_GET['auction_list']) ? $_GET['auction_list'] : 'current';
 
     <div class="section-nav auction-list">
         Auctions <a href="/organizations">| Organizations</a>
+    </div>
+
+    <div class="row sort-bar auction-item-list" style="transition: none; margin-bottom: 15px;">
+
+        <div class="category-cover-cheating"></div>
+
+        <div class="col-md-6 col-xs-6 fancy-search-wrapper">
+
+            <form class="fancy-search" method="get">
+                <button type="submit">Search Auctions</button>
+                <input class="query categories-query" type="search" name="search" placeholder="Search Auctions" value="<?php echo ($search)?$search:"";?>">
+                <a class="reset" href="#" style="display: none">X</a>
+            </form>
+
+        </div>
     </div>
 
     <div class="sort-bar auction-list">
