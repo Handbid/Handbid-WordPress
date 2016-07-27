@@ -14,7 +14,6 @@ $creditCards = $profile->creditCards;
 $coinsCount = 2;
 $groupDivider = ",";
 $coinsDivider = ".";
-
 foreach ($invoices as $i => $invoice) {
     foreach ($invoice->lineItems as $li => $lineItem) {
         unset($invoices[$i]->lineItems[$li]->bidder);
@@ -103,20 +102,19 @@ foreach ($invoices as $i => $invoice) {
                         <?php }?>
                         </tbody>
                     </table>
-
+                    <div class="col-xs-12 margin-bottom">
+                        <div class="col-xs-6 col-md-3">
+                            <a class="buy-now green-solid-button receipt-action-button col-md-12 loading-span-button"
+                               onclick="handbidMain.sendInvoice('<?php echo $invoice->id; ?>','<?php echo $profile->email; ?>', false)"
+                            ><span>Email Receipt</span></a></div>
+                        <div class="col-xs-6 col-md-3">
+                            <a class="buy-now green-solid-button receipt-action-button col-md-12 loading-span-button"
+                               onclick="handbidMain.sendInvoice('<?php echo $invoice->id; ?>','<?php echo $profile->userCellPhone; ?>', true)"
+                            ><span>Text Receipt</span></a></div>
+                    </div>
                     <?php if (!((bool)$invoice->paid)) { ?>
                         <div class="unpaidControls">
-                            <div class="col-md-12 margin-bottom" style="display: none;">
-                                <div class="col-md-3">
-                                    <a class="buy-now green-solid-button receipt-action-button col-md-12 loading-span-button"
-                                        ><span>Print Receipt</span></a></div>
-                                <div class="col-md-3">
-                                    <a class="buy-now green-solid-button receipt-action-button col-md-12 loading-span-button"
-                                        ><span>Email Receipt</span></a></div>
-                                <div class="col-md-3">
-                                    <a class="buy-now green-solid-button receipt-action-button col-md-12 loading-span-button"
-                                        ><span>Text Receipt</span></a></div>
-                            </div>
+
 
                             <div class="col-md-12  margin-bottom receipt-payment-block hideIfNoCCAllowed">
                                 <div class="col-md-6">

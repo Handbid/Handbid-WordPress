@@ -21,6 +21,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
     attentionAboutTBuying = false;
     attentionAboutBuyConf = false;
     attentionAboutUnpaidI = false;
+    attentionAboutSendInv = false;
 
     var isMobile = {
         getUserAgent: function () {
@@ -180,6 +181,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     && !attentionAboutConfirm
                     && !attentionAboutTBuying
                     && !attentionAboutUnpaidI
+                    && !attentionAboutSendInv
                     && !attentionAboutBuyConf) {
                     modal_overlay.fadeOut("fast");
                 }
@@ -3001,6 +3003,150 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
                     return false;
 
+                }
+
+            },
+
+
+            sendInvoice: function (invoice_id, send_to, is_text_message) {
+
+                var notice_title = 'Send Invoice?',
+                    notice_message = '',
+                    completed_message = '';
+
+                if(is_text_message){
+                    notice_message = 'Text a link to this invoice to '+send_to+'?';
+                    completed_message = 'Your request to Text(SMS) invoice completed.';
+                }
+                else{
+                    notice_message = 'Send this invoice to '+send_to+'?';
+                    completed_message = 'Your request to Email invoice completed.';
+                }
+
+                if (invoice_id != "") {
+                    attentionAboutSendInv = true;
+                    var sendInvoiceNotice = new PNotify({
+                        title: notice_title,
+                        text: notice_message,
+                        icon: 'glyphicon glyphicon-question-sign',
+                        type: 'info',
+                        addclass: 'handbid-message-notice',
+                        hide: false,
+                        mouse_reset: false,
+                        confirm: {
+                            confirm: true,
+                            buttons: [{
+                                text: 'Send',
+                                addClass: 'send-invoice-button',
+                                click: function (notice) {
+                                    notice.update({
+                                        title: 'Processing send invoice to ' + send_to,
+                                        text: '<div class="progress progress-striped active" style="margin:0">\
+	                                            <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">\
+		                                        <span class="sr-only">100%</span>\
+	                                            </div>\
+                                                </div>',
+                                        icon: 'glyphicon glyphicon-refresh gly-spin',
+                                        addclass: "handbid-paddle-number-notice",
+                                        hide: false,
+                                        confirm: {
+                                            confirm: false
+                                        },
+                                        buttons: {
+                                            closer: false,
+                                            sticker: false
+                                        },
+                                        history: {
+                                            history: false
+                                        }
+                                    });
+                                    var data = {
+                                        action: "handbid_ajax_send_invoice",
+                                        invoice_id: invoice_id,
+                                        send_to: send_to,
+                                        send_type: (is_text_message ? 'sms' : 'email')
+                                    };
+                                    $.post(
+                                        ajaxurl,
+                                        data,
+                                        function (data) {
+
+                                            console.log("-----------------------");
+                                            console.log("----Sending Invoice success----");
+                                            data = JSON.parse(data);
+                                            console.log(data);
+
+                                            var text = "";
+                                            var title = "";
+                                            var type = "";
+                                            var icon = "";
+
+                                            if (data.errors == undefined) {
+                                                text = completed_message;
+                                                title = 'Done';
+                                                type = 'success';
+                                                icon = 'glyphicon glyphicon-ok';
+
+                                            }
+                                            else {
+                                                text = data.errors.join("<br>");
+                                                title = 'Failed';
+                                                type = 'error';
+                                                icon = 'glyphicon glyphicon-remove-sign';
+                                            }
+
+                                            attentionAboutSendInv = false;
+                                            notice.update({
+                                                title: title,
+                                                text: text,
+                                                icon: icon,
+                                                hide: true,
+                                                type: type,
+                                                delay: 3000,
+                                                mouse_reset: false,
+                                                confirm: {
+                                                    confirm: false
+                                                },
+                                                buttons: {
+                                                    closer: true,
+                                                    sticker: false
+                                                },
+                                                history: {
+                                                    history: false
+                                                }
+                                            });
+
+                                            return false;
+                                        }
+                                    );
+                                }
+                            }, {
+                                text: 'Cancel',
+                                addClass: 'cancel-sending-button',
+                                click: function (notice) {
+                                    attentionAboutSendInv = false;
+                                    notice.remove();
+                                }
+                            }]
+                        },
+                        stack: false,
+                        before_open: function (PNotify) {
+                            handbidMain.fadeInModalOverlayAndPositionModal(PNotify);
+                        },
+                        before_close: function () {
+                            handbidMain.fadeOutModalOverlay();
+                        },
+                        buttons: {
+                            closer: false,
+                            sticker: false
+                        },
+                        history: {
+                            history: false
+                        }
+                    });
+                    bidNotice.get().on('pnotify.cancel', function () {
+                        return false;
+                    });
                 }
 
             },

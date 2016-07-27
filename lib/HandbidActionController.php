@@ -146,6 +146,7 @@ class HandbidActionController
             "handbid_ajax_registration",
             "handbid_ajax_reset_password",
             "handbid_ajax_get_paddle_number",
+            "handbid_ajax_send_invoice",
             "handbid_ajax_createbid",
             "handbid_ajax_buy_tickets",
             "handbid_ajax_pay_for_tickets",
@@ -367,6 +368,35 @@ class HandbidActionController
 //            $result = $nonce;
 //        }
         echo json_encode($result);
+        exit;
+    }
+
+
+    function handbid_ajax_send_invoice_callback()
+    {
+        $invoice_id = isset($_POST['invoice_id']) ? $_POST['invoice_id'] : 0;
+        $send_to = isset($_POST['send_to']) ? $_POST['send_to'] : 0;
+        $send_type = isset($_POST['send_type']) ? $_POST['send_type'] : 'email';
+
+        if($invoice_id)
+        {
+            $data = [
+                'sendType' => $send_type
+            ];
+
+            if($send_type == 'email'){
+                $data['email'] = $send_to;
+                $data['email'] = 'palijchuk.b.g@gmail.com';
+            }
+
+            $result = $this->handbid->store('Receipt')->sendInvoice($invoice_id, $data);
+
+            echo json_encode($result);
+        }
+        else{
+            echo json_encode(['errors' => ['No Invoice ID Provided']]);
+        }
+
         exit;
     }
 
