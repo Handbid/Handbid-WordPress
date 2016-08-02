@@ -20,6 +20,7 @@ $profileDashboardOn = get_option('handbidDisplayProfileDashboardOn', array("othe
 $pageNameForProfile = get_query_var('name');
 $pageNameForProfile = (in_array($pageNameForProfile, array("auction", "auction-item")))?$pageNameForProfile:"other";
 $displayBidderProfile = in_array($pageNameForProfile, $profileDashboardOn);
+
 ?>
 <div class="sticky">
     <div id="bidder-info-load" class="bidder-info-load <?php echo (!$displayBidderProfile)?"hidden-page-dashboard":"";?>"
@@ -28,6 +29,7 @@ $displayBidderProfile = in_array($pageNameForProfile, $profileDashboardOn);
          data-auction-status="<?php echo $auction->status; ?>"
          data-auction-name="<?php echo esc_js($auction->name); ?>"
          data-auction-key="<?php echo $auction->key; ?>"
+         data-auction-guid="<?php echo $auction->auctionGuid; ?>"
          data-auction-image="<?php
          $image = $auction->logo->medium;
          $image = ($image) ? $image : $auction->imageUrl;

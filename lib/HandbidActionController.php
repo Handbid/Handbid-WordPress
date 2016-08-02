@@ -144,6 +144,7 @@ class HandbidActionController
         $ajaxActions = [
             "handbid_ajax_login",
             "handbid_ajax_registration",
+            "handbid_ajax_auction_info",
             "handbid_ajax_reset_password",
             "handbid_ajax_get_paddle_number",
             "handbid_ajax_send_invoice",
@@ -155,7 +156,6 @@ class HandbidActionController
             "handbid_ajax_add_credit_card",
             "handbid_ajax_get_invoices",
             "handbid_ajax_get_messages",
-            "handbid_ajax_get_active_auctions",
             "handbid_ajax_get_bid_history",
             "handbid_ajax_send_message",
             "handbid_ajax_remove_credit_card",
@@ -173,9 +173,6 @@ class HandbidActionController
 
         $postActions = [
             "handbid_post_update_bidder",
-            "autologin",
-            "shareditem",
-            "sharedauction",
         ];
         foreach ($postActions as $postAction)
         {
@@ -352,6 +349,25 @@ class HandbidActionController
     }
 
 
+    function handbid_ajax_auction_info_callback()
+    {
+        $auction_guid = $_POST["auction_guid"];
+
+        if(!empty($auction_guid)){
+            try{
+                $auction = $this->handbid->store('Auction')->byGuid($auction_guid);
+                if(!empty($auction->timerRemaining)){
+                    echo intval($auction->timerRemaining);
+                    exit;
+                }
+            }
+            catch(Exception $e){}
+        }
+        echo 0;
+        exit;
+    }
+
+
     function handbid_ajax_get_paddle_number_callback()
     {
         $result = [];
@@ -386,7 +402,6 @@ class HandbidActionController
 
             if($send_type == 'email'){
                 $data['email'] = $send_to;
-                $data['email'] = 'palijchuk.b.g@gmail.com';
             }
 
             $result = $this->handbid->store('Receipt')->sendInvoice($invoice_id, $data);
@@ -788,34 +803,6 @@ class HandbidActionController
     }
 
 
-    function handbid_ajax_get_active_auctions_callback()
-    {
-
-        $result = [
-            "auctions" => "",
-        ];
-
-        $nonce = isset($_POST['nonce']) ? $_POST['nonce'] : 'nonce';
-
-        if ($this->handbid_verify_nonce($nonce, date("d.m.Y") . "get_active_auctions"))
-        {
-
-            $myAuctions = $this->handbid->store('Bidder')->getMyAuctions();
-
-            $result["auctions"] = $this->viewRenderer->render(
-                'views/bidder/active-auctions',
-                [
-                    'myAuctions' => $myAuctions,
-                ]
-            );
-        }
-
-
-        echo json_encode($result);
-        exit;
-    }
-
-
     function handbid_ajax_get_bid_history_callback()
     {
 
@@ -1083,63 +1070,18 @@ class HandbidActionController
         }
         if (isset($_POST["redirect"]))
         {
-            wp_redirect($_POST["redirect"]);
-        }
+            $redirect_link = $_POST["redirect"];
 
-    }
-
-    function autologin_callback()
-    {
-        $this->handbid->store('Bidder')->setCookie($_REQUEST["id"]);
-        $uuid        = $_REQUEST["uuid"];
-        $auid        = $_REQUEST["auid"];
-        $auctionSlug = "";
-        try
-        {
-            $auction = $this->handbid->store('Auction')->byGuid($auid);
-            $auctionSlug = $auction->key;
-            
-        } catch (Exception $e)
-        {
-
-        }
-        wp_redirect("/auctions/" . $auctionSlug);
-    }
-
-    function sharedauction_callback()
-    {
-        $auid        = $_REQUEST["auid"];
-        $auctionSlug = "";
-        try
-        {
-            $auction = $this->handbid->store('Auction')->byGuid($auid);
-            $auctionSlug = $auction->key;
-
-        } catch (Exception $e)
-        {
-
-        }
-        wp_redirect('/auctions' . (!empty($auctionSlug) ? '/' . $auctionSlug : ''));
-    }
-
-    function shareditem_callback()
-    {
-        $id          = $_REQUEST["id"];
-        $auctionSlug = "";
-        $itemSlug    = "";
-        try
-        {
-            $item = $this->handbid->store('Item')->byID($id);
-            if (!empty($item->auction))
+            if (!empty($_POST["payInvoiceID"]))
             {
-                $itemSlug    = $item->key;
-                $auctionSlug = $item->auction->key;
+                $redirect_link = add_query_arg(['pay_invoice' => $_POST["payInvoiceID"]], $redirect_link);
             }
-        } catch (Exception $e)
-        {
-
+            else{
+                $redirect_link = preg_replace('/[\?&]pay_invoice=\d*/ui', '', $redirect_link);
+            }
+            wp_redirect($redirect_link);
         }
-        wp_redirect('/auctions' . (!empty($auctionSlug) ? '/' . $auctionSlug : '') . (!empty($itemSlug) ? '/item/' . $itemSlug : ''));
+
     }
 
 

@@ -18,11 +18,13 @@ class HandbidRouter
 {
 
     public $state;
+    public $handbid;
 
-    public function __construct(HandbidState $state)
+    public function __construct(HandbidState $state, $handbid)
     {
         add_action('init', [$this, 'init']);
         $this->state = $state;
+        $this->handbid = $handbid;
         add_action('wp', [$this, 'checkPageState']);
     }
 
@@ -35,27 +37,54 @@ class HandbidRouter
             'template_redirect',
             function() {
                 if (strpos($_SERVER["REQUEST_URI"], "autologin") !== false) {
-                    wp_safe_redirect(add_query_arg(array(
-                        "action" => "autologin",
-                        "id" => $_REQUEST["id"],
-                        "auid" => $_REQUEST["auid"],
-                        "uuid" => $_REQUEST["uuid"],
-                    ), admin_url("admin-post.php")));
+
+                    $this->handbid->store('Bidder')->setCookie($_REQUEST["id"]);
+                    $auctionSlug = "";
+                    try
+                    {
+                        $auction = $this->handbid->store('Auction')->byGuid($_REQUEST["auid"]);
+                        $auctionSlug = $auction->key;
+
+                    } catch (Exception $e) { }
+
+                    wp_redirect("/auctions/" . (!empty($auctionSlug) ? $auctionSlug . '/' : ''));
+
                     exit;
                 }
                 if (strpos($_SERVER["REQUEST_URI"], "sharedauction") !== false) {
-                    wp_safe_redirect(add_query_arg(array(
-                        "action" => "sharedauction",
-                        "auid" => $_REQUEST["auid"],
-                    ), admin_url("admin-post.php")));
+
+                    $auctionSlug = "";
+                    try
+                    {
+                        $auction = $this->handbid->store('Auction')->byGuid($_REQUEST["auid"]);
+                        $auctionSlug = $auction->key;
+
+                    } catch (Exception $e)
+                    {
+
+                    }
+                    wp_redirect('/auctions/' . (!empty($auctionSlug) ? $auctionSlug . '/' : ''));
+
                     exit;
                 }
                 if (strpos($_SERVER["REQUEST_URI"], "shareditem") !== false) {
-                    wp_safe_redirect(add_query_arg(array(
-                        "action" => "shareditem",
-                        "auid" => $_REQUEST["auid"],
-                        "id" => $_REQUEST["id"],
-                    ), admin_url("admin-post.php")));
+
+                    $auctionSlug = "";
+                    $itemSlug    = "";
+                    try
+                    {
+                        $item = $this->handbid->store('Item')->byID($_REQUEST["id"]);
+                        if (!empty($item->auction))
+                        {
+                            $itemSlug    = $item->key;
+                            $auctionSlug = $item->auction->key;
+                        }
+                    } catch (Exception $e)
+                    {
+
+                    }
+                    wp_redirect('/auctions/' . (!empty($auctionSlug) ? $auctionSlug . '/' : '') . (!empty($itemSlug) ? 'item/' . $itemSlug . '/' : ''));
+
                     exit;
                 }
             }

@@ -9,6 +9,7 @@
  */
 
 $invoices = $this->get("myInvoices");
+$auction = $this->get("auction");
 $profile = $this->get("profile");
 $creditCards = $profile->creditCards;
 $coinsCount = 2;
@@ -57,8 +58,6 @@ foreach ($invoices as $i => $invoice) {
                 </div>
                 <div class="col-md-12 invoice-details-container" style="display: none;">
 
-                    <?php
-                    ?>
                     <table class="table  table-receipt-summary ">
                         <tbody>
                         <tr>
@@ -136,6 +135,7 @@ foreach ($invoices as $i => $invoice) {
                                        data-make-payment-nonce="<?php echo apply_filters("handbid_create_nonce", date("d.m.Y") . "make_receipt_payment"); ?>"
                                        data-handbid-credit-cards-need
                                         <?php if (!count($creditCards)) { ?> data-handbid-credit-cards-required <?php } ?>
+                                        <?php if (isset($invoice->requireAddresstoPay) and intval($invoice->requireAddresstoPay)) { ?> data-require-address-to-pay <?php } ?>
                                         ><span>Make Payment</span></a>
                                 </div>
                             </div>

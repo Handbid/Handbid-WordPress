@@ -274,33 +274,13 @@ class Handbid
         }
 
         $scripts = array(
-            //'handbid-details-map-js'   => 'public/js/details-map.js',
-
-            //'smart-app-banner-js'      => 'public/js/smart-app-banner.js',
-            //'smart-app-banner-init-js' => 'public/js/smart-app-banner-init.js',
-
+            'handbid-details-map-js' => 'resources/js/details-map.js',
             'yii-node-socket-js'     => 'public/js/yii-node-socket.js',
             'node-socket-manager-js' => 'public/js/node-socket-manager.js',
             'stripe-init-js'         => 'public/js/stripe-init.js',
             'smooch-init-js'         => 'public/js/smooch-init.js',
 
             'handbid-notices-js' => 'public/js/pnotify.custom.min.js',      // Probably should be changed on newest version, but there is problems with plugin docs
-
-            //'progress-bar-js'          => 'public/js/progress-bar.js',
-            //'cookie-plugin-js'         => 'public/js/jquery.cookie.js',
-            //'visible-plugin-js'        => 'public/js/jquery.visible.min.js',
-            //'handbid-isotope-js'       => 'public/js/isotope.pkgd.min.js',
-            //'handbid-unslider-js'      => 'public/js/unslider.min.js',
-            //'handbid-photo-gallery-js' => 'public/js/photoGallery.js',
-            //'handbid-tab-slider-js'    => 'public/js/slider.js',
-            //'handbid-auction-page-js'  => 'public/js/auction-details.js',
-            //'handbid-tooltip-js'       => 'public/js/tooltip.js',
-            //'handbid-bootstrap-js'     => 'public/js/bootstrap.js',
-            //'handbid-select2-js'       => 'public/js/select2.full.js',
-            //'handbid-login-js'         => 'public/js/login.js',
-            //'handbid-plugin-js'        => 'public/js/handbid.js',
-            //'handbid-modal-js'         => 'public/js/modal.js',
-
 
             'progress-bar-js'      => 'public/plugins/progressbar.js/progressbar.min.js',
             'cookie-plugin-js'     => 'public/plugins/jquery.cookie/jquery.cookie.js',
@@ -428,7 +408,7 @@ class Handbid
             $state = $this->state;
         }
 
-        return new HandbidRouter($state);
+        return new HandbidRouter($state, $this->handbid);
     }
 
     // View Renderer
@@ -713,15 +693,22 @@ class Handbid
             echo '<input type="hidden" data-auction-reset-sign>';
         }
 
+        if (isset($_GET["pay_invoice"]))
+        {
+            echo '<input type="hidden" data-auction-continue-payment-sign value="'.intval($_GET["pay_invoice"]).'">';
+        }
+
+        $map_callback = '';
         if ($this->state->getMapVisibility())
         {
             $currentPostID = get_the_ID();
             $currentPost   = get_post($currentPostID);
-            if (in_array($currentPost->post_name, ['auction', 'organization']))
+            if (in_array($currentPost->post_name, ['auction', 'auctions', 'auction-item', 'organization']))
             {
-                echo '<script async defer src="https://maps.googleapis.com/maps/api/js?v=3.exp&callback=auctionGoogleMapsInit"></script>';
+                $map_callback = '&callback=auctionGoogleMapsInit';
             }
         }
+        echo '<script async defer src="https://maps.googleapis.com/maps/api/js?v=3.exp'.$map_callback.'"></script>';
     }
 
     function logout()

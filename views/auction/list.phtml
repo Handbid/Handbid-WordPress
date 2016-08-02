@@ -116,7 +116,7 @@ $selected = isset($_GET['auction_list']) ? $_GET['auction_list'] : 'current';
 
                     <ul class="details">
 
-                        <li class="org"><span class="icon"></span><a href="/organizations/<?php echo $auction->organization->key; ?>/"><?php echo $auction->organization->name; ?></a></li>
+                        <li class="org"><span class="icon"></span><a href="/organizations/<?php echo $auction->organizationKey; ?>/"><?php echo $auction->organizationName; ?></a></li>
                         <?php if ($auction->vanityAddress) { ?>
                             <li class="addy"><span class="icon"></span><?php echo $auction->vanityAddress; ?></li>
                         <?php } ?>

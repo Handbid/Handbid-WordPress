@@ -20,8 +20,7 @@ gulp.task('watch', function() {
 
 gulp.task('js', function() {
     gulp.src([
-        'resources/js/details-map.js',
-        //'resources/js/smart-app-banner-init.js',
+        //'resources/js/details-map.js',
         'resources/js/photoGallery.js',
         'resources/js/slider.js',
         'resources/js/handbid.js',

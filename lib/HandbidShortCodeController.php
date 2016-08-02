@@ -178,6 +178,7 @@ class HandbidShortCodeController
                 $attributes['type'] = 'byOrg';
             }
 
+
             // Get orgs from handbid server
             if ($org)
             {
