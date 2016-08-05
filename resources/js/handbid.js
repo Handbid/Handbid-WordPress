@@ -24,6 +24,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
     attentionAboutSendInv = false;
     attentionAboutAddrPay = false;
     attentionAboutContPay = false;
+    attentionAboutAreHere = false;
 
     String.prototype.toHHMMSS = function () {
         var sec_num = parseInt(this, 10);
@@ -201,6 +202,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     && !attentionAboutAddrPay
                     && !attentionAboutContPay
                     && !attentionAboutSendInv
+                    && !attentionAboutAreHere
                     && !attentionAboutBuyConf) {
                     modal_overlay.fadeOut("fast");
                 }
@@ -1986,7 +1988,9 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                         }
                         else {
 
-                            handbid.setPaddleNumberAndWelcomeMessage(data);
+                            handbid.setPaddleNumberAndWelcomeMessage(data.welcomeForReceipt, data.paddleNumber);
+                            handbid.showAreYouHereMessage(data.bidderLocationQuestion);
+                            console.log(data);
 
                             var totalSoldContainer = $('[data-handbid-item-attribute="totalSoldItems"]').eq(0);
                             var totalSold = data.item.quantitySold;
@@ -2269,7 +2273,9 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                                 }
                                 else {
 
-                                    handbid.setPaddleNumberAndWelcomeMessage(data);
+                                    handbid.setPaddleNumberAndWelcomeMessage(data.welcomeForReceipt, data.paddleNumber);
+                                    handbid.showAreYouHereMessage(data.bidderLocationQuestion);
+                                    console.log(data);
 
                                     data.item.auctionKey = $("#bidder-info-load").data("auction-key");
                                     handbid.addDashboardBidProxy(data.id, data.item.id, data.item.name, data.item.key, data.item.auctionKey, data.maxAmount);
@@ -2345,7 +2351,9 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                             data = JSON.parse(data);
 
 
-                            handbid.setPaddleNumberAndWelcomeMessage(data);
+                            handbid.setPaddleNumberAndWelcomeMessage(data.welcomeForReceipt, data.paddleNumber);
+                            handbid.showAreYouHereMessage(data.bidderLocationQuestion);
+                            console.log(data);
 
                             $('[data-handbid-item-banner="sold"]').show();
                             handbid.disableAllBiddingButtonsIfSold();
@@ -2496,7 +2504,9 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                         }
                         else {
 
-                            handbid.setPaddleNumberAndWelcomeMessage(data);
+                            handbid.setPaddleNumberAndWelcomeMessage(data.welcomeForReceipt, data.paddleNumber);
+                            handbid.showAreYouHereMessage(data.bidderLocationQuestion);
+                            console.log(data);
 
                             $('[data-handbid-item-attribute="bidCount"]').html(data.item.bidCount);
                             $('[data-handbid-item-attribute="minimumBidAmount"]').html(currencySpan() + data.item.minimumBidAmount);
@@ -3409,10 +3419,13 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
             },
 
 
-            setPaddleNumberAndWelcomeMessage: function (data) {
 
-                if(data.paddleNumber != undefined){
-                    $('#data-profile-current-paddle-number').html(data.paddleNumber);
+
+
+            setPaddleNumberAndWelcomeMessage: function (welcomeForReceipt, paddleNumber) {
+
+                if(paddleNumber != undefined){
+                    $('#data-profile-current-paddle-number').html(paddleNumber);
                 }
                 var bidderDashboardPlace = $("#bidder-info-load"),
                     auctionID = parseInt(bidderDashboardPlace.data("auction")),
@@ -3421,9 +3434,144 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     messageShownCookie = $.cookie(messageShownCookieKey),
                     messageWasNotShown = (messageShownCookie != 'yes');
 
-                if(messageWasNotShown && data.welcomeForReceipt != undefined && data.welcomeForReceipt != ''){
+                if(messageWasNotShown && welcomeForReceipt != undefined && welcomeForReceipt != ''){
                     $.cookie(messageShownCookieKey, 'yes', {expires: cookieExpire, path: '/'});
-                    handbidMain.showWelcomeMessage(data.welcomeForReceipt);
+                    handbidMain.showWelcomeMessage(welcomeForReceipt);
+                }
+            },
+
+
+            showAreYouHereMessage: function (are_you_here_message) {
+
+                if(are_you_here_message) {
+
+                    var bidderDashboardPlace = $("#bidder-info-load"),
+                        auctionID = parseInt(bidderDashboardPlace.data("auction")),
+                        profileID = parseInt(bidderDashboardPlace.data("profile-id")),
+                        messageShownCookieKey = "bidder-" + profileID + "-has-are-you-here-message-" + auctionID,
+                        messageShownCookie = $.cookie(messageShownCookieKey),
+                        messageWasNotShown = (messageShownCookie != 'yes');
+
+                    if (messageWasNotShown && are_you_here_message != undefined && are_you_here_message != '') {
+
+                        $.cookie(messageShownCookieKey, 'yes', {expires: cookieExpire, path: '/'});
+                        attentionAboutAreHere = true;
+                        var welcomeNotice = new PNotify({
+                            title: 'Are You Here?',
+                            text: are_you_here_message,
+                            icon: 'glyphicon glyphicon-question-sign',
+                            type: 'info',
+                            addclass: 'handbid-message-notice',
+                            hide: false,
+                            mouse_reset: false,
+                            confirm: {
+                                confirm: true,
+                                buttons: [{
+                                    text: 'Yes',
+                                    addClass: 'bid-here-button',
+                                    click: function (notice) {
+                                        notice.update({
+                                            title: 'Sending your answer to auction manager',
+                                            text: '<div class="progress progress-striped active" style="margin:0">\
+	                                            <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">\
+		                                        <span class="sr-only">100%</span>\
+	                                            </div>\
+                                                </div>',
+                                            icon: 'glyphicon glyphicon-refresh gly-spin',
+                                            addclass: "handbid-paddle-number-notice",
+                                            hide: false,
+                                            confirm: {
+                                                confirm: false
+                                            },
+                                            buttons: {
+                                                closer: false,
+                                                sticker: false
+                                            },
+                                            history: {
+                                                history: false
+                                            }
+                                        });
+                                        var data = {
+                                            action: "handbid_ajax_i_am_here",
+                                            auctionID: auctionID
+                                        };
+                                        $.post(
+                                            ajaxurl,
+                                            data,
+                                            function (data) {
+
+                                                console.log("-----------------------");
+                                                console.log("----I Am Here Notification success----");
+                                                data = JSON.parse(data);
+
+                                                attentionAboutAreHere = false;
+                                                notice.update({
+                                                    title: 'Done',
+                                                    text: 'Thank you for this notification!',
+                                                    icon: 'glyphicon glyphicon-ok',
+                                                    hide: true,
+                                                    type: 'success',
+                                                    delay: 3000,
+                                                    mouse_reset: false,
+                                                    confirm: {
+                                                        confirm: false
+                                                    },
+                                                    buttons: {
+                                                        closer: true,
+                                                        sticker: false
+                                                    },
+                                                    history: {
+                                                        history: false
+                                                    }
+                                                });
+
+                                                return false;
+                                            }
+                                        );
+                                    }
+                                }, {
+                                    text: 'No',
+                                    addClass: 'browse-here-button',
+                                    click: function (notice) {
+                                        attentionAboutAreHere = false;
+                                        $.cookie(viewCookieKey, "yes", {expires: cookieExpire, path: '/'});
+                                        notice.remove();
+                                    }
+                                }]
+                            },
+                            stack: false,
+                            before_open: function (PNotify) {
+                                handbidMain.fadeInModalOverlayAndPositionModal(PNotify);
+                            },
+                            before_close: function () {
+                                attentionAboutAreHere = false;
+                                handbidMain.fadeOutModalOverlay();
+                            },
+                            buttons: {
+                                closer: true,
+                                sticker: false
+                            },
+                            history: {
+                                history: false
+                            }
+                        });
+                        welcomeNotice.get().on('pnotify.cancel', function () {
+                            return false;
+                        });
+                    }
+
+                }
+            },
+
+
+            detectIfNeedToShowAreYouHereMessage: function () {
+
+                var bidderDashboardPlace = $("#bidder-info-load"),
+                    auctionLocationQuestion = bidderDashboardPlace.data("auction-locatin-question");
+
+                if (auctionLocationQuestion) {
+
+                    handbidMain.showAreYouHereMessage(auctionLocationQuestion);
                 }
             },
 
@@ -4187,10 +4335,12 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
         handbid.initializePaymentButtons();
         handbid.detectIfUserWantToBuyTickets();
         handbid.detectIfUserWantToBid();
-        //handbid.detectIfUserCanDownloadApps();
         handbid.messageToAuctionManager();
         handbid.redirectFromResetedAuctionsCheck();
         handbid.detectIfNeedToContinuePayment();
+        setTimeout(function () {
+            handbid.detectIfNeedToShowAreYouHereMessage()
+        }, 4000);
         setTimeout(function () {
             handbid.checkSocketConnection(handbid)
         }, 10000);

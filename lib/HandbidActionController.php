@@ -145,6 +145,7 @@ class HandbidActionController
             "handbid_ajax_login",
             "handbid_ajax_registration",
             "handbid_ajax_auction_info",
+            "handbid_ajax_i_am_here",
             "handbid_ajax_reset_password",
             "handbid_ajax_get_paddle_number",
             "handbid_ajax_send_invoice",
@@ -360,6 +361,26 @@ class HandbidActionController
                     echo intval($auction->timerRemaining);
                     exit;
                 }
+            }
+            catch(Exception $e){}
+        }
+        echo 0;
+        exit;
+    }
+
+
+    function handbid_ajax_i_am_here_callback()
+    {
+        $auctionID = $_POST["auctionID"];
+
+        if(!empty($auction_guid)){
+            try
+            {
+                $this->handbid->store('Auction')
+                              ->onSite([
+                                           'auctionId' => $auctionID,
+                                           'onSite'    => 1,
+                                       ]);
             }
             catch(Exception $e){}
         }

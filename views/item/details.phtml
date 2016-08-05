@@ -17,6 +17,7 @@ $profile = $this->get('profile');
 $winning = $this->get('winning');
 $losing  = $this->get('losing');
 
+
 $isWinning = count(array_filter($winning, function ($bid) use ($item)
 {
     return $bid->itemId == $item->id;
