@@ -740,7 +740,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                         if (!isShowing && !isHiding && !isHidden) {
                             handbid.utilChangeCountValue(newCatIDContainer, 1);
                             handbid.utilChangeCountValue(oldCatIDContainer, -1);
-                        }
+                        } 
                     }
                     else {
                         isShowing ? handbid.utilChangeCountValue(newCatIDContainer, 1) : "";
@@ -3424,11 +3424,14 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
             setPaddleNumberAndWelcomeMessage: function (welcomeForReceipt, paddleNumber) {
 
+                var bidderDashboardPlace = $("#bidder-info-load");
+
                 if(paddleNumber != undefined){
                     $('#data-profile-current-paddle-number').html(paddleNumber);
+                    bidderDashboardPlace.data("profile-paddle-number", currentPaddleNumber);
                 }
-                var bidderDashboardPlace = $("#bidder-info-load"),
-                    auctionID = parseInt(bidderDashboardPlace.data("auction")),
+
+                var auctionID = parseInt(bidderDashboardPlace.data("auction")),
                     profileID = parseInt(bidderDashboardPlace.data("profile-id")),
                     messageShownCookieKey = "bidder-" + profileID + "-has-welcome-message-" + auctionID,
                     messageShownCookie = $.cookie(messageShownCookieKey),
@@ -3534,7 +3537,6 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                                     addClass: 'browse-here-button',
                                     click: function (notice) {
                                         attentionAboutAreHere = false;
-                                        $.cookie(viewCookieKey, "yes", {expires: cookieExpire, path: '/'});
                                         notice.remove();
                                     }
                                 }]
@@ -3567,9 +3569,11 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
             detectIfNeedToShowAreYouHereMessage: function () {
 
                 var bidderDashboardPlace = $("#bidder-info-load"),
-                    auctionLocationQuestion = bidderDashboardPlace.data("auction-locatin-question");
+                    auctionLocationQuestion = bidderDashboardPlace.data("auction-locatin-question"),
+                    paddleNumber = bidderDashboardPlace.data("profile-paddle-number"),
+                    havePaddleNumber = (paddleNumber != undefined && (paddleNumber + '').trim() != 'N/A');
 
-                if (auctionLocationQuestion) {
+                if (auctionLocationQuestion && havePaddleNumber) {
 
                     handbidMain.showAreYouHereMessage(auctionLocationQuestion);
                 }
@@ -4258,9 +4262,11 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 var bidderDashboardPlace = $("#bidder-info-load"),
                     auctionID = parseInt(bidderDashboardPlace.data("auction")),
                     profileID = parseInt(bidderDashboardPlace.data("profile-id")),
-                    messageShownCookieKey = "bidder-" + profileID + "-has-welcome-message-" + auctionID;
+                    messageShownCookieKey = "bidder-" + profileID + "-has-welcome-message-" + auctionID,
+                    isHereShownCookieKey = "bidder-" + profileID + "-has-are-you-here-message-" + auctionID;
 
                 $.cookie(messageShownCookieKey, 'no', {expires: cookieExpire, path: '/'});
+                $.cookie(isHereShownCookieKey, 'no', {expires: cookieExpire, path: '/'});
 
                 window.location = "/auctions/?auction-reset"
             },
@@ -4340,7 +4346,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
         handbid.detectIfNeedToContinuePayment();
         setTimeout(function () {
             handbid.detectIfNeedToShowAreYouHereMessage()
-        }, 4000);
+        }, 1000);
         setTimeout(function () {
             handbid.checkSocketConnection(handbid)
         }, 10000);
