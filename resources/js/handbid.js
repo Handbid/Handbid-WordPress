@@ -1336,6 +1336,8 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
                 this.removeItemFromDashboardList(itemID, "winning");
 
+                this.removeItemFromDashboardList(itemID, "purchases");
+
                 var reasonStr = (type == "under_maxbid") ? " by MaxBid! " : " now!";
 
                 var auctionKey = (values.auctionKey != undefined) ? values.auctionKey : currentAuctionKey;
@@ -1375,7 +1377,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
                     //this.addLosingItemRow(itemID, values);
 
-                    this.checkIfMaxBidIsNotAtual(values);
+                    this.checkIfMaxBidIsNotActual(values);
 
                     this.loadMessagesToContainer();
                 }
@@ -1385,7 +1387,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
                     this.addWinningItemRow(itemID, values);
 
-                    this.checkIfMaxBidIsNotAtual(values);
+                    this.checkIfMaxBidIsNotActual(values);
 
                     this.loadMessagesToContainer();
                 }
@@ -1408,7 +1410,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 }
             },
 
-            checkIfMaxBidIsNotAtual: function (values) {
+            checkIfMaxBidIsNotActual: function (values) {
                 var itemID = values.item.id,
                     itemBlock = $("[data-maxbid-item-id='" + itemID + "']").eq(0),
                     itemBlockVal = parseInt(itemBlock.data("proxy-item-max-value"));
@@ -2782,11 +2784,6 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                         dataType: 'html',
                         success: function (response) {
                             $(response).appendTo($('.bidder-dashboard-inner'));
-
-                            // Open bider profile by default
-                            //$('[data-slider-nav-key="profile-user-info"]').addClass('active-slide');
-                            //$('[data-slider-nav-key="user-profile"]').addClass('active-slide');
-
                         }
                     });
 
@@ -3650,7 +3647,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                                             console.log("-----------------------");
                                             console.log("----Receive Paddle Number success----");
                                             data = JSON.parse(data);
-
+                                            console.log(data);
 
                                             var text = "";
                                             var title = "";

@@ -12,6 +12,8 @@
 $auctions = $this->get('auctions');
 $cols = $this->get('cols_count');
 $search = $this->get('search');
+$no_auctions_text = $this->get('no_auctions_text');
+$no_auctions_text = (!empty($no_auctions_text)) ? $no_auctions_text : 'No Auctions Found';
 $col = 1;
 $newRow = false;
 $total = count($auctions);
@@ -77,7 +79,7 @@ $selected = isset($_GET['auction_list']) ? $_GET['auction_list'] : 'current';
 <div class="row simple-box-row auctions">
 
 <?php if(count($auctions) == 0) { ?>
-    <h3 class="no-results">No Auctions Found</h3>
+    <h3 class="no-results"><?php echo $no_auctions_text; ?></h3>
 <?php } ?>
 
 <?php foreach ($auctions as $auction) {

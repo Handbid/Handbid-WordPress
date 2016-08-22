@@ -93,11 +93,13 @@ $selected = isset($_GET['auction_list']) ? $_GET['auction_list'] : 'current';
                         <li class="total-auctions"><span class="icon"></span><?php
                             $countAuctions = (int) $organization->activeAuctions;
 
-                            echo $countAuctions . ' Auction';
+                            $countAuctions .= ' Auction';
                             if($countAuctions > 1 or $countAuctions == 0) {
-                                echo 's';
+                                $countAuctions .= 's';
                             }
+                            $countAuctions .= ' Open';
 
+                            echo $countAuctions;
 
                             ?></li>
 

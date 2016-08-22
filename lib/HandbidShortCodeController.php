@@ -168,7 +168,6 @@ class HandbidShortCodeController
                 $attributes['type'] = $_GET['auction_list'];
             }
 
-
             if (!isset($attributes['type']) || !is_array($attributes) || !in_array(
                     $attributes['type'],
                     ['current', 'upcoming', 'byOrg', 'past', 'closed', 'open', 'preview', 'presale']
@@ -177,7 +176,6 @@ class HandbidShortCodeController
             {
                 $attributes['type'] = 'byOrg';
             }
-
 
             // Get orgs from handbid server
             if ($org)
@@ -206,11 +204,14 @@ class HandbidShortCodeController
 
             $colsCount = $this->state->getGridColsCount();
 
+            $no_auctions_text = ($org && ($attributes['type'] == 'byOrg')) ? 'No Auctions currently running' : 'No Auctions Found';
+
             $markup = $this->viewRenderer->render(
                 $template,
                 [
                     'auctions'   => $auctions,
                     'cols_count' => $colsCount,
+                    'no_auctions_text' => $no_auctions_text,
                 ]
             );
 

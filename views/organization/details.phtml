@@ -90,7 +90,11 @@ if(!$org) {
                 echo '<div class="handbid-share-bar row">';
                 foreach($socialLinks as $socialLink){
                     if(trim($socialLink["link"])){
-                        echo '<a class="icon '.$socialLink["class"].'" href="'.$socialLink["link"].'"></a>';
+                        $link = trim($socialLink["link"]);
+                        if(($socialLink["class"] == 'twitter') && (strpos($link, 'twitter') === false)){
+                            $link = 'https://twitter.com/' . str_replace('/','',$link);
+                        }
+                        echo '<a target="_blank" class="icon '.$socialLink["class"].'" href="'.$link.'"></a>';
                     }
                 }
                 echo '</div>';
