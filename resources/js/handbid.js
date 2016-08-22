@@ -1287,10 +1287,13 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
             },
 
 
-            removeItemFromDashboardList: function (itemID, status) {
+            removeItemFromDashboardList: function (itemID, status, removePurchaseID) {
                 var listBids = $(".handbid-list-of-bids-" + status).eq(0);
                 if ((status == "purchases")) {
                     $("[data-purchased-purchase-id=" + itemID + "]").remove();
+                    if(removePurchaseID){
+                        $("[data-purchased-item-id=" + itemID + "]").remove();
+                    }
                 }
                 else {
                     $("[data-" + status + "-item-id=" + itemID + "]").remove();
@@ -1406,6 +1409,12 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 if (status == "winning" && statusReason == "maxbid_auto") {
                     this.removeItemFromDashboardList(itemID, "winning");
                     this.addWinningItemRow(itemID, values, statusReason);
+                    handbid.loadBidsHistoryToContainer(itemID);
+                }
+                if (status == "removed" && statusReason == "bid_removed") {
+
+                    this.removeItemFromDashboardList(itemID, "purchases", itemID);
+                    this.recheckAndRecalculateBids();
                     handbid.loadBidsHistoryToContainer(itemID);
                 }
             },
