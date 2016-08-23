@@ -80,10 +80,8 @@ $selected = isset($_GET['auction_list']) ? $_GET['auction_list'] : 'current';
                 <div class="contents">
 
                     <a href="<?php echo $url; ?>" class="image-wrapper">
-                        <img class="logo" src="<?php
-
-                        echo $image;
-                        ?>">
+                        <div class="auction-image-place without-image"  data-backgroung-image-url="<?php echo $image; ?>">
+                        </div>
                     </a>
 
                     <h3><a href="<?php echo $url; ?>"><?php echo strip_tags($organization->name); ?></a></h3>

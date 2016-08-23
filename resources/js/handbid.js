@@ -4335,6 +4335,20 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 setTimeout(function () {
                     handbid.checkSocketConnection(handbid, socket_retry)
                 }, 3000);
+            },
+
+
+            changeBackgroundImageIfElementIsVisible: function () {
+                $('[data-backgroung-image-url].without-image').each(function () {
+                    var visible = $(this).visible("complete");
+                    if (visible) {
+                        var backGround = $(this).data("backgroung-image-url");
+                        if(backGround.trim != "") {
+                            $(this).attr("style", "background-image: url('" + backGround + "');");
+                        }
+                        $(this).removeClass("without-image");
+                    }
+                });
             }
         };
 
@@ -4350,6 +4364,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
         handbid.messageToAuctionManager();
         handbid.redirectFromResetedAuctionsCheck();
         handbid.detectIfNeedToContinuePayment();
+        handbid.changeBackgroundImageIfElementIsVisible();
         setTimeout(function () {
             handbid.detectIfNeedToShowAreYouHereMessage()
         }, 1000);

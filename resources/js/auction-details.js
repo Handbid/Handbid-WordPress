@@ -285,16 +285,7 @@ var timerForSearch, timerToLoad, isotopeWasFiltered = false, wasNotVisible = tru
     function detectVisibleIsotopeElements(){
         detectIfContainerIsVisibleNow();
         if(isotopeWasFiltered) {
-            $('.simple-item-box .full-image-wrapper.without-image').each(function () {
-                var visible = $(this).visible("complete");
-                if (visible) {
-                    var backGround = $(this).data("backgroung-image-url");
-                    if(backGround.trim != "") {
-                        $(this).attr("style", "background-image: url('" + backGround + "');");
-                    }
-                    $(this).removeClass("without-image");
-                }
-            });
+            handbidMain.changeBackgroundImageIfElementIsVisible();
         }
     }
 
