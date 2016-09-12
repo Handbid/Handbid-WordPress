@@ -94,7 +94,12 @@ if(!$org) {
                         if(($socialLink["class"] == 'twitter') && (strpos($link, 'twitter') === false)){
                             $link = 'https://twitter.com/' . str_replace('/','',$link);
                         }
-                        echo '<a target="_blank" class="icon '.$socialLink["class"].'" href="'.$link.'"></a>';
+                        echo
+                            '<a target="_blank" class="icon '.$socialLink["class"].'" href="'.$link.'">
+                                <svg class="u-svg-icon">
+                                    <use xlink:href="#'.$socialLink["class"].'-icon"></use>
+                                </svg>
+                            </a>';
                     }
                 }
                 echo '</div>';

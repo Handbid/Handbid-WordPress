@@ -15,12 +15,36 @@ $openInJavascript = "javascript:window.open(this.href,'', 'menubar=no,toolbar=no
 ?>
 
 <div class="handbid-share-bar">
-    <a class="icon facebook" href="https://www.facebook.com/sharer.php?u=<?php echo $url; ?>" onclick="<?php echo $openInJavascript; ?>"></a>
+    <a class="icon" href="https://www.facebook.com/sharer.php?u=<?php echo $url; ?>" onclick="<?php echo $openInJavascript; ?>">
+        <svg class="u-svg-icon">
+            <use xlink:href="#facebook-icon"></use>
+        </svg>
+    </a>
 
-    <a class="icon google-plus" href="https://plus.google.com/share?url=<?php echo $url; ?>" onclick="<?php echo $openInJavascript; ?>">g+</a>
+    <a class="icon" href="https://plus.google.com/share?url=<?php echo $url; ?>" onclick="<?php echo $openInJavascript; ?>">
+        <svg class="u-svg-icon">
+            <use xlink:href="#googleplus-icon"></use>
+        </svg>
+        g+
+    </a>
 
-    <a class="icon twitter" href="https://www.twitter.com/share?url=<?php echo $url; ?>" onclick="<?php echo $openInJavascript; ?>">Tweet</a>
+    <a class="icon" href="https://www.twitter.com/share?url=<?php echo $url; ?>" onclick="<?php echo $openInJavascript; ?>">
+        <svg class="u-svg-icon">
+            <use xlink:href="#twitter-icon"></use>
+        </svg>
+        Tweet
+    </a>
 
-    <a class="icon pinterest" href="https://pinterest.com/pin/create/button/?url=<?php echo $url; ?>&description=Handbid+Auction" onclick="<?php echo $openInJavascript; ?>">Share on Pinterest</a>
-    <a class="icon email" href="mailto:?subject=Handbid+Auction&body=<?php echo $url; ?>" title="Share by Email">Email</a>
+    <a class="icon" href="https://pinterest.com/pin/create/button/?url=<?php echo $url; ?>&description=Handbid+Auction" onclick="<?php echo $openInJavascript; ?>">
+        <svg class="u-svg-icon">
+            <use xlink:href="#pinterest-icon"></use>
+        </svg>
+        Share on Pinterest
+    </a>
+    <a class="icon" href="mailto:?subject=Handbid+Auction&body=<?php echo $url; ?>" title="Share by Email">
+        <svg class="u-svg-icon">
+            <use xlink:href="#email-icon"></use>
+        </svg>
+        Email
+    </a>
 </div>
