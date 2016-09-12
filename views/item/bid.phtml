@@ -102,7 +102,8 @@ $isDonation = (!empty($item->isAppeal) and $item->isAppeal);
             <a class="bid-now green-solid-button  loading-span-button"
                href=""
                <?php echo $creditCardsRequired; ?>
-               data-handbid-bid-button="bid"><span><?php echo __('Bid Now'); ?></span></a>
+               data-handbid-bid-button="bid">
+                <span><?php echo __('Bid Now'); ?></span></a>
         </div>
 
         <?php } ?>
@@ -142,13 +143,18 @@ $isDonation = (!empty($item->isAppeal) and $item->isAppeal);
             <ul class="horizontal-details row">
 
                 <?php if($isBiddable) { ?>
-                    <li class="bids col-md-4 col-xs-3"><em   data-change-attribute="bidCount"><?php echo $item->bidCount; ?></em>Bids</li>
+                    <li class="bids col-md-4 col-xs-3">
+                        <em   data-change-attribute="bidCount"><?php echo $item->bidCount; ?></em>Bids
+                    </li>
                     <li class="increment col-md-4 col-xs-5"><em><span class="handbidAuctionCurrency" title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span><span id="bidIncrement"   data-change-attribute="bidIncrement"><?php echo $item->bidIncrement; ?></span></em>Increment</li>
                     <li class="min minimalBidAmount col-md-4 col-xs-4"><em><span class="handbidAuctionCurrency" title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span><span id="currentPrice"  data-change-attribute="minimumBidAmount"><?php echo $item->minimumBidAmount; ?></span></em>Min Bid</li>
                 <?php } else { ?>
                     <li class="purchases col-md-4 col-xs-3"><em  data-change-attribute="totalSold"><?php echo $item->meta->totalSold; ?></em>Sold</li>
                     <li class="increment col-md-4 col-xs-3"><span class="handbidAuctionCurrency" title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span><em data-change-attribute="buyNowPrice"><?php echo $item->buyNowPrice; ?></em>Price</li>
-                    <li class="remaining col-md-4 col-xs-6"><em data-change-attribute="inventoryRemaining"><?php echo $item->inventoryRemaining; ?></em>Remaining</li>
+                    <li class="remaining col-md-4 col-xs-6">
+                        <em data-change-attribute="inventoryRemaining"><?php echo $item->inventoryRemaining; ?></em>
+                        Remaining
+                    </li>
                 <?php } ?>
             </ul>
         </div>

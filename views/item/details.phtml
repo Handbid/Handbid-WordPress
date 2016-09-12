@@ -171,7 +171,8 @@ $isDonation = (!empty($item->isAppeal) and $item->isAppeal);
 
                     <?php if ($isBiddable)
                     { ?>
-                        <li class="bids col-md-4 col-xs-3"><em
+                        <li class="bids col-md-4 col-xs-3">
+                            <em
                                 data-handbid-item-attribute="bidCount"><?php echo $item->bidCount; ?></em>Bids
                         </li>
                         <li class="increment col-md-4 col-xs-5"><em>
@@ -198,7 +199,8 @@ $isDonation = (!empty($item->isAppeal) and $item->isAppeal);
                                 <span id="singleItemPrice"
                                       data-handbid-item-attribute="buyNowPrice"><?php echo $item->buyNowPrice; ?></span></em>Price
                         </li>
-                        <li class="remaining col-md-4 col-xs-4"><em
+                        <li class="remaining col-md-4 col-xs-4">
+                            <em
                                 data-handbid-item-attribute="inventoryRemaining"><?php echo $item->inventoryRemaining; ?></em>Remaining
                         </li>
                     <?php } ?>

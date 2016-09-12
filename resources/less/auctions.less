@@ -57,8 +57,7 @@
         height: 80px;
         width: 100%;
         margin-top: 10px;
-        background-repeat: no-repeat;
-        background-position: center center;
+        background: center center no-repeat;
         background-size: contain;
       }
 
@@ -109,24 +108,23 @@
     .icon {
       display: block;
       float: left;
-      width: 36px;
+      width: 35px;
       height: 20px;
-      background: transparent url("../images/simple-box/people.svg") no-repeat center center;
+      background: transparent no-repeat center center;
+      color: #9EB94A;
     }
 
     .addy .icon {
-      background-image: url("../images/simple-box/pin.svg");
-    }
-
-    .total-auctions .icon {
-      background-image: url("../images/simple-box/gavel.svg");
-      background-size: 22px;
+      .u-svg-icon {
+        display: block;
+        width: 16px;
+        height: 26px;
+        margin: -4px auto 0;
+      }
     }
 
     .timer .icon {
-      background-image: url("../images/simple-box/clock-orange.svg");
-      background-position: center;
-      background-size: 19px;
+      color: #F78F1E;
     }
   }
 
@@ -172,7 +170,7 @@
     background-color: @green;
   }
   .timer .icon {
-    background-image: url("../images/simple-box/clock-green.svg");
+    color: #9EB94A;
   }
 }
 
@@ -645,6 +643,7 @@
       right: 0;
 
       li {
+        position: relative;
         border-right: 1px solid @lightGray;
         padding-right: -1px;
         padding-top: 40px;
@@ -655,27 +654,31 @@
         white-space: nowrap;
         text-overflow: ellipsis;
         overflow: hidden;
-        background: transparent url("../images/simple-box/heart.svg") no-repeat center 5px;
-        background-size: 23px;
+
+        .icon {
+          position: absolute;
+          top: 5px;
+          right: 50%;
+          margin-right: -15px;
+          width: 30px;
+          height: 30px;
+          color: #DBE0E2;
+        }
 
         em {
           color: @lightBlue;
         }
-      }
 
-      li:last-of-type {
-        border-right: none;
-      }
-      li.bids {
-        background-image: url('../images/simple-box/bids.svg');
-      }
-      li.bid-now {
-        background-image: url('../images/simple-box/gavel-grey.svg');
-        background-size: 35px;
-      }
-      li.remaining {
-        background-image: url('../images/simple-box/buy-now.svg');
-        background-size: 30px;
+        &:last-of-type {
+          border-right: none;
+        }
+        &.bid-now {
+          .icon {
+            height: 35px;
+            width: 35px;
+            margin-right: -18px;
+          }
+        }
       }
     }
   }
@@ -781,7 +784,6 @@
         display: inline-flex;
         a {
           width: 125px;
-          //height: 76px;
         }
       }
     }

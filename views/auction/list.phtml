@@ -120,12 +120,30 @@ $selected = isset($_GET['auction_list']) ? $_GET['auction_list'] : 'current';
 
                     <ul class="details">
 
-                        <li class="org"><span class="icon"></span><a href="/organizations/<?php echo $auction->organizationKey; ?>/"><?php echo $auction->organizationName; ?></a></li>
+                        <li class="org">
+                            <span class="icon">
+                                <svg class="u-svg-icon">
+                                    <use xlink:href="#hb-people"></use>
+                                </svg>
+                            </span>
+                            <a href="/organizations/<?php echo $auction->organizationKey; ?>/"><?php echo $auction->organizationName; ?></a>
+                        </li>
                         <?php if ($auction->vanityAddress) { ?>
-                            <li class="addy"><span class="icon"></span><?php echo $auction->vanityAddress; ?></li>
+                            <li class="addy">
+                                <span class="icon">
+                                    <svg class="u-svg-icon">
+                                        <use xlink:href="#hb-pin"></use>
+                                    </svg>
+                                </span>
+                                <?php echo $auction->vanityAddress; ?>
+                            </li>
                         <?php } ?>
                         <li class="timer">
-                            <span class="icon"></span>
+                            <span class="icon">
+                                <svg class="u-svg-icon">
+                                    <use xlink:href="#hb-clock"></use>
+                                </svg>
+                            </span>
                             <?php
                             $timeZone = (trim($auction->timeZone)) ? $auction->timeZone : 'America/Denver' ;
                             date_default_timezone_set($timeZone);

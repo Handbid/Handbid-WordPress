@@ -140,19 +140,44 @@ $isDonation = (!empty($item->isAppeal) and $item->isAppeal);
 
                 <?php if ($item->isDirectPurchaseItem) { ?>
 
-                    <li class="bids col-md-6 col-xs-6"><?php echo ($isDonation) ? 'Donated' : 'Sold' ?> <em
+                    <li class="bids col-md-6 col-xs-6">
+                        <span class="icon">
+                            <svg class="u-svg-icon">
+                                <use xlink:href="#hb-bids"></use>
+                            </svg>
+                        </span>
+                        <?php echo ($isDonation) ? 'Donated' : 'Sold' ?> <em
                             data-handbid-sold-of-id="<?php echo $item->id; ?>"
                             data-handbid-item-attribute="quantitySold"><?php echo $item->quantitySold; ?></em></li>
-                    <li class="remaining col-md-6 col-xs-6"><em
+                    <li class="remaining col-md-6 col-xs-6">
+                        <span class="icon">
+                            <svg class="u-svg-icon">
+                                <use xlink:href="#hb-tag"></use>
+                            </svg>
+                        </span>
+                        <em
                             data-handbid-remaining-of-id="<?php echo $item->id; ?>"
                             data-handbid-item-attribute="inventoryRemaining"><?php echo $item->inventoryRemaining; ?></em>
                         Left
                     </li>
                 <?php } else { ?>
-                    <li class="bids col-md-6 col-xs-6">Bids <em
+                    <li class="bids col-md-6 col-xs-6">
+                        <span class="icon">
+                            <svg class="u-svg-icon">
+                                <use xlink:href="#hb-bids"></use>
+                            </svg>
+                        </span>
+                        Bids <em
                             data-handbid-bids-of-id="<?php echo $item->id; ?>"
                             data-handbid-item-attribute="bidCount"><?php echo $item->bidCount; ?></em></li>
-                    <li class="bid-now col-md-6 col-xs-6">Bid Now</li>
+                    <li class="bid-now col-md-6 col-xs-6">
+                        <span class="icon">
+                            <svg class="u-svg-icon">
+                                <use xlink:href="#hb-gavel"></use>
+                            </svg>
+                        </span>
+                        Bid Now
+                    </li>
                 <?php } ?>
 
             </ul>

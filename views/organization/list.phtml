@@ -88,7 +88,13 @@ $selected = isset($_GET['auction_list']) ? $_GET['auction_list'] : 'current';
 
                     <ul class="details">
 
-                        <li class="total-auctions"><span class="icon"></span><?php
+                        <li class="total-auctions">
+                            <span class="icon">
+                                <svg class="u-svg-icon">
+                                    <use xlink:href="#hb-gavel"></use>
+                                </svg>
+                            </span>
+                            <?php
                             $countAuctions = (int) $organization->activeAuctions;
 
                             $countAuctions .= ' Auction';
@@ -105,7 +111,14 @@ $selected = isset($_GET['auction_list']) ? $_GET['auction_list'] : 'current';
                         $city = $organization->organizationAddressCity;
                         $prov = $organization->organizationAddressProvince;
                         if($city) { ?>
-                            <li class="addy"><span class="icon"></span><?php echo $city . (($prov) ? ', ' . $prov : ""); ?></li>
+                            <li class="addy">
+                                <span class="icon">
+                                    <svg class="u-svg-icon">
+                                        <use xlink:href="#hb-pin"></use>
+                                    </svg>
+                                </span>
+                                <?php echo $city . (($prov) ? ', ' . $prov : ""); ?>
+                            </li>
                         <?php } ?>
 
                     </ul>
