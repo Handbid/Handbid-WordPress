@@ -36,7 +36,14 @@ $selected = isset($_GET['auction_list']) ? $_GET['auction_list'] : 'current';
     <div class="col-md-6 col-xs-6 fancy-search-wrapper">
 
         <form class="fancy-search" method="get">
-            <button type="submit">Search Organizations</button>
+            <button type="submit">
+                <span class="icon">
+                    <svg class="u-svg-icon">
+                        <use xlink:href="#hb-mag"></use>
+                    </svg>
+                </span>
+                Search Organizations
+            </button>
             <input class="query categories-query" type="search" name="search" placeholder="Search organizations" value="<?php echo ($search)?$search:"";?>">
             <a class="reset" href="#" style="display: none">X</a>
         </form>

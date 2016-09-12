@@ -41,7 +41,14 @@ if(count($myInvoices)){
     <img src="<?php echo $image; ?>" class="bidder-image"/>
     <?php }?>
     <div class="slider-nav" data-slider-nav-id="bidder-dashboard-inner">
-        <a data-slider-nav-key="user-profile" class="edit-picture">Edit Pic</a>
+        <a data-slider-nav-key="user-profile" class="edit-picture">
+            <span class="icon">
+                <svg class="u-svg-icon">
+                    <use xlink:href="#hb-edit-img"></use>
+                </svg>
+            </span>
+            Edit Pic
+        </a>
     </div>
 </div>
 <div class="col-md-3 col-xs-12">
