@@ -11,7 +11,8 @@
 
 var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_overlay, timerNotice, timerMessage,
     circleTimer, auctionInvoices, currentPaddleNumber, currentElemNeedsCard, timerTimeout = 1000, timerElements, timerElementsFull, timerTime,
-    currentCCForm, cookieExpire = 7, ticketsPopupWasOpened = false, addingCCState = false, profile_location_map, invoices_loaded = false;
+    currentCCForm, cookieExpire = 7, ticketsPopupWasOpened = false, addingCCState = false, profile_location_map, invoices_loaded = false,
+    refreshTimerInterval = 15000;
 (function ($) {
 
     attentionAboutTickets = false;
@@ -4036,7 +4037,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 setTimeout(function()
                 {
                     handbidMain.refreshTimerToAvoidMistakes();
-                }, 30000)
+                }, refreshTimerInterval)
 
                 circleTimer.animate(1.0, {
                     from: {color: startColor},
@@ -4088,7 +4089,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     setTimeout(function()
                     {
                         handbidMain.refreshTimerToAvoidMistakes();
-                    }, 30000)
+                    }, refreshTimerInterval)
                 }
             },
 
