@@ -307,6 +307,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
 
             addDashboardBidPurchased: function (values) {
+
                 var item = values.item,
                     itemID = item.id,
                     itemKey = item.key,
@@ -314,6 +315,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     amount = values.pricePerItem,
                     quantity = values.quantity,
                     receiptId = values.receiptId,
+                    requireAddresstoPay = values.requireAddresstoPay,
                     auctionId = values.auctionId,
                     receiptTotal = values.grandTotal,
                     purchaseID = values.id,
@@ -341,7 +343,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 listBidsPurchases.append(pattern);
 
                 this.recheckAndRecalculateBids();
-                this.doesUserWantToBuyTicketsJustNow(receiptId, auctionId, receiptTotal);
+                this.doesUserWantToBuyTicketsJustNow(receiptId, auctionId, receiptTotal, requireAddresstoPay);
             },
 
             addItemBidsHistory: function (itemID, bidID, values, amount) {
@@ -797,11 +799,15 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     .addClass('status-' + itemStatus);
             },
 
-            wantToPurchaseTicketsImmediately: function (ticketsQuantity, ticketsPrice, receiptId, auctionId, receiptTotal) {
+            wantToPurchaseTicketsImmediately: function (ticketsQuantity, ticketsPrice, receiptId, auctionId, receiptTotal, requireAddresstoPay) {
 
                 var bidderDashboardPlace = $("#bidder-info-load"),
                     nonce = bidderDashboardPlace.data("paddle-nonce");
 
+
+                if(attentionAboutTBuying){
+                    return false;
+                }
                 attentionAboutTBuying = true;
                 var bidNotice = new PNotify({
                     title: 'Pay for Tickets?',
@@ -817,93 +823,104 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                             text: 'Pay Now',
                             addClass: 'bid-here-button',
                             click: function (notice) {
-                                notice.update({
-                                    title: "Purchasing",
-                                    text: '<div class="progress progress-striped active" style="margin:0">\
+
+                                var needAddressToPay = handbidMain.auctionRequiresAddressToPay(false, receiptId, requireAddresstoPay);
+
+
+                                if(!needAddressToPay) {
+
+                                    notice.update({
+                                        title: "Purchasing",
+                                        text: '<div class="progress progress-striped active" style="margin:0">\
 	                                            <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">\
 		                                        <span class="sr-only">100%</span>\
 	                                            </div>\
                                                 </div>',
-                                    icon: 'glyphicon glyphicon-refresh gly-spin',
-                                    addclass: "handbid-paddle-number-notice",
-                                    hide: false,
-                                    confirm: {
-                                        confirm: false
-                                    },
-                                    buttons: {
-                                        closer: false,
-                                        sticker: false
-                                    },
-                                    history: {
-                                        history: false
-                                    }
-                                });
+                                        icon: 'glyphicon glyphicon-refresh gly-spin',
+                                        addclass: "handbid-paddle-number-notice",
+                                        hide: false,
+                                        confirm: {
+                                            confirm: false
+                                        },
+                                        buttons: {
+                                            closer: false,
+                                            sticker: false
+                                        },
+                                        history: {
+                                            history: false
+                                        }
+                                    });
 
-                                var dataAct = {
-                                    action: "handbid_ajax_pay_for_tickets",
-                                    auctionId: auctionId,
-                                    receiptId: receiptId,
-                                    nonce: nonce
-                                };
-                                $.post(
-                                    ajaxurl,
-                                    dataAct,
-                                    function (data) {
+                                    var dataAct = {
+                                        action: "handbid_ajax_pay_for_tickets",
+                                        auctionId: auctionId,
+                                        receiptId: receiptId,
+                                        nonce: nonce
+                                    };
+                                    $.post(
+                                        ajaxurl,
+                                        dataAct,
+                                        function (data) {
 
-                                        console.log("----Pay For Tickets success----");
-                                        data = JSON.parse(data);
+                                            console.log("----Pay For Tickets success----");
+                                            data = JSON.parse(data);
 
-                                        var text = "";
-                                        var title = "";
-                                        var type = "";
-                                        var icon = "";
+                                            var text = "";
+                                            var title = "";
+                                            var type = "";
+                                            var icon = "";
 
-                                        if (data.errors == undefined) {
-                                            if (data.result) {
-                                                text = "Purchased by your credit card '" + data.paid_by.nameOnCard + "' (**** **** **** " + data.paid_by.lastFour + ")";
-                                                title = 'Purchasing success';
-                                                type = 'success';
-                                                icon = 'glyphicon glyphicon-ok';
-                                                $('[data-receipt-block-id="' + receiptId + '"]').removeClass("preview").addClass("open");
+                                            if (data.errors == undefined) {
+                                                if (data.result) {
+                                                    text = "Purchased by your credit card '" + data.paid_by.nameOnCard + "' (**** **** **** " + data.paid_by.lastFour + ")";
+                                                    title = 'Purchasing success';
+                                                    type = 'success';
+                                                    icon = 'glyphicon glyphicon-ok';
+                                                    $('[data-receipt-block-id="' + receiptId + '"]').removeClass("preview").addClass("open");
+                                                }
+                                                else {
+                                                    text = "Cannot pay invoice by any of your cards. Please, contact auction manager for instructions.";
+                                                    title = 'Failed';
+                                                    type = 'error';
+                                                    icon = 'glyphicon glyphicon-remove-sign';
+                                                }
                                             }
                                             else {
-                                                text = "Cannot pay invoice by any of your cards. Please, contact auction manager for instructions.";
+                                                text = data.errors.join("<br>");
                                                 title = 'Failed';
                                                 type = 'error';
                                                 icon = 'glyphicon glyphicon-remove-sign';
                                             }
-                                        }
-                                        else {
-                                            text = data.errors.join("<br>");
-                                            title = 'Failed';
-                                            type = 'error';
-                                            icon = 'glyphicon glyphicon-remove-sign';
-                                        }
 
-                                        attentionAboutTBuying = false;
-                                        notice.update({
-                                            title: title,
-                                            text: text,
-                                            icon: icon,
-                                            hide: true,
-                                            type: type,
-                                            delay: 3000,
-                                            mouse_reset: false,
-                                            confirm: {
-                                                confirm: false
-                                            },
-                                            buttons: {
-                                                closer: true,
-                                                sticker: false
-                                            },
-                                            history: {
-                                                history: false
-                                            }
-                                        });
+                                            attentionAboutTBuying = false;
+                                            notice.update({
+                                                title: title,
+                                                text: text,
+                                                icon: icon,
+                                                hide: true,
+                                                type: type,
+                                                delay: 3000,
+                                                mouse_reset: false,
+                                                confirm: {
+                                                    confirm: false
+                                                },
+                                                buttons: {
+                                                    closer: true,
+                                                    sticker: false
+                                                },
+                                                history: {
+                                                    history: false
+                                                }
+                                            });
 
-                                        return false;
-                                    }
-                                );
+                                            return false;
+                                        }
+                                    );
+                                }
+                                else{
+                                    attentionAboutTBuying = false;
+                                    notice.remove();
+                                }
                             }
                         }, {
                             text: 'Pay Later',
@@ -961,7 +978,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 return onlyTickets;
             },
 
-            doesUserWantToBuyTicketsJustNow: function (receiptId, auctionId, receiptTotal) {
+            doesUserWantToBuyTicketsJustNow: function (receiptId, auctionId, receiptTotal, requireAddresstoPay) {
 
                 var purchaseRows = $("[data-purchased-purchase-id]"),
                     ticketsQuantity = 0,
@@ -974,7 +991,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                         ticketsQuantity += parseInt($(val).data("dashboard-quantity"));
                     });
 
-                    handbidMain.wantToPurchaseTicketsImmediately(ticketsQuantity, ticketsPrice, receiptId, auctionId, receiptTotal);
+                    handbidMain.wantToPurchaseTicketsImmediately(ticketsQuantity, ticketsPrice, receiptId, auctionId, receiptTotal, requireAddresstoPay);
 
                 }
             },
@@ -1361,7 +1378,9 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
                 noticeMessage = (type == "maxbid_auto") ? values.message : noticeMessage;
 
-                this.notice(noticeMessage, "Winning!", "success", null, noticeFormatting);
+                var noticeHeader = (type == "maxbid_auto") ? "Still Winning!" : "Winning!";
+
+                this.notice(noticeMessage, noticeHeader, "success", null, noticeFormatting);
             },
 
             checkIfBidsExistsAndChange: function (values, type) {
@@ -1465,8 +1484,23 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
             },
 
             scrollToProfile: function () {
-                $('a[data-slider-nav-key="user-profile"]:visible').click();
-                $('html,body').animate({scrollTop: $('#profileNewPasswordConfirm').offset().top}, 'normal');
+                var selectorProfile = 'a[data-slider-nav-key="profile-user-info"]:visible';
+                var selectorInfo = 'a[data-slider-nav-key="user-profile"]:visible';
+                if($(selectorInfo).length != 0){
+                    $(selectorInfo).click();
+                    setTimeout(function(){
+                        $('html,body').animate({scrollTop: $('#profileNewPasswordConfirm').offset().top}, 'normal');
+                    }, 300);
+                }
+                else{
+                    $(selectorProfile).click();
+                    setTimeout(function(){
+                        $(selectorInfo).click();
+                        setTimeout(function(){
+                            $('html,body').animate({scrollTop: $('#profileNewPasswordConfirm').offset().top}, 'normal');
+                        }, 300);
+                    }, 300);
+                }
             },
 
 
@@ -1632,19 +1666,40 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
             },
 
 
-            auctionRequiresAddressToPay: function (elem) {
+            auctionRequiresAddressToPay: function (elem, receipt_id, requireAddresstoPay) {
 
-                var attr = elem.attr('data-require-address-to-pay');
+                var needAddress = true;
 
-                var needAddress = (typeof attr !== typeof undefined && attr !== false);
+                if(elem)
+                {
+                    var attr = elem.attr('data-require-address-to-pay');
 
-                var addressFilled = ($('#profileShippingAddress').val().trim() != '');
-
-                if(needAddress && !addressFilled){
-                    handbidMain.proposeToFillAddressBeforePay(elem.attr('data-receipt-id'));
+                    needAddress = (typeof attr !== typeof undefined && attr !== false);
+                }
+                else{
+                    needAddress = requireAddresstoPay;
                 }
 
-                return (needAddress && !addressFilled);
+                if(needAddress) {
+
+                    var address = $('#profileShippingAddress').val().trim(),
+                        addressFilled = (address != '' && address != 'United States');
+
+                    if (needAddress && !addressFilled) {
+
+                        if(!receipt_id)
+                        {
+                            receipt_id = elem.attr('data-receipt-id')
+                        }
+
+                        handbidMain.proposeToFillAddressBeforePay(receipt_id);
+                    }
+
+                    return !addressFilled;
+                }
+                else{
+                    return false;
+                }
             },
 
 
@@ -1989,7 +2044,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
                         console.log("-----------------------");
                         console.log("----Buy Items success----");
-                        data = JSON.parse(data);
+                        data = JSON.parse(data); 
 
                         button.removeClass("active");
                         var message = "";
@@ -2001,7 +2056,6 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
                             handbid.setPaddleNumberAndWelcomeMessage(data.welcomeForReceipt, data.paddleNumber);
                             handbid.showAreYouHereMessage(data.bidderLocationQuestion);
-                            console.log(data);
 
                             var totalSoldContainer = $('[data-handbid-item-attribute="totalSoldItems"]').eq(0);
                             var totalSold = data.item.quantitySold;
@@ -2166,7 +2220,6 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
                     }
                     else {
-                        console.log('maxb burchase');
                         var buyNowPrice = ($('[data-handbid-buynow-price]').length > 0 ) ? $('[data-handbid-buynow-price]').eq(0).data("handbid-buynow-price") : -1;
                         buyNowPrice = (buyNowPrice != "" ) ? parseInt(buyNowPrice) : -1;
 
@@ -2286,7 +2339,6 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
                                     handbid.setPaddleNumberAndWelcomeMessage(data.welcomeForReceipt, data.paddleNumber);
                                     handbid.showAreYouHereMessage(data.bidderLocationQuestion);
-                                    console.log(data);
 
                                     data.item.auctionKey = $("#bidder-info-load").data("auction-key");
                                     handbid.addDashboardBidProxy(data.id, data.item.id, data.item.name, data.item.key, data.item.auctionKey, data.maxAmount);
@@ -2364,7 +2416,6 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
                             handbid.setPaddleNumberAndWelcomeMessage(data.welcomeForReceipt, data.paddleNumber);
                             handbid.showAreYouHereMessage(data.bidderLocationQuestion);
-                            console.log(data);
 
                             $('[data-handbid-item-banner="sold"]').show();
                             handbid.disableAllBiddingButtonsIfSold();
@@ -2517,7 +2568,6 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
                             handbid.setPaddleNumberAndWelcomeMessage(data.welcomeForReceipt, data.paddleNumber);
                             handbid.showAreYouHereMessage(data.bidderLocationQuestion);
-                            console.log(data);
 
                             $('[data-handbid-item-attribute="bidCount"]').html(data.item.bidCount);
                             $('[data-handbid-item-attribute="minimumBidAmount"]').html(currencySpan() + data.item.minimumBidAmount);
@@ -2931,7 +2981,6 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                                 catch (e) {
                                 }
                                 resp = resp.resp;
-                                console.log(resp);
 
                                 if (resp.success != undefined && !resp.success && resp.data != undefined && resp.data.error != undefined) {
                                     var messageParts = $.map(resp.data.error, function (val, i) {
@@ -3656,7 +3705,6 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                                             console.log("-----------------------");
                                             console.log("----Receive Paddle Number success----");
                                             data = JSON.parse(data);
-                                            console.log(data);
 
                                             var text = "";
                                             var title = "";

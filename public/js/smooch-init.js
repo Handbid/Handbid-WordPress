@@ -6,4 +6,4 @@
  * @link http://www.handbid.com/
  * @author Master of Code (worldclass@masterofcode.com)
  */
-Smooch.init({ appToken: smoochAppToken });
+Smooch.init(smoochSettings);
