@@ -505,14 +505,14 @@ class Handbid
         if ($is_auction)
         {
             $og_page_url    = $og_page_url . 'auctions/' . $auction->key . '/';
-            $og_title       = implode(' | ', [$site_title, $auction->name]);
+            $og_title       = implode(' | ', [$auction->organizationName, $auction->name]);
             $og_image       = (!empty($auction->imageUrl)) ? $auction->imageUrl : $og_image;
             $og_description = (!empty($auction->description)) ? $auction->description : $og_description;
         } elseif ($is_item)
         {
             $current_item   = $this->state()->currentItem();
             $og_page_url    = $og_page_url . 'auctions/' . $current_item->auction->key . '/item/' . $current_item->key . '/';
-            $og_title       = implode(' | ', [$site_title, $current_item->auction->name, $current_item->name]);
+            $og_title       = implode(' | ', [$current_item->auction->organizationName, $current_item->auction->name, $current_item->name]);
             $og_image       = (!empty($current_item->imageUrl)) ? $current_item->imageUrl : $og_image;
             $og_description = (!empty($current_item->description)) ? $current_item->description : $og_description;
 
@@ -520,7 +520,7 @@ class Handbid
         {
             $current_org    = $this->state()->currentOrg();
             $og_page_url    = $og_page_url . 'organizations/' . $current_org->key . '/';
-            $og_title       = implode(' | ', [$site_title, $current_org->name]);
+            $og_title       = implode(' | ', [$current_org->name, $site_title]);
             $og_image       = (!empty($current_org->logo)) ? $current_org->logo : $og_image;
             $og_description = (!empty($current_org->description)) ? $current_org->description : $og_description;
         }
@@ -609,6 +609,33 @@ class Handbid
 
         $params = json_encode(["secure" => true, "cookie" => $userGuid]);
 
+        $smoochSettings = [
+            'appToken' => $this->state->getSmoochToken(),
+            'properties' => [],
+        ];
+
+        if(isset($bidder->usersGuid)){
+            $smoochSettings['userId'] = $bidder->email;
+            $smoochSettings['email'] = $bidder->email;
+            $smoochSettings['givenName'] = $bidder->firstName;
+            $smoochSettings['surname'] = $bidder->lastName;
+            $smoochSettings['properties'] = array_merge($smoochSettings['properties'], [
+                'user.countryCode' => $bidder->countryCode,
+                'user.cellPhone' => $bidder->userCellPhone,
+                'user.guid' => $bidder->usersGuid,
+                'user.fullName' => $bidder->name,
+                'user.creditCards.count' => count($bidder->creditCards),
+            ]);
+        }
+
+        if(isset($auction->id)){
+            $smoochSettings['properties'] = array_merge($smoochSettings['properties'], [
+                'auction.id' => $auction->id,
+                'auction.name' => $auction->name,
+                'auction.guid' => $auction->auctionGuid,
+            ]);
+        }
+
         ?>
         <script>
             var auctionChannelId = '<?php echo $auctionGuid; ?>',
@@ -617,8 +644,8 @@ class Handbid
                 url = '<?php echo $nodeClientUrl; ?>',
                 params = <?php echo $params; ?>,
                 stripePublishableKey = '<?php echo $this->state->getStripeApiKey();?>',
-                smoochAppToken = '<?php echo $this->state->getSmoochToken();?>',
-                mapsAreActivated = false;
+                mapsAreActivated = false,
+                smoochSettings = <?php echo json_encode($smoochSettings);?>;
 
             var forcePageRefreshAfterBids = <?php echo (get_option('handbidForceRefresh', 'no') == "yes") ? "true" : "false";?>;
             var forcePageRefreshAfterPurchases = <?php echo (get_option('handbidForceRefreshAfterPurchases', 'no') == "yes") ? "true" : "false";?>;
