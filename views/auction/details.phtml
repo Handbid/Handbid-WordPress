@@ -92,13 +92,15 @@ $currencySymbol = (isset($auction->currencySymbol)) ? $auction->currencySymbol :
         $image = (strpos($image, "ucarecdn") !== false and strpos($image, "preview") === false) ? $image . "-/preview/1140x280/" : $image;
         echo $image; ?>')">
             <div class="logo">
-                <img src="<?php
-                $image        = ($auction->imageUrl) ? $auction->imageUrl : $auction->sponsorImage;
-                $imageUrlPath = parse_url($image);
-                $image        = ($imageUrlPath["scheme"]) ? $image : "https://" . $image;
-                $image        = (strpos($image, "ucarecdn") !== false and strpos($image, "preview") === false) ? $image . "-/preview/120x120/" : $image;
-                echo $image;
-                ?>"/>
+                <a href="/organizations/<?php echo $auction->organizationKey; ?>/" style="cursor: pointer;">
+                    <img src="<?php
+                    $image        = ($auction->imageUrl) ? $auction->imageUrl : $auction->sponsorImage;
+                    $imageUrlPath = parse_url($image);
+                    $image        = ($imageUrlPath["scheme"]) ? $image : "https://" . $image;
+                    $image        = (strpos($image, "ucarecdn") !== false and strpos($image, "preview") === false) ? $image . "-/preview/120x120/" : $image;
+                    echo $image;
+                    ?>"/>
+                </a>
             </div>
         </div>
         <div class="controls">
