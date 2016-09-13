@@ -24,7 +24,8 @@ $bidderLocationQuestion = (!empty($auction->bidderLocationQuestion)
     ? $auction->bidderLocationQuestion
     : (!empty($auction->bidderLocationText)
         ? $auction->bidderLocationText
-        : ''))
+        : ''));
+$welcomeForReceipt = (!empty($auction->welcomeForReceipt)) ? str_replace(['{auction}'], [$auction->name], $auction->welcomeForReceipt) : '';
 
 ?>
 <div class="sticky">
@@ -36,6 +37,7 @@ $bidderLocationQuestion = (!empty($auction->bidderLocationQuestion)
          data-auction-key="<?php echo $auction->key; ?>"
          data-auction-guid="<?php echo $auction->auctionGuid; ?>"
          data-auction-locatin-question="<?php echo esc_attr($bidderLocationQuestion); ?>"
+         data-auction-welcome-message="<?php echo esc_attr($welcomeForReceipt); ?>"
          data-auction-image="<?php
          $image = $auction->logo->medium;
          $image = ($image) ? $image : $auction->imageUrl;

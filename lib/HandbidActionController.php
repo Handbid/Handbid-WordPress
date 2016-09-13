@@ -241,6 +241,11 @@ class HandbidActionController
     {
         $this->handbid->logout();
 
+        if(isset($_COOKIE['handbid-auth'])) {
+            unset($_COOKIE['handbid-auth']);
+            setcookie('handbid-auth', null, time()-3600, COOKIEPATH, COOKIE_DOMAIN);
+        }
+
         $redirect = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/';
         wp_redirect($redirect);
     }

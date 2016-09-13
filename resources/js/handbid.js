@@ -3443,6 +3443,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
             showWelcomeMessage: function (welcome_message) {
 
                 if(welcome_message.trim() != '') {
+
                     attentionAboutWelcome = true;
                     var welcomeNotice = new PNotify({
                         title: 'WELCOME!',
@@ -3632,6 +3633,19 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 if (auctionLocationQuestion && havePaddleNumber) {
 
                     handbidMain.showAreYouHereMessage(auctionLocationQuestion);
+                }
+            },
+
+
+            detectIfNeedToShowWelcomeMessage: function () {
+
+                var bidderDashboardPlace = $("#bidder-info-load"),
+                    auctionWelcomeMessage = bidderDashboardPlace.data("auction-welcome-message"),
+                    paddleNumber = bidderDashboardPlace.data("profile-paddle-number"),
+                    havePaddleNumber = (paddleNumber != undefined && (paddleNumber + '').trim() != 'N/A');
+
+                if (auctionWelcomeMessage && havePaddleNumber) {
+                    handbidMain.setPaddleNumberAndWelcomeMessage(auctionWelcomeMessage);
                 }
             },
 
@@ -4417,6 +4431,9 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
         setTimeout(function () {
             handbid.detectIfNeedToShowAreYouHereMessage()
         }, 1000);
+        setTimeout(function () {
+            handbid.detectIfNeedToShowWelcomeMessage()
+        }, 2000);
         setTimeout(function () {
             handbid.checkSocketConnection(handbid)
         }, 10000);

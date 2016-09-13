@@ -740,6 +740,12 @@ class Handbid
 
     function logout()
     {
+
+        if(isset($_COOKIE['handbid-auth'])) {
+            unset($_COOKIE['handbid-auth']);
+            setcookie('handbid-auth', null, time()-3600, COOKIEPATH, COOKIE_DOMAIN);
+        }
+
         $this->handbid->logout();
     }
 
