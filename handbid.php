@@ -13,11 +13,11 @@
 
 /**
  * @copyright Copyright (c) 2014-2015 Handbid Inc.
- * @category handbid
- * @package Handbid2-WordPress
- * @license Proprietary
- * @link http://www.handbid.com/
- * @author Master of Code (worldclass@masterofcode.com)
+ * @category  handbid
+ * @package   Handbid2-WordPress
+ * @license   Proprietary
+ * @link      http://www.handbid.com/
+ * @author    Master of Code (worldclass@masterofcode.com)
  */
 
 
@@ -246,7 +246,8 @@ class Handbid
                 echo do_shortcode("[handbid_bidder_login_form in_page='1']");
                 get_footer();
                 die();
-            } else
+            }
+            else
             {
                 $wp_query->is_404 = true;
             }
@@ -261,11 +262,11 @@ class Handbid
         $socketUrl   = $this->getSocketUrl();
         $socketIoUrl = sprintf('%ssocket.io/socket.io.js', $socketUrl);
 
-        $outerScripts = array(
+        $outerScripts = [
             'socket-io-js'   => $socketIoUrl,
             'stripe-api-js'  => 'https://js.stripe.com/v2/',
             'smooch-chat-js' => 'https://cdn.smooch.io/smooch.min.js',
-        );
+        ];
 
         foreach ($outerScripts as $key => $sc)
         {
@@ -273,26 +274,26 @@ class Handbid
             wp_enqueue_script($key);
         }
 
-        $scripts = array(
+        $scripts = [
             'handbid-details-map-js' => 'resources/js/details-map.js',
             'yii-node-socket-js'     => 'public/js/yii-node-socket.js',
             'node-socket-manager-js' => 'public/js/node-socket-manager.js',
             'stripe-init-js'         => 'public/js/stripe-init.js',
             'smooch-init-js'         => 'public/js/smooch-init.js',
 
-            'handbid-notices-js' => 'public/js/pnotify.custom.min.js',      // Probably should be changed on newest version, but there is problems with plugin docs
+//            'handbid-notices-js'   => 'public/js/pnotify.custom.min.js',
+//            'progress-bar-js'      => 'public/plugins/progressbar.js/progressbar.min.js',
+//            'cookie-plugin-js'     => 'public/plugins/jquery.cookie/jquery.cookie.js',
+//            'visible-plugin-js'    => 'public/plugins/df-visible/jquery.visible.min.js',
+//            'handbid-isotope-js'   => 'public/plugins/isotope/isotope.pkgd.min.js',
+//            'handbid-unslider-js'  => 'public/plugins/unslider/js/unslider-min.js',
+//            'handbid-bootstrap-js' => 'public/plugins/bootstrap/js/bootstrap.min.js',
+//            'handbid-select2-js'   => 'public/plugins/select2/js/select2.full.min.js',
 
-            'progress-bar-js'      => 'public/plugins/progressbar.js/progressbar.min.js',
-            'cookie-plugin-js'     => 'public/plugins/jquery.cookie/jquery.cookie.js',
-            'visible-plugin-js'    => 'public/plugins/df-visible/jquery.visible.min.js',
-            'handbid-isotope-js'   => 'public/plugins/isotope/isotope.pkgd.min.js',
-            'handbid-unslider-js'  => 'public/plugins/unslider/js/unslider-min.js',
-            'handbid-bootstrap-js' => 'public/plugins/bootstrap/js/bootstrap.min.js',
-            'handbid-select2-js'   => 'public/plugins/select2/js/select2.full.min.js',
-
+            'handbid-pl-js' => 'public/js/plugins.min.js',
             'handbid-js' => 'public/js/app.min.js',
 
-        );
+        ];
 
         foreach ($scripts as $key => $sc)
         {
@@ -301,7 +302,7 @@ class Handbid
         }
 
 
-        $styles = array(
+        $styles = [
             //'smart-app-banner-css'       => 'public/css/smart-app-banner.css',
             //'handid-bootstrap-css'       => 'public/css/bootstrap.min.css',
             //'handid-modal-css'           => 'public/css/modal.css',
@@ -314,14 +315,15 @@ class Handbid
             //'handbid-less-responsive-css'=> 'public/less/responsive-fix.less',
 
 
-            'handid-notices-css'   => 'public/css/pnotify.custom.min.css', // Probably should be changed on newest version, but there is problems with plugin docs
+            'handid-notices-css'   => 'public/css/pnotify.custom.min.css',
+            // Probably should be changed on newest version, but there is problems with plugin docs
             //'smart-app-banner-css'       => 'public/plugins/smart-app-banner/smart-app-banner.css',
             'handid-bootstrap-css' => 'public/plugins/bootstrap/css/bootstrap.min.css',
             'handbid-select2-css'  => 'public/plugins/select2/css/select2.min.css',
 
             'handid-css' => 'public/css/app.min.css',
 
-        );
+        ];
 
         foreach ($styles as $key => $sc)
         {
@@ -329,10 +331,10 @@ class Handbid
             wp_enqueue_style($key);
         }
 
-        $outerStyles = array(
+        $outerStyles = [
             //'fonts-google-lato'          => 'https://fonts.googleapis.com/css?family=Lato:300,400,500',
             //'fonts-google-oswald'          => 'https://fonts.googleapis.com/css?family=Oswald',
-        );
+        ];
 
         foreach ($outerStyles as $key => $sc)
         {
@@ -508,15 +510,18 @@ class Handbid
             $og_title       = implode(' | ', [$auction->organizationName, $auction->name]);
             $og_image       = (!empty($auction->imageUrl)) ? $auction->imageUrl : $og_image;
             $og_description = (!empty($auction->description)) ? $auction->description : $og_description;
-        } elseif ($is_item)
+        }
+        elseif ($is_item)
         {
             $current_item   = $this->state()->currentItem();
             $og_page_url    = $og_page_url . 'auctions/' . $current_item->auction->key . '/item/' . $current_item->key . '/';
-            $og_title       = implode(' | ', [$current_item->auction->organizationName, $current_item->auction->name, $current_item->name]);
+            $og_title       = implode(' | ', [$current_item->auction->organizationName, $current_item->auction->name,
+                                              $current_item->name]);
             $og_image       = (!empty($current_item->imageUrl)) ? $current_item->imageUrl : $og_image;
             $og_description = (!empty($current_item->description)) ? $current_item->description : $og_description;
 
-        } elseif ($is_organization)
+        }
+        elseif ($is_organization)
         {
             $current_org    = $this->state()->currentOrg();
             $og_page_url    = $og_page_url . 'organizations/' . $current_org->key . '/';
@@ -610,27 +615,29 @@ class Handbid
         $params = json_encode(["secure" => true, "cookie" => $userGuid]);
 
         $smoochSettings = [
-            'appToken' => $this->state->getSmoochToken(),
+            'appToken'   => $this->state->getSmoochToken(),
             'properties' => [],
         ];
 
-        if(isset($bidder->usersGuid)){
-            $smoochSettings['userId'] = $bidder->email;
-            $smoochSettings['email'] = $bidder->email;
-            $smoochSettings['givenName'] = $bidder->firstName;
-            $smoochSettings['surname'] = $bidder->lastName;
+        if (isset($bidder->usersGuid))
+        {
+            $smoochSettings['userId']     = $bidder->email;
+            $smoochSettings['email']      = $bidder->email;
+            $smoochSettings['givenName']  = $bidder->firstName;
+            $smoochSettings['surname']    = $bidder->lastName;
             $smoochSettings['properties'] = array_merge($smoochSettings['properties'], [
-                'user.countryCode' => $bidder->countryCode,
-                'user.cellPhone' => $bidder->userCellPhone,
-                'user.guid' => $bidder->usersGuid,
-                'user.fullName' => $bidder->name,
+                'user.countryCode'       => $bidder->countryCode,
+                'user.cellPhone'         => $bidder->userCellPhone,
+                'user.guid'              => $bidder->usersGuid,
+                'user.fullName'          => $bidder->name,
                 'user.creditCards.count' => count($bidder->creditCards),
             ]);
         }
 
-        if(isset($auction->id)){
+        if (isset($auction->id))
+        {
             $smoochSettings['properties'] = array_merge($smoochSettings['properties'], [
-                'auction.id' => $auction->id,
+                'auction.id'   => $auction->id,
                 'auction.name' => $auction->name,
                 'auction.guid' => $auction->auctionGuid,
             ]);
@@ -710,9 +717,10 @@ class Handbid
         if ($isCustomizerPage)
         {
             echo do_shortcode("[handbid_customizer_styles]");
-        } else
+        }
+        else
         {
-            echo '<link rel="stylesheet" href="' . add_query_arg(array("action" => "handbid_ajax_customizer_css"), admin_url("admin-ajax.php")) . '" media="all"/>';
+            echo '<link rel="stylesheet" href="' . add_query_arg(["action" => "handbid_ajax_customizer_css"], admin_url("admin-ajax.php")) . '" media="all"/>';
         }
 
         if (isset($_GET["auction-reset"]))
@@ -722,7 +730,7 @@ class Handbid
 
         if (isset($_GET["pay_invoice"]))
         {
-            echo '<input type="hidden" data-auction-continue-payment-sign value="'.intval($_GET["pay_invoice"]).'">';
+            echo '<input type="hidden" data-auction-continue-payment-sign value="' . intval($_GET["pay_invoice"]) . '">';
         }
 
         $map_callback = '';
@@ -735,15 +743,16 @@ class Handbid
                 $map_callback = '&callback=auctionGoogleMapsInit';
             }
         }
-        echo '<script async defer src="https://maps.googleapis.com/maps/api/js?v=3.exp'.$map_callback.'"></script>';
+        echo '<script async defer src="https://maps.googleapis.com/maps/api/js?v=3.exp' . $map_callback . '"></script>';
     }
 
     function logout()
     {
 
-        if(isset($_COOKIE['handbid-auth'])) {
+        if (isset($_COOKIE['handbid-auth']))
+        {
             unset($_COOKIE['handbid-auth']);
-            setcookie('handbid-auth', null, time()-3600, COOKIEPATH, COOKIE_DOMAIN);
+            setcookie('handbid-auth', null, time() - 3600, COOKIEPATH, COOKIE_DOMAIN);
         }
 
         $this->handbid->logout();

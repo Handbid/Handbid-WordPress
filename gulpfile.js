@@ -36,6 +36,23 @@ gulp.task('js', function() {
     .pipe(notify("Gulp watch: js task completed."));
 });
 
+gulp.task('plugins', function() {
+    gulp.src([
+        'public/js/pnotify.custom.min.js',
+        'public/plugins/progressbar.js/progressbar.min.js',
+        'public/plugins/jquery.cookie/jquery.cookie.js',
+        'public/plugins/df-visible/jquery.visible.min.js',
+        'public/plugins/isotope/isotope.pkgd.min.js',
+        'public/plugins/unslider/js/unslider-min.js',
+        'public/plugins/bootstrap/js/bootstrap.min.js',
+        'public/plugins/select2/js/select2.full.min.js'
+    ])
+    .pipe(concat('plugins.min.js'))
+    .pipe(uglify())
+    .pipe(gulp.dest('public/js'))
+    .pipe(notify("Gulp watch: plugins task completed."));
+});
+
 gulp.task('less', function () {
     gulp.src([
         'resources/less/variables.less',
@@ -67,4 +84,4 @@ gulp.task('less', function () {
     .pipe(notify("Gulp watch: less task completed."));
 });
 
-gulp.task('default', ['js', 'less', 'watch']);
+gulp.task('default', ['js', 'plugins', 'less', 'watch']);
