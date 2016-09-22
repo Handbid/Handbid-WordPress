@@ -14,7 +14,7 @@ $profile    = $this->get('profile');
 $auction    = $this->get('auction');
 $isBiddable = !$item->isDirectPurchaseItem;
 $buyItNow   = $isBiddable && $item->buyNowPrice > 0 && $item->buyNowPrice > $item->minimumBidAmount;
-$itemSold   = ($item->status == "sold");
+$itemSold   = ($item->status == "sold" || $item->status == "paid");
 
 $creditCards = (isset($profile->creditCards) and is_array($profile->creditCards)) ? $profile->creditCards : [];
 $itemIsTicket = (isset($item->isTicket)) ? (bool) $item->isTicket : false;
