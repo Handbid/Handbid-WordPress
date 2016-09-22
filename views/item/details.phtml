@@ -137,12 +137,12 @@ $isDonation = (!empty($item->isAppeal) and $item->isAppeal);
                          data-handbid-item-banner="winning" class="item-banner winning"
                          data-handbid-box-id="<?php echo $item->id; ?>">You are winning this item.
                     </div>
-                    <div
+                    <!-- <div
                         style="<?php if (!($item->status == "sold" || $item->status == "paid" || (($itemIsTicket) && ($item->inventoryRemaining == 0))))
                         { ?>display:none;<?php } ?>"
                         data-handbid-item-banner="sold" class="item-banner winning"
                         data-handbid-box-id="<?php echo $item->id; ?>">This item has already been SOLD!
-                    </div>
+                    </div> -->
                 </div>
 
                 <?php if ($hasManyImages)
