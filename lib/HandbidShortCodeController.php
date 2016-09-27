@@ -989,6 +989,7 @@ class HandbidShortCodeController
 
             $winning    = [];
             $losing     = [];
+            $payments   = [];
             $purchases  = null;
             $proxyBids  = null;
             $totalSpent = 0;
@@ -998,27 +999,18 @@ class HandbidShortCodeController
             if ($profile)
             {
 
-
-                //$myAuctions = $this->handbid->store( 'Bidder' )->getMyAuctions();
                 $myInvoices = $this->handbid->store('Receipt')->allReceipts();
-                //$myMessages = $this->handbid->store( 'Notification' )->allMessages( 0, 255 );
 
                 $myAuctions = [];
-                //$myInvoices = [];
                 $myMessages = [];
 
                 if ($auction && $profile)
                 {
-
                     $myInventory = $this->state->currentInventory($auctionID);
-
-                    // $winning   = $this->handbid->store( 'Bid' )->myWinning($auction->id );
-                    // $losing    = $this->handbid->store( 'Bid' )->myLosing( $auction->id );
-                    // $purchases = $this->handbid->store( 'Bid' )->myPurchases( $auction->id );
-                    // $proxyBids = $this->handbid->store( 'Bid' )->myProxyBids( $auction->id );
 
                     $winning = (isset($myInventory->winning) and is_array($myInventory->winning)) ? $myInventory->winning : [];
                     $losing  = (isset($myInventory->losing) and is_array($myInventory->losing)) ? $myInventory->losing : [];;
+                    $payments  = (isset($myInventory->payments) and is_array($myInventory->payments)) ? $myInventory->payments : [];;
                     $purchases = $myInventory->purchases;
                     $proxyBids = $myInventory->max_bids;
 
@@ -1047,6 +1039,40 @@ class HandbidShortCodeController
                     }
                     $winning = $tempWinning;
 
+                    //TODO: REMOVE TEST FAKER
+                    $purchaseAmount = intval($myInventory->stats->purchaseAmount);
+                    $paidAmount = 0;
+                    $fakePayments = [];
+                    $cards_arr = ['Visa', 'MasterCard', 'AmEx', 'Maestro'];
+                    for($i = 0; $i < rand(2,3); $i++){
+
+                        $amount = rand(1, intval($purchaseAmount / 3));
+
+                        if(($purchaseAmount - ($paidAmount + $amount)) > 0)
+                        {
+                            $paidAmount += $amount;
+
+                            $fakePayments[] = [
+                                'datetime' => time() - rand(1000, 3000),
+                                'amount'   => $amount,
+                                'last4'    => rand(1000, 9999),
+                                'card'     => $cards_arr[mt_rand(0, count($cards_arr) - 1)],
+                            ];
+                        }
+                    }
+//                    $fakePayments[] = [
+//                        'datetime' => time() - rand(1000, 3000),
+//                        'amount'   => $purchaseAmount - $paidAmount,
+//                        'last4'    => rand(1000, 9999),
+//                        'card'     => $cards_arr[mt_rand(0, count($cards_arr) - 1)],
+//                    ];
+
+                    $payments = json_decode(json_encode($fakePayments));
+
+
+//                    $purchases = [];
+                    //TODO: REMOVE TEST FAKER
+
                 }
 
             }
@@ -1059,6 +1085,7 @@ class HandbidShortCodeController
                     'winning'          => $winning,
                     'losing'           => $losing,
                     'purchases'        => $purchases,
+                    'payments'         => $payments,
                     'maxBids'          => $proxyBids,
                     'totalSpent'       => $totalSpent,
                     'myAuctions'       => $myAuctions,

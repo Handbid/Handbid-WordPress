@@ -367,6 +367,71 @@
   }
 }
 
+.simple-list.handbid-list-of-bids-purchases {
+  li {
+    .bid-amount {
+      float: right;
+    }
+  }
+}
+
+.simple-list.handbid-list-of-purchase-totals {
+
+  margin-top: -8px;
+
+  li {
+
+    padding: 5px 0;
+
+    .bid-amount {
+      float: right;
+    }
+    .quantity-total {
+      text-align: right;
+    }
+
+    &.payments-list{
+
+      .quantity-total {
+        font-size: 15px;
+        margin-top: 5px;
+
+        span {
+          display: block;
+          font-weight: normal;
+          text-transform: uppercase;
+        }
+      }
+
+      .bid-amount {
+        font-size: 2.0em;
+      }
+
+    }
+
+    .receipt-payment-block{
+      padding: 15px;
+
+      a,
+      select{
+        height: 45px;
+      }
+
+      select{
+        width: 100%;
+      }
+
+      & > div{
+        height: 50px;
+      }
+    }
+
+    .invoiceNoCCAllowed{
+      text-align: right;
+    }
+  }
+}
+
 .simple-list.bid-history {
   margin-bottom: 15px;
   h4 {

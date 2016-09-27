@@ -616,7 +616,7 @@ class HandbidActionController
                 $response["result"] = $resp;
             } catch (Exception $e)
             {
-                $response["error"] = $e;
+                $response["error"] = $e->getMessage();
             }
         }
         echo json_encode($response);

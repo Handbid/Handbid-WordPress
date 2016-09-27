@@ -228,6 +228,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
             recheckAndRecalculateBids: function () {
                 this.recheckBidCounts();
                 this.recalculateDashboardPrice();
+                this.recheckYourCardItems();
             },
 
 
@@ -335,7 +336,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     '<h4 class="quantity-total">' + quantity + ' x ' + currencySpan() + amount + '</h4>' +
                     '</div>' +
                     '<div class="col-md-4 col-xs-4">' +
-                    '<span class="bid-amount winning">' + currencySpan() + '<span>' + (amount * quantity) + '</span></span>' +
+                    '<span class="bid-amount winning">' + currencySpan() + '<span class="purchaseTotalAmount">' + (amount * quantity) + '</span></span>' +
                     '</div>' +
                     '</li>';
 
@@ -2717,24 +2718,41 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     return false;
                 }
 
-                var receiptBlock = button.parents(".receiptRow").eq(0);
-                var paidControls = $(".paidControls", receiptBlock).eq(0);
-                var unpaidControls = $(".unpaidControls", receiptBlock).eq(0);
-                var receiptPaymentBlock = button.parents(".receipt-payment-block").eq(0);
-                var cardId = $(".select-payment-card", receiptPaymentBlock).eq(0).val();
-                var nonce = button.data("make-payment-nonce");
-                var auctionId = button.data("auction-id");
-                var receiptId = button.data("receipt-id");
+                var isInventoryPayment = (button.attr("data-inventory-payment-button") != undefined);
 
-                button.addClass("active");
+                var receiptPaymentBlock = button.parents(".receipt-payment-block").eq(0),
+                    cardId = $(".select-payment-card", receiptPaymentBlock).eq(0).val(),
+                    nonce = button.data("make-payment-nonce"),
+                    auctionId = button.data("auction-id");
 
                 var data = {
                     action: "handbid_ajax_make_receipt_payment",
                     nonce: nonce,
                     cardId: cardId,
-                    receiptId: receiptId,
                     auctionId: auctionId
                 };
+
+                if(isInventoryPayment){
+                    // var receiptBlock = button.parents(".receiptRow").eq(0),
+                    //     paidControls = $(".paidControls", receiptBlock).eq(0),
+                    //     unpaidControls = $(".unpaidControls", receiptBlock).eq(0),
+                    //     receiptPaymentBlock = button.parents(".receipt-payment-block").eq(0),
+                    //     cardId = $(".select-payment-card", receiptPaymentBlock).eq(0).val(),
+                    //     nonce = button.data("make-payment-nonce"),
+                    //     auctionId = button.data("auction-id"),
+                    //     receiptId = button.data("receipt-id");
+                }
+                else{
+                    var receiptBlock = button.parents(".receiptRow").eq(0),
+                        paidControls = $(".paidControls", receiptBlock).eq(0),
+                        unpaidControls = $(".unpaidControls", receiptBlock).eq(0),
+                        receiptId = button.data("receipt-id");
+
+                    data[receiptId] = receiptId;
+                }
+                console.log(data);
+                button.addClass("active");
+
                 $.post(
                     ajaxurl,
                     data,
@@ -2744,28 +2762,87 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                         console.log("----Make payment success----");
                         data = JSON.parse(data);
 
-
-                        if (data.result.paid) {
-                            paidControls.slideDown();
-                            unpaidControls.remove();
-                            receiptBlock.addClass("open").removeClass("preview");
-                            handbidMain.notice("Your receipt was successfully paid!", "Congratulations!", "success");
-
-                            var unpaidInvoicesCountContainer = $(".unpaidInvoicesCountContainer");
-                            var unpaidInvoices = $(".receipts-list-area li.preview").length;
-                            (unpaidInvoices) ? unpaidInvoicesCountContainer.show() : unpaidInvoicesCountContainer.hide();
-                            unpaidInvoicesCountContainer.html(unpaidInvoices);
+                        if(isInventoryPayment){
+                            console.log(data);
                         }
                         else {
-                            handbidMain.notice(data.result.description, "Payment Error", "error");
+                            if (data.result.paid) {
+
+                                paidControls.slideDown();
+                                unpaidControls.remove();
+                                receiptBlock.addClass("open").removeClass("preview");
+                                handbidMain.notice("Your receipt was successfully paid!", "Congratulations!", "success");
+
+                                var unpaidInvoicesCountContainer = $(".unpaidInvoicesCountContainer");
+                                var unpaidInvoices = $(".receipts-list-area li.preview").length;
+                                (unpaidInvoices) ? unpaidInvoicesCountContainer.show() : unpaidInvoicesCountContainer.hide();
+                                unpaidInvoicesCountContainer.html(unpaidInvoices);
+                            }
+                            else {
+                                handbidMain.notice(data.result.description, "Payment Error", "error");
+                            }
                         }
 
-
-                        //handbidMain.notice(message, "Congratulations!", "success");
                         button.removeClass("active");
                         return false;
                     }
                 );
+            },
+
+            recheckYourCardItems: function ()
+            {
+                var purchases_amounts = $('.handbid-list-of-bids-purchases li .purchaseTotalAmount'),
+                    purchases_payment_amounts = $('.handbidInventorySinglePaymentAmount'),
+                    purchases_info_block = $('.handbid-list-of-purchase-totals'),
+                    purchases_payments_block = $('.handbid-list-of-purchase-totals .payments-list'),
+                    purchases_total_place = $('.handbidInventoryTotalPurchases'),
+                    purchases_due_place = $('.handbidInventoryBalanceDue'),
+                    purchases_card_block = $('.handbid-list-of-purchase-totals .balanceDuePaymentCards'),
+                    purchases_count = purchases_amounts.length,
+                    purchases_payments_count = purchases_payment_amounts.length,
+                    totalAmount = 0,
+                    paidAmount = 0,
+                    dueAmount = 0;
+
+                $.map(purchases_amounts, function (val) {
+                    totalAmount += parseInt($(val).html());
+                });
+
+                if(totalAmount){
+                    purchases_info_block.show();
+
+                    purchases_total_place.html(totalAmount);
+
+                    $.map(purchases_payment_amounts, function (val) {
+                        paidAmount += parseInt($(val).html());
+                    });
+
+                    if(paidAmount){
+                        purchases_payments_block.show();
+                    }
+                    else{
+                        purchases_payments_block.hide();
+                    }
+
+                    dueAmount = totalAmount - paidAmount;
+
+                    purchases_due_place.html(dueAmount);
+
+                    if(dueAmount > 0){
+                        purchases_card_block.show();
+                    }
+                    else{
+                        purchases_card_block.hide();
+                    }
+
+                }
+                else{
+                    purchases_info_block.hide();
+                }
+
+                console.log(totalAmount);
+                console.log(paidAmount);
+                console.log(dueAmount);
             },
 
             initializePaymentButtons: function ()

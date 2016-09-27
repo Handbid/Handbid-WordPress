@@ -12,6 +12,8 @@
 $item       = $this->get('item');
 $profile    = $this->get('profile');
 $auction    = $this->get('auction');
+$currencySymbol    = $this->get('currencySymbol');
+$currencyCode    = $this->get('currencyCode');
 $isBiddable = !$item->isDirectPurchaseItem;
 $buyItNow   = $isBiddable && $item->buyNowPrice > 0 && $item->buyNowPrice > $item->minimumBidAmount;
 $itemSold   = ($item->status == "sold" || $item->status == "paid");
@@ -115,7 +117,7 @@ $isDonation = (!empty($item->isAppeal) and $item->isAppeal);
             <a class="buy-now pink-solid-button loading-span-button"
                href=""
                 <?php echo $creditCardsRequired; ?>
-               data-handbid-bid-button="buyItNow" data-handbid-buynow-price="<?php echo $item->buyNowPrice?>"><span><?php echo __('Buy Now For $')  . "<em data-change-attribute='buyNowPrice'>".$item->buyNowPrice ."</em>"; ?></span></a>
+               data-handbid-bid-button="buyItNow" data-handbid-buynow-price="<?php echo $item->buyNowPrice?>"><span><?php echo __('Buy Now For ') . $currencySymbol . "<em data-change-attribute='buyNowPrice'>".$item->buyNowPrice ."</em>"; ?></span></a>
         </div>
 
         <?php }

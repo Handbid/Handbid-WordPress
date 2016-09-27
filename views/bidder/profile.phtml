@@ -15,6 +15,7 @@ if (!is_null($this->get('profile'))) {
     $losing     = $this->get('losing');
     $winning    = $this->get('winning');
     $purchases  = $this->get('purchases');
+    $payments   = $this->get('payments');
     $maxBids    = $this->get('maxBids');
     $total      = $this->get('totalSpent');
     $myAuctions = $this->get('myAuctions');
@@ -26,9 +27,12 @@ if (!is_null($this->get('profile'))) {
     $bidderPage = is_page('bidder');
     $currencyCode = (isset($auction->currencyCode))? $auction->currencyCode : HANDBID_DEFAULT_CURRENCY;
     $currencySymbol = (isset($auction->currencySymbol))? $auction->currencySymbol : HANDBID_DEFAULT_CURRENCY_SYMBOL;
+
+    $creditCards = $profile->creditCards;
 } else {
     return;
 }
+//echo "<pre>" . print_r($creditCards, true) . "</pre>";
 ?>
 <div class="bidder-info-container" data-dashboard-profile-id="<?php echo $profile->id; ?>">
     <div class="container container-fluid underlined">
@@ -225,8 +229,10 @@ if (!is_null($this->get('profile'))) {
                     <div class="col-md-12 simple-list-container">
                         <ul class="simple-list handbid-list-of-bids handbid-list-of-bids-purchases" data-no-items-text="You have not purchased any items.">
                             <?php
+                            $totalPurchases = 0;
                             if(count($purchases) > 0 ) {
                                 forEach($purchases as $purchase) {
+                                    $totalPurchases += $purchase->grandTotal;
                                     ?>
                                     <li class="row"
                                         data-dashboard-price="<?php echo (int) $purchase->grandTotal; ?>"
@@ -241,7 +247,10 @@ if (!is_null($this->get('profile'))) {
                                             <h4 class="quantity-total"><?php echo $purchase->quantity; ?> x <span class="handbidAuctionCurrency" title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span><?php echo $purchase->pricePerItem; ?></h4>
                                         </div>
                                         <div class="col-md-4 col-xs-4">
-                                            <span class="bid-amount winning"><span class="handbidAuctionCurrency" title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span><span><?php echo $purchase->grandTotal; ?></span></span>
+                                            <span class="bid-amount winning">
+                                                <span class="handbidAuctionCurrency" title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span>
+                                                <span class="purchaseTotalAmount"><?php echo $purchase->grandTotal; ?></span>
+                                            </span>
                                         </div>
                                     </li>
                                 <?php
@@ -252,6 +261,107 @@ if (!is_null($this->get('profile'))) {
                             <?php
                             }
                             ?>
+                        </ul>
+                        <ul class="simple-list handbid-list-of-purchase-totals" style="<?php echo (count($purchases) > 0 ) ? 'display:none' : ' display:none ' ;?>">
+                            <li class="row">
+                                <div class="col-xs-0 col-md-6"></div>
+                                <div class="col-xs-8 col-md-4">
+                                    <h4 class="quantity-total">Total Purchases</h4>
+                                </div>
+                                <div class="col-xs-4 col-md-2">
+                                    <span class="bid-amount winning">
+                                        <span class="handbidAuctionCurrency" title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span>
+                                        <span class="handbidInventoryTotalPurchases"><?php echo $totalPurchases; ?></span>
+                                    </span>
+                                </div>
+                            </li>
+                            <li class="row payments-list" style="<?php echo (count($payments) > 0 ) ? '' : ' display:none ' ;?>">
+                                <?php
+
+                                $amountPaid = 0;
+                                if(count($payments) > 0)
+                                {
+                                    forEach ($payments as $payment)
+                                    {
+                                        $amountPaid += $payment->amount;
+                                        ?>
+                                        <div class="col-xs-0 col-md-5"></div>
+                                        <div class="col-xs-8 col-md-5">
+                                            <h4 class="quantity-total">Payment Applied: <?php echo $payment->card?> xxxx-xxxx-xxxx-<?php echo $payment->last4?>
+                                            <span><?php echo date('d-M-Y h:i:s A', $payment->datetime)?></span></h4>
+                                        </div>
+                                        <div class="col-xs-4 col-md-2">
+                                    <span class="bid-amount winning">
+                                        <span class="handbidAuctionCurrency"
+                                              title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span>
+                                        <span
+                                            class="handbidInventorySinglePaymentAmount"><?php echo $payment->amount?></span>
+                                    </span>
+                                        </div>
+                                        <?php
+                                    }
+                                }
+                            ?>
+                            </li>
+                            <li class="row">
+                                <?php
+                                $balanceDue = $totalPurchases - $amountPaid;
+                                ?>
+                                <div class="col-xs-0 col-md-6"></div>
+                                <div class="col-xs-8 col-md-4">
+                                    <h4 class="quantity-total">Balance Due</h4>
+                                </div>
+                                <div class="col-xs-4 col-md-2">
+                                    <span class="bid-amount losing">
+                                        <span class="handbidAuctionCurrency" title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span>
+                                        <span class="handbidInventoryBalanceDue"><?php echo $balanceDue; ?></span>
+                                    </span>
+                                </div>
+                            </li>
+                            <li class="row balanceDuePaymentCards" style="<?php echo ($balanceDue > 0 ) ? '' : ' display:none ' ;?>">
+
+                                <div class="unpaidControls row receipt-payment-block <?php echo (intval($auction->enableCreditCardSupport))?"":" invoiceNoCCAllowed "?>">
+
+                                    <div class="col-xs-2 hideIfNoCCAllowed">&nbsp;</div>
+
+                                    <div class="col-xs-3 hideIfNoCCAllowed">
+                                        <a class="buy-now green-solid-button receipt-action-button col-md-12"><span>View Invoice Details</span></a>
+                                    </div>
+
+                                    <div class="col-xs-4 hideIfNoCCAllowed">
+                                        <select class="select-payment-card col-md-12"
+                                                style="<?php echo (!count($creditCards)) ? " display:none; " : ""; ?>">
+                                            <?php
+                                            if (count($creditCards)) {
+                                                foreach ($creditCards as $i => $creditCard) {
+                                                    echo "<option data-option-val='" . $creditCard->id . "' value='" . $creditCard->id . "' " . selected($i, 0, false) . ">" . $creditCard->nameOnCard . " (xxxx xxxx xxxx " . $creditCard->lastFour . ")</option>";
+                                                }
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <div class="col-xs-3 hideIfNoCCAllowed">
+                                        <a class="buy-now green-solid-button receipt-action-button make-payment-button col-md-12 loading-span-button"
+                                           data-auction-id="<?php echo $auction->id; ?>"
+                                           data-inventory-payment-button
+                                           data-make-payment-nonce="<?php echo apply_filters("handbid_create_nonce", date("d.m.Y") . "make_receipt_payment"); ?>"
+                                           data-handbid-credit-cards-need
+                                            <?php if (!count($creditCards)) { ?> data-handbid-credit-cards-required <?php } ?>
+                                            <?php if (isset($auction->requireAddresstoPay) and intval($auction->requireAddresstoPay)) { ?> data-require-address-to-pay <?php } ?>
+                                        ><span>Make Payment</span></a>
+                                    </div>
+
+                                    <div class="col-xs-12  margin-bottom receipt-payment-block showIfNoCCAllowed">
+                                        <div class="col-xs-12">
+                                            <h4>Payments have been disabled through the site. Contact the auction manager to pay.</h4>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+
+                            </li>
                         </ul>
                     </div>
                 </div>
