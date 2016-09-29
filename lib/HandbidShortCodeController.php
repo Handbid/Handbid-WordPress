@@ -1009,11 +1009,11 @@ class HandbidShortCodeController
                     $myInventory = $this->state->currentInventory($auctionID);
 
                     $winning = (isset($myInventory->winning) and is_array($myInventory->winning)) ? $myInventory->winning : [];
-                    $losing  = (isset($myInventory->losing) and is_array($myInventory->losing)) ? $myInventory->losing : [];;
-                    $payments  = (isset($myInventory->payments) and is_array($myInventory->payments)) ? $myInventory->payments : [];;
+                    $losing  = (isset($myInventory->losing) and is_array($myInventory->losing)) ? $myInventory->losing : [];
+                    $payments  = (isset($myInventory->payments)) ? $myInventory->payments : [];
                     $purchases = $myInventory->purchases;
                     $proxyBids = $myInventory->max_bids;
-
+                    $payments = (array) $payments;
 
                     $alreadyInPurchasesIDs = [];
                     if (is_array($purchases) and count($purchases))
@@ -1039,39 +1039,31 @@ class HandbidShortCodeController
                     }
                     $winning = $tempWinning;
 
-                    //TODO: REMOVE TEST FAKER
-                    $purchaseAmount = intval($myInventory->stats->purchaseAmount);
-                    $paidAmount = 0;
-                    $fakePayments = [];
-                    $cards_arr = ['Visa', 'MasterCard', 'AmEx', 'Maestro'];
-                    for($i = 0; $i < rand(2,3); $i++){
-
-                        $amount = rand(1, intval($purchaseAmount / 3));
-
-                        if(($purchaseAmount - ($paidAmount + $amount)) > 0)
-                        {
-                            $paidAmount += $amount;
-
-                            $fakePayments[] = [
-                                'datetime' => time() - rand(1000, 3000),
-                                'amount'   => $amount,
-                                'last4'    => rand(1000, 9999),
-                                'card'     => $cards_arr[mt_rand(0, count($cards_arr) - 1)],
-                            ];
-                        }
-                    }
-//                    $fakePayments[] = [
-//                        'datetime' => time() - rand(1000, 3000),
-//                        'amount'   => $purchaseAmount - $paidAmount,
-//                        'last4'    => rand(1000, 9999),
-//                        'card'     => $cards_arr[mt_rand(0, count($cards_arr) - 1)],
-//                    ];
-
-                    $payments = json_decode(json_encode($fakePayments));
-
-
-//                    $purchases = [];
-                    //TODO: REMOVE TEST FAKER
+//                    //TODO: REMOVE TEST FAKER
+//                    $purchaseAmount = intval($myInventory->stats->purchaseAmount);
+//                    $paidAmount = 0;
+//                    $fakePayments = [];
+//                    $cards_arr = ['Visa', 'MasterCard', 'AmEx', 'Maestro'];
+//                    for($i = 0; $i < rand(2,3); $i++){
+//
+//                        $amount = rand(1, intval($purchaseAmount / 3));
+//
+//                        if(($purchaseAmount - ($paidAmount + $amount)) > 0)
+//                        {
+//                            $paidAmount += $amount;
+//
+//                            $fakePayments[] = [
+//                                'datetime' => time() - rand(1000, 3000),
+//                                'amount'   => $amount,
+//                                'last4'    => rand(1000, 9999),
+//                                'card'     => $cards_arr[mt_rand(0, count($cards_arr) - 1)],
+//                            ];
+//                        }
+//                    }
+//
+//                    $payments = json_decode(json_encode($fakePayments));
+//
+//                    //TODO: REMOVE TEST FAKER
 
                 }
 

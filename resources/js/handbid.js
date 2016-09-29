@@ -1758,7 +1758,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     isTicket = (itemDetailsBox.data('item-is-ticket') == 'yes'),
                     buyAgain = isDonation ? false : handbid.getCountOfPastItemPurchases(itemID),
                     title = isDonation ? 'Donation Confirmation' : 'Purchase Confirmation',
-                    confirmText = isDonation ? 'Confirm Donation of $' + purchaseTotal + '?' : 'Add ' + purchaseCount + ' for $' + purchaseTotal + ' to your cart?',
+                    confirmText = isDonation ? 'Confirm Donation of ' + currencySpan() + purchaseTotal + '?' : 'Add ' + purchaseCount + ' for '+currencySpan() + purchaseTotal + ' to your cart?',
                     text = buyAgain ? confirmText + '<br /><br /> Hey! You have already purchased ' + buyAgain + ' of this item, are you sure you want to purchase ' + purchaseCount + ' more?' : confirmText;
 
 
@@ -1772,7 +1772,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 }
                 if(isTicket || tickets){
                     title = 'Ticket Confirmation';
-                    text = 'Confirm addition of ' + purchaseCount + ' ticket' + ((purchaseCount > 1)? 's' : '') + ' for $' + purchaseTotal + ' to purchases?';
+                    text = 'Confirm addition of ' + purchaseCount + ' ticket' + ((purchaseCount > 1)? 's' : '') + ' for ' + currencySpan() + purchaseTotal + ' to purchases?';
                 }
 
                 attentionAboutBuyConf = true;
@@ -2047,7 +2047,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                         console.log("-----------------------");
                         console.log("----Buy Items success----");
                         data = JSON.parse(data); 
-
+                        console.log(data);
                         button.removeClass("active");
                         var message = "";
                         if (data.status == "failed") {

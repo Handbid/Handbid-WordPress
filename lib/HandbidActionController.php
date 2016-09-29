@@ -591,11 +591,14 @@ class HandbidActionController
     {
         $nonce    = isset($_POST['nonce']) ? $_POST['nonce'] : 'nonce';
         $response = [];
+        $receipt_id = (int)$_POST["receiptId"];
         $values   = [
             "cardId"    => (int)$_POST["cardId"],
-            "receiptId" => (int)$_POST["receiptId"],
             "auctionId" => (int)$_POST["auctionId"],
         ];
+        if($receipt_id){
+            $values['receiptId'] = $receipt_id;
+        }
         if ($this->handbid_verify_nonce($nonce, date("d.m.Y") . "make_receipt_payment"))
         {
             $profile = $this->state->currentBidder();
@@ -610,6 +613,7 @@ class HandbidActionController
                     }
                 }
             }
+            unset($values["cardId"]);
             try
             {
                 $resp               = $this->handbid->store('Receipt')->makePayment($values);

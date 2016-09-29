@@ -20,6 +20,9 @@ if ($this->get('bids')) {
 	$item       = $this->get('item');
 	$itemID       = $this->get('itemID');
 }
+
+$auction = $this->get('auction');
+
 if($item->isDirectPurchaseItem){
 	$noBidsMessage = "Purchase history not available on this item";
 }
