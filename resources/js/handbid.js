@@ -1465,6 +1465,65 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
             },
 
 
+            getSinglePaymentTemplate: function (payment) {
+
+                var payment_title = '';
+                switch (payment.paymentMethod){
+                    case 'creditcard' :
+                        payment_title = payment.card + ' xxxx-xxxx-xxxx-' + payment.last4;
+                        break;
+                    case 'creditcard_external' :
+                        payment_title = 'Credit Card (external)';
+                        break;
+                    case 'cash' :
+                        payment_title = 'Cash';
+                        break;
+                    case 'checking_account' :
+                        payment_title = 'Check';
+                        break;
+                    case 'credited_amount' :
+                        payment_title = 'Credit';
+                        break;
+                    case 'discount_amount' :
+                        payment_title = 'Discount';
+                        break;
+                    default:
+                        payment_title = '';
+                }
+
+                var template = '<div class="col-xs-0 col-md-5"></div>' +
+                               '<div class="col-xs-8 col-md-5">' +
+                               '<h4 class="quantity-total">Payment Applied: ' + payment_title +
+                               '<span>' + payment.datetime + '</span></h4>' +
+                               '</div>' +
+                               '<div class="col-xs-4 col-md-2">' +
+                               '<span class="bid-amount winning">' +
+                               currencySpan() +
+                               '<span class="handbidInventorySinglePaymentAmount">' + payment.amount + '</span>' +
+                               '</span>' +
+                               '</div>';
+
+                return template;
+
+            },
+
+
+            processPayments: function (payments, auction_id) {
+
+                var paymentsBlock = $('.handbid-list-of-purchase-totals .payments-list-'+auction_id);
+
+                paymentsBlock.html('');
+
+                $.map(payments, function (payment) {
+                    var payment_str = handbidMain.getSinglePaymentTemplate(payment);
+                    paymentsBlock.append(payment_str);
+                });
+
+                handbidMain.recheckYourCardItems();
+
+            },
+
+
             processUserReceipt: function (values) {
                 var receiptID = values.id;
                 var receiptBlock = $('[data-receipt-block-id="' + receiptID + '"]').eq(0);
@@ -1482,6 +1541,10 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     unpaidControls.show();
                     unpaidRows.show();
                     paidControls.hide();
+                }
+
+                if(values.payments != undefined){
+                    handbidMain.processPayments(values.payments, values.auctionId)
                 }
             },
 
@@ -2046,8 +2109,8 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
                         console.log("-----------------------");
                         console.log("----Buy Items success----");
-                        data = JSON.parse(data); 
-                        console.log(data);
+                        data = JSON.parse(data);
+
                         button.removeClass("active");
                         var message = "";
                         if (data.status == "failed") {
@@ -2732,17 +2795,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     auctionId: auctionId
                 };
 
-                if(isInventoryPayment){
-                    // var receiptBlock = button.parents(".receiptRow").eq(0),
-                    //     paidControls = $(".paidControls", receiptBlock).eq(0),
-                    //     unpaidControls = $(".unpaidControls", receiptBlock).eq(0),
-                    //     receiptPaymentBlock = button.parents(".receipt-payment-block").eq(0),
-                    //     cardId = $(".select-payment-card", receiptPaymentBlock).eq(0).val(),
-                    //     nonce = button.data("make-payment-nonce"),
-                    //     auctionId = button.data("auction-id"),
-                    //     receiptId = button.data("receipt-id");
-                }
-                else{
+                if(!isInventoryPayment){
                     var receiptBlock = button.parents(".receiptRow").eq(0),
                         paidControls = $(".paidControls", receiptBlock).eq(0),
                         unpaidControls = $(".unpaidControls", receiptBlock).eq(0),
@@ -2750,7 +2803,6 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
                     data[receiptId] = receiptId;
                 }
-                console.log(data);
                 button.addClass("active");
 
                 $.post(
@@ -2762,26 +2814,23 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                         console.log("----Make payment success----");
                         data = JSON.parse(data);
 
-                        if(isInventoryPayment){
-                            console.log(data);
-                        }
-                        else {
                             if (data.result.paid) {
 
-                                paidControls.slideDown();
-                                unpaidControls.remove();
-                                receiptBlock.addClass("open").removeClass("preview");
+                                if(!isInventoryPayment) {
+                                    paidControls.slideDown();
+                                    unpaidControls.remove();
+                                    receiptBlock.addClass("open").removeClass("preview");
+                                    var unpaidInvoicesCountContainer = $(".unpaidInvoicesCountContainer");
+                                    var unpaidInvoices = $(".receipts-list-area li.preview").length;
+                                    (unpaidInvoices) ? unpaidInvoicesCountContainer.show() : unpaidInvoicesCountContainer.hide();
+                                    unpaidInvoicesCountContainer.html(unpaidInvoices);
+                                }
                                 handbidMain.notice("Your receipt was successfully paid!", "Congratulations!", "success");
 
-                                var unpaidInvoicesCountContainer = $(".unpaidInvoicesCountContainer");
-                                var unpaidInvoices = $(".receipts-list-area li.preview").length;
-                                (unpaidInvoices) ? unpaidInvoicesCountContainer.show() : unpaidInvoicesCountContainer.hide();
-                                unpaidInvoicesCountContainer.html(unpaidInvoices);
                             }
                             else {
                                 handbidMain.notice(data.result.description, "Payment Error", "error");
                             }
-                        }
 
                         button.removeClass("active");
                         return false;
@@ -2840,9 +2889,6 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     purchases_info_block.hide();
                 }
 
-                console.log(totalAmount);
-                console.log(paidAmount);
-                console.log(dueAmount);
             },
 
             initializePaymentButtons: function ()

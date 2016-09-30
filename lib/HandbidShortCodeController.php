@@ -1013,7 +1013,6 @@ class HandbidShortCodeController
                     $payments  = (isset($myInventory->payments)) ? $myInventory->payments : [];
                     $purchases = $myInventory->purchases;
                     $proxyBids = $myInventory->max_bids;
-                    $payments = (array) $payments;
 
                     $alreadyInPurchasesIDs = [];
                     if (is_array($purchases) and count($purchases))

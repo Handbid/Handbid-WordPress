@@ -32,7 +32,7 @@ if (!is_null($this->get('profile'))) {
 } else {
     return;
 }
-//echo "<pre>" . print_r($creditCards, true) . "</pre>";
+//echo "<pre>" . print_r($payments, true) . "</pre>";
 ?>
 <div class="bidder-info-container" data-dashboard-profile-id="<?php echo $profile->id; ?>">
     <div class="container container-fluid underlined">
@@ -100,7 +100,7 @@ if (!is_null($this->get('profile'))) {
                         <span data-handbid-stats-num-losing><?php echo ($losing) ? count($losing) : '0'; ?></span>
                     </a>
                     <a class="col-md-2 col-sm-3 col-xs-3 profile-purchases <?php echo $loader;?>" data-slider-nav-key="profile-purchases">
-                        <label>Purchases</label>
+                        <label>Your Cart</label>
                         <span data-handbid-stats-num-purchases><?php echo ($purchases) ? count($purchases) : '0'; ?></span>
                     </a>
                     <a class="col-md-2 col-xs-12 total-spent <?php echo $loader;?>">
@@ -262,7 +262,7 @@ if (!is_null($this->get('profile'))) {
                             }
                             ?>
                         </ul>
-                        <ul class="simple-list handbid-list-of-purchase-totals" style="<?php echo (count($purchases) > 0 ) ? ' display:none ' : ' display:none ' ;?>">
+                        <ul class="simple-list handbid-list-of-purchase-totals" style="<?php echo (count($purchases) > 0 ) ? '  ' : ' display:none ' ;?>">
                             <li class="row">
                                 <div class="col-xs-0 col-md-6"></div>
                                 <div class="col-xs-8 col-md-4">
@@ -275,7 +275,7 @@ if (!is_null($this->get('profile'))) {
                                     </span>
                                 </div>
                             </li>
-                            <li class="row payments-list" style="<?php echo (count($payments) > 0 ) ? '' : ' display:none ' ;?>">
+                            <li class="row payments-list payments-list-<?php echo $auction->id?>" style="<?php echo (count($payments) > 0 ) ? '' : ' display:none ' ;?>">
                                 <?php
 
                                 $amountPaid = 0;
@@ -284,10 +284,26 @@ if (!is_null($this->get('profile'))) {
                                     forEach ($payments as $payment)
                                     {
                                         $amountPaid += $payment->amount;
+                                        $payment_title = '';
+                                        switch($payment->paymentMethod){
+                                            case 'creditcard' : $payment_title = $payment->card . ' xxxx-xxxx-xxxx-' . $payment->last4;
+                                                break;
+                                            case 'creditcard_external' : $payment_title = 'Credit Card (external)';
+                                                break;
+                                            case 'cash' : $payment_title = 'Cash';
+                                                break;
+                                            case 'checking_account' : $payment_title = 'Check';
+                                                break;
+                                            case 'credited_amount' : $payment_title = 'Credit';
+                                                break;
+                                            case 'discount_amount' : $payment_title = 'Discount';
+                                                break;
+                                        }
+
                                         ?>
                                         <div class="col-xs-0 col-md-5"></div>
                                         <div class="col-xs-8 col-md-5">
-                                            <h4 class="quantity-total">Payment Applied: <?php echo $payment->card?> xxxx-xxxx-xxxx-<?php echo $payment->last4?>
+                                            <h4 class="quantity-total">Payment Applied: <?php echo $payment_title;?>
                                             <span><?php echo $payment->datetime?></span></h4>
                                         </div>
                                         <div class="col-xs-4 col-md-2">
