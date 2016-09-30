@@ -821,8 +821,8 @@ class HandbidShortCodeController
 
             $template = $this->templateFromAttributes($attributes, 'views/item/bids');
 
-            $auction = $this->state->currentAuction();
             $item    = $this->state->currentItem($attributes);
+            $auction = $this->state->currentAuction();
             $profile = $this->state->currentBidder($auction->id);
             $bids    = null;
 
@@ -840,6 +840,7 @@ class HandbidShortCodeController
                     'item'    => $item,
                     'profile' => $profile,
                     'bids'    => $bids,
+                    'auction' => $auction,
                 ]
             );
         } catch (Exception $e)
@@ -1218,14 +1219,14 @@ class HandbidShortCodeController
             // $losing    = $this->handbid->store( 'Bid' )->myLosing( $auction->id );
 
             $winning = (isset($myInventory->winning) and is_array($myInventory->winning)) ? $myInventory->winning : [];
-            $losing  = (isset($myInventory->losing) and is_array($myInventory->losing)) ? $myInventory->losing : [];;
+            $losing  = (isset($myInventory->losing) and is_array($myInventory->losing)) ? $myInventory->losing : [];
+
 
             return $this->viewRenderer->render(
                 $template,
                 [
                     'winning' => $winning,
                     'losing'  => $losing,
-                    'auction' => $auction,
                 ]
             );
         } catch (Exception $e)

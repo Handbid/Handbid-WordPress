@@ -22,7 +22,6 @@ if ($this->get('bids')) {
 }
 
 $auction = $this->get('auction');
-
 if($item->isDirectPurchaseItem){
 	$noBidsMessage = "Purchase history not available on this item";
 }
@@ -33,8 +32,8 @@ else{
 	$noBidsMessage = "No bids yet! You could be the first!";
 }
 
-$currencyCode = (isset($auction->currencyCode))? $auction->currencyCode : HANDBID_DEFAULT_CURRENCY;
-$currencySymbol = (isset($auction->currencySymbol))? $auction->currencySymbol : HANDBID_DEFAULT_CURRENCY_SYMBOL;
+$currencyCode = $item->auction->currencyCode;
+$currencySymbol = $item->auction->currencySymbol;
 ?>
 
 <ul class="simple-list bid-history bid-history-item-<?php echo ($item) ? $item->id : $itemID ; ?>"  data-no-items-text="<?php echo $noBidsMessage;?>">
