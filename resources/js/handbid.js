@@ -12,7 +12,7 @@
 var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_overlay, timerNotice, timerMessage,
     circleTimer, auctionInvoices, currentPaddleNumber, currentElemNeedsCard, timerTimeout = 1000, timerElements, timerElementsFull, timerTime,
     currentCCForm, cookieExpire = 7, ticketsPopupWasOpened = false, addingCCState = false, profile_location_map, invoices_loaded = false,
-    refreshTimerInterval = 15000;
+    refreshTimerInterval = 15000, autocomplete, autocomplete_element_id;
 (function ($) {
 
     attentionAboutTickets = false;
@@ -1675,6 +1675,15 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
             },
 
+
+            initGoogleAutocomplete: function (element_id) {
+
+                autocomplete_element_id = element_id;
+                autocomplete = new google.maps.places.Autocomplete(
+                    /** @type {!HTMLInputElement} */(document.getElementById(element_id)),
+                    {types: ['geocode']});
+
+            },
 
             toggleProfileLocationMap: function () {
 

@@ -130,54 +130,13 @@ $currencySymbol = (isset($auction->currencySymbol))? $auction->currencySymbol : 
             </div>
         </li>
         <li class="row">
-            <div class="col-md-8">
-                <input type="text" name="shippingAddress" value="<?php echo $profile->shippingAddress; ?>" id="profileShippingAddress" placeholder="Shipping Address" title="Shipping Address"/>
+            <div class="col-md-12">
+                <input type="text" name="shippingAddress" value="<?php echo $profile->shippingAddress; ?>"
+                       id="profileShippingAddress" onfocus="handbidMain.initGoogleAutocomplete('profileShippingAddress')"
+                       placeholder="Shipping Address" title="Shipping Address"/>
                 <input type="hidden" value="<?php echo $profile->shippingAddress; ?>" id="profileShippingAddressOld"/>
             </div>
-            <div class="col-md-4">
-                <input class="button btn-small green-solid-button" value="Toggle Map" id="update_profile_location_map" onclick="handbidMain.toggleProfileLocationMap();"/>
-            </div>
         </li>
-        <li id="profile-location-map-container" class="row" style="display:none;">
-            <div id="profile-location-map" style="width: 100%; height: 300px;"></div>
-        </li>
-<!--        <li class="row">-->
-<!--            <div class="col-md-12">-->
-<!--                <input type="text" name="userAddressStreet1" value="--><?php //echo $profile->userAddressStreet1; ?><!--" id="profileStreet1" placeholder="Street" title="Street"/>-->
-<!--                <input type="hidden" value="--><?php //echo $profile->userAddressStreet1; ?><!--" id="profileStreet1Old"/>-->
-<!--            </div>-->
-<!--        </li>-->
-<!--        <li class="row">-->
-<!--            <div class="col-md-12">-->
-<!--                <input type="text" name="userAddressStreet2" value="--><?php //echo $profile->userAddressStreet2; ?><!--" id="profileStreet2" placeholder="Street 2" title="Street 2"/>-->
-<!--                <input type="hidden" value="--><?php //echo $profile->userAddressStreet2; ?><!--" id="profileStreet2Old"/>-->
-<!--            </div>-->
-<!--        </li>-->
-<!--        <li class="row">-->
-<!--            <div class="col-md-12">-->
-<!--                <input type="text" name="userAddressCity" value="--><?php //echo $profile->userAddressCity; ?><!--" id="profileCity" placeholder="City" title="City"/>-->
-<!--                <input type="hidden" value="--><?php //echo $profile->userAddressCity; ?><!--" id="profileCityOld"/>-->
-<!--            </div>-->
-<!--        </li>-->
-<!--        <li class="row">-->
-<!--            <div class="col-md-12">-->
-<!--                <input type="text" name="userAddressPostalCode" value="--><?php //echo $profile->userAddressPostalCode; ?><!--" id="profilePostalCode" placeholder="Postal Code" title="Postal Code"/>-->
-<!--                <input type="hidden" value="--><?php //echo $profile->userAddressPostalCode; ?><!--" id="profilePostalCodeOld"/>-->
-<!--            </div>-->
-<!--        </li>-->
-<!--        <li class="row">-->
-<!--            <div class="col-md-12">-->
-<!--                <input type="text" name="province" value="--><?php //echo $profile->province; ?><!--" id="profileProvince" placeholder="Province" title="Province"/>-->
-<!--                <input type="hidden" value="--><?php //echo $profile->province; ?><!--" id="profileProvinceOld"/>-->
-<!--            </div>-->
-<!--        </li>-->
-
-<!--        <li class="row">-->
-<!--            <div class="col-md-12">-->
-<!--                <input type="text" name="countryCode" value="--><?php //echo isset($profile->countryCode) ? $profile->countryCode : 'US'; ?><!--" id="profileCountry" placeholder="Country" title="Country"/>-->
-<!--                <input type="hidden" value="--><?php //echo $profile->countryCode; ?><!--" id="profileCountryOld"/>-->
-<!--            </div>-->
-<!--        </li>-->
 
 	    <li class="row">
 		    <div class="col-md-5">

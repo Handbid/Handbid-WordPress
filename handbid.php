@@ -733,17 +733,33 @@ class Handbid
             echo '<input type="hidden" data-auction-continue-payment-sign value="' . intval($_GET["pay_invoice"]) . '">';
         }
 
-        $map_callback = '';
+        $google_api_key = 'AIzaSyAAq80YJt_UEdNvabAMyZPg3usiPn2e9ek'; // by Woody
+        $google_api_key = 'AIzaSyA19yroJEilO86dD8dllbH2j4ZiV2dxbDQ'; // by prod
+        $google_api_key = 'AIzaSyAJsBZcOzH5mWubgqRYnefsSIN9aQtAsiI'; // by Serhii - default - need to test
+
+        $google_api_key = (!empty($_GET["google_key"])) ? $_GET["google_key"] : $google_api_key;
+
+        $map_params = [
+            'v' => '3.exp',
+            'key' => $google_api_key,
+            'libraries' => 'places',
+        ];
+
+
+
         if ($this->state->getMapVisibility())
         {
             $currentPostID = get_the_ID();
             $currentPost   = get_post($currentPostID);
             if (in_array($currentPost->post_name, ['auction', 'auctions', 'auction-item', 'organization']))
             {
-                $map_callback = '&callback=auctionGoogleMapsInit';
+                $map_params['callback'] = 'auctionGoogleMapsInit';
             }
         }
-        echo '<script async defer src="https://maps.googleapis.com/maps/api/js?v=3.exp' . $map_callback . '"></script>';
+
+        $map_url = add_query_arg($map_params, 'https://maps.googleapis.com/maps/api/js');
+
+        echo '<script async defer src="' . $map_url . '"></script>';
     }
 
     function logout()
