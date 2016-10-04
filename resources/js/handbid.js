@@ -2143,7 +2143,10 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
                             var isAppeal = (data.item.isAppeal != undefined && data.item.isAppeal == 1);
                             var noticeTitle = (isAppeal) ? "Thank You!" : "Congratulations!";
-                            message = (isAppeal) ? "You donated " + currencySpan() + (data.currentAmount * data.quantity) : "You've added " + quantity + " <br>of Item #" + data.item.id + " <br><b>" + data.item.name + " to your Cart</b>";
+                            message = (isAppeal) ? "You donated " + currencySpan() + (data.currentAmount * data.quantity)
+                                : "You've added " + quantity
+                                  + " <br>of Item #" + data.item.id + " <br><b>" + data.item.name
+                                  + " to your Cart</b>";
                             handbidMain.notice(message, noticeTitle, "success");
 
                             handbidMain.removeItemFromDashboardList(itemId, "proxy");
@@ -2238,7 +2241,8 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                                 }
                             });
                             handbid.loadInvoicesToContainer(true);
-                            handbidMain.notice("You purchased <br>" + messages.join("; <br>"), "Congratulations!", "success");
+                            var message = "You've added " +  messages.join("; <br>")  + " to your Cart</b>";
+                            handbidMain.notice(message, "Congratulations!", "success");
                         }
                         button.removeClass("active");
                         closeModal.show();
