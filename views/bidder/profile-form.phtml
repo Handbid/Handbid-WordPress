@@ -37,13 +37,11 @@ $currencySymbol = (isset($auction->currencySymbol))? $auction->currencySymbol : 
             </div>
         </li>
         <li class="row">
-            <div class="col-md-12">
+            <div class="col-md-6">
                 <input type="text" name="firstName" value="<?php echo $profile->firstName; ?>" id="profileFirstName" placeholder="First Name" title="First Name"/>
                 <input type="hidden" value="<?php echo $profile->firstName; ?>" id="profileFirstNameOld"/>
             </div>
-        </li>
-        <li class="row">
-            <div class="col-md-12">
+            <div class="col-md-6">
                 <input type="text" name="lastName" value="<?php echo $profile->lastName; ?>" id="profileLastName" placeholder="Last Name" title="Last Name"/>
                 <input type="hidden" value="<?php echo $profile->lastName; ?>" id="profileLastNameOld"/>
             </div>
@@ -88,31 +86,6 @@ $currencySymbol = (isset($auction->currencySymbol))? $auction->currencySymbol : 
                 <input type="hidden" value="<?php echo $profile->userCellPhone; ?>" id="profileCellPhoneOld"/>
             </div>
         </li>
-        <li class="row provincesRow" style="<?php echo (count($provinces))?"":"display:none";?>">
-            <div class="col-md-12">
-                        <select id="userAddressProvinceId" name="userAddressProvinceId"
-                                title="Province"
-                                class="col-md-12">
-                            <?php
-
-                            foreach($provinces as $province){
-                                $selected = selected($profile->userAddressProvinceId, $province->id, false);
-                                echo "<option value='" . $province->id . "' " . $selected . ">" . $province->countriesRegionsName . "</option>";
-                            }
-                            ?>
-                        </select>
-                <input type="hidden" id="provincesCountByCountry"
-                       data-current-country="<?php echo $curID; ?>"
-                    <?php
-                    foreach($countryIDs as $country){
-                        if(isset($country->provinces) and count($country->provinces)){
-                            echo " data-provinces-".$country->id."='".count($country->provinces)."' ";
-                        }
-                    }
-                    ?>
-                    >
-            </div>
-        </li>
         <li class="row">
             <div class="col-md-12">
                 <label>Upload Photo</label>
@@ -120,12 +93,10 @@ $currencySymbol = (isset($auction->currencySymbol))? $auction->currencySymbol : 
             </div>
         </li>
         <li class="row">
-            <div class="col-md-12">
+            <div class="col-md-6">
                 <input type="password" name="password" placeholder="Password" title="Password" id="profileNewPassword"/>
             </div>
-        </li>
-        <li class="row">
-            <div class="col-md-12">
+            <div class="col-md-6">
                 <input type="password" name="password2" placeholder="Confirm Password" title="Confirm Password" id="profileNewPasswordConfirm"/>
             </div>
         </li>
