@@ -2822,24 +2822,46 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                         console.log("---------------------------");
                         console.log("----Make payment success----");
                         data = JSON.parse(data);
+                        console.log(data);
 
-                            if (data.result.paid) {
+                        if(data.result != undefined) {
 
-                                if(!isInventoryPayment) {
-                                    paidControls.slideDown();
-                                    unpaidControls.remove();
-                                    receiptBlock.addClass("open").removeClass("preview");
-                                    var unpaidInvoicesCountContainer = $(".unpaidInvoicesCountContainer");
-                                    var unpaidInvoices = $(".receipts-list-area li.preview").length;
-                                    (unpaidInvoices) ? unpaidInvoicesCountContainer.show() : unpaidInvoicesCountContainer.hide();
-                                    unpaidInvoicesCountContainer.html(unpaidInvoices);
+                            if (data.result.data != undefined && data.result.data.error != undefined) {
+
+                                var payment_error_messages = [];
+
+                                for (var propertyName in data.result.data.error) {
+
+                                    var value = data.result.data.error[propertyName];
+
+                                    payment_error_messages.push('<b>'+propertyName+':</b> ' + value);
                                 }
-                                handbidMain.notice("Your receipt was successfully paid!", "Congratulations!", "success");
 
+                                handbidMain.notice(payment_error_messages.join('<br>'), "Payment Error", "error");
                             }
                             else {
-                                handbidMain.notice(data.result.description, "Payment Error", "error");
+                                if (data.result.paid) {
+
+                                    if (!isInventoryPayment) {
+                                        paidControls.slideDown();
+                                        unpaidControls.remove();
+                                        receiptBlock.addClass("open").removeClass("preview");
+                                        var unpaidInvoicesCountContainer = $(".unpaidInvoicesCountContainer");
+                                        var unpaidInvoices               = $(".receipts-list-area li.preview").length;
+                                        (unpaidInvoices) ? unpaidInvoicesCountContainer.show() : unpaidInvoicesCountContainer.hide();
+                                        unpaidInvoicesCountContainer.html(unpaidInvoices);
+                                    }
+                                    handbidMain.notice("Your receipt was successfully paid!", "Congratulations!", "success");
+
+                                }
+                                else {
+                                    handbidMain.notice(data.result.description, "Payment Error", "error");
+                                }
                             }
+                        }
+                        else{
+                            handbidMain.notice('Something went wrong. Please try again later', "Payment Error", "error");
+                        }
 
                         button.removeClass("active");
                         return false;
