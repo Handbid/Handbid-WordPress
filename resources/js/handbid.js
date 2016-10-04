@@ -2134,7 +2134,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
                             var isAppeal = (data.item.isAppeal != undefined && data.item.isAppeal == 1);
                             var noticeTitle = (isAppeal) ? "Thank You!" : "Congratulations!";
-                            message = (isAppeal) ? "You donated " + currencySpan() + (data.currentAmount * data.quantity) : "You purchased " + quantity + " <br>of Item #" + data.item.id + " <br><b>" + data.item.name + "</b>";
+                            message = (isAppeal) ? "You donated " + currencySpan() + (data.currentAmount * data.quantity) : "You've added " + quantity + " <br>of Item #" + data.item.id + " <br><b>" + data.item.name + " to your Cart</b>";
                             handbidMain.notice(message, noticeTitle, "success");
 
                             handbidMain.removeItemFromDashboardList(itemId, "proxy");
