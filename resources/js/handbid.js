@@ -12,7 +12,7 @@
 var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_overlay, timerNotice, timerMessage,
     circleTimer, auctionInvoices, currentPaddleNumber, currentElemNeedsCard, timerTimeout = 1000, timerElements, timerElementsFull, timerTime,
     currentCCForm, cookieExpire = 7, ticketsPopupWasOpened = false, addingCCState = false, profile_location_map, invoices_loaded = false,
-    refreshTimerInterval = 15000, autocomplete, autocomplete_element_id;
+    refreshTimerInterval = 15000, autocomplete, autocomplete_element_id, address_to_pay_receipt;
 (function ($) {
 
     attentionAboutTickets = false;
@@ -801,6 +801,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     .addClass('status-' + itemStatus);
             },
 
+            // Pnotify to be in queue
             wantToPurchaseTicketsImmediately: function (ticketsQuantity, ticketsPrice, receiptId, auctionId, receiptTotal, requireAddresstoPay) {
 
                 var bidderDashboardPlace = $("#bidder-info-load"),
@@ -1077,7 +1078,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
             },
 
 
-            loadInvoicesToContainer: function (scrolled) {
+            loadInvoicesToContainer: function (scrolled, invoiceID) {
 
                 var unpaidInvoicesCountContainer = $(".unpaidInvoicesCountContainer");
                 var invoicesContainer = $(".receipts-list-area");
@@ -1123,6 +1124,12 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                                 });
 
                             });
+                        }
+
+                        if(invoiceID){
+                            var invoiceBlock = $('[data-toggle-invoice-link="'+invoiceID+'"]')
+                            invoiceBlock.click();
+                            $('html,body').animate({scrollTop: invoiceBlock.offset().top}, 'normal');
                         }
 
                         return false;
@@ -1197,8 +1204,8 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 profileLinkVisible.click();
                 $('a[data-slider-nav-key="see-my-receipt"]:visible').click();
                 $('html,body').animate({scrollTop: profileLinkVisible.offset().top}, 'normal');
-                handbid.loadInvoicesToContainer(true);
-                (notice != undefined) ? notice.remove() : "";
+                handbid.loadInvoicesToContainer(true, invoiceID);
+                ((notice != undefined) && (notice != null)) ? notice.remove() : "";
             },
 
 
@@ -1548,7 +1555,12 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 }
             },
 
-            scrollToProfile: function () {
+            scrollToProfile: function (receipt_id) {
+
+                if(receipt_id){
+                    address_to_pay_receipt = receipt_id;
+                }
+
                 var selectorProfile = 'a[data-slider-nav-key="profile-user-info"]:visible';
                 var selectorInfo = 'a[data-slider-nav-key="user-profile"]:visible';
                 if($(selectorInfo).length != 0){
@@ -1568,7 +1580,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 }
             },
 
-
+            // Pnotify to be in queue
             proposeToFillAddressBeforePay: function (receipt_id) {
 
                 attentionAboutAddrPay = true;
@@ -1589,7 +1601,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                                 attentionAboutAddrPay = false;
                                 notice.remove();
                                 $('#payInvoiceID').val(receipt_id);
-                                handbidMain.scrollToProfile();
+                                handbidMain.scrollToProfile(receipt_id);
                             }
                         }, {
                             text: 'Cancel',
@@ -1622,6 +1634,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
             },
 
 
+            // Pnotify to be in queue
             proposeToContinuePayInvoice: function (receipt_id) {
 
                 attentionAboutContPay = true;
@@ -1909,89 +1922,6 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     var oldMax = values.item.highestProxyBid;
                     handbidMain.notice("Cannot create MaxBid at <b>" + itemName + "</b> at " + currencySpan() + newMax + ". You already have a maxbid for this item at " + currencySpan() + oldMax + " . Please remove the current maxbid to create a new one.", "Already Have MaxBid", "error");
                 }
-            },
-
-            messageToAuctionManager: function () {
-
-                $("[data-handbid-mail-to-manager]").live("click", function (e) {
-                    var emailTo = $(this).data("handbid-mail-to-manager");
-                    var auction = $(this).data("handbid-auction");
-                    var auctionID = $(this).data("handbid-auction-id");
-                    var auctionOrg = $(this).data("handbid-auction-org");
-                    var nonce = $(this).data("nonce");
-                    e.preventDefault();
-                    var messageNotice = new PNotify({
-                        title: 'Send Email To Auction Manager',
-                        text: '',
-                        icon: 'glyphicon glyphicon-envelope',
-                        addclass: 'handbid-message-notice',
-                        hide: false,
-                        mouse_reset: false,
-                        confirm: {
-                            prompt: true,
-                            prompt_multi_line: true,
-                            prompt_default: ''
-                        },
-                        buttons: {
-                            closer: false,
-                            sticker: false
-                        },
-                        history: {
-                            history: false
-                        }
-                    });
-                    messageNotice.get().on('pnotify.confirm', function (e, notice, val) {
-                        notice.cancelRemove().update({
-                            title: 'Sending Your Message',
-                            text: $('<div/>').text(val).html() + '<br><br><div class="progress progress-striped active" style="margin:0">\
-	                                            <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">\
-		                                        <span class="sr-only">100%</span>\
-	                                            </div>\
-                                                </div>',
-                            icon: true,
-                            type: 'info',
-                            hide: false,
-                            confirm: {
-                                prompt: false
-                            },
-                            buttons: {
-                                closer: false,
-                                sticker: false
-                            }
-                        });
-                        $.post(
-                            ajaxurl,
-                            {
-                                action: "handbid_ajax_send_message",
-                                text: val,
-                                email: emailTo,
-                                auction: auction,
-                                auctionID: auctionID,
-                                auctionOrg: auctionOrg,
-                                nonce: nonce
-                            },
-                            function (data) {
-
-                                notice.cancelRemove().update({
-                                    title: '<b>Message Sent</b>',
-                                    text: "<b>Thank you, your message has been sent</b>",
-                                    icon: true,
-                                    type: 'success',
-                                    hide: true,
-                                    delay: 3000,
-                                    confirm: {
-                                        prompt: false
-                                    },
-                                    buttons: {
-                                        closer: true,
-                                        sticker: false
-                                    }
-                                });
-                            }
-                        );
-                    });
-                });
-
             },
 
 
@@ -3598,6 +3528,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
             },
 
 
+            // Pnotify to be in queue
             showWelcomeMessage: function (welcome_message) {
 
                 if(welcome_message.trim() != '') {
@@ -3658,7 +3589,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 }
             },
 
-
+            // Pnotify to be in queue
             showAreYouHereMessage: function (are_you_here_message) {
 
                 if(are_you_here_message) {
@@ -3808,6 +3739,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
             },
 
 
+            // Pnotify to be in queue
             detectIfUserWantToBid: function () {
 
                 var bidderDashboardPlace = $("#bidder-info-load"),
@@ -3976,7 +3908,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 }
             },
 
-
+            // Pnotify to be in queue
             detectIfUserWantToBuyTickets: function () {
 
                 var bidderDashboardPlace = $("#bidder-info-load"),
@@ -4570,6 +4502,96 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                         $(this).removeClass("without-image");
                     }
                 });
+            },
+
+
+            updateUserProfile: function (button) {
+
+                var form_inputs = $('.edit-profile input, .edit-profile select'),
+                    password_input = $('[data-profile-form-password]').eq(0),
+                    password_conf_input = $('[data-profile-form-password-confirm]').eq(0);
+
+                var data = {};
+                $('[data-profile-form-field]').each(function () {
+                    var elem = $(this),
+                        nameAttr = elem.attr('name'),
+                        idAttr = elem.attr('id'),
+                        oldElem = $('#' + idAttr + 'Old'),
+                        newValue = elem.val(),
+                        oldValue = oldElem.val();
+
+                    if(newValue != oldValue){
+                        data[nameAttr] = newValue;
+                    }
+                });
+
+                if(password_input.val().trim() != ''){
+                    if((password_input.val().trim() != password_conf_input.val().trim())){
+                        password_input.addClass('required-error');
+                        password_conf_input.addClass('required-error');
+                    }
+                    else{
+                        password_input.removeClass('required-error');
+                        password_conf_input.removeClass('required-error');
+                        data['password'] = password_input.val().trim();
+                    }
+                }
+                else{
+                    password_input.removeClass('required-error');
+                    password_conf_input.removeClass('required-error');
+                }
+
+                if(!$.isEmptyObject(data)){
+                    console.log(data);
+                    button.addClass('active');
+                    form_inputs.attr('disabled','disabled');
+
+                    data['action'] = "handbid_ajax_update_profile";
+
+                    $.post(
+                        ajaxurl,
+                        data,
+                        function (resp) {
+
+                            console.log("----Profile Updating success----");
+                            resp = JSON.parse(resp);
+
+                            if(resp.id != undefined){
+                                var profile_name = resp.firstName.substring(0, 1).toUpperCase()
+                                                   + '. '
+                                                   + resp.lastName.substring(0, 1).toUpperCase()
+                                                   + resp.lastName.substring(1);
+                                $('.profile-user-info span').html(profile_name);
+
+                                $.map(data, function (val, key) {
+                                    var elem = $('[data-profile-form-field][name="'+key+'"]'),
+                                        idAttr = elem.attr('id'),
+                                        oldElem = $('#' + idAttr + 'Old');
+                                    oldElem.val(val);
+                                });
+
+                                handbidMain.notice('Your Profile was successfully updated', 'Profile Updated', "success");
+
+                                if(address_to_pay_receipt) {
+                                    $('[data-slider-nav-key="see-my-receipt"]').click();
+                                    handbidMain.loadInvoicesToContainer(null, address_to_pay_receipt);
+                                }
+                                address_to_pay_receipt = null;
+                            }
+                            else{
+                                handbidMain.notice('Your Profile was not updated. Please try later', 'Profile Error', "error");
+                                address_to_pay_receipt = null;
+                            }
+
+                            button.removeClass('active');
+                            form_inputs.removeAttr('disabled');
+
+
+                        }
+                    );
+                }
+
+
             }
         };
 
@@ -4582,7 +4604,6 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
         handbid.initializePaymentButtons();
         handbid.detectIfUserWantToBuyTickets();
         handbid.detectIfUserWantToBid();
-        handbid.messageToAuctionManager();
         handbid.redirectFromResetedAuctionsCheck();
         handbid.detectIfNeedToContinuePayment();
         handbid.changeBackgroundImageIfElementIsVisible();
@@ -4710,29 +4731,10 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
             }
         });
 
-        //$('.testimonials-list li a').live("click", function(e){
-        //    e.preventDefault();
-        //    var testimonialID = $(this).data("testimonial-id");
-        //    var testimonialsContainer = $("#testimonials-container");
-        //    if($(".single-testimonial-block-" + testimonialID).length){
-        //        $(".single-testimonial-block").removeClass("active-testimonial-block");
-        //        $(".single-testimonial-block-" + testimonialID).addClass("active-testimonial-block");
-        //    }
-        //    else {
-        //        $.post(
-        //            ajaxurl,
-        //            {
-        //                action: "handbid_ajax_get_testimonial",
-        //                testimonial_id: testimonialID
-        //            },
-        //            function (data) {
-        //                testimonialsContainer.append(data);
-        //                $(".single-testimonial-block").removeClass("active-testimonial-block");
-        //                $(".single-testimonial-block-" + testimonialID).addClass("active-testimonial-block");
-        //            }
-        //        );
-        //    }
-        //});
+        $('#updateUserProfile').live("click", function (e) {
+            e.preventDefault();
+            handbidMain.updateUserProfile($(this));
+        });
 
     });
 

@@ -32,29 +32,28 @@ $currencySymbol = (isset($auction->currencySymbol))? $auction->currencySymbol : 
     <ul class="simple-list">
         <li class="row">
             <div class="col-md-12">
-                <input type="text" name="alias" value="<?php echo $profile->alias; ?>" id="profileAlias" placeholder="Alias" title="Alias"/>
+                <input type="text" name="alias" data-profile-form-field value="<?php echo $profile->alias; ?>" id="profileAlias" placeholder="Alias" title="Alias"/>
                 <input type="hidden" value="<?php echo $profile->alias; ?>" id="profileAliasOld"/>
             </div>
         </li>
         <li class="row">
             <div class="col-md-6">
-                <input type="text" name="firstName" value="<?php echo $profile->firstName; ?>" id="profileFirstName" placeholder="First Name" title="First Name"/>
+                <input type="text" name="firstName" data-profile-form-field value="<?php echo $profile->firstName; ?>" id="profileFirstName" placeholder="First Name" title="First Name"/>
                 <input type="hidden" value="<?php echo $profile->firstName; ?>" id="profileFirstNameOld"/>
             </div>
             <div class="col-md-6">
-                <input type="text" name="lastName" value="<?php echo $profile->lastName; ?>" id="profileLastName" placeholder="Last Name" title="Last Name"/>
+                <input type="text" name="lastName" data-profile-form-field value="<?php echo $profile->lastName; ?>" id="profileLastName" placeholder="Last Name" title="Last Name"/>
                 <input type="hidden" value="<?php echo $profile->lastName; ?>" id="profileLastNameOld"/>
             </div>
         </li>
         <li class="row">
             <div class="col-md-12">
                 <span title="Email" style="text-transform: uppercase;"><?php echo $profile->email; ?></span>
-<!--                <input type="email" name="email" value="--><?php //echo $profile->email; ?><!--" id="profileEmail" placeholder="Email" title="Email"/>-->
                 <input type="hidden" value="<?php echo $profile->email; ?>" id="profileEmail"/>
                 <input type="hidden" value="<?php echo $profile->email; ?>" id="profileEmailOld"/>
             </div>
         </li>
-	    <?php if(!empty($inventory->spendingLimit)){ // NOT EMPTY does the work of ISSET and > 0 ?>
+	    <?php if(!empty($inventory->spendingLimit)){ ?>
 	    <li class="row">
 		    <div class="col-md-12">
 			    <span title="Spending Limit: <?php echo $currencySymbol . $inventory->spendingLimit; ?>" style="text-transform: uppercase;">Spending Limit: <?php echo $currencySymbol . $inventory->spendingLimit; ?></span>
@@ -64,45 +63,38 @@ $currencySymbol = (isset($auction->currencySymbol))? $auction->currencySymbol : 
         <li class="row">
             <div class="col-md-4">
                         <select id="userAddressCountryId" name="userAddressCountryId"
+                                data-profile-form-field
                                 title="Country"
                                 data-provinces-nonce="<?php echo apply_filters("handbid_create_nonce", date("d.m.Y") . "country_provinces");?>"
                                 class="col-md-12">
                             <?php
-                            $provinces = [];
                             $curID = 0;
                             foreach($countryIDs as $country){
                                 $selected = trim($profile->userAddressCountryId) ? selected($profile->userAddressCountryId, $country->id, false) : selected("US", $country->countryCode, false);
-                                $provincesTemp = trim($profile->userAddressCountryId) ? ($profile->userAddressCountryId == $country->id ? $country->provinces : []) : ("US" == $country->countryCode ? $country->provinces : []);
                                 $curIDTemp = trim($profile->userAddressCountryId) ? ($profile->userAddressCountryId == $country->id ? $country->id : 0) : ("US" == $country->countryCode ? $country->id : 0);
-                                $provinces = (count($provincesTemp))? $provincesTemp : $provinces;
                                 $curID = ($curIDTemp == -1)? $curID : $curIDTemp;
                                 echo "<option value='" . $country->id . "' " . $selected . ">" . $country->name . "</option>";
                             }
                             ?>
                         </select>
+                <input type="hidden" value="<?php echo $profile->userAddressCountryId; ?>" id="userAddressCountryIdOld"/>
             </div>
             <div class="col-md-8">
-                <input type="tel" name="userCellPhone" value="<?php echo $profile->userCellPhone; ?>" id="profileCellPhone" placeholder="Cell Phone" title="Cell Phone"/>
+                <input type="tel" name="userCellPhone" data-profile-form-field value="<?php echo $profile->userCellPhone; ?>" id="profileCellPhone" placeholder="Cell Phone" title="Cell Phone"/>
                 <input type="hidden" value="<?php echo $profile->userCellPhone; ?>" id="profileCellPhoneOld"/>
             </div>
         </li>
         <li class="row">
-            <div class="col-md-12">
-                <label>Upload Photo</label>
-                <input type="file" name="profile_photo"/>
-            </div>
-        </li>
-        <li class="row">
             <div class="col-md-6">
-                <input type="password" name="password" placeholder="Password" title="Password" id="profileNewPassword"/>
+                <input type="password" name="password" data-profile-form-password placeholder="Password" title="Password" id="profileNewPassword"/>
             </div>
             <div class="col-md-6">
-                <input type="password" name="password2" placeholder="Confirm Password" title="Confirm Password" id="profileNewPasswordConfirm"/>
+                <input type="password" name="password2" data-profile-form-password-confirm placeholder="Confirm Password" title="Confirm Password" id="profileNewPasswordConfirm"/>
             </div>
         </li>
         <li class="row">
             <div class="col-md-12">
-                <input type="text" name="shippingAddress" value="<?php echo $profile->shippingAddress; ?>"
+                <input type="text" name="shippingAddress" data-profile-form-field value="<?php echo $profile->shippingAddress; ?>"
                        id="profileShippingAddress" onfocus="handbidMain.initGoogleAutocomplete('profileShippingAddress')"
                        placeholder="Shipping Address" title="Shipping Address"/>
                 <input type="hidden" value="<?php echo $profile->shippingAddress; ?>" id="profileShippingAddressOld"/>
@@ -125,7 +117,9 @@ $currencySymbol = (isset($auction->currencySymbol))? $auction->currencySymbol : 
     </ul>
     <div class="row">
         <div class="col-md-12">
-            <input class="button green-solid-button"  type="submit" value="submit" id="updateUserProfile"/>
+            <button class="button green-solid-button loading-span-button"  type="submit" value="submit" id="updateUserProfile">
+                <span>Submit</span>
+            </button>
             <input type='hidden' name='action' value='handbid_post_update_bidder' />
             <?php echo ($redirect) ? '<input type=\'hidden\' name=\'redirect\' value=\'' . $redirect . '\'/>' : null; ?>
         </div>

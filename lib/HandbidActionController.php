@@ -165,6 +165,7 @@ class HandbidActionController
             "handbid_load_shortcode_auctions",
             "handbid_ajax_customizer_css",
             "handbid_ajax_get_testimonial",
+            "handbid_ajax_update_profile",
         ];
         foreach ($ajaxActions as $ajaxAction)
         {
@@ -1062,6 +1063,27 @@ class HandbidActionController
                 "is_initial"  => false,
             ]
         );
+        exit;
+
+    }
+
+
+    public function handbid_ajax_update_profile_callback()
+    {
+
+        $profile_data = $_POST;
+
+        $response = [];
+
+        unset($profile_data['action']);
+
+        if(!empty($profile_data)){
+
+            $response = $this->handbid->store('Bidder')->updateProfileData($profile_data);
+
+        }
+
+        echo json_encode($response);
         exit;
 
     }
