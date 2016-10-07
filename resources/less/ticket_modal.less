@@ -99,6 +99,73 @@
   }
 }
 
+.handbid-modal.handbid-login-modal .tickets-on-register{
+
+  .ticket-title{
+    font-size: 25px;
+    font-weight: 300;
+  }
+
+  .buy-quantity {
+    height: 30px;
+    line-height: 30px;
+  }
+
+  .remaining-inventory {
+    font-size: 18px;
+  }
+
+  .ticket-description {
+    text-align: left;
+    padding-top: 15px;
+  }
+
+  .bid-price-toggle{
+    font-weight: normal;
+    font-size: 30px;
+  }
+
+  .upper-tickets-text{
+    text-align: right;
+    font-weight: bold;
+  }
+
+  .upper-summary{
+
+    text-align: right;
+
+    span{
+      font-weight: bold;
+    }
+  }
+
+  .ticket-quantity {
+
+    display: block;
+    text-align: left !important;
+    padding-top: 10px !important;
+  }
+
+  .btn-gray{
+    background: #b6c0c5;
+    border: 1px solid #b6c0c5;
+  }
+
+  .tickets-container{
+
+    &.loading{
+      background-image: url("../images/ajax-loader.gif") !important;
+      background-position: center !important;
+      background-repeat: no-repeat !important;
+    }
+
+    h3.cannot-load{
+
+    }
+  }
+
+}
+
 @media (max-width: 768px) {
   .tickets-modal {
     .ticket-part-container {

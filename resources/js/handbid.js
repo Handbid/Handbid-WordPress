@@ -12,7 +12,7 @@
 var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_overlay, timerNotice, timerMessage,
     circleTimer, auctionInvoices, currentPaddleNumber, currentElemNeedsCard, timerTimeout = 1000, timerElements, timerElementsFull, timerTime,
     currentCCForm, cookieExpire = 7, ticketsPopupWasOpened = false, addingCCState = false, profile_location_map, invoices_loaded = false,
-    refreshTimerInterval = 15000, autocomplete, autocomplete_element_id, address_to_pay_receipt;
+    refreshTimerInterval = 15000, autocomplete, autocomplete_element_id, address_to_pay_receipt, currencySpan;
 (function ($) {
 
     attentionAboutTickets = false;
@@ -69,7 +69,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
         }
     };
 
-    var currencySpan = function () {
+    currencySpan = function () {
         var currencyCode = $("[data-auction-currency-code]").eq(0).data("auction-currency-code"),
             currencySymbol = $("[data-auction-currency-symbol]").eq(0).data("auction-currency-symbol");
         return '<span class="handbidAuctionCurrency" title="' + currencyCode + '">' + currencySymbol + '</span>';
@@ -2610,9 +2610,10 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                         quantity = parseInt(quantityBlock.html()),
                         itemID = parseInt(parentBlock.data("handbid-ticket-id")),
                         itemPrice = parseInt(parentBlock.data("handbid-ticket-price")),
-                        itemTitle = $("[data-handbid-ticket-title]", parentBlock).eq(0).html();
+                        itemTitle = $("[data-handbid-ticket-title]", parentBlock).eq(0).html(),
+                        itemDescr = $("[data-handbid-ticket-description]", parentBlock).eq(0).html();
                     totalPrice += quantity * itemPrice;
-                    return (quantity > 0) ? {id: itemID, price: itemPrice, quantity: quantity, name: itemTitle} : null;
+                    return (quantity > 0) ? {id: itemID, price: itemPrice, quantity: quantity, name: itemTitle, description: itemDescr} : null;
                 });
                 totalPrice = handbid.number_format(totalPrice, 0, ".", ",");
                 $("[data-handbid-tickets-total]").html(totalPrice);

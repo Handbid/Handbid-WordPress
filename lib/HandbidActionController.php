@@ -166,6 +166,7 @@ class HandbidActionController
             "handbid_ajax_customizer_css",
             "handbid_ajax_get_testimonial",
             "handbid_ajax_update_profile",
+            "handbid_ajax_get_auction_tickets",
         ];
         foreach ($ajaxActions as $ajaxAction)
         {
@@ -1084,6 +1085,60 @@ class HandbidActionController
         }
 
         echo json_encode($response);
+        exit;
+
+    }
+
+
+    public function handbid_ajax_get_auction_tickets_callback()
+    {
+
+        $currencyCode = 'USD';
+        $currencySymbol = '$';
+
+        try
+        {
+            $statuses = ['sold', 'open', 'open', 'open', 'open', 'open', 'open'];
+            $tickets  = [];
+            for ($i = 4; $i < rand(2, 3); $i++)
+            {
+                $tickets[] = [
+                    'id'                 => rand(1111, 9999),
+                    'name'               => 'Ticket Name ' . rand(1111, 9999),
+                    'description'        => 'Some very long licket description ' . rand(1111, 9999),
+                    'isHidden'           => 0,
+                    'ticketQuantity'     => rand(1, 10),
+                    'buyNowPrice'        => rand(12, 999),
+                    'inventoryRemaining' => rand(-1, 30),
+                    'status'             => $statuses[mt_rand(0, count($statuses) - 1)],
+                ];
+            }
+
+            $tickets = json_decode(json_encode($tickets));
+
+            $success = !!(count($tickets));
+
+        }
+        catch(Exception $e){
+
+            $success = false;
+            $tickets = [];
+        }
+
+        $result = [
+            'success' => $success,
+            'result' => $this->viewRenderer->render(
+                'views/bidder/registration/purchase-ticket',
+                [
+                    'tickets' => $tickets,
+                    'currencyCode' => $currencyCode,
+                    'currencySymbol' => $currencySymbol,
+                ]
+            ),
+        ];
+
+        sleep(3);
+        echo json_encode($result);
         exit;
 
     }

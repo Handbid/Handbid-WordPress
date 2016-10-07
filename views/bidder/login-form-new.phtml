@@ -648,216 +648,59 @@ if(!function_exists("handbid_popup_inline_links")){
             </div>
         </div>
 
-        <?php if(defined("HANDBID_SHOW_TUTORIAL") and HANDBID_SHOW_TUTORIAL){?>
 
-            <div class="container-fluid container-tab" style="display: none" data-tab-name="tutorial-info-1">
-                <?php get_login_popup_header("Tutorial. Step 1");?>
-                <div class="handbid-form row">
-                    <h3>GETTING STARTED</h3>
-                    <h4 class="sub-title">with <span>Handbid</span></h4>
-                    <h4 class="help-title">HANDBID 101<br></h4>
-                    <h4 class="step">Step 1<br></h4>
+        <div class="container-fluid container-tab" style="display: none" data-tab-name="purchase-tickets">
+            <?php get_login_popup_header("Auction Tickets");?>
+            <div class="handbid-form row">
+                <div class="row no-margin" style="display: none">
+                    <div class="col-sm-8 col-sm-offset-2 col-xs-12">
 
-                    <div class="row col-md-10 col-md-offset-1" role="tablist">
-                        <div class="col-lg-4 center-aligned-text active tutorialTabsContainer"  role="presentation">
-                            <a href="#your-phone" aria-controls="your-phone" role="tab" data-toggle="tab" class="tutorialTabs">
-                                <img class="img-circle"
-                                     src="<?php echo plugin_dir_url(__FILE__)."../../public/images/login-modal/phones.png"; ?>"
-                                     alt="Generic placeholder image" width="140" height="140">
-                                <h2 class="center-aligned-text">Your Phone</h2>
-                            </a>
-                        </div>
-                        <div class="col-lg-4 center-aligned-text tutorialTabsContainer"  role="presentation">
-                            <a href="#ipads" aria-controls="ipads" role="tab" data-toggle="tab" class="tutorialTabs">
-                                <img class="img-circle"
-                                     src="<?php echo plugin_dir_url(__FILE__)."../../public/images/login-modal/ipads.png"; ?>"
-                                     alt="Generic placeholder image" width="140" height="140">
-                                <h2 class="center-aligned-text">iPads</h2>
-                            </a>
-                        </div>
-                        <div class="col-lg-4 center-aligned-text tutorialTabsContainer"  role="presentation">
-                            <a href="#your-comp" aria-controls="your-comp" role="tab" data-toggle="tab" class="tutorialTabs">
-                                <img class="img-circle"
-                                     src="<?php echo plugin_dir_url(__FILE__)."../../public/images/login-modal/comp.png"; ?>"
-                                     alt="Generic placeholder image" width="140" height="140">
-                                <h2 class="center-aligned-text">Your Computer</h2>
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="tab-content">
-
-                        <div role="tabpanel" class="tab-pane active center-aligned-text" id="your-phone">
-                            <div class="row">
-                                <div class="col-xs-12 col-md-10 col-md-offset-1">
-                                    <p>Watch a brief video tutorial on how the App works.</p>
-                                    <div class="video">
-                                        <iframe width="480" height="270"
-                                                src="https://www.youtube.com/embed/XQu8TTBmGhA">
-                                        </iframe>
-                                    </div>
-                                    <div class="row" style="display: none;">
-                                        <p>Send Text Instructions to My Phone</p>
-                                        <div class="row col-xs-10 col-xs-offset-1">
-                                            <input id="reg-phone-number" placeholder="Cell Phone" type="text" name="phone-number" value=""
-                                                   class="col-xs-10 cleanable-input">
-                                            <button class="btn btn-info signup col-xs-2">SEND</button>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <div role="tabpanel" class="tab-pane center-aligned-text" id="ipads">
-                            <div class="row">
-                                <div class="col-xs-12 col-md-10 col-md-offset-1">
-                                    <h4>Don't have a smartphone? Not sure you will bring it?<br></h4>
-                                    <h5>
-                                        No worries! You can bid from iPads at the event.
-                                        The iPads provided will allow you to bid on any ithem on the auction.
-                                        You will be given assistance on how to place bids when you are at the event.
-                                    </h5>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-xs-12 col-md-10 col-md-offset-1">
-                                    <p>
-                                        Watch a brief video tutorial on how the iPad works.
-                                    </p>
-                                    <div class="video">
-                                        <iframe width="480" height="270"
-                                                src="https://www.youtube.com/embed/XQu8TTBmGhA">
-                                        </iframe>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <div role="tabpanel" class="tab-pane center-aligned-text" id="your-comp">
-                            <div class="row">
-                                <div class="col-xs-12 col-md-10 col-md-offset-1">
-                                    <h4>You can bid right from your computer or smartphone web browser!</h4>
-                                    <h5>You can go to Handbid.com right now, find your auction and start bidding.<br></h5>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-xs-12 col-md-10 col-md-offset-1">
-                                    <a class="btn btn-info signup" href="/auctions/">START BIDDING</a>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-
-                </div>
-                <div class="row">
-                    <div class="modal-footer col-xs-12 col-md-8 col-md-offset-2">
-                        <!--   <a class="action-link go-back-button login-popup-link" data-target-tab="register-complete">< Go Back</a>-->
-                        <a class="action-link go-next-button login-popup-link" data-target-tab="tutorial-info-2">Next ></a>
-                        <?php handbid_app_links();?>
                     </div>
                 </div>
+
+
+                    <div class="col-xs-12 handbid-form-area tickets-modal tickets-on-register">
+                        <?php
+
+                        $currencyCode = 'USD';
+                        $currencySymbol = '$';
+
+                        ?>
+                        <div class="row">
+                            <h5 class="col-xs-12 upper-tickets-text">
+                                Selected
+                            </h5>
+                            <h4 class="col-xs-12 upper-summary">
+                                <span class="upper-tickets-count" data-handbid-tickets-quantity>0</span>
+                                items for
+                                <span class="handbidAuctionCurrency" title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span><span class="upper-tickets-count" data-handbid-tickets-total>0</span>
+                            </h4>
+                                <div class="col-xs-12 tickets-container">
+                                </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group col-md-3 col-xs-6 buttons">
+                                <button type="submit" class="btn signup btn-gray" id="hb-purchase-tickets-back"><span>Back</span></button>
+                            </div>
+                            <div class="form-group col-md-3 col-md-offset-6 col-xs-6 buttons">
+                                <button type="submit" class="btn signup" id="hb-purchase-tickets-next"><span>Purchase</span></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-10 col-md-offset-1 col-xs-12 modal-footer">
+                            <?php handbid_app_links();?>
+                        </div>
+                    </div>
+
+                    <input type='hidden' name='redirect' value='<?php echo $redirectLink; ?>' id="hb-login-form-redirect"/>
+                    <input type='hidden' name='form-id' value='handbid-login'/>
+                    <input type='hidden' name='nonce' value='<?php echo apply_filters("handbid_create_nonce", date("d.m.Y") . "login");?>' id="hb-login-form-nonce"/>
+                    <input type='hidden' name='action' value='handbid_ajax_login' id="hb-login-form-action"/>
+
             </div>
-
-
-            <div class="container-fluid container-tab" style="display: none" data-tab-name="tutorial-info-2">
-                <?php get_login_popup_header("Tutorial. Step 2");?>
-                <div class="handbid-form row">
-                    <h3>GETTING STARTED</h3>
-                    <h4 class="sub-title">with <span>Handbid</span></h4>
-                    <h4 class="help-title">HANDBID 101<br></h4>
-                    <h4 class="step">Step 2<br></h4>
-
-                    <h3>Handbid Bidding Tips</h3>
-
-
-                    <ul class="handbid-tips">
-                        <li>
-                            <h2>Set MaxBids to avoid losing that treasured item</h2>
-                            <p>Do you really want to win that Diamond Pendant? Don't rely on your craftiness and swift finger to place that last minute bid.
-                                Instead, set a MaxBid on it and forget about it! Handbid will bid for you automatically up to that amount. And trust us, Handbid doesn't lose.
-                                That bid will go in on time</p>
-                        </li>
-                        <li>
-                            <h2>Make Sure you are getting notified when you are not at your computer</h2>
-                            <p>Even if you are not bidding from the Apps, you can still get text notifications when you are outbid.
-                                Just enter a valid cell phone number into your profile and turn on SMS notifications in your settings.
-                                You can easily turn these off later if you want to stop getting messages.</p>
-                        </li>
-                        <li>
-                            <h2>Understand how Extended Biding Works</h2>
-                            <p>Your auction host MAY have enabled this feature. It will indicate that it is on when you are viewing the auction page.
-                                Extended bidding will keep specific items open AFTER the auction closes if a last minute bid was placed.
-                                So, if you think you can snipe that item at the item by placing a bid right before time expires, you may just be
-                                extending the item longer for others to bid.</p>
-                        </li>
-                        <li>
-                            <h2>View your Invoice and Pay From your Phone or Computer</h2>
-                            <p>At the end of the auction, you will receive a notification with a link to your invoice in the app or by clicking on the
-                                text message you received. You can also view the invoice from your profile at Handbid.com. If the auction manager
-                                has enabled the Handbid payment system, then you will be able to pay your invoice directly.</p>
-                        </li>
-                    </ul>
-
-
-
-                </div>
-                <div class="row">
-                    <div class="modal-footer col-xs-12 col-md-8 col-md-offset-2">
-                        <a class="action-link go-back-button login-popup-link" data-target-tab="tutorial-info-1">< Go Back</a>
-                        <a class="action-link go-next-button login-popup-link" data-target-tab="tutorial-info-3">Next ></a>
-                        <?php handbid_app_links();?>
-                    </div>
-                </div>
-            </div>
-
-            <div class="container-fluid container-tab" style="display: none" data-tab-name="tutorial-info-3">
-                <?php get_login_popup_header("Tutorial. Step 3");?>
-                <div class="handbid-form row">
-                    <h3>GETTING STARTED</h3>
-                    <h4 class="sub-title">with <span>Handbid</span></h4>
-                    <h4 class="help-title">HANDBID 101<br></h4>
-                    <h4 class="step">Step 3<br></h4>
-
-                    <h3>How to get Help</h3>
-
-
-                    <ul class="handbid-tips">
-                        <li>
-                            <h2>Have you a question about auction or auction items?</h2>
-                            <p>Best to contact the auction managers and ask them. Your auction manager information will be provided
-                                to you by them when you are invited or register for the auction. Please contact them first as they will
-                                have the quickest answer about whether or not Disney Vacation has an expiration date on it or not.</p>
-                        </li>
-                        <li>
-                            <h2>Not sure how to use Handbid or bid?</h2>
-                            <p>Click on the help button either in the app (from the menu) or on the bottom right of the website
-                                (handbid.com) and ask us for help.</p>
-                        </li>
-                    </ul>
-
-                    <h3>Thats all we have.</h3>
-                    <h4>We hope the quick tutorial was helpful. Happy Bidding!</h4>
-
-
-                    <div class="row center-aligned-text">
-                        <a class="btn btn-info signup exit-tutorial-link">EXIT TUTORIAL</a>
-                    </div>
-
-                </div>
-                <div class="row">
-                    <div class="modal-footer col-xs-12 col-md-8 col-md-offset-2">
-                        <a class="action-link go-back-button login-popup-link" data-target-tab="tutorial-info-2">< Go Back</a>
-                        <?php handbid_app_links();?>
-                    </div>
-                </div>
-            </div>
-
-        <?php }?>
+        </div>
     </div>
 </div>

@@ -20,6 +20,10 @@ var handbidLoginMain, cookieExpire = 7;
                 currentTab.removeClass("active-container").slideUp("fast");
                 neededTab.addClass("active-container").slideDown("fast");
             }
+
+            if (tabName == 'purchase-tickets') {
+                handbidLogin.getTicketsForAuction();
+            }
         },
 
         registerFieldsValidation: function (tabName) {
@@ -340,7 +344,14 @@ var handbidLoginMain, cookieExpire = 7;
 
                         handbidLogin.requestToAddCCAfter(!auctionRequiresCC);
 
-                        handbidLogin.displaySpecifiedTabOfLoginPopup("register-complete");
+                        var buyingTickets = false;
+
+                        if(buyingTickets){
+                            handbidLogin.displaySpecifiedTabOfLoginPopup("purchase-tickets");
+                        }
+                        else {
+                            handbidLogin.displaySpecifiedTabOfLoginPopup("register-complete");
+                        }
                     }
                     else{
                         errorRow.show();
@@ -395,6 +406,126 @@ var handbidLoginMain, cookieExpire = 7;
 
             (cardAdded) ? addNewCCBlock.hide() : addNewCCBlock.show();
             (cardAdded) ? startBiddingBlock.show() : startBiddingBlock.hide();
+        },
+
+        getTicketsForAuction: function(){
+
+            var auction_id = 7;
+
+            var tickets_container = $('.tickets-on-register .tickets-container');
+            var buy_button = $('#hb-purchase-tickets-next');
+
+            tickets_container.html();
+            tickets_container.addClass('loading');
+
+            $.post(ajaxurl,
+                   {
+                       action: "handbid_ajax_get_auction_tickets",
+                       auction_id: auction_id
+                   },
+                   function (data) {
+
+                       data = JSON.parse(data);
+                       console.log(data);
+
+                       tickets_container.removeClass('loading');
+
+                       tickets_container.html(data.result);
+
+                       if(data.success){
+                           handbidLogin.setupTicketsPurchasing();
+                           buy_button.removeAttr('disabled');
+                       }
+                       else{
+                           buy_button.attr('disabled', 'disabled');
+                       }
+                   }
+            );
+
+        },
+
+        recalculateTotalTicketsPrice: function(){
+
+            var totalPrice = 0;
+            var totalQuantity = 0;
+            var prices = $.map($("[data-handbid-ticket-id]"), function (val, i) {
+                var parentBlock = $(val),
+                    quantityBlock = $("[data-handbid-ticket-quantity]", parentBlock).eq(0),
+                    quantity = parseInt(quantityBlock.html()),
+                    itemID = parseInt(parentBlock.data("handbid-ticket-id")),
+                    itemPrice = parseInt(parentBlock.data("handbid-ticket-price")),
+                    itemTitle = $("[data-handbid-ticket-title]", parentBlock).eq(0).html();
+                totalPrice += quantity * itemPrice;
+                totalQuantity += quantity;
+                return (quantity > 0) ? {id: itemID, price: itemPrice, quantity: quantity, name: itemTitle} : null;
+            });
+            totalPrice = handbidMain.number_format(totalPrice, 0, ".", ",");
+            $("[data-handbid-tickets-total]").html(totalPrice);
+            $("[data-handbid-tickets-quantity]").html(totalQuantity);
+            return prices;
+        },
+
+
+        setupTicketsPurchasing: function () {
+
+            $('[data-handbid-ticket-button="up"]').live('click', function (e) {
+
+                e.preventDefault();
+
+                var parentBlock = $(this).parents("[data-handbid-ticket-id]").eq(0),
+                    otherButton = $("[data-handbid-ticket-button='down']", parentBlock).eq(0),
+                    quantityBlock = $("[data-handbid-ticket-quantity]", parentBlock).eq(0),
+                    remainingBlock = $("[data-handbid-tickets-remaining]", parentBlock).eq(0),
+                    quantity = parseInt(quantityBlock.html()),
+                    remainingSymb = remainingBlock.val(),
+                    remaining = parseInt(remainingBlock.val()),
+                    itemStep = parseInt(parentBlock.data("handbid-ticket-step"));
+
+                var newValue = quantity + itemStep;
+                if (newValue <= remaining || (remainingSymb == "-1" || remainingSymb == "∞")) {
+                    quantityBlock.html(newValue);
+                    handbidLoginMain.recalculateTotalTicketsPrice();
+                    otherButton.removeClass("ghosted-out");
+
+                    if (newValue + itemStep > remaining && !(remainingSymb == "-1" || remainingSymb == "∞")) {
+                        $(this).addClass("ghosted-out");
+                    }
+                }
+
+            });
+
+            $('[data-handbid-ticket-button="down"]').live('click', function (e) {
+
+                e.preventDefault();
+
+                var parentBlock = $(this).parents("[data-handbid-ticket-id]").eq(0),
+                    otherButton = $("[data-handbid-ticket-button='up']", parentBlock).eq(0),
+                    quantityBlock = $("[data-handbid-ticket-quantity]", parentBlock).eq(0),
+                    remainingBlock = $("[data-handbid-tickets-remaining]", parentBlock).eq(0),
+                    quantity = parseInt(quantityBlock.html()),
+                    remaining = parseInt(remainingBlock.val()),
+                    itemStep = parseInt(parentBlock.data("handbid-ticket-step"));
+
+                var newValue = quantity - itemStep;
+                if (newValue >= 0) {
+                    quantityBlock.html(newValue);
+                    handbidLoginMain.recalculateTotalTicketsPrice();
+                    otherButton.removeClass("ghosted-out");
+
+                    if (newValue - itemStep < 0) {
+                        $(this).addClass("ghosted-out");
+                    }
+                }
+            });
+
+            $('#hb-purchase-tickets-back').live('click', function (e) {
+                e.preventDefault();
+            });
+
+            $('#hb-purchase-tickets-next').live('click', function (e) {
+                e.preventDefault();
+            });
+
         }
     };
 
@@ -486,6 +617,7 @@ var handbidLoginMain, cookieExpire = 7;
             $(".loadAuctionsToAutoCompleteRegisterSelectContainer").show();
             $(".autoCompleteHiddenRegister").val("");
         });
+
         handbidLoginMain = handbidLogin;
 
     });
