@@ -68,6 +68,7 @@ gulp.task('less', function () {
         'resources/less/modal.less',
         
         'resources/less/login_modal.less',
+        'resources/less/purchase_modal.less',
         'resources/less/ticket_modal.less',
         'resources/less/credit_card_modal.less',
         'resources/less/bid_modal.less',

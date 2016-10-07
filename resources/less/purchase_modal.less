@@ -1,0 +1,98 @@
+@import "variables.less";
+@import "buttons.less";
+
+.purchase-container {
+  padding: 10px 20px 20px;
+  background: @white;
+
+  .purchase-header {
+    margin: 0 0 20px;
+    font-size: 26px;
+    color: @gray;
+  }
+
+  .purchase-list {
+    width: 100%;
+    th {
+      padding-bottom: 10px;
+      text-transform: uppercase;
+      font-size: 16px;
+      font-weight: 400;
+      color: @gray;
+    }
+    th, td {
+      width: 18%;
+      text-align: center;
+      &:first-child {
+        width: 50%;
+        text-align: left;
+      }
+      &:last-child {
+        width: 14%;
+        text-align: right;
+      }
+    }
+
+    td {
+      padding-bottom: 15px;
+      vertical-align: top;
+      font-size: 24px;
+      font-weight: 400;
+      color: @darkBlue;
+      h6 {
+        margin: 0;
+        font-size: inherit;
+        font-weight: inherit;
+        color: @lightBlue;
+        & + span {
+          position: relative;
+          top: -10px;
+          font-size: 14px;
+          font-weight: 300;
+          color: @gray;
+        }
+      }
+      &:first-child {
+        vertical-align: middle;
+      }
+    }
+  }
+
+  .discount-applied,
+  .purchase-total {
+    padding-top: 10px;
+    text-align: right;
+    font-size: 22px;
+    color: @lightBlue;
+    span {
+      margin: 0 0 0 15px;
+    }
+  }
+  .purchase-total {
+    font-weight: 400;
+    span {
+      color: @darkBlue;
+    }
+  }
+}
+
+.purchase-container .discount-block {
+  text-align: right;
+  label {
+    font-size: 22px;
+    font-weight: 400;
+    color: @lightBlue;
+  }
+  input {
+    vertical-align: top;
+    margin: 0 0 0 10px;
+    box-sizing: border-box;
+    border: 1px solid @mediumGray;
+  }
+  .light-blue-solid-button {
+    padding: 5px 30px;
+    border-radius: 0;
+    line-height: 23px;
+    font-weight: 400;
+  }
+}

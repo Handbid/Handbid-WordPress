@@ -89,8 +89,20 @@
 
   .form-group {
     margin-bottom: 5px;
-    padding: 0 5px;
     text-align: center;
+
+    &.buttons:not(:only-child) {
+      &:first-child {
+        text-align: left;
+      }
+      &:last-child {
+        text-align: right;
+      }
+    }
+  }
+
+  .register-tab .form-group {
+    padding: 0 5px;
   }
 
   [data-tab-name=register-complete] {

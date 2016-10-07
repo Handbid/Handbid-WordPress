@@ -529,7 +529,6 @@ if(!function_exists("handbid_popup_inline_links")){
             </div>
         </div>
 
-
         <div class="container-fluid container-tab" style="display: none" data-tab-name="register-form-confirm">
             <?php get_login_popup_header("Confirm Registration");?>
             <div class="handbid-form row">
@@ -605,7 +604,6 @@ if(!function_exists("handbid_popup_inline_links")){
             </div>
         </div>
 
-
         <div class="container-fluid container-tab" style="display: none" data-tab-name="register-complete">
             <?php get_login_popup_header("Registration Complete!");?>
             <div class="handbid-form row">
@@ -648,7 +646,6 @@ if(!function_exists("handbid_popup_inline_links")){
             </div>
         </div>
 
-
         <div class="container-fluid container-tab" style="display: none" data-tab-name="purchase-tickets">
             <?php get_login_popup_header("Auction Tickets");?>
             <div class="handbid-form row">
@@ -675,7 +672,8 @@ if(!function_exists("handbid_popup_inline_links")){
                                 items for
                                 <span class="handbidAuctionCurrency" title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span><span class="upper-tickets-count" data-handbid-tickets-total>0</span>
                             </h4>
-                                <div class="col-xs-12 tickets-container">
+                                <div class="col-xs-12">
+                                    <div class="tickets-container purchase-container"></div>
                                 </div>
                         </div>
 
@@ -699,6 +697,85 @@ if(!function_exists("handbid_popup_inline_links")){
                     <input type='hidden' name='form-id' value='handbid-login'/>
                     <input type='hidden' name='nonce' value='<?php echo apply_filters("handbid_create_nonce", date("d.m.Y") . "login");?>' id="hb-login-form-nonce"/>
                     <input type='hidden' name='action' value='handbid_ajax_login' id="hb-login-form-action"/>
+            </div>
+        </div>
+
+        <div class="container-fluid container-tab" style="display: none" data-tab-name="confirm-purchase">
+            <?php get_login_popup_header("Confirm Purchase");?>
+            <div class="handbid-form row">
+                <div class="row no-margin" style="display: none">
+                    <div class="col-sm-8 col-sm-offset-2 col-xs-12">
+
+                    </div>
+                </div>
+
+
+                <div class="col-xs-12 handbid-form-area tickets-modal tickets-on-register">
+
+                    <div class="purchase-container">
+                        <h4 class="purchase-header">
+                            Please confirm your purchases
+                        </h4>
+                        <table class="purchase-list">
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <h6>1 Adult</h6>
+                                        <span>(admits 1 person)</span>
+                                    </td>
+                                    <td>
+                                        $75
+                                    </td>
+                                    <td>
+                                        2
+                                    </td>
+                                    <td>
+                                        $150
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="discount-block">
+                            <form class="form-inline">
+                                <div class="form-group">
+                                    <label for="discount-code">Apply a Discount Code</label>
+                                    <input type="text" class="form-control" id="discount-code">
+                                </div>
+                                <button type="submit" class="light-blue-solid-button">Apply</button>
+                            </form>
+                            <p class="discount-applied">Discount Applied: <span>$150</span></p>
+                        </div>
+                        <p class="purchase-total">Grand Total: <span>$50</span></p>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-md-3 col-xs-6 buttons">
+                            <button type="submit" class="btn signup btn-gray"><span>Back</span></button>
+                        </div>
+                        <div class="form-group col-md-3 col-md-offset-6 col-xs-6 buttons">
+                            <button type="submit" class="btn signup"><span>Pay now</span></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-10 col-md-offset-1 col-xs-12 modal-footer">
+                        <?php handbid_app_links();?>
+                    </div>
+                </div>
+
+                <input type='hidden' name='redirect' value='<?php echo $redirectLink; ?>' id="hb-login-form-redirect"/>
+                <input type='hidden' name='form-id' value='handbid-login'/>
+                <input type='hidden' name='nonce' value='<?php echo apply_filters("handbid_create_nonce", date("d.m.Y") . "login");?>' id="hb-login-form-nonce"/>
+                <input type='hidden' name='action' value='handbid_ajax_login' id="hb-login-form-action"/>
 
             </div>
         </div>
