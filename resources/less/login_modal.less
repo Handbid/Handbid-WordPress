@@ -19,9 +19,8 @@
     margin: 5px auto;
   }
   .login-modal-head-title {
-    color: #F0F0F0;
+    color: @lightGray;
     font-size: 36px;
-    font-weight: 400;
   }
 }
 
@@ -91,11 +90,11 @@
     margin-bottom: 5px;
     text-align: center;
 
-    &.buttons:not(:only-child) {
-      &:first-child {
+    &.buttons {
+      &.left-aligned {
         text-align: left;
       }
-      &:last-child {
+      &.right-aligned {
         text-align: right;
       }
     }
@@ -151,7 +150,7 @@
   input[type=email],
   input[type=password],
   select {
-    height: 40px;
+    height: 44px;
     max-width: 100%;
     padding: 0 15px;
     margin: 0 auto;
@@ -189,6 +188,11 @@
     vertical-align: middle;
   }
 
+  select {
+    background-color: @white;
+    background-image: url(../images/triangle-down.svg);
+  }
+
   .form-control:focus {
     box-shadow: none;
   }
@@ -205,8 +209,7 @@
   margin: 0;
 }
 
-.handbid-form .btn,
-.handbid-form .btn:hover {
+.handbid-form .btn {
   padding: 10px 50px;
   margin: 10px 0 5px;
   background: @green;
@@ -217,6 +220,21 @@
   font-weight: 400;
   font-size: 16px;
   color: @white;
+  &:hover {
+    background: @white;
+    border: 1px solid @green;
+    color: @green;
+  }
+
+  &.btn-gray {
+    background: @mediumGray;
+    border-color: @mediumGray;
+    &:hover {
+      background: @white;
+      border-color: @mediumGray;
+      color: @mediumGray;
+    }
+  }
 }
 
 /* ---Popover--- */
