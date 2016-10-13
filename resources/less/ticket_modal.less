@@ -31,18 +31,18 @@
   }
 
   .tickets-container {
-    padding: 15px 15px 25px;
+    padding: 5px 30px 15px;
   }
 
   .ticket-row {
     border-bottom: 1px solid @dropShadow;
-    &:first-of-type {
-      border-top: 1px solid @dropShadow;
+    &:last-of-type {
+      border-bottom: none;
     }
   }
 
   .ticket {
-    padding: 0 0 0 15px;
+    padding: 0;
   }
   .tickets-are-available {
     text-align: center;
@@ -66,8 +66,11 @@
   }
 
   .ticket-price {
-    font-size: 26px;
-    font-weight: normal;
+    padding: 0;
+    font-size: 24px;
+    line-height: 24px;
+    font-weight: 400;
+    color: @darkBlue;
   }
 
   [data-handbid-tickets-button] {

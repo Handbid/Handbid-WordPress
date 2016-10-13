@@ -798,7 +798,7 @@ if(!function_exists("handbid_popup_inline_links")){
         <div class="container-fluid container-tab" style="display: none" data-tab-name="process-payment">
             <?php get_login_popup_header("Process Payment");?>
             <div class="handbid-form row">
-                <div class="col-xs-12 handbid-form-area tickets-modal tickets-on-register">
+                <div class="col-xs-12 handbid-form-area">
 
                     <div class="process-container">
                         <p class="process-message">
@@ -848,7 +848,7 @@ if(!function_exists("handbid_popup_inline_links")){
         <div class="container-fluid container-tab" style="display: none" data-tab-name="process-error">
             <?php get_login_popup_header("Process Payment");?>
             <div class="handbid-form row">
-                <div class="col-xs-12 handbid-form-area tickets-modal tickets-on-register">
+                <div class="col-xs-12 handbid-form-area">
 
                     <div class="process-container">
                         <p class="process-message">
@@ -869,6 +869,112 @@ if(!function_exists("handbid_popup_inline_links")){
                             <button class="btn btn-gray"><span>Back</span></button>
                         </div>
                     </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-10 col-md-offset-1 col-xs-12 modal-footer">
+                        <?php handbid_app_links();?>
+                    </div>
+                </div>
+
+                <input type='hidden' name='redirect' value='<?php echo $redirectLink; ?>' id="hb-login-form-redirect"/>
+                <input type='hidden' name='form-id' value='handbid-login'/>
+                <input type='hidden' name='nonce' value='<?php echo apply_filters("handbid_create_nonce", date("d.m.Y") . "login");?>' id="hb-login-form-nonce"/>
+                <input type='hidden' name='action' value='handbid_ajax_login' id="hb-login-form-action"/>
+            </div>
+        </div>
+
+        <div class="container-fluid container-tab" style="display: none" data-tab-name="process-success">
+            <?php get_login_popup_header("Payment Successfully Processed!");?>
+            <div class="handbid-form row">
+                <div class="col-xs-12 handbid-form-area">
+
+                    <div class="process-container process-success-container">
+                        <p class="process-message">
+                            <span class="smaller-text">You are all set for</span>
+                            <span data-auction-item>The 2016 Annual Gala & Auction Tickets?</span>
+                        </p>
+                        <h4>Your tickets</h4>
+
+                        <div class="tickets-section">
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <svg class="u-svg-icon">
+                                                <use xlink:href="#ticket-icon"></use>
+                                            </svg>
+                                            1 Adult</td>
+                                        <td>x2</td>
+                                        <td>@ $75</td>
+                                        <td class="ticket-fullprice">$150</td>
+                                        <td>
+                                            <a href="#" class="btn-icon" title="Send tickets on email">
+                                                <svg class="u-svg-icon">
+                                                    <use xlink:href="#p-email-icon"></use>
+                                                </svg>
+                                                mail
+                                            </a>
+                                            <a href="#" class="btn-icon" title="Print tickets">
+                                                <svg class="u-svg-icon">
+                                                    <use xlink:href="#print-icon"></use>
+                                                </svg>
+                                                print
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <svg class="u-svg-icon">
+                                                <use xlink:href="#ticket-icon"></use>
+                                            </svg>
+                                            2 Children
+                                        </td>
+                                        <td>x1</td>
+                                        <td>@ $50</td>
+                                        <td class="ticket-fullprice">$50</td>
+                                        <td>
+                                            <a href="#" class="btn-icon" title="Send tickets on email">
+                                                <svg class="u-svg-icon">
+                                                    <use xlink:href="#p-email-icon"></use>
+                                                </svg>
+                                                mail
+                                            </a>
+                                            <a href="#" class="btn-icon" title="Print tickets">
+                                                <svg class="u-svg-icon">
+                                                    <use xlink:href="#print-icon"></use>
+                                                </svg>
+                                                print
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <h4>Auction information</h4>
+
+                        <div class="auction-info-section">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <h5>You have been registered with</h5>
+                                    <p>Paddle # <span class="paddle-number">176</span></p>
+                                </div>
+                                <div class="col-sm-4">
+                                    <h5>Want to bid from your smartphone?</h5>
+                                    <p>Get setup on my phone</p>
+                                    <a href="#" class="btn"><span>Text me a link</span></a>
+                                </div>
+                                <div class="col-sm-4">
+                                    <h5>Want to bid right now?</h5>
+                                    <p>Bid on my computer</p>
+                                    <a href="#" class="btn"><span>Start bidding</span></a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
                 </div>
 
                 <div class="row">
