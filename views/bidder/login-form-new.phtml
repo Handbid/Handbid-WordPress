@@ -56,19 +56,22 @@ if(!function_exists("handbid_popup_inline_links")){
         if($isForgot or $isLogin or $isRegister) {
             ?>
             <div class="row links-to-other-tabs">
+                <div class="col-xs-12 col-sm-4 single-link-to-other-tabs">
+                    <a href="#" class="login-popup-link" >Manager Login</a>
+                </div>
+                <?php if(!$isForgot){?>
+                    <div class="col-xs-12 col-sm-4 single-link-to-other-tabs">
+                        <a class="login-popup-link" data-target-tab="forgot-pass">Forgot My Password</a>
+                    </div>
+                <?php }?>
                 <?php if(!$isRegister){?>
-                <div class="col-xs-12 col-sm-6 single-link-to-other-tabs">
-                    <a class="login-popup-link" data-target-tab="register-form">Sign Up</a>
+                <div class="col-xs-12 col-sm-4 single-link-to-other-tabs">
+                    <a class="login-popup-link" data-target-tab="register-form">Register</a>
                 </div>
                 <?php }?>
                 <?php if(!$isLogin){?>
-                <div class="col-xs-12 col-sm-6 single-link-to-other-tabs">
+                <div class="col-xs-12 col-sm-4 single-link-to-other-tabs">
                     <a class="login-popup-link" data-target-tab="login-form">Sign In</a>
-                </div>
-                <?php }?>
-                <?php if(!$isForgot){?>
-                <div class="col-xs-12 col-sm-6 single-link-to-other-tabs">
-                    <a class="login-popup-link" data-target-tab="forgot-pass">Forgot My Password</a>
                 </div>
                 <?php }?>
             </div>
