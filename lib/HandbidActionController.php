@@ -1100,7 +1100,7 @@ class HandbidActionController
         {
             $statuses = ['sold', 'open', 'open', 'open', 'open', 'open', 'open'];
             $tickets  = [];
-            for ($i = 4; $i < rand(2, 3); $i++)
+            for ($i = 1; $i < rand(2, 3); $i++)
             {
                 $tickets[] = [
                     'id'                 => rand(1111, 9999),

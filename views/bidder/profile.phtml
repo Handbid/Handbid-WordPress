@@ -32,7 +32,11 @@ if (!is_null($this->get('profile'))) {
 } else {
     return;
 }
-//echo "<pre>" . print_r($payments, true) . "</pre>";
+
+$coinsCount = 2;
+$groupDivider = ",";
+$coinsDivider = ".";
+
 ?>
 <div class="bidder-info-container" data-dashboard-profile-id="<?php echo $profile->id; ?>">
     <div class="container container-fluid underlined">
@@ -227,12 +231,23 @@ if (!is_null($this->get('profile'))) {
                 <div class="row" data-slider-nav-key="profile-purchases">
                     <button class="close-bidder-slider" data-slider-close="bidder-dashboard">&times;</button>
                     <div class="col-md-12 simple-list-container">
+
                         <ul class="simple-list handbid-list-of-bids handbid-list-of-bids-purchases" data-no-items-text="You have not purchased any items.">
                             <?php
+
                             $totalPurchases = 0;
+                            $itemsTax = 0;
                             if(count($purchases) > 0 ) {
                                 forEach($purchases as $purchase) {
                                     $totalPurchases += $purchase->grandTotal;
+                                    if(!empty($purchase->tax))
+                                    {
+                                        $purchaseTax = round($purchase->tax / 100, 2);
+                                        $itemsTax += $purchaseTax;
+                                    }
+                                    else{
+                                        $purchaseTax = 0;
+                                    }
                                     ?>
                                     <li class="row"
                                         data-dashboard-price="<?php echo (int) $purchase->grandTotal; ?>"
@@ -249,7 +264,9 @@ if (!is_null($this->get('profile'))) {
                                         <div class="col-md-4 col-xs-4">
                                             <span class="bid-amount winning">
                                                 <span class="handbidAuctionCurrency" title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span>
-                                                <span class="purchaseTotalAmount"><?php echo $purchase->grandTotal; ?></span>
+                                                <span class="purchaseTotalAmount"
+                                                      data-dashboard-tax="<?php echo $purchaseTax; ?>"
+                                                ><?php echo $purchase->grandTotal; ?></span>
                                             </span>
                                         </div>
                                     </li>
@@ -262,16 +279,53 @@ if (!is_null($this->get('profile'))) {
                             }
                             ?>
                         </ul>
+
                         <ul class="simple-list handbid-list-of-purchase-totals" style="<?php echo (count($purchases) > 0 ) ? '  ' : ' display:none ' ;?>">
                             <li class="row">
-                                <div class="col-xs-0 col-md-6"></div>
-                                <div class="col-xs-8 col-md-4">
+                                <div class="col-xs-0 col-md-5"></div>
+                                <div class="col-xs-7 col-md-4">
                                     <h4 class="quantity-total">Total Purchases</h4>
                                 </div>
-                                <div class="col-xs-4 col-md-2">
+                                <div class="col-xs-5 col-md-3">
                                     <span class="bid-amount winning">
                                         <span class="handbidAuctionCurrency" title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span>
                                         <span class="handbidInventoryTotalPurchases"><?php echo $totalPurchases; ?></span>
+                                    </span>
+                                </div>
+                            </li>
+                            <li class="row auctionPremiumRow"
+                                data-auction-tax-rate="<?php echo esc_js($auction->taxRate / 10000); ?>"
+                                data-auction-tax-label="<?php echo esc_js($auction->taxLabel); ?>"
+                                style="<?php echo (!empty($auction->taxRate) and ($auction->taxRate != 0)) ? '' : ' display:none ';?>">
+                                <div class="col-xs-0 col-md-5"></div>
+                                <div class="col-xs-7 col-md-4">
+                                    <h4 class="quantity-total"><?php echo $auction->taxLabel; ?></h4>
+                                </div>
+                                <div class="col-xs-5 col-md-3">
+                                    <span class="bid-amount winning">
+                                        <span class="handbidAuctionCurrency" title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span>
+                                        <span class="inventoryPremium"
+                                        ><?php
+                                            $premium = round ($totalPurchases * ($auction->taxRate / 10000), 2);
+                                            echo $premium;
+                                            ?></span>
+                                    </span>
+                                </div>
+                            </li>
+                            <li class="row itemsTaxRow"
+                                style="<?php echo ($itemsTax > 0) ? '' : ' display:none ';?>">
+                                <div class="col-xs-0 col-md-5"></div>
+                                <div class="col-xs-7 col-md-4">
+                                    <h4 class="quantity-total">Item Tax</h4>
+                                </div>
+                                <div class="col-xs-5 col-md-3">
+                                    <span class="bid-amount winning">
+                                        <span class="handbidAuctionCurrency" title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span>
+                                        <span class="itemsTaxTotal"
+                                        ><?php
+                                            $itemsTax = round ($itemsTax, 2);
+                                            echo $itemsTax;
+                                            ?></span>
                                     </span>
                                 </div>
                             </li>
@@ -301,12 +355,12 @@ if (!is_null($this->get('profile'))) {
                                         }
 
                                         ?>
-                                        <div class="col-xs-0 col-md-5"></div>
-                                        <div class="col-xs-8 col-md-5">
+                                        <div class="col-xs-0 col-md-4"></div>
+                                        <div class="col-xs-7 col-md-5">
                                             <h4 class="quantity-total">Payment Applied: <?php echo $payment_title;?>
                                             <span><?php echo $payment->datetime?></span></h4>
                                         </div>
-                                        <div class="col-xs-4 col-md-2">
+                                        <div class="col-xs-5 col-md-3">
                                     <span class="bid-amount winning">
                                         <span class="handbidAuctionCurrency"
                                               title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span>
@@ -321,13 +375,13 @@ if (!is_null($this->get('profile'))) {
                             </li>
                             <li class="row">
                                 <?php
-                                $balanceDue = $totalPurchases - $amountPaid;
+                                $balanceDue = $totalPurchases + $premium + $itemsTax - $amountPaid;
                                 ?>
-                                <div class="col-xs-0 col-md-6"></div>
-                                <div class="col-xs-8 col-md-4">
+                                <div class="col-xs-0 col-md-5"></div>
+                                <div class="col-xs-7 col-md-4">
                                     <h4 class="quantity-total">Balance Due</h4>
                                 </div>
-                                <div class="col-xs-4 col-md-2">
+                                <div class="col-xs-5 col-md-3">
                                     <span class="bid-amount losing">
                                         <span class="handbidAuctionCurrency" title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span>
                                         <span class="handbidInventoryBalanceDue"><?php echo $balanceDue; ?></span>

@@ -321,6 +321,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     auctionId = values.auctionId,
                     receiptTotal = values.grandTotal,
                     purchaseID = values.id,
+                    tax = (values.tax != undefined) ? values.tax : 0,
                     auctionKey = (values.auctionKey != undefined) ? values.auctionKey : "undefined";
 
                 var pattern = '<li class="row"' +
@@ -336,7 +337,10 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     '<h4 class="quantity-total">' + quantity + ' x ' + currencySpan() + amount + '</h4>' +
                     '</div>' +
                     '<div class="col-md-4 col-xs-4">' +
-                    '<span class="bid-amount winning">' + currencySpan() + '<span class="purchaseTotalAmount">' + (amount * quantity) + '</span></span>' +
+                    '<span class="bid-amount winning">' + currencySpan() +
+                              '<span class="purchaseTotalAmount"' +
+                              'data-dashboard-tax="' + tax + '"' +
+                              '>' + (amount * quantity) + '</span></span>' +
                     '</div>' +
                     '</li>';
 
@@ -1498,12 +1502,12 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                         payment_title = '';
                 }
 
-                var template = '<div class="col-xs-0 col-md-5"></div>' +
-                               '<div class="col-xs-8 col-md-5">' +
+                var template = '<div class="col-xs-0 col-md-4"></div>' +
+                               '<div class="col-xs-7 col-md-5">' +
                                '<h4 class="quantity-total">Payment Applied: ' + payment_title +
                                '<span>' + payment.datetime + '</span></h4>' +
                                '</div>' +
-                               '<div class="col-xs-4 col-md-2">' +
+                               '<div class="col-xs-5 col-md-3">' +
                                '<span class="bid-amount winning">' +
                                currencySpan() +
                                '<span class="handbidInventorySinglePaymentAmount">' + payment.amount + '</span>' +
@@ -2810,17 +2814,24 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     purchases_payment_amounts = $('.handbidInventorySinglePaymentAmount'),
                     purchases_info_block = $('.handbid-list-of-purchase-totals'),
                     purchases_payments_block = $('.handbid-list-of-purchase-totals .payments-list'),
+                    purchases_premium_block = $('.handbid-list-of-purchase-totals .auctionPremiumRow'),
+                    purchases_item_tax_block = $('.handbid-list-of-purchase-totals .itemsTaxRow'),
+                    purchases_item_tax_place = $('.handbid-list-of-purchase-totals .itemsTaxTotal'),
+                    purchases_premium_place = $('.handbid-list-of-purchase-totals .inventoryPremium'),
                     purchases_total_place = $('.handbidInventoryTotalPurchases'),
                     purchases_due_place = $('.handbidInventoryBalanceDue'),
                     purchases_card_block = $('.handbid-list-of-purchase-totals .balanceDuePaymentCards'),
                     purchases_count = purchases_amounts.length,
                     purchases_payments_count = purchases_payment_amounts.length,
                     totalAmount = 0,
+                    premiumAmount = 0,
+                    itemTaxesAmount = 0,
                     paidAmount = 0,
                     dueAmount = 0;
 
                 $.map(purchases_amounts, function (val) {
                     totalAmount += parseInt($(val).html());
+                    itemTaxesAmount += parseFloat($(val).attr('data-dashboard-tax'));
                 });
 
                 if(totalAmount){
@@ -2839,7 +2850,26 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                         purchases_payments_block.hide();
                     }
 
-                    dueAmount = totalAmount - paidAmount;
+                    premiumAmount = totalAmount * parseFloat(purchases_premium_block.attr('data-auction-tax-rate'))
+                    premiumAmount = Math.round(premiumAmount * 100) / 100
+
+                    if(premiumAmount){
+                        purchases_premium_block.show();
+                        purchases_premium_place.html(premiumAmount);
+                    }
+                    else{
+                        purchases_premium_block.hide();
+                    }
+
+                    if(itemTaxesAmount){
+                        purchases_item_tax_block.show();
+                        purchases_item_tax_place.html(itemTaxesAmount);
+                    }
+                    else{
+                        purchases_item_tax_block.hide();
+                    }
+
+                    dueAmount = totalAmount + premiumAmount + itemTaxesAmount - paidAmount;
 
                     purchases_due_place.html(dueAmount);
 
