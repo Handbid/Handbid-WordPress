@@ -58,9 +58,11 @@ if (!is_null($this->get('cards'))) {
         </div>
     <?php } ?>
     <input type="hidden" id="deleteCardNonce" value="<?php echo apply_filters("handbid_create_nonce", date("d.m.Y") . "delete_card");?>">
+    <a class="button green-solid-button handbid-modal-link credit-card-form-link" data-handbid-modal-key="credit-card-form">Add Credit
+        Card</a>
     <?php
     //was it too hard to create a [handbid_bidder_cc_form]? thanks
     //echo do_shortcode('[handbid_bidder_profile_form template="views/bidder/credit-card-form"]');
-    echo do_shortcode('[handbid_bidder_cc_form]');
+    //echo do_shortcode('[handbid_bidder_cc_form]');
     ?>
 </div>

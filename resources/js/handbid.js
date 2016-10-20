@@ -2871,6 +2871,10 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
                     dueAmount = totalAmount + premiumAmount + itemTaxesAmount - paidAmount;
 
+                    if(dueAmount < 0){
+                        dueAmount = 0;
+                    }
+
                     purchases_due_place.html(dueAmount);
 
                     if(dueAmount > 0){

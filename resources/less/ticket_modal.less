@@ -152,19 +152,38 @@
     padding-top: 10px !important;
   }
 
-  .tickets-container{
+}
 
-    &.loading{
-      background-image: url("../images/ajax-loader.gif") !important;
-      background-position: center !important;
-      background-repeat: no-repeat !important;
-    }
+.loading-tickets-container{
 
-    h3.cannot-load{
+  &.loading{
+    background-image: url("../images/ajax-loader.gif") !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+  }
+}
 
+.select-payment-card{
+
+  &.loading{
+    background-image: url("../images/ajax-loader.gif") !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+  }
+}
+
+.pay-for-purchased-containers{
+
+  &.loading{
+    padding: 25px;
+    background-image: url("../images/ajax-loader.gif") !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+
+    p, div {
+      display: none;
     }
   }
-
 }
 
 @media (max-width: 768px) {

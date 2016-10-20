@@ -376,6 +376,7 @@ $coinsDivider = ".";
                             <li class="row">
                                 <?php
                                 $balanceDue = $totalPurchases + $premium + $itemsTax - $amountPaid;
+                                $balanceDue = ($balanceDue < 0) ? 0 : $balanceDue;
                                 ?>
                                 <div class="col-xs-0 col-md-5"></div>
                                 <div class="col-xs-7 col-md-4">

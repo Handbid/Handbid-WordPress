@@ -1,0 +1,82 @@
+<?php
+
+$tickets = $this->get('tickets');
+$currencyCode  = $this->get('currencyCode');
+$currencySymbol = $this->get('currencySymbol');
+
+if(is_array($tickets) and !empty($tickets))
+{
+    ?>
+    <h4 class="purchase-header">
+        Please confirm your purchases
+    </h4>
+    <table class="purchase-list">
+        <thead>
+        <tr>
+            <th>Item</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Total</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php
+        $total = 0;
+        foreach($tickets as $ticket)
+        {
+            ?>
+            <tr>
+                <td>
+                    <h6><?php echo $ticket->name; ?></h6>
+                    <span><?php echo $ticket->description; ?></span>
+                </td>
+                <td>
+                    <span title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span>
+                    <?php echo $ticket->price; ?>
+                </td>
+                <td>
+                    <?php echo $ticket->quantity; ?>
+                </td>
+                <td>
+                    <span title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span>
+                    <?php
+                    $price =  $ticket->quantity * $ticket->price;
+                    $total += $price;
+                    echo $price;
+                    ?>
+                </td>
+            </tr>
+        <?php
+        }
+        ?>
+        </tbody>
+    </table>
+    <div class="discount-block" style="display: none">
+        <form class="form-inline">
+            <div class="form-group">
+                <label for="discount-code">Apply a Discount Code</label>
+                <input type="text" class="form-control" id="discount-code">
+            </div>
+            <button type="submit" class="light-blue-solid-button">Apply</button>
+        </form>
+        <p class="discount-applied">Discount Applied:
+            <span>
+                <span title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span>
+                150
+            </span></p>
+    </div>
+    <p class="purchase-total">Grand Total:
+        <span>
+            <span title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span>
+            <?php echo $total; ?>
+        </span>
+    </p>
+
+    <?php
+}
+else{
+    ?>
+    <h3 class="cannot-load">Cannot load selected tickets. Please go back and select another.</h3>
+    <?php
+
+}

@@ -147,11 +147,13 @@ class HandbidActionController
             "handbid_ajax_auction_info",
             "handbid_ajax_i_am_here",
             "handbid_ajax_reset_password",
+            "handbid_ajax_send_text_link",
             "handbid_ajax_get_paddle_number",
             "handbid_ajax_send_invoice",
             "handbid_ajax_createbid",
             "handbid_ajax_buy_tickets",
             "handbid_ajax_pay_for_tickets",
+            "handbid_ajax_pay_for_tickets_by_card",
             "handbid_ajax_make_receipt_payment",
             "handbid_ajax_removebid",
             "handbid_ajax_add_credit_card",
@@ -166,7 +168,9 @@ class HandbidActionController
             "handbid_ajax_customizer_css",
             "handbid_ajax_get_testimonial",
             "handbid_ajax_update_profile",
-            "handbid_ajax_get_auction_tickets",
+            "handbid_ajax_get_auction_tickets_template",
+            "handbid_ajax_get_confirmed_tickets_template",
+            "handbid_ajax_get_list_of_credit_cards",
         ];
         foreach ($ajaxActions as $ajaxAction)
         {
@@ -314,6 +318,7 @@ class HandbidActionController
             ];
 
             $profile = $this->handbid->store('Bidder')->register($values);
+//            $profile = true;
 
             $baseError = "Something went wrong. Please, try again later.";
             if (!$profile)
@@ -331,6 +336,7 @@ class HandbidActionController
                     $result["error"] = trim($result["error"]) ? $result["error"] : $baseError;
                 }
             }
+
 
         }
         echo json_encode($result);
@@ -350,6 +356,22 @@ class HandbidActionController
             $profile = $this->handbid->store('Bidder')->resetPass($emailOrPhone);
 
             $result = $profile;
+
+        }
+        echo json_encode($result);
+        exit;
+    }
+
+
+    function handbid_ajax_send_text_link_callback()
+    {
+        $auctionId = $_POST["auctionId"];
+        $result       = [];
+
+        try{
+            $result = $this->handbid->store('Auction')->sendTextLink($auctionId);
+        }
+        catch(Exception $e){
 
         }
         echo json_encode($result);
@@ -505,20 +527,24 @@ class HandbidActionController
             "failID"    => [],
         ];
 
-        if ($this->handbid_verify_nonce($nonce, date("d.m.Y") . "buy_tickets_array"))
-        {
+        //if ($this->handbid_verify_nonce($nonce, date("d.m.Y") . "buy_tickets_array"))
+        //{
             $items = $_POST["items"];
             if (count($items))
             {
                 foreach ($items as $item)
                 {
                     $values = [
-                        'userId'    => (int)$_POST['userId'],
-                        'auctionId' => (int)$_POST['auctionId'],
-                        'itemId'    => (int)$item['id'],
-                        'amount'    => (int)$item['price'],
-                        'quantity'  => (int)$item['quantity'],
+                        'itemId'    => intval($item['id']),
+                        'amount'    => intval($item['price']),
+                        'quantity'  => intval($item['quantity']),
                     ];
+                    if(!empty($_POST['auctionId'])){
+                        $values['auctionId'] = intval($_POST['auctionId']);
+                    }
+                    if(!empty($_POST['userId'])){
+                        $values['userId'] = intval($_POST['userId']);
+                    }
                     try
                     {
                         $resp                  = $this->handbid->store('Bid')->createBid($values);
@@ -534,7 +560,7 @@ class HandbidActionController
                     }
                 }
             }
-        }
+        //}
         echo json_encode($result);
         exit;
     }
@@ -545,8 +571,8 @@ class HandbidActionController
         $nonce    = isset($_POST['nonce']) ? $_POST['nonce'] : 'nonce';
         $response = [];
         $values   = [
-            "receiptId" => (int)$_POST["receiptId"],
-            "auctionId" => (int)$_POST["auctionId"],
+            "receiptId" => intval($_POST["receiptId"]),
+            "auctionId" => intval($_POST["auctionId"]),
         ];
         if ($this->handbid_verify_nonce($nonce, date("d.m.Y") . "paddle-nonce"))
         {
@@ -589,14 +615,47 @@ class HandbidActionController
         exit;
     }
 
+
+    function handbid_ajax_pay_for_tickets_by_card_callback()
+    {
+        $response = [];
+        $values   = [
+            "cardId"    => intval($_POST["cardId"]),
+            "auctionId" => intval($_POST["auctionId"]),
+        ];
+        $profile  = $this->state->currentBidder();
+        if (count($profile->creditCards))
+        {
+            foreach ($profile->creditCards as $card)
+            {
+                if ($card->id == $values["cardId"])
+                {
+                    $values["stripeId"]         = $card->stripeId;
+                    $values["creditCardHandle"] = $card->creditCardHandle;
+                }
+            }
+        }
+        unset($values["cardId"]);
+        try
+        {
+            $resp               = $this->handbid->store('Receipt')->makePayment($values);
+            $response["result"] = $resp;
+        } catch (Exception $e)
+        {
+            $response["error"] = $e->getMessage();
+        }
+        echo json_encode($response);
+        exit;
+    }
+
     function handbid_ajax_make_receipt_payment_callback()
     {
         $nonce    = isset($_POST['nonce']) ? $_POST['nonce'] : 'nonce';
         $response = [];
-        $receipt_id = (int)$_POST["receiptId"];
+        $receipt_id = intval($_POST["receiptId"]);
         $values   = [
-            "cardId"    => (int)$_POST["cardId"],
-            "auctionId" => (int)$_POST["auctionId"],
+            "cardId"    => intval($_POST["cardId"]),
+            "auctionId" => intval($_POST["auctionId"]),
         ];
         if($receipt_id){
             $values['receiptId'] = $receipt_id;
@@ -641,7 +700,7 @@ class HandbidActionController
         if ($this->handbid_verify_nonce($nonce, date("d.m.Y") . "bid"))
         {
 
-            $bidID = (int)$_POST["bidID"];
+            $bidID = intval($_POST["bidID"]);
 
             $resp = $this->handbid->store('Bid')->removeBid($bidID);
 //            if(isset($resp->status)){
@@ -709,8 +768,8 @@ class HandbidActionController
                 $tok = \Stripe\Token::create(array(
                                                  "card" => array(
                                                      "number"    => $cardNum,
-                                                     "exp_month" => (int)$opts["expMonth"],
-                                                     "exp_year"  => (int)$opts["expYear"],
+                                                     "exp_month" => intval($opts["expMonth"]),
+                                                     "exp_year"  => intval($opts["expYear"]),
                                                      "cvc"       => $opts["cvc"],
                                                      "name"      => $opts["nameOnCard"],
                                                  ),
@@ -844,7 +903,7 @@ class HandbidActionController
 
         $nonce = isset($_POST['nonce']) ? $_POST['nonce'] : 'nonce';
 
-        $itemID = (int)$_REQUEST["itemID"];
+        $itemID = intval($_REQUEST["itemID"]);
 
         if ($this->handbid_verify_nonce($nonce, date("d.m.Y") . "get_bids_" . $itemID))
         {
@@ -1054,7 +1113,7 @@ class HandbidActionController
     public function handbid_ajax_get_testimonial_callback()
     {
 
-        $postID      = (int)$_POST["testimonial_id"];
+        $postID      = intval($_POST["testimonial_id"]);
         $testimonial = get_post($postID);
 
         echo $this->viewRenderer->render(
@@ -1090,57 +1149,59 @@ class HandbidActionController
     }
 
 
-    public function handbid_ajax_get_auction_tickets_callback()
+    public function handbid_ajax_get_auction_tickets_template_callback()
     {
+        $tickets = json_decode(json_encode($_POST['tickets']));
+        $currencyCode = (!empty($_POST['currencyCode'])) ? $_POST['currencyCode'] : 'USD';
+        $currencySymbol = (!empty($_POST['currencySymbol'])) ? $_POST['currencySymbol'] : '$';
 
-        $currencyCode = 'USD';
-        $currencySymbol = '$';
-
-        try
-        {
-            $statuses = ['sold', 'open', 'open', 'open', 'open', 'open', 'open'];
-            $tickets  = [];
-            for ($i = 1; $i < rand(2, 3); $i++)
-            {
-                $tickets[] = [
-                    'id'                 => rand(1111, 9999),
-                    'name'               => 'Ticket Name ' . rand(1111, 9999),
-                    'description'        => 'Some very long licket description ' . rand(1111, 9999),
-                    'isHidden'           => 0,
-                    'ticketQuantity'     => rand(1, 10),
-                    'buyNowPrice'        => rand(12, 999),
-                    'inventoryRemaining' => rand(-1, 30),
-                    'status'             => $statuses[mt_rand(0, count($statuses) - 1)],
-                ];
-            }
-
-            $tickets = json_decode(json_encode($tickets));
-
-            $success = !!(count($tickets));
-
-        }
-        catch(Exception $e){
-
-            $success = false;
-            $tickets = [];
-        }
-
-        $result = [
-            'success' => $success,
-            'result' => $this->viewRenderer->render(
-                'views/bidder/registration/purchase-ticket',
-                [
-                    'tickets' => $tickets,
-                    'currencyCode' => $currencyCode,
-                    'currencySymbol' => $currencySymbol,
-                ]
-            ),
-        ];
-
-        sleep(3);
-        echo json_encode($result);
+        echo $this->viewRenderer->render(
+            'views/bidder/registration/purchase-tickets',
+            [
+                'tickets' => $tickets,
+                'currencyCode' => $currencyCode,
+                'currencySymbol' => $currencySymbol,
+            ]
+        );
         exit;
+    }
 
+    public function handbid_ajax_get_confirmed_tickets_template_callback()
+    {
+        $tickets = json_decode(json_encode($_POST['tickets']));
+        $currencyCode = (!empty($_POST['currencyCode'])) ? $_POST['currencyCode'] : 'USD';
+        $currencySymbol = (!empty($_POST['currencySymbol'])) ? $_POST['currencySymbol'] : '$';
+
+        $confirm_tickets = $this->viewRenderer->render(
+            'views/bidder/registration/confirmed-tickets',
+            [
+                'tickets' => $tickets,
+                'currencyCode' => $currencyCode,
+                'currencySymbol' => $currencySymbol,
+            ]
+        );
+        $result_tickets = $this->viewRenderer->render(
+            'views/bidder/registration/result-tickets',
+            [
+                'tickets' => $tickets,
+                'currencyCode' => $currencyCode,
+                'currencySymbol' => $currencySymbol,
+            ]
+        );
+        echo json_encode(
+            [
+                'confirm_tickets' => $confirm_tickets,
+                'result_tickets' => $result_tickets,
+            ]
+        );
+        exit;
+    }
+
+    public function handbid_ajax_get_list_of_credit_cards_callback()
+    {
+        $bidder = $this->state->currentBidder();
+        echo json_encode($bidder->creditCards);
+        exit;
     }
 
 

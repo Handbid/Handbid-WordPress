@@ -1,0 +1,55 @@
+<?php
+
+$tickets = $this->get('tickets');
+$currencyCode  = $this->get('currencyCode');
+$currencySymbol = $this->get('currencySymbol');
+
+if(is_array($tickets) and !empty($tickets))
+{
+    ?>
+    <table>
+        <tbody>
+        <?php
+        foreach($tickets as $ticket)
+        {
+            ?>
+            <tr>
+                <td>
+                    <svg class="u-svg-icon">
+                        <use xlink:href="#ticket-icon"></use>
+                    </svg>
+                    <?php echo $ticket->name; ?>
+                </td>
+                <td>x<?php echo $ticket->quantity; ?></td>
+                <td>@
+                    <span class="handbidAuctionCurrency" title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span>
+                    <?php echo $ticket->price; ?>
+                </td>
+                <td class="ticket-fullprice">
+                    <span class="handbidAuctionCurrency" title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span>
+                    <?php echo $ticket->price; ?>
+                </td>
+                <td>
+                    <a href="#" class="btn-icon loading-span-button" title="Send tickets on email" style="display: none">
+                        <span>
+                        <svg class="u-svg-icon">
+                            <use xlink:href="#p-email-icon"></use>
+                        </svg>
+                        mail
+                        </span>
+                    </a>
+                    <a href="#" class="btn-icon" title="Print tickets" style="display: none">
+                        <svg class="u-svg-icon">
+                            <use xlink:href="#print-icon"></use>
+                        </svg>
+                        print
+                    </a>
+                </td>
+            </tr>
+        <?php
+        }
+        ?>
+        </tbody>
+    </table>
+    <?php
+}
