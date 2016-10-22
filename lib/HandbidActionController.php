@@ -312,13 +312,13 @@ class HandbidActionController
                 'mobile'      => $_POST['mobile'],
                 'password'    => $_POST['password'],
                 'email'       => $_POST['email'],
+                'shippingAddress' => $_POST['shippingAddress'],
                 'deviceType'  => (isset($_POST['deviceType'])) ? $_POST['deviceType'] : "other",
                 'countryCode' => $_POST['countryCode'],
                 'auctionGuid' => $_POST['auctionGuid'],
             ];
 
             $profile = $this->handbid->store('Bidder')->register($values);
-//            $profile = true;
 
             $baseError = "Something went wrong. Please, try again later.";
             if (!$profile)

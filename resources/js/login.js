@@ -247,6 +247,7 @@ var handbidLoginMain, cookieExpire = 7;
             var lastname = $("#confirm-lastname").val();
             var password = $("#confirm-password").val();
             var email = $("#confirm-email").val();
+            var shippingAddress = $("#confirm-address").val();
             var countryCode = $("#confirm-phone-code").val();
             var mobile = handbidLogin.getPhoneNumber($("#confirm-phone-number").val());
             var deviceType = $("#confirm-phone-type").val();
@@ -268,6 +269,7 @@ var handbidLoginMain, cookieExpire = 7;
                 lastname: lastname,
                 password: password,
                 email: email,
+                shippingAddress: shippingAddress,
                 countryCode: countryCode,
                 mobile: mobile,
                 deviceType: deviceType,

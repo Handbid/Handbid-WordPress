@@ -229,7 +229,10 @@ if(!function_exists("handbid_popup_inline_links")){
         </div>
 
         <div class="container-fluid container-tab register-tab" style="display: none" data-tab-name="register-form">
-            <?php get_login_popup_header("Getting Started!");?>
+            <?php
+            $register_text = (!empty($auction->name)) ? 'Register for ' . $auction->name : "Getting Started!";
+            get_login_popup_header($register_text);
+            ?>
             <div class="handbid-form row">
                 <h4>Creating Your Bidder Account<br></h4>
 
@@ -278,7 +281,7 @@ if(!function_exists("handbid_popup_inline_links")){
                     </div>
 
                     <div class="row">
-                        <div class="form-group col-xs-12">
+                        <div class="form-group col-xs-6">
                             <input id="reg-email" placeholder="eMail" type="email" name="email" value=""
                                    class="col-xs-12 has-question-icon has-popover cleanable-input copyable-field is-email"
                                    data-copy-to="confirm-email"
@@ -293,6 +296,21 @@ if(!function_exists("handbid_popup_inline_links")){
                                data-trigger="focus"
                                title="Enter in Your Email Address"
                                data-content="We will use your eMail to identify you and also to send you a receipt at the end of the auction. Don't worry, you won't end up on any list because of us. You can review our privacy policy for more details.">
+                                ?
+                            </a>
+                        </div>
+                        <div class="form-group col-xs-6">
+                            <input id="reg-address" placeholder="Address" type="text" name="address" value=""
+                                   class="col-xs-12 has-question-icon has-popover cleanable-input copyable-field"
+                                   data-copy-to="confirm-address" onfocus="handbidMain.initGoogleAutocomplete('reg-address')">
+                            <a class="has-question-icon has-popover"
+                               tabindex="-1"
+                               role="button"
+                               data-toggle="popover"
+                               data-placement="top"
+                               data-trigger="focus"
+                               title="Enter in Your Shipping Address"
+                               data-content="Please review our privacy policy for more details.">
                                 ?
                             </a>
                         </div>
@@ -424,6 +442,10 @@ if(!function_exists("handbid_popup_inline_links")){
                             <input id="confirm-email" placeholder="eMail" type="email" name="email" value=""
                                    class="col-xs-12 cleanable-input is-email"
                                    data-not-email-message="Please, provide valid email address" >
+                        </div>
+                        <div class="form-group col-xs-12">
+                            <input id="confirm-address" placeholder="Address" type="text" name="address" value=""
+                                   class="col-xs-12 cleanable-input"  onfocus="handbidMain.initGoogleAutocomplete('confirm-address')">
                         </div>
                     </div>
                     <div class="row">
