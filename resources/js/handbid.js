@@ -4710,6 +4710,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 }
             });
             logoutNotice.get().on('pnotify.confirm', function () {
+                $.removeCookie("handbid-auth", {path: '/'});
                 window.location = path;
             }).on('pnotify.cancel', function () {
                 return false;
