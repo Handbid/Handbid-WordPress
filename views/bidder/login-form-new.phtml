@@ -234,7 +234,6 @@ if(!function_exists("handbid_popup_inline_links")){
             get_login_popup_header($register_text);
             ?>
             <div class="handbid-form row">
-                <h4>Creating Your Bidder Account<br></h4>
 
                 <div class="col-md-10 col-md-offset-1 col-xs-12 center-aligned-text handbid-form-area">
                     <div class="row errorsRow" style="display: none;">
@@ -415,7 +414,7 @@ if(!function_exists("handbid_popup_inline_links")){
         <div class="container-fluid container-tab" style="display: none" data-tab-name="register-form-confirm">
             <?php get_login_popup_header("Confirm Registration");?>
             <div class="handbid-form row">
-                <h4>Your Handbid Account is SETUP<br>please confirm your information below</h4>
+                <h4>Please confirm your information below</h4>
                 <div class="col-md-10 col-md-offset-1 col-xs-12 handbid-form-area">
                     <div class="row errorsRow" style="display: none;">
                         <div class="col-xs-12 errorsContainer">
@@ -445,7 +444,8 @@ if(!function_exists("handbid_popup_inline_links")){
                         </div>
                         <div class="form-group col-xs-12">
                             <input id="confirm-address" placeholder="Address" type="text" name="address" value=""
-                                   class="col-xs-12 cleanable-input"  onfocus="handbidMain.initGoogleAutocomplete('confirm-address')">
+                                   class="col-xs-12 cleanable-input"
+                                   onfocus="handbidMain.initGoogleAutocomplete('confirm-address')">
                         </div>
                     </div>
                     <div class="row">
@@ -473,7 +473,7 @@ if(!function_exists("handbid_popup_inline_links")){
                     <input type="hidden" id="confirm-password" name="password">
                     <div class="row">
                         <div class="col-xs-12 center-aligned-text">
-                            <a class="btn btn-info signup login-popup-link register-confirm" data-target-tab="register-complete"><span>COMPLETE</span></a>
+                            <a class="btn btn-info signup login-popup-link register-confirm" data-target-tab="register-complete"><span>CONTINUE</span></a>
                         </div>
                     </div>
                 </div>
