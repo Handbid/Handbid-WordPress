@@ -565,12 +565,6 @@ if(!function_exists("handbid_popup_inline_links")){
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-md-10 col-md-offset-1 col-xs-12 modal-footer">
-                        <?php handbid_app_links();?>
-                    </div>
-                </div>
-
                 <input type='hidden' name='redirect' value='<?php echo $redirectLink; ?>' id="hb-login-form-redirect"/>
                 <input type='hidden' name='form-id' value='handbid-login'/>
                 <input type='hidden' name='nonce' value='<?php echo apply_filters("handbid_create_nonce", date("d.m.Y") . "login");?>' id="hb-login-form-nonce"/>
@@ -592,12 +586,6 @@ if(!function_exists("handbid_popup_inline_links")){
                         <div class="form-group col-md-3 col-md-offset-6 col-xs-6 buttons right-aligned">
                             <button class="btn" id="hb-confirm-tickets-pay"><span>Purchase</span></button>
                         </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-10 col-md-offset-1 col-xs-12 modal-footer">
-                        <?php handbid_app_links();?>
                     </div>
                 </div>
 
@@ -624,8 +612,8 @@ if(!function_exists("handbid_popup_inline_links")){
                             <span data-auction-item><?php echo $auction->name;?> Tickets?</span>
                         </p>
 
-                        <div class="cards-block">
-                            <form class="row">
+                        <div class="cards-block no-cards-if-no-cards no-cards-on-file">
+                            <form class="row cards-form">
                                 <div class="form-group col-sm-9">
                                     <select id="tickets-payment-card" class="form-control select-payment-card" name="payment-card"></select>
                                 </div>
@@ -639,14 +627,8 @@ if(!function_exists("handbid_popup_inline_links")){
 
                     <div class="row">
                         <div class="form-group col-md-3 col-xs-6 buttons left-aligned">
-                            <button class="btn btn-gray"  id="hb-pay-tickets-skip"><span>Skip</span></button>
+                            <button class="btn btn-gray"  id="hb-pay-tickets-skip"><span>Back</span></button>
                         </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-10 col-md-offset-1 col-xs-12 modal-footer">
-                        <?php handbid_app_links();?>
                     </div>
                 </div>
 
@@ -683,12 +665,6 @@ if(!function_exists("handbid_popup_inline_links")){
                         <div class="form-group col-md-3 col-xs-6 buttons left-aligned">
                             <button class="btn btn-gray"  id="hb-ticket-payment-error-back"><span>Back</span></button>
                         </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-10 col-md-offset-1 col-xs-12 modal-footer">
-                        <?php handbid_app_links();?>
                     </div>
                 </div>
 

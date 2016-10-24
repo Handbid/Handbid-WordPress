@@ -13,7 +13,7 @@ var handbidLoginMain, cookieExpire = 7;
 
     var handbidLogin = {
 
-        displaySpecifiedTabOfLoginPopup: function (tabName) {
+        displaySpecifiedTabOfLoginPopup: function (tabName, referredFrom) {
             var currentTab = $(".active-container").eq(0);
             var neededTab = $("[data-tab-name=" + tabName + "]");
 
@@ -25,14 +25,8 @@ var handbidLoginMain, cookieExpire = 7;
 
             if (tabName == 'purchase-tickets') {
                 var tickets_html = $('.tickets-container.loading-tickets-container').eq(0).html().trim();
-                if(tickets_html == '') {
+                if(tickets_html == '' || referredFrom != undefined) {
                     handbidLogin.getTicketsForAuction();
-                }
-            }
-
-            if (tabName == 'process-payment') {
-                if(!tickets) {
-                    handbidLogin.purchaseTickets();
                 }
             }
 
@@ -381,6 +375,8 @@ var handbidLoginMain, cookieExpire = 7;
             var tickets_container = $('.tickets-on-register .tickets-container');
             var currencyCode = $("#login-add-to-auction-currency-code").val();
             var currencySymbol = $("#login-add-to-auction-currency-symbol").val();
+            $("[data-handbid-tickets-quantity]").html(0);
+            $("[data-handbid-tickets-total]").html(0);
 
             tickets_container.html();
             tickets_container.addClass('loading');
@@ -406,32 +402,12 @@ var handbidLoginMain, cookieExpire = 7;
 
         },
 
-        purchaseTickets: function(){
-
-            tickets = handbidLogin.recalculateTotalTicketsPrice();
-            var payContainer = $(".pay-for-purchased-containers");
-            var auctionId = $("#confirm-add-to-auction-id").val();
-            var userId = bidderId;
-            payContainer.addClass('loading');
-            var data = {
-                action: "handbid_ajax_buy_tickets",
-                userId: userId,
-                auctionId: auctionId,
-                items: tickets
-            };
-            $.post(
-                ajaxurl,
-                data,
-                function (data) {
-
-                    payContainer.removeClass('loading');
-                }
-            );
-        },
-
         addCreditCardsToPayForTickets: function(cards){
 
             var cards_container = $('#tickets-payment-card');
+
+            var no_cards_class = 'no-cards-on-file';
+            var cards_block = $('.no-cards-if-no-cards');
 
             cards_container.html();
 
@@ -442,7 +418,10 @@ var handbidLoginMain, cookieExpire = 7;
                     cards_container.append("<option data-option-val='" + card.id + "' value='" + card.id + "'>" + card.nameOnCard + " (xxxx xxxx xxxx " + card.lastFour + ")</option>");
 
                 });
-
+                cards_block.removeClass(no_cards_class);
+            }
+            else{
+                cards_block.addClass(no_cards_class);
             }
 
         },
@@ -594,12 +573,33 @@ var handbidLoginMain, cookieExpire = 7;
 
         },
 
+        purchaseTickets: function(callback){
+
+            tickets = handbidLogin.recalculateTotalTicketsPrice();
+            var payContainer = $(".pay-for-purchased-containers");
+            var auctionId = $("#confirm-add-to-auction-id").val();
+            var userId = bidderId;
+            payContainer.addClass('loading');
+            var data = {
+                action: "handbid_ajax_buy_tickets",
+                userId: userId,
+                auctionId: auctionId,
+                items: tickets
+            };
+            $.post(
+                ajaxurl,
+                data,
+                function (data) {
+                    payContainer.removeClass('loading');
+                    callback();
+                }
+            );
+        },
+
 
         payForTicketsAllCard: function (button) {
 
-
             if(!button.hasClass('active')) {
-
 
                 var auctionId  = $("#confirm-add-to-auction-id").val();
                 var cardSelect = $("#tickets-payment-card");
@@ -614,57 +614,81 @@ var handbidLoginMain, cookieExpire = 7;
                 if(cardId) {
 
                     button.addClass('active');
-                    var dataAct = {
-                        action   : "handbid_ajax_pay_for_tickets_by_card",
+
+                    var to_buy = [];
+
+                    if(tickets == null){
+                        tickets = handbidLogin.recalculateTotalTicketsPrice();
+                        to_buy = tickets;
+                    }
+
+                    var data = {
+                        action: "handbid_ajax_buy_tickets",
+                        userId: bidderId,
                         auctionId: auctionId,
-                        cardId   : cardId
+                        items: to_buy
                     };
 
                     $.post(
                         ajaxurl,
-                        dataAct,
+                        data,
                         function (data) {
-                            button.removeClass('active');
-                            data = JSON.parse(data);
 
-                            if (data.result != undefined) {
+                            var dataAct = {
+                                action   : "handbid_ajax_pay_for_tickets_by_card",
+                                auctionId: auctionId,
+                                cardId   : cardId
+                            };
 
-                                if (data.result.data != undefined && data.result.data.error != undefined) {
+                            $.post(
+                                ajaxurl,
+                                dataAct,
+                                function (data) {
+                                    button.removeClass('active');
+                                    data = JSON.parse(data);
 
-                                    var payment_error_messages = [];
+                                    if (data.result != undefined) {
 
-                                    for (var propertyName in data.result.data.error) {
+                                        if (data.result.data != undefined && data.result.data.error != undefined) {
 
-                                        var value = data.result.data.error[propertyName];
+                                            var payment_error_messages = [];
 
-                                        payment_error_messages.push('<b>' + propertyName + ':</b> ' + value);
-                                    }
+                                            for (var propertyName in data.result.data.error) {
 
-                                    processErrorBox.html(payment_error_messages.join('<br>'));
-                                    nextPopupWindow = "process-error";
-                                }
-                                else {
-                                    if (data.result.paid) {
-                                        nextPopupWindow = "process-success";
+                                                var value = data.result.data.error[propertyName];
 
-                                        $('.hide-if-no-tickets').show();
-                                        $('.last-screen-title').html('Successfully Processed!');
+                                                payment_error_messages.push(value);
+                                            }
 
+                                            processErrorBox.html(payment_error_messages.join('<br>'));
+                                            nextPopupWindow = "process-error";
+                                        }
+                                        else {
+                                            if (data.result.paid) {
+                                                nextPopupWindow = "process-success";
+
+                                                $('.hide-if-no-tickets').show();
+                                                $('.last-screen-title').html('Successfully Processed!');
+                                                tickets = null;
+
+                                            }
+                                            else {
+                                                processErrorBox.html(data.result.description);
+                                                nextPopupWindow = "process-error";
+                                            }
+                                        }
                                     }
                                     else {
-                                        processErrorBox.html(data.result.description);
+                                        processErrorBox.html('Something went wrong. Please try again later');
                                         nextPopupWindow = "process-error";
                                     }
-                                }
-                            }
-                            else {
-                                processErrorBox.html('Something went wrong. Please try again later');
-                                nextPopupWindow = "process-error";
-                            }
 
-                            handbidLogin.displaySpecifiedTabOfLoginPopup(nextPopupWindow);
+                                    handbidLogin.displaySpecifiedTabOfLoginPopup(nextPopupWindow);
+                                }
+                            );
                         }
                     );
+
                 }
                 else{
                     processErrorBox.html('There is no card selected');
@@ -739,7 +763,7 @@ var handbidLoginMain, cookieExpire = 7;
 
         $('#hb-pay-tickets-skip').on('click', function (e) {
             e.preventDefault();
-            handbidLogin.displaySpecifiedTabOfLoginPopup('process-success');
+            handbidLogin.displaySpecifiedTabOfLoginPopup('purchase-tickets', 'hb-pay-tickets-skip');
         });
 
         $('#hb-confirm-tickets-pay').on('click', function (e) {

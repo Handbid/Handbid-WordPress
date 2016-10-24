@@ -3130,7 +3130,8 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
                                     var cardSelects = $(".select-payment-card");
                                     cardSelects.show();
-                                    cardSelects.append("<option data-option-val='" + resp.id + "' value='" + resp.id + "'>" + resp.nameOnCard + " (xxxx xxxx xxxx " + resp.lastFour + ")</option>");
+                                    $(".select-payment-card option").removeAttr('selected');
+                                    cardSelects.append("<option data-option-val='" + resp.id + "' selected='selected' value='" + resp.id + "'>" + resp.nameOnCard + " (xxxx xxxx xxxx " + resp.lastFour + ")</option>");
 
                                     if (!hasCards) {
                                         template.appendTo(container);
@@ -3150,6 +3151,10 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                                         template.appendTo(list);
 
                                     }
+
+                                    var no_cards_class = 'no-cards-on-file';
+                                    var cards_block = $('.no-cards-if-no-cards');
+                                    cards_block.removeClass(no_cards_class);
 
                                     $("[data-handbid-credit-cards-need]").removeAttr("data-handbid-credit-cards-required");
                                     $('[data-handbid-modal-key="credit-card-form"] .modal-close').click();
