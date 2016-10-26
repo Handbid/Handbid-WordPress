@@ -43,6 +43,8 @@ class HandbidViewRenderer
 
             $path .= '.phtml';
 
+            $path = str_replace('.phtml.phtml', '.phtml', $path);
+
             if (file_exists($path))
             {
                 $view = new HandbidView($path, $vars);

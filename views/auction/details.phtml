@@ -28,9 +28,12 @@ $categories  = $this->get('categories');
 $categories  = $auction->categories;
 
 $categoriesOutput                = [];
+$output_categories               = [];
+$first_category_items            = [];
 $auctionStatusIsPresaleOrPreview = in_array($auction->status, array("presale", "preview"));
 $auctionStatusIsPresale          = in_array($auction->status, array("presale"));
 $allItemsCount                   = 0;
+$counter                         = 0;
 foreach ($categories as $category_single)
 {
     $temp = [
@@ -38,7 +41,7 @@ foreach ($categories as $category_single)
         'name'  => $category_single->name,
         'count' => 0,
         'items' => [],
-        'itemz' => [],
+        'real_items' => [],
     ];
     foreach ($category_single->items as $item_single)
     {
@@ -52,17 +55,27 @@ foreach ($categories as $category_single)
         {
             $temp['count'] += 1;
             $temp['items'][] = $item_single->name;
-        } else
-        {
-            $temp['itemz'][] = $item_single->name;
+            $temp['real_items'][] = $item_single;
         }
     }
     if ($temp['count'])
     {
         $allItemsCount += $temp['count'];
-        $categoriesOutput[] = $temp;
+
+        if($counter){
+            $output_categories[$category_single->id] = $category_single->id;
+        }
+        else{
+            $first_category_items = $temp['real_items'];
+        }
+
+        unset($temp['real_items']);
+
+        $categoriesOutput[$category_single->id] = $temp;
+        $counter++;
     }
 }
+
 
 $locationStreet1       = ($hasLocation) ? $location->auctionLocationStreet1 : "";
 $locationStreet2       = ($hasLocation) ? $location->auctionLocationStreet2 : "";
@@ -81,6 +94,7 @@ $hasTicketItems = !!(count($tickets));
 
 $currencyCode   = (isset($auction->currencyCode)) ? $auction->currencyCode : HANDBID_DEFAULT_CURRENCY;
 $currencySymbol = (isset($auction->currencySymbol)) ? $auction->currencySymbol : HANDBID_DEFAULT_CURRENCY_SYMBOL;
+
 ?>
 
 <div class="auction-details <?php echo $auction->status; ?>"
@@ -216,9 +230,13 @@ $currencySymbol = (isset($auction->currencySymbol)) ? $auction->currencySymbol :
 
                         <select name="mobile-category">
 
-                            <option value="*">Category: All Items</option>
+                            <option value="*" data-legacy-category-id="all"
+                                <?php selected(wp_is_mobile(), false) ?>
+                            >Category: All Items</option>
 
-                            <?php foreach ($categoriesOutput as $category)
+                            <?php
+                            $i = 0;
+                            foreach ($categoriesOutput as $category)
                             {
 
                                 if ($category['count'] > 0)
@@ -226,9 +244,13 @@ $currencySymbol = (isset($auction->currencySymbol)) ? $auction->currencySymbol :
                                     ?>
                                     <option value="[data-tags~='|<?php echo esc_html(
                                         sanitize_key($category['name'])
-                                    ); ?>|']"><?php echo $category['name'] . ' (' . $category['count'] . ')'; ?></option>
+                                    ); ?>|']"
+                                        <?php selected((($i == 0) && wp_is_mobile()), true) ?>
+                                            data-legacy-category-id="<?php echo $category['id']?>">
+                                        <?php echo $category['name'] . ' (' . $category['count'] . ')'; ?></option>
                                     <?php
                                 } //end if
+                                $i++;
                             } ?>
                         </select>
 
@@ -262,20 +284,22 @@ $currencySymbol = (isset($auction->currencySymbol)) ? $auction->currencySymbol :
                             <h4>Categories</h4>
                             <ul class="by-category">
 
-                                <li data-selector="*" class="selected"><a href="#">All (<span
+                                <li data-selector="*" class="<?php echo (wp_is_mobile() ? '' : 'selected') ?>" data-legacy-category-id="all"><a href="#">All (<span
                                             class="countAuctionItemsForCatAll"><?php echo $allItemsCount; ?></span>)</a>
                                 </li>
 
 
                                 <?php
-                                $selected = '';
+
                                 if (count($categoriesOutput))
                                 {
+                                    $i = 0;
                                     foreach ($categoriesOutput as $category)
                                     {
 
                                         if ($category['count'] > 0)
                                         {
+                                            $selected = (($i == 0) && wp_is_mobile()) ? 'selected' : '';
                                             ?>
                                             <li class="<?php echo $selected; ?>"
                                                 data-selector="[data-tags~='|<?php echo esc_html(
@@ -284,8 +308,9 @@ $currencySymbol = (isset($auction->currencySymbol)) ? $auction->currencySymbol :
                                                     href="#"><?php echo $category['name'] . ' (<span class="countAuctionItemsForCat' . $category['id'] . '">' . $category['count'] . '</span>)'; ?></a>
                                             </li>
                                             <?php
-                                            $selected = '';
                                         } //end if
+
+                                        $i++;
                                     }
                                 } ?>
 
@@ -300,15 +325,16 @@ $currencySymbol = (isset($auction->currencySymbol)) ? $auction->currencySymbol :
 
                     <?php
 
-                    echo $this->partial('../../views/item/list.phtml', [
-                                                                         'auction'    => $auction,
-                                                                         'items'      => $items,
-                                                                         'cols_count' => $colsCount,
-                                                                         'winning'    => $winning,
-                                                                         'losing'     => $losing,
-                                                                     ]
+                    echo $this->partial(
+                        '../../views/item/list.phtml',
+                        [
+                            'auction'    => $auction,
+                            'items'      => wp_is_mobile() ? $first_category_items : $items,
+                            'cols_count' => $colsCount,
+                            'winning'    => $winning,
+                            'losing'     => $losing,
+                        ]
                     );
-
                     //echo do_shortcode('[handbid_auction_item_list auction="' . $auction->key . '"]');
                     ?>
 
@@ -360,6 +386,9 @@ $currencySymbol = (isset($auction->currencySymbol)) ? $auction->currencySymbol :
 
     </div>
 </div>
+<script>
+    var auction_categories_ids = <?php echo wp_is_mobile() ? json_encode($output_categories) : 'null'; ?>
+</script>
 
 <?php if ($auction->timerRemaining > 0)
 {

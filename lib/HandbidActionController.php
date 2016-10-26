@@ -171,6 +171,7 @@ class HandbidActionController
             "handbid_ajax_get_auction_tickets_template",
             "handbid_ajax_get_confirmed_tickets_template",
             "handbid_ajax_get_list_of_credit_cards",
+            "handbid_ajax_get_item_boxes_by_category",
         ];
         foreach ($ajaxActions as $ajaxAction)
         {
@@ -1201,6 +1202,67 @@ class HandbidActionController
     {
         $bidder = $this->state->currentBidder();
         echo json_encode($bidder->creditCards);
+        exit;
+    }
+
+    public function handbid_ajax_get_item_boxes_by_category_callback()
+    {
+        if(!empty($_POST['auctionId'])){
+            $auctionID = intval($_POST['auctionId']);
+
+            $auction  = $this->state->currentAuction(['id' => $auctionID]);
+            if($auction)
+            {
+                $catId = $_POST['catId'];
+
+                $colsCount = $this->state->getGridColsCount(3, "Item");
+
+                $myInventory = $this->state->currentInventory($auctionID);
+
+                if ($myInventory)
+                {
+                    $winning     = (isset($myInventory->winning) and is_array($myInventory->winning)) ? $myInventory->winning : [];
+                    $losing      = (isset($myInventory->losing) and is_array($myInventory->losing)) ? $myInventory->losing : [];;
+
+                }
+                else
+                {
+                    $winning = [];
+                    $losing  = [];
+                }
+
+                $items = [];
+
+                if (count($auction->categories))
+                {
+                    forEach ($auction->categories as $category)
+                    {
+                        if($catId == 'all'){
+                            forEach ($category->items as $item)
+                            {
+                                $items[] = $item;
+                            }
+                        }
+                        elseif($category->id == $catId)
+                        {
+                            $items = $category->items;
+                        }
+                    }
+                }
+
+                echo $this->viewRenderer->render(
+                    'views/item/list.phtml',
+                    [
+                        'only_items' => true,
+                        'auction'    => $auction,
+                        'items'      => $items,
+                        'cols_count' => $colsCount,
+                        'winning'    => $winning,
+                        'losing'     => $losing,
+                    ]
+                );
+            }
+        }
         exit;
     }
 

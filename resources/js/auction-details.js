@@ -8,6 +8,7 @@
  */
 
 var timerForSearch, timerToLoad, isotopeWasFiltered = false, wasNotVisible = true, needToMoveToItem = false, checkIS;
+var currentlyFilteringByCat = null;
 (function ($) {
 
 
@@ -370,13 +371,48 @@ var timerForSearch, timerToLoad, isotopeWasFiltered = false, wasNotVisible = tru
         (iso) ? refreshSearchResults() : prepareIsotope() && refreshSearchResults();
     }
 
+    function needToAppendItems(catId){
+        var result = false;
+
+        if(currentlyFilteringByCat != catId){
+            result = true;
+            currentlyFilteringByCat = catId;
+        }
+
+        if(catId && auction_categories_ids && (auction_categories_ids[catId] || (catId == 'all'))){
+            result = true;
+            if(catId == 'all'){
+                auction_categories_ids = null;
+            }
+            else{
+                delete auction_categories_ids[catId];
+            }
+
+            var auctionId = $('#bidder-info-load').attr('data-auction');
+
+            var dataAct = {
+                action: "handbid_ajax_get_item_boxes_by_category",
+                auctionId: auctionId,
+                catId: catId
+            };
+
+            $.post(
+                ajaxurl,
+                dataAct,
+                function (data) {
+                    var $newItems = $(data);
+                    $('.simple-box-row.item-list.isotope').append( $newItems ).isotope( 'addItems', $newItems );
+                    checkAndUpdateIsotope();
+                }
+            );
+        }
+
+        return result;
+    }
+
     $(document).ready(function () {
 
         var searchEnabled = true;
-        //checkIS = checkAndUpdateIsotope;
-        //alert("ready");
-        //prepareIsotope();
-        //refreshSearchResults();
 
         //show iso on first load of items tab
         $('.slider-nav [data-slider-nav-key="items"]').on('click', function () {
@@ -463,7 +499,6 @@ var timerForSearch, timerToLoad, isotopeWasFiltered = false, wasNotVisible = tru
                 console.log('not found', sort);
             }
         });
-
         //the filter controls
         $('.filters .section').each(function (index, section) {
 
@@ -486,7 +521,14 @@ var timerForSearch, timerToLoad, isotopeWasFiltered = false, wasNotVisible = tru
                     filterItems[key] = selector;
                 }
 
-                if (searchEnabled) {
+                var need_to_append_items = false;
+
+                if(key == 'category'){
+                    var catId = $(this).parent().attr('data-legacy-category-id');
+                    need_to_append_items = needToAppendItems(catId);
+                }
+
+                if (searchEnabled && !need_to_append_items) {
                     $('.fancy-search .query').val('');
                     searchTerm = false;
                     checkAndUpdateIsotope();
@@ -510,7 +552,13 @@ var timerForSearch, timerToLoad, isotopeWasFiltered = false, wasNotVisible = tru
                 filterItems[key] = selector;
             }
 
-            if (searchEnabled) {
+            var need_to_append_items = false;
+            if(key == 'category'){
+                var catId = $('select[name="mobile-category"] option:selected').attr('data-legacy-category-id');
+                need_to_append_items = needToAppendItems(catId);
+            }
+
+            if (searchEnabled && !need_to_append_items) {
                 $('.fancy-search .query').val('');
                 searchTerm = false;
                 checkAndUpdateIsotope();
@@ -524,6 +572,15 @@ var timerForSearch, timerToLoad, isotopeWasFiltered = false, wasNotVisible = tru
                 firstCatLink.click();
             }
         }, 3500);
+
+
+        //reset search button
+        $('[data-slider-nav-key="items"]').on('click', function (e) {
+
+            e.preventDefault();
+            checkAndUpdateIsotope();
+
+        });
 
 
         //reset search button
