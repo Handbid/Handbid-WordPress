@@ -681,11 +681,11 @@ if(!function_exists("handbid_popup_inline_links")){
                 <div class="col-xs-12 handbid-form-area">
 
                     <div class="process-container process-success-container">
-                        <div class="hide-if-no-tickets" style="display: none">
-                        <p class="process-message">
+                        <p class="process-message block-only-for-auction">
                             <span class="smaller-text">You are all set for</span>
-                            <span data-auction-item><?php echo $auction->name;?> Tickets?</span>
+                            <span data-auction-item><?php echo $auction->name;?></span>
                         </p>
+                        <div class="hide-if-no-tickets" style="display: none">
                         <h4>Your tickets</h4>
 
                         <div class="tickets-section result-tickets-container"></div>
