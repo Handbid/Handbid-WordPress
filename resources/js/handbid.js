@@ -4682,7 +4682,16 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
         handbid.setTimerRemaining(handbid);
 
 
-        handbid.reloadBidderProfile();
+        var loadProfileWithAjax = false;
+
+        if(loadProfileWithAjax) {
+            handbid.reloadBidderProfile();
+        }
+        else {
+            handbid.setupAddCreditCard();
+            handbid.setupProvincesSelect();
+            handbid.loadAllToContainers();
+        }
 
         handbid.showCardErrorsIfExists();
 
