@@ -221,6 +221,7 @@ $currencySymbol = (isset($auction->currencySymbol)) ? $auction->currencySymbol :
                             <option value="*">Type: All Items</option>
                             <option value="[data-for-sale]">For Sale</option>
                             <option value="[data-live]">Live</option>
+                            <option value="[data-silent]">Silent</option>
                             <option value="[data-no-bids]">No Bids</option>
                             <?php if ($hasTicketItems)
                             { ?>
@@ -272,6 +273,7 @@ $currencySymbol = (isset($auction->currencySymbol)) ? $auction->currencySymbol :
                                 <li data-selector="*" class="selected"><a href="#">All Items</a></li>
                                 <li data-selector="[data-for-sale]"><a href="#">For Sale</a></li>
                                 <li data-selector="[data-live]"><a href="#">Live</a></li>
+                                <li data-selector="[data-silent]"><a href="#">Silent</a></li>
                                 <li data-selector="[data-no-bids]"><a href="#">No Bids</a></li>
                                 <?php if ($hasTicketItems)
                                 { ?>

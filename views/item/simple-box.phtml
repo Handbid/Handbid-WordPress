@@ -60,6 +60,8 @@ $currencySymbol = (isset($auction->currencySymbol)) ? $auction->currencySymbol :
 
 $isDonation = (!empty($item->isAppeal) and $item->isAppeal);
 
+$isSilentItem = (!$item->isDirectPurchaseItem && !$item->disableMobileBidding && !$item->isTicket);
+
 ?>
 
 <div onclick="handbidMain.goToSingleItemPage('<?php echo $url; ?>', <?php echo $item->id; ?>);"
@@ -74,6 +76,7 @@ $isDonation = (!empty($item->isAppeal) and $item->isAppeal);
      <?php if ($isHidden) { ?>data-is-hidden-item<?php } ?>
      <?php if ($item->isDirectPurchaseItem) { ?>data-for-sale<?php } ?>
      <?php if ($item->disableMobileBidding) { ?>data-live<?php } ?>
+     <?php if ($isSilentItem) { ?>data-silent<?php } ?>
      <?php if ($item->isBidpadOnly) { ?>data-bidpad<?php } ?>
      <?php if ($item->isTicket) { ?>data-is-ticket<?php } ?>
      <?php if ($itemHideIfSold) { ?>data-hide-if-sold<?php } ?>
