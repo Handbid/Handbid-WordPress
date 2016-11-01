@@ -580,6 +580,21 @@ var handbidLoginMain, cookieExpire = 7;
                 }
                 : null;
             });
+
+            if(discounts.length) {
+                var discountAmount = 0;
+                $.map(discounts, function (discountApplied) {
+                    var appliedTo = parseInt(discountApplied.ticketId);
+                    $.map(prices, function (ticket) {
+                        if (ticket.id == appliedTo) {
+                            discountAmount += ticket.quantity * discountApplied.amount;
+                        }
+                        return ticket.id;
+                    });
+                });
+                totalPrice -= discountAmount;
+            }
+
             totalPrice = handbidMain.number_format(totalPrice, 0, ".", ",");
             $("[data-handbid-tickets-total]").html(totalPrice);
             $(".tickets-full-price").html(totalPrice);

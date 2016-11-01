@@ -2870,7 +2870,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
                     dueAmount = totalAmount + premiumAmount + itemTaxesAmount - paidAmount;
 
-                    if(dueAmount < 0){
+                    if(dueAmount < 0.01){
                         dueAmount = 0;
                     }
 
