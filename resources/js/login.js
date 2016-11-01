@@ -9,7 +9,7 @@
 var handbidLoginMain, cookieExpire = 7;
 (function ($) {
 
-    var auction_tickets = [], tickets = null, bidderId = null;
+    var auction_tickets = [], discounts = [], tickets = null, bidderId = null;
 
     var handbidLogin = {
 
@@ -357,6 +357,87 @@ var handbidLoginMain, cookieExpire = 7;
 
         },
 
+        checkDiscountCode: function(button){
+
+            if(!button.hasClass("active")) {
+
+                discounts = [];
+
+                var tickets     = handbidLoginMain.recalculateTotalTicketsPrice();
+                var ticketIds = $.map(tickets, function(ticket){
+                    return ticket.id;
+                });
+                var discountFormPlace = $(".discount-block .form-inline");
+                var discountAppliedPlace = $(".discount-applied.discount-success");
+                var discountErrorPlace = $(".discount-applied.discount-error");
+                var discountAmountPlace = $("#confirm-purchasing-discount");
+                var totalAmountPlace = $("#confirm-purchasing-total");
+                var fullPricePlaces = $(".tickets-full-price");
+                var discountInput = $("#discount-code");
+                var discountCode  = discountInput.val();
+
+                if (discountCode.trim() != '') {
+
+                    discountInput.removeClass('input-error');
+
+                    button.addClass("active");
+
+                    $.post(ajaxurl,
+                           {
+                               action      : "handbid_ajax_check_discount_code",
+                               ticketIds   : ticketIds,
+                               discountCode: discountCode
+                           },
+                           function (data) {
+
+                               try{
+                                   data = JSON.parse(data);
+                               }
+                               catch(e){}
+
+                               if(data.success){
+                                   var discountAmount = 0;
+
+                                   discounts = data.apply;
+
+                                   $.map(data.apply, function(discountApplied){
+                                       var appliedTo = parseInt(discountApplied.ticketId);
+                                       $.map(tickets, function(ticket){
+                                           if(ticket.id == appliedTo){
+                                               discountAmount += ticket.quantity * discountApplied.amount;
+                                           }
+                                           return ticket.id;
+                                       });
+                                   });
+
+                                   discountAmountPlace.html(discountAmount);
+
+                                   var newTotalAmount = parseFloat(totalAmountPlace.html()) - discountAmount;
+
+                                   totalAmountPlace.html(newTotalAmount);
+                                   fullPricePlaces.html(newTotalAmount);
+
+                                   discountErrorPlace.slideUp('fast');
+                                   discountFormPlace.slideUp('fast');
+                                   discountAppliedPlace.slideDown('fast');
+                               }
+                               else{
+                                   var errorMessage = "The code "+(discountCode.toUpperCase())+" was not applied due to the following reason: " + data.reason;
+                                   discountErrorPlace.html(errorMessage);
+                                   discountErrorPlace.slideDown('fast');
+                               }
+
+                               button.removeClass("active");
+                           }
+                    );
+                }
+                else {
+                    discountInput.addClass('input-error')
+                }
+            }
+
+        },
+
         requestToAddCC: function(){
             handbidModalsMain.showSingleModal('credit-card-form');
         },
@@ -622,6 +703,15 @@ var handbidLoginMain, cookieExpire = 7;
                         to_buy = tickets;
                     }
 
+                    $.map(discounts, function(discountApplied){
+                        var appliedTo = parseInt(discountApplied.ticketId);
+                        $.map(to_buy, function(ticket, index){
+                            if(ticket.id == appliedTo){
+                                to_buy[index]['discountId'] = discountApplied.discountId;
+                            }
+                        });
+                    });
+
                     var data = {
                         action: "handbid_ajax_buy_tickets",
                         userId: bidderId,
@@ -811,6 +901,11 @@ var handbidLoginMain, cookieExpire = 7;
 
         $('#hb-text-a-link').on('click', function (e) {
             handbidLogin.sendTextLinkSms($(this));
+        });
+
+        $('#hb-apply-discount-code-button').live('click', function (e) {
+            e.preventDefault();
+            handbidLogin.checkDiscountCode($(this));
         });
 
         handbidLoginMain = handbidLogin;

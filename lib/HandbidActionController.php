@@ -172,6 +172,7 @@ class HandbidActionController
             "handbid_ajax_get_confirmed_tickets_template",
             "handbid_ajax_get_list_of_credit_cards",
             "handbid_ajax_get_item_boxes_by_category",
+            "handbid_ajax_check_discount_code",
         ];
         foreach ($ajaxActions as $ajaxAction)
         {
@@ -540,6 +541,9 @@ class HandbidActionController
                         'amount'    => intval($item['price']),
                         'quantity'  => intval($item['quantity']),
                     ];
+                    if(!empty($item['discountId'])){
+                        $values['discountId'] = intval($item['discountId']);
+                    }
                     if(!empty($_POST['auctionId'])){
                         $values['auctionId'] = intval($_POST['auctionId']);
                     }
@@ -1263,6 +1267,24 @@ class HandbidActionController
                 );
             }
         }
+        exit;
+    }
+
+    public function handbid_ajax_check_discount_code_callback()
+    {
+        $ticketIds = $_POST['ticketIds'];
+        $discountCode = $_POST['discountCode'];
+        if(is_array($ticketIds) && !empty($ticketIds) && !empty($discountCode))
+        {
+            $result = $this->handbid->store('Ticket')->checkDiscountCode($ticketIds, $discountCode);
+        }
+        else{
+            $result = [
+                'success' => false,
+                'reason' => empty($discountCode) ? 'Empty discount code' : 'No tickets provided',
+            ];
+        }
+        echo json_encode($result);
         exit;
     }
 

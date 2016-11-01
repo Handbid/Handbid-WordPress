@@ -51,24 +51,28 @@ if(is_array($tickets) and !empty($tickets))
         ?>
         </tbody>
     </table>
-    <div class="discount-block" style="display: none">
+    <div class="discount-block">
         <form class="form-inline">
             <div class="form-group">
                 <label for="discount-code">Apply a Discount Code</label>
                 <input type="text" class="form-control" id="discount-code">
             </div>
-            <button type="submit" class="light-blue-solid-button">Apply</button>
+            <button class="light-blue-solid-button loading-span-button" id="hb-apply-discount-code-button"><span>Apply</span></button>
         </form>
-        <p class="discount-applied">Discount Applied:
+        <p class="discount-applied discount-success">Discount Applied:
             <span>
                 <span title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span>
-                150
-            </span></p>
+                <span id="confirm-purchasing-discount"><?php echo 150; ?></span>
+            </span>
+        </p>
+        <p class="discount-applied discount-error">
+            Discount Error
+        </p>
     </div>
     <p class="purchase-total">Grand Total:
         <span>
             <span title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span>
-            <?php echo $total; ?>
+            <span id="confirm-purchasing-total"><?php echo $total; ?></span>
         </span>
     </p>
 

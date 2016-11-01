@@ -67,6 +67,16 @@
     span {
       margin: 0 0 0 15px;
     }
+    span+span {
+      margin: 0;
+    }
+  }
+
+  .discount-applied {
+    display: none;
+    &.discount-error{
+      color: @pink;
+    }
   }
   .purchase-total {
     font-weight: 400;
@@ -88,6 +98,10 @@
     margin: 0 0 0 10px;
     box-sizing: border-box;
     border: 1px solid @mediumGray;
+
+    &.input-error{
+      border: 1px solid red;
+    }
   }
   .light-blue-solid-button {
     padding: 9px 30px;
