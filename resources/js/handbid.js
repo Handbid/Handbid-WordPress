@@ -347,7 +347,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 listBidsPurchases.append(pattern);
 
                 this.recheckAndRecalculateBids();
-                this.doesUserWantToBuyTicketsJustNow(receiptId, auctionId, receiptTotal, requireAddresstoPay);
+                //this.doesUserWantToBuyTicketsJustNow(receiptId, auctionId, receiptTotal, requireAddresstoPay);
             },
 
             addItemBidsHistory: function (itemID, bidID, values, amount) {
