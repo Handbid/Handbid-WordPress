@@ -63,12 +63,6 @@ if(is_array($tickets) and !empty($tickets))
             </div>
             <button class="light-blue-solid-button loading-span-button" id="hb-apply-discount-code-button"><span>Apply</span></button>
         </form>
-        <p class="discount-applied discount-success">Discount Applied:
-            <span>
-                <span title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span>
-                <span id="confirm-purchasing-discount"><?php echo 150; ?></span>
-            </span>
-        </p>
         <p class="discount-applied discount-error">
             Discount Error
         </p>
@@ -81,6 +75,12 @@ if(is_array($tickets) and !empty($tickets))
         <span>
             <span title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span>
             <span id="confirm-purchasing-subtotal"><?php echo $tickets_price; ?></span>
+        </span>
+    </p>
+    <p class="purchase-block purchase-discount discount-applied discount-success"  style="display:none">Discount Applied:
+        <span>
+            <span title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span>
+            <span id="confirm-purchasing-discount">0</span>
         </span>
     </p>
     <p class="purchase-block purchase-premium" style="<?php echo $premium ? '' : ' display:none '?>">Auction Premium (<?php echo $premium; ?>%):
