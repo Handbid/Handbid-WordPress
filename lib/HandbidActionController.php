@@ -170,6 +170,7 @@ class HandbidActionController
             "handbid_ajax_update_profile",
             "handbid_ajax_get_auction_tickets_template",
             "handbid_ajax_get_confirmed_tickets_template",
+            "handbid_ajax_get_auction_ticketing",
             "handbid_ajax_get_list_of_credit_cards",
             "handbid_ajax_get_item_boxes_by_category",
             "handbid_ajax_check_discount_code",
@@ -1174,6 +1175,7 @@ class HandbidActionController
     public function handbid_ajax_get_confirmed_tickets_template_callback()
     {
         $tickets = json_decode(json_encode($_POST['tickets']));
+        $premium = $_POST['premium'];
         $currencyCode = (!empty($_POST['currencyCode'])) ? $_POST['currencyCode'] : 'USD';
         $currencySymbol = (!empty($_POST['currencySymbol'])) ? $_POST['currencySymbol'] : '$';
 
@@ -1181,6 +1183,7 @@ class HandbidActionController
             'views/bidder/registration/confirmed-tickets',
             [
                 'tickets' => $tickets,
+                'premium' => $premium,
                 'currencyCode' => $currencyCode,
                 'currencySymbol' => $currencySymbol,
             ]
@@ -1189,6 +1192,7 @@ class HandbidActionController
             'views/bidder/registration/result-tickets',
             [
                 'tickets' => $tickets,
+                'premium' => $premium,
                 'currencyCode' => $currencyCode,
                 'currencySymbol' => $currencySymbol,
             ]
@@ -1199,6 +1203,19 @@ class HandbidActionController
                 'result_tickets' => $result_tickets,
             ]
         );
+        exit;
+    }
+
+    public function handbid_ajax_get_auction_ticketing_callback()
+    {
+        $ticketing = null;
+        try
+        {
+            $ticketing = $this->handbid->store('Auction')->getTicketing($_POST['auctionGuid']);
+
+        } catch (Exception $e) { }
+
+        echo json_encode($ticketing);
         exit;
     }
 

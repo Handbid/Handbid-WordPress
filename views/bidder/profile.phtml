@@ -385,7 +385,7 @@ $coinsDivider = ".";
                                 <div class="col-xs-5 col-md-3">
                                     <span class="bid-amount losing">
                                         <span class="handbidAuctionCurrency" title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span>
-                                        <span class="handbidInventoryBalanceDue"><?php echo $balanceDue; ?></span>
+                                        <span class="handbidInventoryBalanceDue"><?php echo number_format($balanceDue, 2, ".", ","); ?></span>
                                     </span>
                                 </div>
                             </li>

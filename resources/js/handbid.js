@@ -17,7 +17,6 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
     attentionAboutTickets = false;
     attentionAboutBidding = false;
-    attentionAboutMobiles = false;
     attentionAboutConfirm = false;
     attentionAboutTBuying = false;
     attentionAboutBuyConf = false;
@@ -196,7 +195,6 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
             fadeOutModalOverlay: function () {
                 if (!attentionAboutBidding
                     && !attentionAboutTickets
-                    && !attentionAboutMobiles
                     && !attentionAboutConfirm
                     && !attentionAboutTBuying
                     && !attentionAboutUnpaidI
@@ -2874,6 +2872,8 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                         dueAmount = 0;
                     }
 
+                    dueAmount = handbidMain.number_format(dueAmount, 2, ".", ",");
+
                     purchases_due_place.html(dueAmount);
 
                     if(dueAmount > 0){
@@ -4018,73 +4018,6 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
             },
 
-            detectIfUserCanDownloadApps: function () {
-
-                var bidderDashboardPlace = $("#bidder-info-load"),
-                    profileID = parseInt(bidderDashboardPlace.data("profile-id")),
-                    cookieName = "bidder-" + profileID + "-want-no-apps",
-                    viewCookie = $.cookie(cookieName),
-                    isIPhone = isMobile.iPhone(),
-                    isIPad = isMobile.iPad(),
-                    isAndroid = isMobile.Android(),
-                    mobileDeviceName = (isAndroid) ? "Android" : ((isIPhone) ? "iPhone" : "iPad"),
-                    mobileDeviceLinkContainer = (isAndroid) ? "data-handbid-app-googleplay" : ((isIPhone) ? "data-handbid-app-appstore" : "data-handbid-app-appstore-ipad"),
-                    mobileDeviceLink = $("[" + mobileDeviceLinkContainer + "]").eq(0).val();
-
-
-                if ((isIPhone || isIPad || isAndroid) && viewCookie != "yes") {
-                    attentionAboutMobiles = true;
-                    var bidNotice = new PNotify({
-                        title: 'Download Handbid App?',
-                        text: mobileDeviceName + ' detected. Do you want to download our app special for your device?',
-                        icon: 'glyphicon glyphicon-phone',
-                        type: 'info',
-                        addclass: 'handbid-message-notice',
-                        hide: false,
-                        mouse_reset: false,
-                        confirm: {
-                            confirm: true,
-                            buttons: [{
-                                text: 'Download',
-                                addClass: 'bid-here-button',
-                                click: function (notice) {
-                                    attentionAboutMobiles = false;
-                                    $.cookie(cookieName, "yes", {expires: cookieExpire, path: '/'});
-                                    notice.remove();
-                                    window.location = mobileDeviceLink;
-                                }
-                            }, {
-                                text: 'No, thanks',
-                                addClass: 'browse-here-button',
-                                click: function (notice) {
-                                    attentionAboutMobiles = false;
-                                    $.cookie(cookieName, "yes", {expires: cookieExpire, path: '/'});
-                                    notice.remove();
-                                }
-                            }]
-                        },
-                        stack: false,
-                        before_open: function (PNotify) {
-                            handbidMain.fadeInModalOverlayAndPositionModal(PNotify);
-                        },
-                        before_close: function () {
-                            handbidMain.fadeOutModalOverlay();
-                        },
-                        buttons: {
-                            closer: false,
-                            sticker: false
-                        },
-                        history: {
-                            history: false
-                        }
-                    });
-                    bidNotice.get().on('pnotify.cancel', function () {
-                        return false;
-                    });
-                }
-
-            },
-
 
             displayRequiredCardsMessage: function (msg) {
 
@@ -4625,11 +4558,48 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                             button.removeClass('active');
                             form_inputs.removeAttr('disabled');
 
-
                         }
                     );
                 }
+            },
 
+            setupTicketsPurchasingViaLoginPopup: function () {
+
+                $('[data-handbid-tickets="open-button"]').click(function () {
+
+                    handbidLoginMain.displaySpecifiedTabOfLoginPopup('purchase-tickets');
+                    var paddle = $('[data-profile-current-paddle-number]').html();
+                    $('.reg-paddle-number').html(paddle);
+                    $('.handbid-login-modal').modal('show');
+
+                    $('.handbid-login-modal .tickets-container.purchase-container').addClass('loading');
+
+                    var guid = $('#bidder-info-load').attr("data-auction-guid");
+                    console.log('!!!%%%%%%%%%%%%%%%%%%%%%%%%%!!!!!!!!!');
+                    console.log(guid);
+
+                    $.post(ajaxurl,
+                           {
+                               action: "handbid_ajax_get_auction_ticketing",
+                               auctionGuid: guid
+                           },
+                           function (data) {
+
+                               data = JSON.parse(data);
+
+                               var creditCardsToAdd = handbidLoginMain.getBidderCreditCards(data.data),
+                                   ticketsToAdd = handbidLoginMain.getAuctionTickets(data.data),
+                                   auctionPremium = handbidLoginMain.getAuctionPremiumCoefficient(data.data);
+
+                               handbidLoginMain.addCreditCardsToPayForTickets(creditCardsToAdd);
+                               handbidLoginMain.goToResultWindowDependsOnTickets(ticketsToAdd, auctionPremium, true);
+
+                               handbidLoginMain.getTicketsForAuction();
+                           }
+                    );
+
+
+                });
 
             }
         };
@@ -4678,7 +4648,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
         handbid.setupTutorialPopup();
 
         ($('[data-handbid-bid]').length > 0 || $('.handbid-list-of-bids-proxy').length > 0 ) ? handbid.setupBidding(handbid) : '';
-        ($('[data-handbid-tickets]').length > 0) ? handbid.setupTicketsPurchasing(handbid) : '';
+        //($('[data-handbid-tickets]').length > 0) ? handbid.setupTicketsPurchasing(handbid) : '';
         handbid.setTimerRemaining(handbid);
 
 
@@ -4694,6 +4664,8 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
         }
 
         handbid.showCardErrorsIfExists();
+
+        handbid.setupTicketsPurchasingViaLoginPopup();
 
 
         $(".handbid-logout a, a.handbid-logout-link").live("click", function (e) {

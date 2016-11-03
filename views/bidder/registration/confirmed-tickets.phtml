@@ -1,6 +1,7 @@
 <?php
 
 $tickets = $this->get('tickets');
+$premium = floatval($this->get('premium'));
 $currencyCode  = $this->get('currencyCode');
 $currencySymbol = $this->get('currencySymbol');
 
@@ -21,9 +22,11 @@ if(is_array($tickets) and !empty($tickets))
         </thead>
         <tbody>
         <?php
-        $total = 0;
+        $tickets_price = 0;
+        $surcharges = 0;
         foreach($tickets as $ticket)
         {
+            $surcharges += ((!empty($ticket->surcharge)) ? $ticket->surcharge : 0);
             ?>
             <tr>
                 <td>
@@ -41,7 +44,7 @@ if(is_array($tickets) and !empty($tickets))
                     <span title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span>
                     <?php
                     $price =  $ticket->quantity * $ticket->price;
-                    $total += $price;
+                    $tickets_price += $price;
                     echo $price;
                     ?>
                 </td>
@@ -51,6 +54,7 @@ if(is_array($tickets) and !empty($tickets))
         ?>
         </tbody>
     </table>
+
     <div class="discount-block">
         <form class="form-inline">
             <div class="form-group">
@@ -69,10 +73,36 @@ if(is_array($tickets) and !empty($tickets))
             Discount Error
         </p>
     </div>
-    <p class="purchase-total">Grand Total:
+
+    <?php
+    $premium_amount = (($tickets_price * $premium) / 100);
+    ?>
+    <p class="purchase-block purchase-subtotal"  style="<?php echo $tickets_price ? '' : ' display:none '?>">Subtotal:
         <span>
             <span title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span>
-            <span id="confirm-purchasing-total"><?php echo $total; ?></span>
+            <span id="confirm-purchasing-subtotal"><?php echo $tickets_price; ?></span>
+        </span>
+    </p>
+    <p class="purchase-block purchase-premium" style="<?php echo $premium ? '' : ' display:none '?>">Auction Premium (<?php echo $premium; ?>%):
+        <span>
+            <span title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span>
+            <span id="confirm-purchasing-premium"><?php echo number_format($premium_amount, 2, ".", ""); ?></span>
+        </span>
+    </p>
+    <p class="purchase-block purchase-surcharges"  style="<?php echo $surcharges ? '' : ' display:none '?>">Surcharges:
+        <span>
+            <span title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span>
+            <span id="confirm-purchasing-surcharges"><?php echo $surcharges; ?></span>
+        </span>
+    </p>
+
+    <?php
+    $total = $tickets_price + $premium_amount + $surcharges;
+    ?>
+    <p class="purchase-block purchase-total">Grand Total:
+        <span>
+            <span title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span>
+            <span id="confirm-purchasing-total"><?php echo number_format($total, 2, ".", ""); ?></span>
         </span>
     </p>
 

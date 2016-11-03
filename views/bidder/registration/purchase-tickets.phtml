@@ -24,7 +24,7 @@ if(is_array($tickets) and !empty($tickets))
                         <span data-handbid-ticket-title><?php echo $ticket->name; ?></span>
                     </h4>
 
-                    <p class="ticket-quantity">(admits <span
+                    <p class="ticket-quantity" style="<?php echo ($ticket->ticketQuantity > 0) ? '' : ' display:none '; ?>">(admits <span
                             data-handbid-ticket-quant><?php echo $ticket->ticketQuantity; ?></span>
                         people)</p>
                     <p class="ticket-description"
@@ -36,6 +36,7 @@ if(is_array($tickets) and !empty($tickets))
                     <p class="ticket-price">
                         <span class="handbidAuctionCurrency" title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span>
                         <span data-handbid-ticket-buynow><?php echo $ticket->buyNowPrice; ?></span>
+                        <input type="hidden" data-handbid-ticket-surcharge value="<?php echo $ticket->surcharge; ?>">
                     </p>
                 </div>
                 <div class="col-sm-3 ticket-part-container no-padding-right tickets-are-sold"
@@ -78,7 +79,7 @@ if(is_array($tickets) and !empty($tickets))
 }
 else{
     ?>
-    <h3 class="cannot-load">Cannot load Tickets for this auction. Please try later</h3>
+    <h3 class="cannot-load"></h3>
     <?php
 
 }
