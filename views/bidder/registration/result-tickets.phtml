@@ -1,9 +1,9 @@
 <?php
 
 $tickets = $this->get('tickets');
+$discounts = $this->get('discounts');
 $currencyCode  = $this->get('currencyCode');
 $currencySymbol = $this->get('currencySymbol');
-
 if(is_array($tickets) and !empty($tickets))
 {
     ?>
@@ -12,6 +12,7 @@ if(is_array($tickets) and !empty($tickets))
         <?php
         foreach($tickets as $ticket)
         {
+            $ticket_discount = (!empty($discounts[$ticket->id])) ? $discounts[$ticket->id] : 0
             ?>
             <tr>
                 <td>
@@ -25,9 +26,16 @@ if(is_array($tickets) and !empty($tickets))
                     <span class="handbidAuctionCurrency" title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span>
                     <?php echo $ticket->price; ?>
                 </td>
+                <td>
+                    <?php if($ticket_discount){ ?>
+                    -
+                    <span class="handbidAuctionCurrency" title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span>
+                    <?php echo $ticket_discount * $ticket->quantity; ?>
+                    <?php } ?>
+                </td>
                 <td class="ticket-fullprice">
                     <span class="handbidAuctionCurrency" title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span>
-                    <?php echo $ticket->price; ?>
+                    <?php echo (($ticket->price - $ticket_discount) * $ticket->quantity); ?>
                 </td>
                 <td>
                     <a href="#" class="btn-icon loading-span-button" title="Send tickets on email" style="display: none">

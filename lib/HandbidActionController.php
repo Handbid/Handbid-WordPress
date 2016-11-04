@@ -170,6 +170,7 @@ class HandbidActionController
             "handbid_ajax_update_profile",
             "handbid_ajax_get_auction_tickets_template",
             "handbid_ajax_get_confirmed_tickets_template",
+            "handbid_ajax_get_result_tickets_template",
             "handbid_ajax_get_auction_ticketing",
             "handbid_ajax_get_list_of_credit_cards",
             "handbid_ajax_get_item_boxes_by_category",
@@ -1188,21 +1189,36 @@ class HandbidActionController
                 'currencySymbol' => $currencySymbol,
             ]
         );
+
+        echo $confirm_tickets;
+        exit;
+    }
+
+    public function handbid_ajax_get_result_tickets_template_callback()
+    {
+        $tickets = json_decode(json_encode($_POST['tickets']));
+        $discounts = $_POST['discounts'];
+        $currencyCode = (!empty($_POST['currencyCode'])) ? $_POST['currencyCode'] : 'USD';
+        $currencySymbol = (!empty($_POST['currencySymbol'])) ? $_POST['currencySymbol'] : '$';
+
+        $discount_amounts = [];
+
+        if(!empty($discounts) && is_array($discounts)){
+            foreach($discounts as $discount){
+                $discount_amounts[$discount['ticketId']] = $discount['amount'];
+            }
+        }
+
         $result_tickets = $this->viewRenderer->render(
             'views/bidder/registration/result-tickets',
             [
                 'tickets' => $tickets,
-                'premium' => $premium,
+                'discounts' => $discount_amounts,
                 'currencyCode' => $currencyCode,
                 'currencySymbol' => $currencySymbol,
             ]
         );
-        echo json_encode(
-            [
-                'confirm_tickets' => $confirm_tickets,
-                'result_tickets' => $result_tickets,
-            ]
-        );
+        echo $result_tickets;
         exit;
     }
 

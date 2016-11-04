@@ -30,6 +30,10 @@ var handbidLoginMain, cookieExpire = 7;
                 }
             }
 
+            if (tabName == 'process-payment') {
+                handbidLogin.loadResultTicketsWithDiscount();
+            }
+
             if (tabName == 'process-success') {
                 handbidLogin.checkIfOnAuctionPage();
             }
@@ -591,7 +595,6 @@ var handbidLoginMain, cookieExpire = 7;
         loadCheckedTicketsForConfirmation: function(){
 
             var tickets_container = $('.confirmed-tickets-container');
-            var result_tickets_container = $('.result-tickets-container');
             var currencyCode = $("#login-add-to-auction-currency-code").val();
             var currencySymbol = $("#login-add-to-auction-currency-symbol").val();
             var tickets = handbidLogin.recalculateTotalTicketsPrice();
@@ -609,14 +612,40 @@ var handbidLoginMain, cookieExpire = 7;
                    },
                    function (data) {
 
-                       data = JSON.parse(data);
-
                        tickets_container.removeClass('loading');
 
-                       tickets_container.html(data.confirm_tickets);
-                       result_tickets_container.html(data.result_tickets);
+                       tickets_container.html(data);
 
                        handbidLoginMain.placeCurrentTotalToTotalPlaces();
+                   }
+            );
+
+        },
+
+        loadResultTicketsWithDiscount: function(){
+
+            var result_tickets_container = $('.result-tickets-container');
+            var currencyCode = $("#login-add-to-auction-currency-code").val();
+            var currencySymbol = $("#login-add-to-auction-currency-symbol").val();
+            var tickets = handbidLogin.recalculateTotalTicketsPrice();
+
+            result_tickets_container.html();
+            result_tickets_container.addClass('loading');
+
+            $.post(ajaxurl,
+                   {
+                       action: "handbid_ajax_get_result_tickets_template",
+                       tickets: tickets,
+                       discounts: discounts,
+                       currencyCode: currencyCode,
+                       currencySymbol: currencySymbol
+                   },
+                   function (data) {
+
+                       result_tickets_container.removeClass('loading');
+
+                       result_tickets_container.html(data);
+
                    }
             );
 
