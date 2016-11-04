@@ -26,7 +26,7 @@ if(is_array($tickets) and !empty($tickets))
         $surcharges = 0;
         foreach($tickets as $ticket)
         {
-            $surcharges += ((!empty($ticket->surcharge)) ? $ticket->surcharge : 0);
+            $surcharges += ((!empty($ticket->surcharge)) ? $ticket->quantity * $ticket->surcharge : 0);
             ?>
             <tr>
                 <td>
@@ -69,7 +69,7 @@ if(is_array($tickets) and !empty($tickets))
     </div>
 
     <?php
-    $premium_amount = (($tickets_price * $premium) / 100);
+    $premium_amount = ((($tickets_price + $surcharges) * $premium) / 100);
     ?>
     <p class="purchase-block purchase-subtotal"  style="<?php echo $tickets_price ? '' : ' display:none '?>">Subtotal:
         <span>
@@ -79,20 +79,20 @@ if(is_array($tickets) and !empty($tickets))
     </p>
     <p class="purchase-block purchase-discount discount-applied discount-success"  style="display:none">Discount Applied:
         <span>
-            <span title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span>
-            <span id="confirm-purchasing-discount">0</span>
-        </span>
-    </p>
-    <p class="purchase-block purchase-premium" style="<?php echo $premium ? '' : ' display:none '?>">Auction Premium (<?php echo $premium; ?>%):
-        <span>
-            <span title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span>
-            <span id="confirm-purchasing-premium"><?php echo number_format($premium_amount, 2, ".", ""); ?></span>
+            <span title="<?php echo $currencyCode; ?>">(<?php echo $currencySymbol; ?></span>
+            <span id="confirm-purchasing-discount">0</span>)
         </span>
     </p>
     <p class="purchase-block purchase-surcharges"  style="<?php echo $surcharges ? '' : ' display:none '?>">Surcharges:
         <span>
             <span title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span>
             <span id="confirm-purchasing-surcharges"><?php echo $surcharges; ?></span>
+        </span>
+    </p>
+    <p class="purchase-block purchase-premium" style="<?php echo $premium ? '' : ' display:none '?>">Auction Premium (<?php echo $premium; ?>%):
+        <span>
+            <span title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span>
+            <span id="confirm-purchasing-premium" data-premium="<?php echo $premium; ?>"><?php echo number_format($premium_amount, 2, ".", ""); ?></span>
         </span>
     </p>
 

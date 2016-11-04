@@ -429,6 +429,9 @@ var handbidLoginMain, cookieExpire = 7;
                 var discountAppliedPlace = $(".discount-applied.discount-success");
                 var discountErrorPlace = $(".discount-applied.discount-error");
                 var discountAmountPlace = $("#confirm-purchasing-discount");
+                var subtotalAmountPlace = $("#confirm-purchasing-subtotal");
+                var surchargesAmountPlace = $("#confirm-purchasing-surcharges");
+                var premiumAmountPlace = $("#confirm-purchasing-premium");
                 var totalAmountPlace = $("#confirm-purchasing-total");
                 var fullPricePlaces = $(".tickets-full-price");
                 var discountInput = $("#discount-code");
@@ -470,10 +473,17 @@ var handbidLoginMain, cookieExpire = 7;
 
                                    discountAmountPlace.html(discountAmount);
 
-                                   var newTotalAmount = parseFloat(totalAmountPlace.html()) - discountAmount;
+                                   var subtotalAmount = parseFloat(subtotalAmountPlace.html());
+                                   var surchargesAmount = parseFloat(surchargesAmountPlace.html());
+                                   var premiumPercents = parseFloat(premiumAmountPlace.attr('data-premium'));
 
-                                   totalAmountPlace.html(newTotalAmount);
-                                   fullPricePlaces.html(newTotalAmount);
+                                   var premiumAmount = ((subtotalAmount - discountAmount + surchargesAmount) * premiumPercents / 100 );
+                                   var totalAmount = premiumAmount + subtotalAmount - discountAmount + surchargesAmount;
+
+                                   premiumAmountPlace.html(premiumAmount);
+
+                                   totalAmountPlace.html(totalAmount);
+                                   fullPricePlaces.html(totalAmount);
                                    handbidLoginMain.placeCurrentTotalToTotalPlaces();
 
                                    discountErrorPlace.slideUp('fast');
@@ -679,20 +689,6 @@ var handbidLoginMain, cookieExpire = 7;
                 : null;
             });
 
-            if(discounts.length) {
-                var discountAmount = 0;
-                $.map(discounts, function (discountApplied) {
-                    var appliedTo = parseInt(discountApplied.ticketId);
-                    $.map(prices, function (ticket) {
-                        if (ticket.id == appliedTo) {
-                            discountAmount += ticket.quantity * discountApplied.amount;
-                        }
-                        return ticket.id;
-                    });
-                });
-                totalPrice -= discountAmount;
-            }
-
             totalPrice = handbidMain.number_format(totalPrice, 2, ".", "");
             $("[data-handbid-tickets-total]").html(totalPrice);
             $(".tickets-full-price").html(totalPrice);
@@ -712,7 +708,7 @@ var handbidLoginMain, cookieExpire = 7;
 
         setupTicketsPurchasing: function () {
 
-            $('[data-handbid-ticket-button="up"]').live('click', function (e) {
+            $('[data-handbid-ticket-button="up"]').on('click', function (e) {
 
                 e.preventDefault();
 
@@ -738,7 +734,7 @@ var handbidLoginMain, cookieExpire = 7;
 
             });
 
-            $('[data-handbid-ticket-button="down"]').live('click', function (e) {
+            $('[data-handbid-ticket-button="down"]').on('click', function (e) {
 
                 e.preventDefault();
 
@@ -758,10 +754,6 @@ var handbidLoginMain, cookieExpire = 7;
                         $(this).addClass("ghosted-out");
                     }
                 }
-            });
-
-            $('#hb-purchase-tickets-next').live('click', function (e) {
-                e.preventDefault();
             });
 
         },

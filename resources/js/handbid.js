@@ -431,7 +431,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     'data-handbid-ticket-price="' + buyNowPrice + '"' +
                     'data-handbid-ticket-step="' + step + '"' +
                     '>' +
-                    '<div class="col-xs-5 ticket-part-container no-padding-left">' +
+                    '<div class="col-xs-6 ticket-part-container no-padding-left">' +
                     '<h4 class="ticket-title"><span data-handbid-ticket-title>' + name + '</span>' +
                     '</h4>' +
                     '<p class="ticket-description">' + description + '</p>' +
@@ -439,11 +439,11 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     '<div class="col-md-3 ticket-part-container">' +
                     '<strong class="ticket-price">' + currencySpan() + '<span>' + buyNowPrice + '</span></strong>' +
                     '</div>' +
-                    '<div class="col-md-4 ticket-part-container no-padding-right tickets-are-sold"' +
+                    '<div class="col-md-3 ticket-part-container no-padding-right tickets-are-sold"' +
                     'style="' + ticketsAreSoldStyle + '">' +
                     '<h4>SOLD OUT</h4>' +
                     '</div>' +
-                    '<div class="col-md-4 ticket-part-container no-padding-right tickets-are-available"' +
+                    '<div class="col-md-3 ticket-part-container no-padding-right tickets-are-available"' +
                     'style="' + ticketsAreAvailableStyle + '">' +
                     '<div class="col-md-4 col-xs-4 no-padding">' +
                     '<a href="" class="bid-price-toggle bid-down green-button button ghosted-out"' +
