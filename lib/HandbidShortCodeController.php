@@ -619,7 +619,10 @@ class HandbidShortCodeController
                 {
                     forEach ($category->items as $item)
                     {
-                        $items[] = $item;
+                        if(!$item->isTicket)
+                        {
+                            $items[] = $item;
+                        }
                     }
                 }
             }

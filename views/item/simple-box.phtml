@@ -74,7 +74,8 @@ $isSilentItem = (!$item->isDirectPurchaseItem && !$item->disableMobileBidding &&
      data-handbid-item-auction="<?php echo $auction->id; ?>"
      data-handbid-item-box-status="<?php echo $boxStatus; ?>"
      <?php if ($isHidden) { ?>data-is-hidden-item<?php } ?>
-     <?php if ($item->isDirectPurchaseItem) { ?>data-for-sale<?php } ?>
+     <?php if ($item->isDirectPurchaseItem && !$item->isTicket && !$item->isAppeal) { ?>data-for-sale<?php } ?>
+     <?php if ($item->isDirectPurchaseItem && $item->isAppeal) { ?>data-donations<?php } ?>
      <?php if ($item->disableMobileBidding) { ?>data-live<?php } ?>
      <?php if ($isSilentItem) { ?>data-silent<?php } ?>
      <?php if ($item->isBidpadOnly) { ?>data-bidpad<?php } ?>
