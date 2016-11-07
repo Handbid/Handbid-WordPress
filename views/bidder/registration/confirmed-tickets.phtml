@@ -24,9 +24,15 @@ if(is_array($tickets) and !empty($tickets))
         <?php
         $tickets_price = 0;
         $surcharges = 0;
+        $surchargeNames = [];
         foreach($tickets as $ticket)
         {
             $surcharges += ((!empty($ticket->surcharge)) ? $ticket->quantity * $ticket->surcharge : 0);
+
+            if(!empty($ticket->surchargeName) && !empty($ticket->surcharge))
+            {
+                $surchargeNames[] = $ticket->surchargeName;
+            }
             ?>
             <tr>
                 <td>
@@ -50,6 +56,13 @@ if(is_array($tickets) and !empty($tickets))
                 </td>
             </tr>
         <?php
+        }
+        $surchargeNames = array_unique($surchargeNames);
+        if(empty($surchargeNames) || (count($surchargeNames) > 1)){
+            $surchargeNames = 'Handling Fee';
+        }
+        else{
+            $surchargeNames = $surchargeNames[0];
         }
         ?>
         </tbody>
@@ -83,7 +96,7 @@ if(is_array($tickets) and !empty($tickets))
             <span id="confirm-purchasing-discount">0</span>)
         </span>
     </p>
-    <p class="purchase-block purchase-surcharges"  style="<?php echo $surcharges ? '' : ' display:none '?>">Surcharges:
+    <p class="purchase-block purchase-surcharges"  style="<?php echo $surcharges ? '' : ' display:none '?>"><?php echo $surchargeNames; ?>:
         <span>
             <span title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span>
             <span id="confirm-purchasing-surcharges"><?php echo $surcharges; ?></span>

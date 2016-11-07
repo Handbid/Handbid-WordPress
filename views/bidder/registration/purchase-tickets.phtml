@@ -59,6 +59,7 @@ if(is_array($tickets) and !empty($tickets))
                         <span class="handbidAuctionCurrency" title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span>
                         <span data-handbid-ticket-buynow><?php echo $ticket->buyNowPrice; ?></span>
                         <input type="hidden" data-handbid-ticket-surcharge value="<?php echo $ticket->surcharge; ?>">
+                        <input type="hidden" data-handbid-ticket-surcharge-name value="<?php echo $ticket->surchargeName; ?>">
                     </p>
                 </div>
                 <div class="col-sm-3 ticket-part-container no-padding-right tickets-are-sold"

@@ -673,6 +673,7 @@ var handbidLoginMain, cookieExpire = 7;
                     itemID = parseInt(parentBlock.data("handbid-ticket-row")),
                     itemPrice = parseInt($("[data-handbid-ticket-buynow]", parentBlock).eq(0).html()),
                     itemSurcharge = parseInt($("[data-handbid-ticket-surcharge]", parentBlock).eq(0).val()),
+                    itemSurchargeName = $("[data-handbid-ticket-surcharge-name]", parentBlock).eq(0).val(),
                     itemTitle = $("[data-handbid-ticket-title]", parentBlock).eq(0).html(),
                     itemDescription = $("[data-handbid-ticket-description]", parentBlock).eq(0).html();
                 totalPrice += quantity * itemPrice;
@@ -684,6 +685,7 @@ var handbidLoginMain, cookieExpire = 7;
                     quantity: quantity,
                     name: itemTitle,
                     surcharge: itemSurcharge,
+                    surchargeName: itemSurchargeName,
                     description: itemDescription
                 }
                 : null;
