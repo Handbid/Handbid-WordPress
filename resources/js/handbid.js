@@ -3805,7 +3805,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     attentionAboutBidding = true;
                     var bidNotice = new PNotify({
                         title: 'Register to Bid?',
-                        text: 'Do you want to bid in this auction or just browse for now?',
+                        text: 'Do you want to register to bid in this auction or just browse for now?',
                         icon: 'glyphicon glyphicon-question-sign',
                         type: 'info',
                         addclass: 'handbid-message-notice',
