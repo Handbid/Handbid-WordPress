@@ -1456,6 +1456,7 @@ class HandbidShortCodeController
             $template,
             [
                 "auction"           => $auction,
+                "profile"           => $profile,
                 "countries"         => $countries,
                 "in_page"           => !!(trim($atts["in_page"])),
                 "is_logged_in"      => !!($profile),

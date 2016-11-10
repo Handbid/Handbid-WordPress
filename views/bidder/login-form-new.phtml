@@ -12,6 +12,7 @@ $countries = $this->get("countries");
 $in_page = $this->get("in_page");
 $is_logged_in = $this->get("is_logged_in");
 $auction = $this->get("auction");
+$profile = $this->get("profile");
 $auctionRequiresCC = $this->get("auctionRequiresCC");
 if($in_page){
     $redirectLink = (isset($_SERVER["HTTP_REFERER"]) and $_SERVER["HTTP_REFERER"] != get_permalink()) ? $_SERVER["HTTP_REFERER"] : "/auctions/";
@@ -631,6 +632,51 @@ if(!function_exists("handbid_popup_inline_links")){
                         </div>
                     </div>
                 </div>
+
+                <input type='hidden' name='redirect' value='<?php echo $redirectLink; ?>' id="hb-login-form-redirect"/>
+                <input type='hidden' name='form-id' value='handbid-login'/>
+                <input type='hidden' name='nonce' value='<?php echo apply_filters("handbid_create_nonce", date("d.m.Y") . "login");?>' id="hb-login-form-nonce"/>
+                <input type='hidden' name='action' value='handbid_ajax_login' id="hb-login-form-action"/>
+            </div>
+        </div>
+
+        <div class="container-fluid container-tab" style="display: none" data-tab-name="add-shipping-address">
+            <?php get_login_popup_header("Add Your Shipping Address");?>
+            <div class="handbid-form row">
+                <div class="col-xs-12 handbid-form-area">
+
+                    <div class="process-container">
+
+                        <p class="process-message">
+                            Your shipping address
+                            <span class="smaller-text">is required to pay for</span>
+                            <span data-auction-item><?php echo $auction->name;?> Tickets</span>
+                        </p>
+
+                        <div class="cards-block">
+                            <form class="row cards-form">
+                                <div class="form-group col-sm-9">
+                                    <input type="text" id="profile-shipping-address"
+                                           class="form-control" name="shipping-address"
+                                           onfocus="handbidMain.initGoogleAutocomplete('profile-shipping-address')"
+                                    >
+                                </div>
+                                <button type="submit" id="hb-update-shipping-address" class="btn col-sm-3 loading-span-button">
+                                    <span>Submit</span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-md-3 col-xs-6 buttons left-aligned">
+                            <button class="btn btn-gray"  id="hb-add-address-skip"><span>Back</span></button>
+                        </div>
+                    </div>
+                </div>
+
+                <input type='hidden' value='<?php echo $auction->requireAddresstoPay; ?>' id="hb-auction-requires-address"/>
+                <input type='hidden' value='<?php echo ($profile && !empty($profile->shippingAddress)) ? esc_attr($profile->shippingAddress) : ''; ?>' id="hb-required-profile-address"/>
 
                 <input type='hidden' name='redirect' value='<?php echo $redirectLink; ?>' id="hb-login-form-redirect"/>
                 <input type='hidden' name='form-id' value='handbid-login'/>

@@ -175,6 +175,7 @@ class HandbidActionController
             "handbid_ajax_get_list_of_credit_cards",
             "handbid_ajax_get_item_boxes_by_category",
             "handbid_ajax_check_discount_code",
+            "handbid_ajax_update_shipping_address",
         ];
         foreach ($ajaxActions as $ajaxAction)
         {
@@ -1318,6 +1319,18 @@ class HandbidActionController
             ];
         }
         echo json_encode($result);
+        exit;
+    }
+
+    public function handbid_ajax_update_shipping_address_callback()
+    {
+        $address = $_POST['address'];
+        $response = $this->handbid->store('Bidder')->updateProfileData(
+            [
+                'shippingAddress' => $address
+            ]
+        );
+        echo json_encode($response);
         exit;
     }
 

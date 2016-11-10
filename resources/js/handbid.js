@@ -153,9 +153,10 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 var dashboardTotal = 0;
                 var pricePart = 0;
                 $.map($("[data-dashboard-price]"), function (val) {
-                    pricePart = parseInt($(val).data("dashboard-price"));
+                    pricePart = parseFloat($(val).data("dashboard-price"));
                     dashboardTotal += pricePart;
                 });
+                dashboardTotal = handbid.number_format(dashboardTotal, 0, ".", ",");
                 $("[data-handbid-stats-grand-total]").html(dashboardTotal);
             },
 
@@ -315,6 +316,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     amount = values.pricePerItem,
                     quantity = values.quantity,
                     receiptId = values.receiptId,
+                    grandTotal = values.grandTotal,
                     requireAddresstoPay = values.requireAddresstoPay,
                     auctionId = values.auctionId,
                     receiptTotal = values.grandTotal,
@@ -338,7 +340,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     '<span class="bid-amount winning">' + currencySpan() +
                               '<span class="purchaseTotalAmount"' +
                               'data-dashboard-tax="' + tax + '"' +
-                              '>' + (amount * quantity) + '</span></span>' +
+                              '>' + (grandTotal) + '</span></span>' +
                     '</div>' +
                     '</li>';
 
@@ -992,7 +994,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                 if(handbidMain.detectIfUserHasOnlyTicketsInPurchases(purchaseRows)) {
 
                     $.map(purchaseRows, function (val) {
-                        ticketsPrice += parseInt($(val).data("dashboard-price"));
+                        ticketsPrice += parseFloat($(val).data("dashboard-price"));
                         ticketsQuantity += parseInt($(val).data("dashboard-quantity"));
                     });
 
@@ -1836,7 +1838,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
             confirmIfUserReallyWantToBuy: function (handbid, tickets) {
 
                 var purchaseCount = parseInt($('[data-handbid-quantity]').eq(0).html()),
-                    purchasePrice = parseInt($('[data-handbid-item-attribute="buyNowPrice"]').eq(0).html()),
+                    purchasePrice = parseFloat($('[data-handbid-item-attribute="buyNowPrice"]').eq(0).html()),
                     purchaseTotal = purchaseCount * purchasePrice,
                     itemDetailsBox = $('.item-details').eq(0),
                     itemID = itemDetailsBox.data('item-id'),
@@ -2029,7 +2031,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
 
                 var nonce = $("#bidNonce").val();
                 var button = $('[data-handbid-bid-button="purchase"]').eq(0);
-                var perItem = parseInt(button.data("handbid-buynow-price"));
+                var perItem = parseFloat(button.data("handbid-buynow-price"));
                 var quantity = parseInt(amount[0].innerHTML);
                 button.addClass("active");
                 var data = {
@@ -2402,7 +2404,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     e.preventDefault();
 
                     var nonce = $("#bidNonce").val();
-                    var total = parseInt($(this).data("handbid-buynow-price"));
+                    var total = parseFloat($(this).data("handbid-buynow-price"));
                     var button = $(this);
                     button.addClass("active");
                     var data = {
@@ -2610,7 +2612,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                         quantityBlock = $("[data-handbid-ticket-quantity]", parentBlock).eq(0),
                         quantity = parseInt(quantityBlock.html()),
                         itemID = parseInt(parentBlock.data("handbid-ticket-id")),
-                        itemPrice = parseInt(parentBlock.data("handbid-ticket-price")),
+                        itemPrice = parseFloat(parentBlock.data("handbid-ticket-price")),
                         itemTitle = $("[data-handbid-ticket-title]", parentBlock).eq(0).html(),
                         itemDescr = $("[data-handbid-ticket-description]", parentBlock).eq(0).html();
                     totalPrice += quantity * itemPrice;
@@ -2637,7 +2639,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                         remaining = parseInt(remainingBlock.val()),
                         itemID = parseInt(parentBlock.data("handbid-ticket-id")),
                         itemStep = parseInt(parentBlock.data("handbid-ticket-step")),
-                        itemPrice = parseInt(parentBlock.data("handbid-ticket-price"));
+                        itemPrice = parseFloat(parentBlock.data("handbid-ticket-price"));
 
                     var newValue = quantity + itemStep;
                     if (newValue <= remaining || (remainingSymb == "-1" || remainingSymb == "∞")) {
@@ -2664,7 +2666,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                         remaining = parseInt(remainingBlock.val()),
                         itemID = parseInt(parentBlock.data("handbid-ticket-id")),
                         itemStep = parseInt(parentBlock.data("handbid-ticket-step")),
-                        itemPrice = parseInt(parentBlock.data("handbid-ticket-price"));
+                        itemPrice = parseFloat(parentBlock.data("handbid-ticket-price"));
 
                     var newValue = quantity - itemStep;
                     if (newValue >= 0) {
@@ -2827,7 +2829,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     dueAmount = 0;
 
                 $.map(purchases_amounts, function (val) {
-                    totalAmount += parseInt($(val).html());
+                    totalAmount += parseFloat($(val).html());
                     itemTaxesAmount += parseFloat($(val).attr('data-dashboard-tax'));
                 });
 
@@ -2837,7 +2839,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                     purchases_total_place.html(totalAmount);
 
                     $.map(purchases_payment_amounts, function (val) {
-                        paidAmount += parseInt($(val).html());
+                        paidAmount += parseFloat($(val).html());
                     });
 
                     if(paidAmount){
@@ -4549,6 +4551,10 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                                     handbidMain.loadInvoicesToContainer(null, address_to_pay_receipt);
                                 }
                                 address_to_pay_receipt = null;
+
+                                var shippingAddress = $('#profileShippingAddress').val();
+                                $('#hb-required-profile-address').val(shippingAddress);
+                                $('#profile-shipping-address').val(shippingAddress);
                             }
                             else{
                                 handbidMain.notice('Your Profile was not updated. Please try later', 'Profile Error', "error");

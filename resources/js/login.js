@@ -227,6 +227,13 @@ var handbidLoginMain, cookieExpire = 7;
             return auctionPremium;
         },
 
+        setShippingAddressAfterLogin: function (profileData) {
+
+            if(profileData.shippingAddress != undefined){
+                $('#hb-required-profile-address').val(profileData.shippingAddress);
+            }
+        },
+
         tryToLogin: function (button) {
             var action = $("#hb-login-form-action").val();
             var username = $("#hb-login-form-username").val();
@@ -268,6 +275,8 @@ var handbidLoginMain, cookieExpire = 7;
                             var creditCardsToAdd = handbidLoginMain.getBidderCreditCards(profileData),
                                 ticketsToAdd = handbidLoginMain.getAuctionTickets(profileData),
                                 auctionPremium = handbidLoginMain.getAuctionPremiumCoefficient(profileData);
+
+                            handbidLoginMain.setShippingAddressAfterLogin(profileData);
 
                             handbidLogin.setAuctionKeysToButtons();
                             handbidLogin.setPaddleNumberToContainer(profileData.currentPaddleNumber, profileData.identity);
@@ -355,6 +364,8 @@ var handbidLoginMain, cookieExpire = 7;
                             ticketsToAdd = handbidLoginMain.getAuctionTickets(profileData),
                             auctionPremium = handbidLoginMain.getAuctionPremiumCoefficient(profileData);
 
+                        handbidLoginMain.setShippingAddressAfterLogin(profileData);
+
                         handbidLogin.addCreditCardsToPayForTickets(creditCardsToAdd);
                         handbidLogin.goToResultWindowDependsOnTickets(ticketsToAdd, auctionPremium);
                     }
@@ -364,6 +375,39 @@ var handbidLoginMain, cookieExpire = 7;
                     }
                 }
             );
+        },
+
+        updateProfileShippingAddress: function(button){
+
+            if(!button.hasClass('active')) {
+
+                var shippingAddressContainer = $("#profile-shipping-address");
+                var shippingAddress = shippingAddressContainer.val();
+
+                if(shippingAddress.trim() == ''){
+                    shippingAddressContainer.addClass('input-error');
+                }
+                else {
+                    shippingAddressContainer.removeClass('input-error');
+                    button.addClass("active");
+                    $.post(ajaxurl,
+                           {
+                               action  : "handbid_ajax_update_shipping_address",
+                               address : shippingAddress
+                           },
+                           function (data) {
+                               button.removeClass("active");
+                               $('#hb-required-profile-address').val(shippingAddress);
+                               $('#profileShippingAddress').val(shippingAddress);
+                               $('#profileShippingAddressOld').val(shippingAddress);
+                               handbidLogin.displaySpecifiedTabOfLoginPopup("process-payment");
+                               handbidLogin.payForTicketsAllCard($('#hb-tickets-make-payment'));
+                           }
+                    );
+                }
+
+            }
+
         },
 
         resendPasswordLink: function(button){
@@ -671,8 +715,8 @@ var handbidLoginMain, cookieExpire = 7;
                     quantityBlock = $("[data-handbid-ticket-quantity]", parentBlock).eq(0),
                     quantity = parseInt(quantityBlock.html()),
                     itemID = parseInt(parentBlock.data("handbid-ticket-row")),
-                    itemPrice = parseInt($("[data-handbid-ticket-buynow]", parentBlock).eq(0).html()),
-                    itemSurcharge = parseInt($("[data-handbid-ticket-surcharge]", parentBlock).eq(0).val()),
+                    itemPrice = parseFloat($("[data-handbid-ticket-buynow]", parentBlock).eq(0).html()),
+                    itemSurcharge = parseFloat($("[data-handbid-ticket-surcharge]", parentBlock).eq(0).val()),
                     itemSurchargeName = $("[data-handbid-ticket-surcharge-name]", parentBlock).eq(0).val(),
                     itemTitle = $("[data-handbid-ticket-title]", parentBlock).eq(0).html(),
                     itemDescription = $("[data-handbid-ticket-description]", parentBlock).eq(0).html();
@@ -787,6 +831,14 @@ var handbidLoginMain, cookieExpire = 7;
         payForTicketsAllCard: function (button) {
 
             if(!button.hasClass('active')) {
+
+                var isShippingAddressRequired = parseInt($("#hb-auction-requires-address").val());
+                var currentShippingAddress = $("#hb-required-profile-address").val();
+
+                if(isShippingAddressRequired && (currentShippingAddress.trim() == '')){
+                    handbidLogin.displaySpecifiedTabOfLoginPopup("add-shipping-address");
+                    return false;
+                }
 
                 var auctionId  = $("#confirm-add-to-auction-id").val();
                 var cardSelect = $("#tickets-payment-card");
@@ -939,6 +991,11 @@ var handbidLoginMain, cookieExpire = 7;
             e.preventDefault();
             if (handbidLogin.registerFieldsValidation("register-form")) {
                 var tabName = $(this).data("target-tab");
+
+                $('.copyable-field').each(function () {
+                    handbidLogin.copyToConfirmField($(this));
+                });
+
                 handbidLogin.displaySpecifiedTabOfLoginPopup(tabName);
             }
         });
@@ -999,8 +1056,18 @@ var handbidLoginMain, cookieExpire = 7;
             handbidLogin.displaySpecifiedTabOfLoginPopup('process-payment');
         });
 
+        $('#hb-add-address-skip').on('click', function (e) {
+            e.preventDefault();
+            handbidLogin.displaySpecifiedTabOfLoginPopup('process-payment');
+        });
+
         $('.reset-password-link').on('click', function (e) {
             handbidLogin.resendPasswordLink($(this));
+        });
+
+        $('#hb-update-shipping-address').on('click', function (e) {
+            e.preventDefault();
+            handbidLogin.updateProfileShippingAddress($(this));
         });
 
         $('#start-enter-card-button').on('click', function (e) {
