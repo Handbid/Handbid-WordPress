@@ -3814,7 +3814,7 @@ var handbidMain, connectMessage, modal_overlay, reload_overlay, confirm_bid_over
                         confirm: {
                             confirm: true,
                             buttons: [{
-                                text: 'Bid',
+                                text: 'Register',
                                 addClass: 'bid-here-button',
                                 click: function (notice) {
                                     notice.update({
