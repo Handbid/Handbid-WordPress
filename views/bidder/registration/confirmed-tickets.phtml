@@ -37,7 +37,7 @@ if(is_array($tickets) and !empty($tickets))
             <tr>
                 <td>
                     <h6><?php echo $ticket->name; ?></h6>
-                    <span><?php echo $ticket->description; ?></span>
+                    <span><?php echo wp_unslash($ticket->description); ?></span>
                 </td>
                 <td>
                     <span title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span>
