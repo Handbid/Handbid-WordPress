@@ -50,7 +50,7 @@ if(is_array($tickets) and !empty($tickets))
                             data-handbid-ticket-quant><?php echo (!empty($ticket->admits)) ? $ticket->admits : ''; ?></span>
                         people)</p>
                     <p class="ticket-description"
-                       data-handbid-ticket-description><?php echo $ticket->description; ?></p>
+                       data-handbid-ticket-description><?php echo wp_unslash($ticket->description); ?></p>
 
 
                 </div>
