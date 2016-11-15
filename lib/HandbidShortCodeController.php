@@ -1003,10 +1003,11 @@ class HandbidShortCodeController
             if ($profile)
             {
 
-                $myInvoices = $this->handbid->store('Receipt')->allReceipts();
+                //$myInvoices = $this->handbid->store('Receipt')->allReceipts();
 
                 $myAuctions = [];
                 $myMessages = [];
+                $myInvoices = [];
 
                 if ($auction && $profile)
                 {
@@ -1041,32 +1042,6 @@ class HandbidShortCodeController
                         }
                     }
                     $winning = $tempWinning;
-
-//                    //TODO: REMOVE TEST FAKER
-//                    $purchaseAmount = intval($myInventory->stats->purchaseAmount);
-//                    $paidAmount = 0;
-//                    $fakePayments = [];
-//                    $cards_arr = ['Visa', 'MasterCard', 'AmEx', 'Maestro'];
-//                    for($i = 0; $i < rand(2,3); $i++){
-//
-//                        $amount = rand(1, intval($purchaseAmount / 3));
-//
-//                        if(($purchaseAmount - ($paidAmount + $amount)) > 0)
-//                        {
-//                            $paidAmount += $amount;
-//
-//                            $fakePayments[] = [
-//                                'datetime' => time() - rand(1000, 3000),
-//                                'amount'   => $amount,
-//                                'last4'    => rand(1000, 9999),
-//                                'card'     => $cards_arr[mt_rand(0, count($cards_arr) - 1)],
-//                            ];
-//                        }
-//                    }
-//
-//                    $payments = json_decode(json_encode($fakePayments));
-//
-//                    //TODO: REMOVE TEST FAKER
 
                 }
 
@@ -1478,7 +1453,6 @@ class HandbidShortCodeController
             $cards     = $profile->creditCards;
             $query     = [];//@todo: find out hwo to pass query through attributes. then merge it with our defaults. array_merge([], $query)
 
-//			$tickets = $this->handbid->store( 'Ticket' )->byAuction( $auction->key, $query );
             if ($tickets)
             {
                 $template = $this->templateFromAttributes($attributes, 'views/ticket/list');

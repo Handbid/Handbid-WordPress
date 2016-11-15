@@ -6,15 +6,15 @@ $currencySymbol = $this->get('currencySymbol');
 
 if(!function_exists('hb_check_remaining_and_limit')){
 
-    function hb_check_remaining_and_limit($remaining, $limit, $is_label = false){
+    function hb_check_remaining_and_limit($remaining, $limit, $is_label = false, $hide_sales = false){
         if($is_label){
-            if($limit && (($remaining > $limit) || ($remaining == -1))){
+            if(($limit > 0) && (($remaining > $limit) || ($remaining == -1))){
                 return 'Limit: ' . $limit . ' per purchase';
             }
-            return ($remaining != -1) ? $remaining . " available" : "Unlimited quantity";
+            return ($remaining != -1) ? (($hide_sales) ? '' : $remaining . " available") : "Unlimited quantity";
         }
         else{
-            if($limit){
+            if($limit > 0){
                 return (($remaining != -1) && ($remaining < $limit)) ? $remaining : $limit;
             }
             else{
@@ -46,8 +46,8 @@ if(is_array($tickets) and !empty($tickets))
                         <span data-handbid-ticket-title><?php echo $ticket->name; ?></span>
                     </h4>
 
-                    <p class="ticket-quantity" style="<?php echo ($ticket->ticketQuantity > 0) ? '' : ' display:none '; ?>">(admits <span
-                            data-handbid-ticket-quant><?php echo $ticket->ticketQuantity; ?></span>
+                    <p class="ticket-quantity" style="<?php echo (!empty($ticket->admits)) ? '' : ' display:none '; ?>">(admits <span
+                            data-handbid-ticket-quant><?php echo (!empty($ticket->admits)) ? $ticket->admits : ''; ?></span>
                         people)</p>
                     <p class="ticket-description"
                        data-handbid-ticket-description><?php echo $ticket->description; ?></p>
@@ -78,7 +78,7 @@ if(is_array($tickets) and !empty($tickets))
                             data-handbid-ticket-quantity>0</span>
                         <input type="hidden" data-handbid-tickets-remaining
                                value="<?php
-                               echo hb_check_remaining_and_limit($remaining, $limit, false);
+                               echo hb_check_remaining_and_limit($remaining, $limit, false, $ticket->hideSales);
                                ?>">
                     </div>
 
@@ -91,7 +91,7 @@ if(is_array($tickets) and !empty($tickets))
                     <div class="col-xs-12 ticket-remaining-inventory-cont no-padding">
                         <span class="remaining-inventory"
                               data-handbid-ticket-quant-remaining><?php
-                            echo hb_check_remaining_and_limit($remaining, $limit, true);
+                            echo hb_check_remaining_and_limit($remaining, $limit, true, $ticket->hideSales);
                             ?></span>
                     </div>
                 </div>

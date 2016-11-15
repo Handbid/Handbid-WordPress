@@ -23,7 +23,7 @@ foreach ($invoices as $i => $invoice) {
 ?>
 
 <ul class="simple-list">
-    <?php if (count($invoices) > 0) {
+    <?php if (!empty($invoices) && is_array($invoices)) {
         forEach ($invoices as $invoice) {
             $currency = $invoice->currencySymbol;
             $auctionItems = [];
@@ -104,11 +104,11 @@ foreach ($invoices as $i => $invoice) {
                     <div class="col-xs-12 margin-bottom">
                         <div class="col-xs-6 col-md-3">
                             <a class="buy-now green-solid-button receipt-action-button col-md-12 loading-span-button"
-                               onclick="handbidMain.sendInvoice('<?php echo $invoice->id; ?>','<?php echo $profile->email; ?>', false)"
+                               onclick="handbid_main.sendInvoice('<?php echo $invoice->id; ?>','<?php echo $profile->email; ?>', false)"
                             ><span>Email Receipt</span></a></div>
                         <div class="col-xs-6 col-md-3">
                             <a class="buy-now green-solid-button receipt-action-button col-md-12 loading-span-button"
-                               onclick="handbidMain.sendInvoice('<?php echo $invoice->id; ?>','<?php echo $profile->userCellPhone; ?>', true)"
+                               onclick="handbid_main.sendInvoice('<?php echo $invoice->id; ?>','<?php echo $profile->userCellPhone; ?>', true)"
                             ><span>Text Receipt</span></a></div>
                     </div>
                     <?php if (!((bool)$invoice->paid)) { ?>

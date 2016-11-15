@@ -6,11 +6,11 @@
  * @link http://www.handbid.com/
  * @author Master of Code (worldclass@masterofcode.com)
  */
-var handbidModalsMain;
+var handbid_modals_main;
 
 (function ($) {
 
-    var handbidModals = {
+    var handbid_modals = {
 
         showSingleModal: function (modal_slug) {
             var modal  = $('.handbid-modal[data-handbid-modal-key="' + modal_slug + '"]');
@@ -24,13 +24,6 @@ var handbidModalsMain;
                     .removeClass("card-success").removeClass("card-error");
                 $(this).find('input[type=text]').val("");
             });
-
-            $(".tickets-modal").on('hidden.bs.modal', function () {
-                var elem = $('[data-handbid-tickets-button="purchase"]');
-                if(! elem.is(':visible')){
-                    ticketsPopupWasOpened = false;
-                }
-            });
         }
     };
 
@@ -39,14 +32,14 @@ var handbidModalsMain;
         $('.handbid-modal-link').live('click', function(e) {
             e.preventDefault();
 
-            if(handbidMain.noticeIfNoCreditCard($(this))){
+            if(handbid_main.noticeIfNoCreditCard($(this))){
                 return false;
             }
 
             var key    = $(this).attr('data-handbid-modal-key');
-            handbidModals.showSingleModal(key);
+            handbid_modals.showSingleModal(key);
         });
 
-        handbidModalsMain = handbidModals;
+        handbid_modals_main = handbid_modals;
     });
 }(jQuery));

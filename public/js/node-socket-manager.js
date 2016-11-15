@@ -132,7 +132,7 @@ console.log("success connect");
      */
     $.eventAuction = function (data) {
 
-        handbidMain.processAuctionChange(data.values);
+        handbid_main.processAuctionChange(data.values);
 
         switch (data.attribute) {
             case 'status':
@@ -190,9 +190,9 @@ console.log("success connect");
      */
     $.eventAuctionTimer = function (data) {
         var message = JSON.stringify(data, null, 2);
-        //handbidMain.showTimerRemainingNotice(data.values.timerRemaining);
-        handbidMain.changeAuctionTimer(data.values.timerRemaining, true);
-        //handbidMain.notice(message);
+        //handbid_main.showTimerRemainingNotice(data.values.timerRemaining);
+        handbid_main.changeAuctionTimer(data.values.timerRemaining, true);
+        //handbid_main.notice(message);
     };
 
     /**
@@ -203,7 +203,7 @@ console.log("success connect");
      * @returns boolean
      */
     $.eventAuctionReset = function (data) {
-        handbidMain.redirectFromResetedAuctions(data);
+        handbid_main.redirectFromResetedAuctions(data);
     };
 
     /*
@@ -220,8 +220,8 @@ console.log("success connect");
     $.eventUserBid = function (data) {
         var message = JSON.stringify(data, null, 2);
         console.log(data.values);
-        handbidMain.userItemBiddingEvent(data.values);
-        //handbidMain.notice(message);
+        handbid_main.userItemBiddingEvent(data.values);
+        //handbid_main.notice(message);
     };
 
     /**
@@ -234,7 +234,7 @@ console.log("success connect");
     $.eventUserBroadcast = function (data) {
         var message = JSON.stringify(data, null, 2);
         console.log(data.values);
-        //handbidMain.notice(message);
+        //handbid_main.notice(message);
     };
 
     /**
@@ -249,7 +249,7 @@ console.log("success connect");
     $.eventUserPurchase = function (data) {
         var message = JSON.stringify(data, null, 2);
         console.log(data.values);
-        handbidMain.addUserPurchase(data.values);
+        handbid_main.addUserPurchase(data.values);
     };
 
     /**
@@ -262,8 +262,8 @@ console.log("success connect");
     $.eventUserReceipt = function (data) {
         var message = JSON.stringify(data, null, 2);
         console.log(data);
-        handbidMain.processUserReceipt(data.values);
-        //handbidMain.notifyUserAboutReceipt(data.values);
+        handbid_main.processUserReceipt(data.values);
+        //handbid_main.notifyUserAboutReceipt(data.values);
     };
 
     /**
@@ -276,7 +276,7 @@ console.log("success connect");
     $.eventUser = function (data) {
         var message = JSON.stringify(data, null, 2);
         console.log(data.values);
-        //handbidMain.notice(message);
+        //handbid_main.notice(message);
     };
 
     /*
@@ -292,7 +292,7 @@ console.log("success connect");
      */
     $.effectNodeAuctionBroadcast = function (data) {
         var msg = "<b>at "+data.values.name + ":</b><br>" + data.values.messageText;
-        handbidMain.notice(msg, "Broadcast Message", "info", false);
+        handbid_main.notice(msg, "Broadcast Message", "info", false);
         return true;
     };
 
@@ -359,7 +359,7 @@ console.log("success connect");
                 break;
             default: break;
         }
-        handbidMain.notice(data.values.name + ' is now ' + data.values.status.toUpperCase());
+        handbid_main.notice(data.values.name + ' is now ' + data.values.status.toUpperCase());
 
         return true;
     };
@@ -371,8 +371,8 @@ console.log("success connect");
      * @returns {Boolean}
      */
     $.effectNodeBidUpdate = function (data) {
-        handbidMain.addItemBidsHistory(data.values.item.id, data.values.id, data.values, data.values.amount);
-        handbidMain.checkIfBidsExistsAndChange(data.values, data.type);
+        handbid_main.addItemBidsHistory(data.values.item.id, data.values.id, data.values, data.values.amount);
+        handbid_main.checkIfBidsExistsAndChange(data.values, data.type);
 
         return true;
     };
@@ -385,7 +385,7 @@ console.log("success connect");
      */
     $.effectNodeItemUpdate = function (data) {
 
-        handbidMain.processItemChange(data.values);
+        handbid_main.processItemChange(data.values);
 
         return true;
     };

@@ -18,7 +18,7 @@ $profile    = $this->get('profile');
 $myInvoices = $this->get('myInvoices');
 $myMessages = $this->get('notifications');
 $unpaidInvoices = 0;
-if(count($myInvoices)){
+if(!empty($myInvoices) && is_array($myInvoices)){
     foreach($myInvoices as $invoice){
         if(! $invoice->paid){
             $unpaidInvoices++;

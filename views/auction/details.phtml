@@ -119,7 +119,11 @@ $currencySymbol = (isset($auction->currencySymbol)) ? $auction->currencySymbol :
             <?php echo do_shortcode('[handbid_social_share]'); ?>
 
             <span class="buttons">
-            <a href="#" class="button pink-button register" data-handbid-connect>Register</a>
+                <?php if (!$profile)
+                { ?>
+                    <a href="#" class="button pink-button register" data-handbid-connect>Register<?php echo ($auction->enableTicketSales) ? ' / Buy Tickets' : '' ?></a>
+                <?php } ?>
+
 
                 <?php if ($auction->enableTicketSales and $profile)
                 { ?>

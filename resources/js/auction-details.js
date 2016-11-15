@@ -286,7 +286,7 @@ var currentlyFilteringByCat = null;
     function detectVisibleIsotopeElements(){
         detectIfContainerIsVisibleNow();
         if(isotopeWasFiltered) {
-            handbidMain.changeBackgroundImageIfElementIsVisible();
+            handbid_main.changeBackgroundImageIfElementIsVisible();
         }
     }
 
@@ -296,7 +296,7 @@ var currentlyFilteringByCat = null;
             var isVisible = container.is(":visible");
             if (isVisible) {
 
-                var initialCategory = handbidMain.getCategoryForInitialFilter();
+                var initialCategory = handbid_main.getCategoryForInitialFilter();
                 if((initialCategory != undefined) && (initialCategory != 'all')) {
 
                     var neededElement = $('.by-category li[data-legacy-category-id="'+initialCategory+'"]');
@@ -321,7 +321,7 @@ var currentlyFilteringByCat = null;
                 checkAndUpdateIsotope();
                 wasNotVisible = false;
                 setTimeout(function(){
-                    handbidMain.goBackToItem();
+                    handbid_main.goBackToItem();
                     needToMoveToItem = false;
                 }, 500);
             }

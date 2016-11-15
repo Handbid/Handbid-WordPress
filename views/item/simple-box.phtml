@@ -64,7 +64,7 @@ $isSilentItem = (!$item->isDirectPurchaseItem && !$item->disableMobileBidding &&
 
 ?>
 
-<div onclick="handbidMain.goToSingleItemPage('<?php echo $url; ?>', <?php echo $item->id; ?>);"
+<div onclick="handbid_main.goToSingleItemPage('<?php echo $url; ?>', <?php echo $item->id; ?>);"
      class="simple-item-box simple-box status-<?php echo $item->status; ?>
      <?php echo ($itemCanNotBeShownInPresale or $hideItemIfSold) ? " not-available-in-presale " : ""; ?>"
      data-handbid-item-key="<?php echo $item->key; ?>"
