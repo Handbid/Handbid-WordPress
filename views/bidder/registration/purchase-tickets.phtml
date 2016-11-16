@@ -48,7 +48,7 @@ if(is_array($tickets) and !empty($tickets))
 
                     <p class="ticket-quantity" style="<?php echo (!empty($ticket->admits)) ? '' : ' display:none '; ?>">(admits <span
                             data-handbid-ticket-quant><?php echo (!empty($ticket->admits)) ? $ticket->admits : ''; ?></span>
-                        people)</p>
+                        <?php echo (intval($ticket->admits) == 1) ? 'person' : 'people' ?>)</p>
                     <p class="ticket-description"
                        data-handbid-ticket-description><?php echo wp_unslash($ticket->description); ?></p>
 
