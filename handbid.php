@@ -660,17 +660,23 @@ class Handbid
             var forcePageRefreshAfterBids = <?php echo (get_option('handbidForceRefresh', 'no') == "yes") ? "true" : "false";?>;
             var forcePageRefreshAfterPurchases = <?php echo (get_option('handbidForceRefreshAfterPurchases', 'no') == "yes") ? "true" : "false";?>;
 
+            var branch_settings = {
+                icon: 'http://is2.mzstatic.com/image/thumb/Purple41/v4/ae/fe/3b/aefe3b2f-f700-ade0-a0a9-6ee1a3cf6b8b/source/175x175bb.jpg',
+                rating: 4.5,
+                reviewCount: 70
+            };
+
+            if(navigator.userAgent.toLowerCase().indexOf("android") > -1){
+                branch_settings = {
+                    icon: 'https://lh3.googleusercontent.com/uiYA8FoF_ghTBsZ_QTRUAylYimM86FurQlVNsMaWdA5XT7HQgclGktOSjsBtGj1JfkKD=w300-rw',
+                    rating: 3.5,
+                    reviewCount: 28
+                };
+            }
+
         </script>
-        <script type="text/javascript">
-            (function (h, l, i, n, k, s) {
-                s = h.createElement(i);
-                s.type = "text/javascript";
-                s.async = 1;
-                s.src = l + n + ".js";
-                k = h.getElementsByTagName(i)[0];
-                k.parentNode.insertBefore(s, k);
-            })(document, "//cdn.hokolinks.com/banner/v1/", "script", "af303d2c3f3fb386");
-        </script>
+
+
         <script type="text/javascript">
             WebFontConfig = {
                 google: {families: ['Lato:300,400,500', 'Oswald']}
@@ -684,6 +690,53 @@ class Handbid
                 var s = document.getElementsByTagName('script')[0];
                 s.parentNode.insertBefore(wf, s);
             })(); </script>
+
+
+        <script type="text/javascript">
+            (function(b,r,a,n,c,h,_,s,d,k){if(!b[n]||!b[n]._q){for(;s<_.length;)c(h,_[s++]);d=r.createElement(a);d.async=1;d.src="https://cdn.branch.io/branch-latest.min.js";k=r.getElementsByTagName(a)[0];k.parentNode.insertBefore(d,k);b[n]=h}})(window,document,"script","branch",function(b,r){b[r]=function(){b._q.push([r,arguments])}},{_q:[],_v:1},"addListener applyCode banner closeBanner creditHistory credits data deepview deepviewCta first getCode init link logout redeem referrals removeListener sendSMS setBranchViewData setIdentity track validateCode".split(" "), 0);
+
+            var branch_key = 'key_live_mdFnqn80e1w80tsQ6uS5UijgAyhd9a3x';
+
+            var banner_settings = {
+                icon                  : branch_settings.icon,
+                title                 : 'Handbid',
+                description           : 'Mobile Silent Auction',
+                rating                : branch_settings.rating,
+                reviewCount           : branch_settings.reviewCount,
+                openAppButtonText     : 'Open',
+                downloadAppButtonText : 'Download',
+                showiOS               : true,
+                showiPad              : true,
+                showAndroid           : true,
+                showBlackberry        : false,
+                showWindowsPhone      : false,
+                showKindle            : false,
+                showDesktop           : false,
+                forgetHide            : false
+            };
+
+            branch.init(branch_key, {}, function(err, data) {
+
+                if((data.data_parsed.$deeplink_path != undefined)
+                   && window
+                   && window.location
+                   && window.location.search
+                   && (window.location.search.indexOf("_branch_match_id") > -1)){
+                    var deeplink_path = data.data_parsed.$deeplink_path;
+                    deeplink_path = deeplink_path
+                        .split('http://').join('')
+                        .split('https://').join('')
+                        .split('st-wp.handbid.com').join('')
+                        .split('www.handbid.com').join('')
+                        .split('handbid.com').join('');
+                    window.location = deeplink_path;
+                }
+                else{
+                    branch.banner(banner_settings);
+                }
+            });
+
+        </script>
 
         <?php if (!defined('HANDBID_PAGE_TYPE') or (defined('HANDBID_PAGE_TYPE') and HANDBID_PAGE_TYPE == 'auction-item'))
     { ?>
