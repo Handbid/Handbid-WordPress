@@ -10,8 +10,18 @@ var handbid_login_main, cookieExpire = 7;
 (function ($) {
 
     var auction_tickets = [], auction_premium = 0, discounts = [], tickets = null, bidderId = null;
+    var is_from_initial_login = false, is_from_register_buy_tickets = false, is_from_just_buy_tickets = false;
 
     var handbid_login = {
+
+        setFlagOfInitialScreen : function (flag) {
+            is_from_initial_login = (flag == 'initial_login');
+            is_from_register_buy_tickets = (flag == 'register_buy_tickets');
+            is_from_just_buy_tickets = (flag == 'just_buy_tickets');
+
+            is_from_just_buy_tickets ? $('#hb-purchase-tickets-back').hide(): $('#hb-purchase-tickets-back').show();
+            is_from_register_buy_tickets ? $('#hb-confirm-tickets-back').hide(): $('#hb-confirm-tickets-back').show();
+        },
 
         displaySpecifiedTabOfLoginPopup : function (tabName, referredFrom) {
             var currentTab = $(".active-container").eq(0);
@@ -165,7 +175,12 @@ var handbid_login_main, cookieExpire = 7;
 
             if (tickets != undefined) {
                 if (tickets.length) {
-                    nextPopupWindow = "purchase-tickets";
+                    if (is_from_register_buy_tickets) {
+                        nextPopupWindow = "confirm-purchase";
+                    }
+                    else {
+                        nextPopupWindow = "process-success";
+                    }
                 }
                 else {
                     nextPopupWindow = "process-success";
@@ -228,6 +243,7 @@ var handbid_login_main, cookieExpire = 7;
         },
 
         tryToLogin : function (button) {
+
             var action      = $("#hb-login-form-action").val();
             var username    = $("#hb-login-form-username").val();
             var password    = $("#hb-login-form-password").val();
@@ -256,7 +272,6 @@ var handbid_login_main, cookieExpire = 7;
                    },
                    function (data) {
                        data = JSON.parse(data);
-                       console.log(data);
                        button.removeClass("active");
                        if (data.success) {
 
@@ -293,6 +308,7 @@ var handbid_login_main, cookieExpire = 7;
         },
 
         tryToRegister : function (button) {
+
             var action          = $("#hb-reg-form-action").val();
             var firstname       = $("#confirm-firstname").val();
             var lastname        = $("#confirm-lastname").val();
@@ -703,6 +719,7 @@ var handbid_login_main, cookieExpire = 7;
 
             var totalPrice                    = 0;
             var totalQuantity                 = 0;
+            var ticketsPurchaseSkipButton = $('#hb-purchase-tickets-back');
             var ticketsPurchaseContinueButton = $('#hb-purchase-tickets-next');
             var prices                        = $.map($("[data-handbid-ticket-row]"), function (val, i) {
                 var parentBlock       = $(val),
@@ -740,6 +757,15 @@ var handbid_login_main, cookieExpire = 7;
             }
             else {
                 ticketsPurchaseContinueButton.attr('disabled', 'disabled');
+            }
+
+            if(!is_from_initial_login) {
+                if (prices.length) {
+                    ticketsPurchaseSkipButton.attr('disabled', 'disabled');
+                }
+                else {
+                    ticketsPurchaseSkipButton.removeAttr('disabled');
+                }
             }
 
             return prices;
@@ -965,13 +991,25 @@ var handbid_login_main, cookieExpire = 7;
 
         $('#hb-purchase-tickets-back').on('click', function (e) {
             e.preventDefault();
-            handbid_login.displaySpecifiedTabOfLoginPopup('process-success');
+            if(is_from_register_buy_tickets){
+                handbid_login.displaySpecifiedTabOfLoginPopup('register-form');
+            }
+            else{
+                handbid_login.displaySpecifiedTabOfLoginPopup('process-success');
+                $('.tickets-container.loading-tickets-container.purchase-container').html('');
+            }
         });
 
         $('#hb-purchase-tickets-next').on('click', function (e) {
             e.preventDefault();
             handbid_login.loadCheckedTicketsForConfirmation();
-            handbid_login.displaySpecifiedTabOfLoginPopup('confirm-purchase');
+            var isRegistered = $('#bidder-info-load').length;
+            if(isRegistered || is_from_initial_login){
+                handbid_login.displaySpecifiedTabOfLoginPopup('confirm-purchase');
+            }
+            else{
+                handbid_login.displaySpecifiedTabOfLoginPopup('register-form');
+            }
         });
 
         $('#hb-confirm-tickets-back').on('click', function (e) {
@@ -981,7 +1019,12 @@ var handbid_login_main, cookieExpire = 7;
 
         $('#hb-pay-tickets-skip').on('click', function (e) {
             e.preventDefault();
-            handbid_login.displaySpecifiedTabOfLoginPopup('purchase-tickets', 'hb-pay-tickets-skip');
+            if(is_from_register_buy_tickets){
+                handbid_login.displaySpecifiedTabOfLoginPopup('confirm-purchase');
+            }
+            else {
+                handbid_login.displaySpecifiedTabOfLoginPopup('purchase-tickets', 'hb-pay-tickets-skip');
+            }
         });
 
         $('#hb-confirm-tickets-pay').on('click', function (e) {
@@ -991,10 +1034,8 @@ var handbid_login_main, cookieExpire = 7;
 
         $('.login-popup-link.register-confirm').on('click', function (e) {
             e.preventDefault();
-            if (handbid_login.registerFieldsValidation("register-form-confirm")) {
+            if (!$(this).hasClass('active') && handbid_login.registerFieldsValidation("register-form-confirm")) {
                 handbid_login.tryToRegister($(this));
-                var tabName = $(this).data("target-tab");
-                //handbid_login.displaySpecifiedTabOfLoginPopup(tabName);
             }
         });
 
@@ -1057,37 +1098,11 @@ var handbid_login_main, cookieExpire = 7;
             }
         });
 
-        //$('[data-handbid-modal-key="login-modal"] .modal-close').on('click', function (e) {
-        //
-        //    var tickets_prepared = handbid_login.recalculateTotalTicketsPrice();
-        //    console.log(tickets_prepared);
-        //    if(tickets_prepared.length) {
-        //        e.preventDefault();
-        //        if(confirm('yes?')) {
-        //            $('[data-handbid-modal-key="login-modal"]').modal('hide');
-        //            handbid_login.restoreInitialTabState();
-        //            var reloadHref = $(this).data("reload-href");
-        //            if (reloadHref != undefined) {
-        //                window.location = reloadHref;
-        //            }
-        //        }
-        //    }
-        //    else {
-        //        handbid_login.restoreInitialTabState();
-        //        var reloadHref = $(this).data("reload-href");
-        //        if (reloadHref != undefined) {
-        //            window.location = reloadHref;
-        //        }
-        //    }
-        //
-        //});
-
         $('[data-handbid-modal-key="login-modal"]').on('hide.bs.modal', function (e) {
 
             var close_button = $('[data-handbid-modal-key="login-modal"] .modal-close');
 
             var tickets_prepared = handbid_login.recalculateTotalTicketsPrice();
-            console.log(tickets_prepared);
             if (tickets_prepared.length) {
                 e.preventDefault();
                 (new PNotify({

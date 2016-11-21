@@ -121,7 +121,11 @@ $currencySymbol = (isset($auction->currencySymbol)) ? $auction->currencySymbol :
             <span class="buttons">
                 <?php if (!$profile)
                 { ?>
-                    <a href="#" class="button pink-button register" data-handbid-connect>Register<?php echo ($auction->enableTicketSales) ? ' / Buy Tickets' : '' ?></a>
+                    <a href="#"
+                       class="button pink-button register"
+                       data-handbid-connect
+                       data-tickets-enabled="<?php echo ($auction->enableTicketSales) ? 'yes' : 'no' ?>"
+                    >Register<?php echo ($auction->enableTicketSales) ? ' / Buy Tickets' : '' ?></a>
                 <?php } ?>
 
 

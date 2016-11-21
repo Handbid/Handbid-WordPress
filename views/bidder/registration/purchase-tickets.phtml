@@ -32,73 +32,83 @@ if(is_array($tickets) and !empty($tickets))
         $remaining = intval($ticket->inventoryRemaining);
         $limit = intval($ticket->ticketLimit);
         $isHidden  = (intval($ticket->isHidden) == 1);
-        ?>
-        <div class="row ticket-row" data-handbid-ticket-row="<?php echo $ticket->id; ?>"
-            <?php echo ($isHidden) ? " data-is-hidden-item " : ""; ?>
-             data-handbid-params-box="<?php echo $ticket->id; ?>">
-            <div class="ticket"
-                 data-handbid-ticket-block
-                 data-handbid-ticket-id="<?php echo $ticket->id; ?>"
-                 data-handbid-ticket-price="<?php echo $ticket->buyNowPrice; ?>"
-            >
-                <div class="col-sm-6 ticket-part-container no-padding-left">
-                    <h4 class="ticket-title">
-                        <span data-handbid-ticket-title><?php echo $ticket->name; ?></span>
-                    </h4>
+        $hasInventory  = $ticket->hasInventory;
+        if($ticket->status != 'pending')
+        {
+            ?>
+            <div class="row ticket-row" data-handbid-ticket-row="<?php echo $ticket->id; ?>"
+                <?php echo ($isHidden) ? " data-is-hidden-item " : ""; ?>
+                 data-handbid-params-box="<?php echo $ticket->id; ?>">
+                <div class="ticket"
+                     data-handbid-ticket-block
+                     data-handbid-ticket-id="<?php echo $ticket->id; ?>"
+                     data-handbid-ticket-price="<?php echo $ticket->buyNowPrice; ?>"
+                >
+                    <div class="col-sm-6 ticket-part-container no-padding-left">
+                        <h4 class="ticket-title">
+                            <span data-handbid-ticket-title><?php echo $ticket->name; ?></span>
+                        </h4>
 
-                    <p class="ticket-quantity" style="<?php echo (!empty($ticket->admits)) ? '' : ' display:none '; ?>">(admits <span
-                            data-handbid-ticket-quant><?php echo (!empty($ticket->admits)) ? $ticket->admits : ''; ?></span>
-                        <?php echo (intval($ticket->admits) == 1) ? 'person' : 'people' ?>)</p>
-                    <p class="ticket-description"
-                       data-handbid-ticket-description><?php echo wp_unslash($ticket->description); ?></p>
+                        <p class="ticket-quantity"
+                           style="<?php echo (!empty($ticket->admits)) ? '' : ' display:none '; ?>">(admits <span
+                                data-handbid-ticket-quant><?php echo (!empty($ticket->admits)) ? $ticket->admits : ''; ?></span>
+                            <?php echo (intval($ticket->admits) == 1) ? 'person' : 'people' ?>)</p>
+                        <p class="ticket-description"
+                           data-handbid-ticket-description><?php echo wp_unslash($ticket->description); ?></p>
 
 
-                </div>
-                <div class="col-sm-3 ticket-part-container no-padding-right tickets-are-sold">
-                    <p class="ticket-price">
-                        <span class="handbidAuctionCurrency" title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span>
-                        <span data-handbid-ticket-buynow><?php echo $ticket->buyNowPrice; ?></span>
-                        <input type="hidden" data-handbid-ticket-surcharge value="<?php echo $ticket->surcharge; ?>">
-                        <input type="hidden" data-handbid-ticket-surcharge-name value="<?php echo $ticket->surchargeName; ?>">
-                    </p>
-                </div>
-                <div class="col-sm-3 ticket-part-container no-padding-right tickets-are-sold"
-                     style="<?php echo (($remaining == 0) or ($ticket->status == 'sold')) ? "" : "display:none"; ?>">
-                    <h4>SOLD OUT</h4>
-                </div>
-                <div
-                    class="col-sm-3 col-sm-offset-0 ticket-part-container no-padding-right tickets-are-available"
-                    style="<?php echo (($remaining == 0) or ($ticket->status == 'sold')) ? "display:none" : ""; ?>">
-                    <div class="col-xs-4 no-padding">
-                        <a class="bid-price-toggle bid-down green-button button ghosted-out"
-                           data-handbid-ticket-button="down">-</a>
                     </div>
-
-                    <div class="buy-quantity col-xs-4 no-padding"><span
-                            data-handbid-ticket-quantity>0</span>
-                        <input type="hidden" data-handbid-tickets-remaining
-                               value="<?php
-                               echo hb_check_remaining_and_limit($remaining, $limit, false, $ticket->hideSales);
-                               ?>">
+                    <div class="col-sm-3 ticket-part-container no-padding-right tickets-are-sold">
+                        <p class="ticket-price">
+                            <span class="handbidAuctionCurrency"
+                                  title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span>
+                            <span data-handbid-ticket-buynow><?php echo $ticket->buyNowPrice; ?></span>
+                            <input type="hidden" data-handbid-ticket-surcharge
+                                   value="<?php echo $ticket->surcharge; ?>">
+                            <input type="hidden" data-handbid-ticket-surcharge-name
+                                   value="<?php echo $ticket->surchargeName; ?>">
+                        </p>
                     </div>
-
-                    <div class="col-xs-4 ticket-quantity-up no-padding">
-                        <a
-                            class="bid-price-toggle bid-up green-button button <?php echo ($remaining != 0) ? "" : "ghosted-out"; ?>"
-                            data-handbid-ticket-button="up">+</a>
+                    <div class="col-sm-3 ticket-part-container no-padding-right tickets-are-sold"
+                         style="<?php echo (($hasInventory && $remaining == 0) or (in_array($ticket->status, ['sold',
+                                                                                                              'pending']))) ? "" : "display:none"; ?>">
+                        <h4><?php echo ($ticket->status == 'pending') ? 'PENDING' : 'SOLD OUT'; ?></h4>
                     </div>
+                    <div
+                        class="col-sm-3 col-sm-offset-0 ticket-part-container no-padding-right tickets-are-available"
+                        style="<?php echo (($hasInventory && $remaining == 0) or (in_array($ticket->status, ['sold',
+                                                                                                             'pending']))) ? "display:none" : ""; ?>">
+                        <div class="col-xs-4 no-padding">
+                            <a class="bid-price-toggle bid-down green-button button ghosted-out"
+                               data-handbid-ticket-button="down">-</a>
+                        </div>
 
-                    <div class="col-xs-12 ticket-remaining-inventory-cont no-padding">
+                        <div class="buy-quantity col-xs-4 no-padding"><span
+                                data-handbid-ticket-quantity>0</span>
+                            <input type="hidden" data-handbid-tickets-remaining
+                                   value="<?php
+                                   echo hb_check_remaining_and_limit($remaining, $limit, false, $ticket->hideSales);
+                                   ?>">
+                        </div>
+
+                        <div class="col-xs-4 ticket-quantity-up no-padding">
+                            <a
+                                class="bid-price-toggle bid-up green-button button <?php echo ($remaining != 0) ? "" : "ghosted-out"; ?>"
+                                data-handbid-ticket-button="up">+</a>
+                        </div>
+
+                        <div class="col-xs-12 ticket-remaining-inventory-cont no-padding">
                         <span class="remaining-inventory"
                               data-handbid-ticket-quant-remaining><?php
                             echo hb_check_remaining_and_limit($remaining, $limit, true, $ticket->hideSales);
                             ?></span>
+                        </div>
                     </div>
-                </div>
 
+                </div>
             </div>
-        </div>
-        <?php
+            <?php
+        }
     }
 }
 else{

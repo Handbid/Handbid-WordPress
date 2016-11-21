@@ -26,7 +26,6 @@ $bidderLocationQuestion = (!empty($auction->bidderLocationQuestion)
         ? $auction->bidderLocationText
         : ''));
 $welcomeForReceipt = (!empty($auction->welcomeForReceipt)) ? str_replace(['{auction}'], [$auction->name], $auction->welcomeForReceipt) : '';
-
 ?>
 <div class="sticky">
     <div id="bidder-info-load" class="bidder-info-load <?php echo (!$displayBidderProfile)?"hidden-page-dashboard":"";?>"

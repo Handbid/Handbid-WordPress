@@ -1228,7 +1228,7 @@ class HandbidActionController
         $ticketing = null;
         try
         {
-            $ticketing = $this->handbid->store('Auction')->getTicketing($_POST['auctionGuid']);
+            $ticketing = $this->handbid->store('Auction')->getTicketing($_POST['auctionGuid'], $_POST['published']);
 
         } catch (Exception $e) { }
 

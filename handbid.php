@@ -586,26 +586,17 @@ class Handbid
 
         global $displayBidderProfile, $post;
 
-        //do we need to prompt for credit card?
         $auction   = $this->state()->currentAuction();
         $auctionID = isset($auction->id) ? $auction->id : 0;
         $bidder    = $this->state()->currentBidder($auctionID);
 
-        //if(!$bidder) {
         echo do_shortcode('[handbid_bidder_login_form  auction_requires_cc=' . (($auction->requireCreditCard) ? 'true' : 'false') . ']');
-        //}
 
-//        if (!$displayBidderProfile)
-//        {
-            echo "<div class='handbid-credit-card-footer-form'>";
-            echo "<input type='hidden' id='footer-credit-cards-count' value='" . count($bidder->creditCards) . "'>";
-            echo do_shortcode('[handbid_bidder_profile_form template="views/bidder/credit-card-form" show_credit_card_required_message=true]');
-            echo "</div>";
-//        }
+        echo "<div class='handbid-credit-card-footer-form'>";
+        echo "<input type='hidden' id='footer-credit-cards-count' value='" . count($bidder->creditCards) . "'>";
+        echo do_shortcode('[handbid_bidder_profile_form template="views/bidder/credit-card-form" show_credit_card_required_message=true]');
+        echo "</div>";
 
-//        echo do_shortcode('[handbid_bidder_cc_form]');
-
-        // Set Values
 
         $auctionGuid = (isset($auction->auctionGuid)) ? trim($auction->auctionGuid) : "";
         $auctionKey  = (isset($auction->key)) ? trim($auction->key) : "";
@@ -715,6 +706,16 @@ class Handbid
                 forgetHide            : false
             };
 
+            var link_settings = {
+                data: {
+                    auction_image: '<?php echo $auction->imageUrl; ?>',
+                    auction_title: '<?php echo $auction->name; ?>',
+                    bidder_name: '<?php echo $bidder->firstName . ' ' . $bidder->lastName; ?>',
+                    paddle_number: '<?php echo $bidder->currentPaddleNumber; ?>',
+                    '$deeplink_path': window.location.pathname
+                }
+            };
+
             branch.init(branch_key, {}, function(err, data) {
 
                 if((data.data_parsed.$deeplink_path != undefined)
@@ -732,7 +733,7 @@ class Handbid
                     window.location = deeplink_path;
                 }
                 else{
-                    branch.banner(banner_settings);
+                    branch.banner(banner_settings, link_settings);
                 }
             });
 

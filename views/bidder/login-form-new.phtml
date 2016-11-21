@@ -84,6 +84,9 @@ if(!function_exists("handbid_popup_inline_links")){
 
 <div class="handbid-modal modal fade handbid-login-modal <?php echo ($in_page) ? "handbid-modal-in-page" : "" ; ?>" tabindex="-1" role="dialog" data-handbid-modal-key="login-modal">
     <div class="modal-dialog modal-lg">
+
+        <input type="hidden" id="hb-modal-auction-enabled-tickets" value="<?php echo ($auction && $auction->enableTicketSales) ? 'yes' : 'no' ?>">
+
         <?php if(!$in_page){?>
             <a href="#" class="modal-close" data-dismiss="modal" aria-label="Close">&times;</a>
         <?php }?>
