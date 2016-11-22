@@ -541,10 +541,13 @@ var handbid_login_main, cookieExpire = 7;
                                    var premiumAmount = ((subtotalAmount - discountAmount + surchargesAmount) * premiumPercents / 100 );
                                    var totalAmount   = premiumAmount + subtotalAmount - discountAmount + surchargesAmount;
 
-                                   premiumAmountPlace.html(premiumAmount);
+                                   var totalAmountOut = handbid_main.number_format(totalAmount, 2, ".", "");
+                                   var premiumAmountOut = handbid_main.number_format(premiumAmount, 2, ".", "");
 
-                                   totalAmountPlace.html(totalAmount);
-                                   fullPricePlaces.html(totalAmount);
+                                   premiumAmountPlace.html(premiumAmountOut);
+
+                                   totalAmountPlace.html(totalAmountOut);
+                                   fullPricePlaces.html(totalAmountOut);
                                    handbid_login_main.placeCurrentTotalToTotalPlaces();
 
                                    discountErrorPlace.slideUp('fast');
