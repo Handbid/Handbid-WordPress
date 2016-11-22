@@ -197,6 +197,13 @@ var handbid_login_main, cookieExpire = 7;
 
             var ticketsToAdd = [];
 
+            if(is_from_register_buy_tickets){
+                var tickets = handbid_login.recalculateTotalTicketsPrice();
+                if (tickets.length > 0){
+                    return tickets;
+                }
+            }
+
             if (profileData.auctionTickets != undefined) {
                 ticketsToAdd = profileData.auctionTickets;
             }
@@ -724,8 +731,11 @@ var handbid_login_main, cookieExpire = 7;
             var prices                        = $.map($("[data-handbid-ticket-row]"), function (val, i) {
                 var parentBlock       = $(val),
                     quantityBlock     = $("[data-handbid-ticket-quantity]", parentBlock).eq(0),
-                    quantity          = parseInt(quantityBlock.html()),
-                    itemID            = parseInt(parentBlock.data("handbid-ticket-row")),
+                    quantity          = parseInt(quantityBlock.html());
+                if(quantity <= 0){
+                    return null;
+                }
+                var itemID            = parseInt(parentBlock.data("handbid-ticket-row")),
                     itemPrice         = parseFloat($("[data-handbid-ticket-buynow]", parentBlock).eq(0).html()),
                     itemSurcharge     = parseFloat($("[data-handbid-ticket-surcharge]", parentBlock).eq(0).val()),
                     itemSurchargeName = $("[data-handbid-ticket-surcharge-name]", parentBlock).eq(0).val(),
@@ -733,8 +743,7 @@ var handbid_login_main, cookieExpire = 7;
                     itemDescription   = $("[data-handbid-ticket-description]", parentBlock).eq(0).html();
                 totalPrice += quantity * itemPrice;
                 totalQuantity += quantity;
-                return (quantity > 0) ?
-                {
+                return {
                     id            : itemID,
                     price         : itemPrice,
                     quantity      : quantity,
@@ -742,8 +751,7 @@ var handbid_login_main, cookieExpire = 7;
                     surcharge     : itemSurcharge,
                     surchargeName : itemSurchargeName,
                     description   : itemDescription
-                }
-                    : null;
+                };
             });
 
             totalPrice = handbid_main.number_format(totalPrice, 2, ".", "");
@@ -894,13 +902,16 @@ var handbid_login_main, cookieExpire = 7;
 
                                     if (data.result != undefined) {
 
-                                        if (data.result.data != undefined && data.result.data.error != undefined) {
+                                        var dataData = data.result.data;
 
+                                        if (dataData != undefined
+                                            && dataData.error != undefined
+                                            && dataData.error.Paid == undefined) {
                                             var payment_error_messages = [];
 
-                                            for (var propertyName in data.result.data.error) {
+                                            for (var propertyName in dataData.error) {
 
-                                                var value = data.result.data.error[propertyName];
+                                                var value = dataData.error[propertyName];
 
                                                 payment_error_messages.push(value);
                                             }
@@ -909,7 +920,10 @@ var handbid_login_main, cookieExpire = 7;
                                             nextPopupWindow = "process-error";
                                         }
                                         else {
-                                            if (data.result.paid) {
+                                            if (data.result.paid
+                                                ||(dataData != undefined
+                                                   && dataData.error != undefined
+                                                   && dataData.error.Paid != undefined)) {
                                                 nextPopupWindow = "process-success";
 
                                                 $('.hide-if-no-tickets').show();
