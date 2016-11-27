@@ -50,7 +50,7 @@ $isDonation = (!empty($item->isAppeal) and $item->isAppeal);
 </div>
 <div data-handbid-bid data-handbid-item-key="<?php echo $item->key; ?>" data-item-is-bidpad-id="<?php echo $item->id; ?>"
      style="<?php echo ($isBidpadOnly)?"":" display:none; ";?>">
-    <div class="row"><h4 class="no-bidding-message only-live-auctions"><?php echo "<b>Live Only</b><br>This item is only available using BidPad. Contact the auction manager about this opportunity";?></h4></div>
+    <div class="row"><h4 class="no-bidding-message only-live-auctions"><?php echo "<b>Live Only</b><br>This item is only available using the Handbid App for iPad. Contact the auction manager about this opportunity";?></h4></div>
 </div>
 <div data-handbid-bid data-handbid-item-key="<?php echo $item->key; ?>"  data-item-bidding-id="<?php echo $item->id; ?>"
      style="<?php echo ($itemCanNotBeShownInPresale or $itemSold or $isLiveItem or $isBidpadOnly or $itemsAuctionIsClosed)?" display:none; ":"";?>">
