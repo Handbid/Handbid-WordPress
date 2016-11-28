@@ -1248,7 +1248,8 @@ class HandbidActionController
         if(!empty($_POST['auctionId'])){
             $auctionID = intval($_POST['auctionId']);
 
-            $auction  = $this->state->currentAuction(['id' => $auctionID]);
+            $auction = $this->handbid->store('Auction')->byId($auctionID);
+
             if($auction)
             {
                 $catId = $_POST['catId'];

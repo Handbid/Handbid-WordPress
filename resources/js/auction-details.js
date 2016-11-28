@@ -379,33 +379,50 @@ var currentlyFilteringByCat = null;
             currentlyFilteringByCat = catId;
         }
 
-        if(catId && auction_categories_ids && (auction_categories_ids[catId] || (catId == 'all'))){
-            result = true;
-            if(catId == 'all'){
-                auction_categories_ids = null;
-            }
-            else{
-                delete auction_categories_ids[catId];
-            }
 
-            var auctionId = $('#bidder-info-load').attr('data-auction');
+        if(catId && auction_categories_ids && (auction_categories_ids != null) && (auction_categories_ids[catId] || (catId == 'all'))){
 
-            var dataAct = {
-                action: "handbid_ajax_get_item_boxes_by_category",
-                auctionId: auctionId,
-                catId: catId
-            };
+            var categorySelect = $('select[name="mobile-category"]');
+            var categoryLinks = $('ul.by-category');
+            var itemsContainer = $('.simple-box-row.item-list');
 
-            $.post(
-                ajaxurl,
-                dataAct,
-                function (data) {
-                    var $newItems = $(data);
-                    $('.simple-box-row.item-list.isotope').append( $newItems ).isotope( 'addItems', $newItems );
-                    checkAndUpdateIsotope();
+            if(!itemsContainer.hasClass('loading')) {
+
+                result = true;
+                if (catId == 'all') {
+                    auction_categories_ids = null;
                 }
-            );
+                else {
+                    delete auction_categories_ids[catId];
+                }
+
+                var auctionId = $('#footer-auction-id').val();
+
+                categorySelect.addClass('loading').attr('disabled', 'disabled');
+                categoryLinks.addClass('loading');
+                itemsContainer.addClass('loading');
+
+                var dataAct = {
+                    action    : "handbid_ajax_get_item_boxes_by_category",
+                    auctionId : auctionId,
+                    catId     : catId
+                };
+
+                $.post(
+                    ajaxurl,
+                    dataAct,
+                    function (data) {
+
+                        var $newItems = $(data);
+                        $('.simple-box-row.item-list.isotope').append($newItems).isotope('addItems', $newItems);
+                        checkAndUpdateIsotope();
+                        categorySelect.removeClass('loading').removeAttr('disabled');
+                        itemsContainer.removeClass('loading');
+                    }
+                );
+            }
         }
+
 
         return result;
     }
@@ -521,10 +538,13 @@ var currentlyFilteringByCat = null;
                     filterItems[key] = selector;
                 }
 
+
                 var need_to_append_items = false;
 
                 if(key == 'category'){
                     var catId = $(this).parent().attr('data-legacy-category-id');
+                    $('select[name="mobile-category"] option:selected').removeAttr('selected');
+                    $('select[name="mobile-category"] option[data-legacy-category-id="'+catId+'"]').attr('selected', 'selected');
                     need_to_append_items = needToAppendItems(catId);
                 }
 
@@ -552,9 +572,14 @@ var currentlyFilteringByCat = null;
                 filterItems[key] = selector;
             }
 
+
             var need_to_append_items = false;
             if(key == 'category'){
                 var catId = $('select[name="mobile-category"] option:selected').attr('data-legacy-category-id');
+
+                $('.by-category li').removeClass('selected');
+                $('.by-category li[data-legacy-category-id="'+catId+'"]').addClass('selected');
+
                 need_to_append_items = needToAppendItems(catId);
             }
 
@@ -572,15 +597,6 @@ var currentlyFilteringByCat = null;
                 firstCatLink.click();
             }
         }, 3500);
-
-
-        //reset search button
-        $('[data-slider-nav-key="items"]').on('click', function (e) {
-
-            e.preventDefault();
-            checkAndUpdateIsotope();
-
-        });
 
 
         //reset search button

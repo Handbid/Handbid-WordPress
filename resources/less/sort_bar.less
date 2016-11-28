@@ -29,7 +29,15 @@ select {
   text-transform: uppercase;
   text-overflow: ellipsis;
   white-space: nowrap;
-  width: 80%
+  width: 80%;
+
+  &.loading {
+    background-image: url("../images/ajax-loader.gif") !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    transition: none !important;
+    text-indent: -9999px;
+  }
 }
 
 .sort-bar {

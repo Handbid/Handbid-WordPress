@@ -46,11 +46,11 @@ foreach ($categories as $category_single)
     {
         $availableForPreSale        = ($item_single->availableForPreSale == "1");
         $isDirectPurchaseItem       = ($item_single->isDirectPurchaseItem);
-        $itemCanNotBeShownInPresale = ($auctionStatusIsPresale and !($isDirectPurchaseItem and $availableForPreSale));
+        $itemCanNotBeShownInPresale = ($auctionStatusIsPresale && !($isDirectPurchaseItem && $availableForPreSale));
 
-        $hideItemIfSold = (($item_single->isHidden == "1") or (($item_single->hideSales == 1) and $item_single->status == "sold"));
+        $hideItemIfSold = (($item_single->isHidden == "1") or (($item_single->hideSales == 1) && $item_single->status == "sold"));
 
-        if (!$itemCanNotBeShownInPresale and !$hideItemIfSold)
+        if (!$itemCanNotBeShownInPresale && !$hideItemIfSold && !$item_single->isHidden)
         {
             $temp['count'] += 1;
             $temp['items'][] = $item_single->name;
@@ -100,7 +100,7 @@ $currencySymbol = (isset($auction->currencySymbol)) ? $auction->currencySymbol :
     <div class="container container-fluid detail-banner-wrapper">
         <div class="detail-banner" style="background-image: url('<?php
         $image = ($auction->bannerImage) ? $auction->bannerImage : $auction->organization->banner;
-        $image = (strpos($image, "ucarecdn") !== false and strpos($image, "preview") === false) ? $image . "-/preview/1140x280/" : $image;
+        $image = (strpos($image, "ucarecdn") !== false && strpos($image, "preview") === false) ? $image . "-/preview/1140x280/" : $image;
         echo $image; ?>')">
             <div class="logo">
                 <a href="/organizations/<?php echo $auction->organizationKey; ?>/" style="cursor: pointer;">
@@ -108,7 +108,7 @@ $currencySymbol = (isset($auction->currencySymbol)) ? $auction->currencySymbol :
                     $image        = ($auction->imageUrl) ? $auction->imageUrl : $auction->sponsorImage;
                     $imageUrlPath = parse_url($image);
                     $image        = ($imageUrlPath["scheme"]) ? $image : "https://" . $image;
-                    $image        = (strpos($image, "ucarecdn") !== false and strpos($image, "preview") === false) ? $image . "-/preview/120x120/" : $image;
+                    $image        = (strpos($image, "ucarecdn") !== false && strpos($image, "preview") === false) ? $image . "-/preview/120x120/" : $image;
                     echo $image;
                     ?>"/>
                 </a>
@@ -129,7 +129,7 @@ $currencySymbol = (isset($auction->currencySymbol)) ? $auction->currencySymbol :
                 <?php } ?>
 
 
-                <?php if ($auction->enableTicketSales and $profile)
+                <?php if ($auction->enableTicketSales && $profile)
                 { ?>
                     <a class="button pink-button handbid-modal-link purchase-tickets"
                        data-handbid-credit-cards-need
@@ -147,7 +147,7 @@ $currencySymbol = (isset($auction->currencySymbol)) ? $auction->currencySymbol :
 
     <?php $informationFirst = (in_array($auction->status, ["preview", "presale", "closed"])); ?>
     <ul class="slider-nav col-md-12 auto-open" data-slider-nav-id="auction-details">
-        <?php if ($auction->description and $informationFirst)
+        <?php if ($auction->description && $informationFirst)
         { ?>
             <li>
                 <a data-slider-nav-key="description">Auction Information</a>
@@ -156,7 +156,7 @@ $currencySymbol = (isset($auction->currencySymbol)) ? $auction->currencySymbol :
         <li>
             <a data-slider-nav-key="items">Items</a>
         </li>
-        <?php if ($auction->description and !$informationFirst)
+        <?php if ($auction->description && !$informationFirst)
         { ?>
             <li>
                 <a data-slider-nav-key="description">Auction Information</a>
