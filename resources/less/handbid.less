@@ -472,3 +472,78 @@ h3.no-results {
     opacity: 0;
   }
 }
+
+.page-invoices{
+  .bidder-info-load{
+    visibility: hidden !important;
+  }
+}
+
+.receipts-page-container{
+  width: 70%;
+  margin: 10px auto;
+}
+
+.add-credit-card-to-receipt{
+  font-size: 13px;
+  padding: 12px 4px !important;
+  text-align: center !important;
+}
+
+.simple-list .receipt h4{
+  margin-bottom: 10px;
+}
+
+@media print {
+  .page-invoices{
+    [data-toggle-invoice-more-link],
+    .unpaidControls,
+    .paidControls,
+    .bidder-info-load,
+    .mobile-menu,
+    .share-receipt-controls,
+    .handbid-breadcrumb,
+    .global-header,
+    .global-footer{
+      display:none !important;
+    }
+    .sticking{
+        position: relative !important;
+    }
+  }
+  .receipts-page-container{
+    width: 100%;
+  }
+}
+
+@media only screen
+and (min-width: 320px) {
+
+  .receipts-page-container{
+    width: 90%;
+
+    .invoice-details-container{
+      padding: 2%;
+    }
+
+    h3{
+      font-size: 1.5em !important;
+      margin-top: 0;
+    }
+  }
+
+}
+
+@media only screen
+and (max-width: 500px) {
+  .hide-in-mobile{
+    display: none;
+  }
+}
+
+@media only screen
+and (min-width: 960px) {
+  .receipts-page-container{
+    width: 70%;
+  }
+}

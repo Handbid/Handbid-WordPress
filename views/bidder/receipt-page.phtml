@@ -1,0 +1,13 @@
+<div class="receipts-page-container">
+<?php
+
+$profile = $this->get('profile');
+$myInvoices = $this->get('myInvoices');
+
+echo $this->partial('receipt.phtml', [
+    'profile'    => $profile,
+    'myInvoices' => $myInvoices,
+    'invoicePage' => true,
+]);
+?>
+</div>

@@ -9,25 +9,23 @@
  */
 
 $invoices = $this->get("myInvoices");
-$auction = $this->get("auction");
 $profile = $this->get("profile");
+$invoicePage = $this->get("invoicePage");
 $creditCards = $profile->creditCards;
 $coinsCount = 2;
 $groupDivider = ",";
 $coinsDivider = ".";
-foreach ($invoices as $i => $invoice) {
-    foreach ($invoice->lineItems as $li => $lineItem) {
-        unset($invoices[$i]->lineItems[$li]->bidder);
-    }
-}
 ?>
 
 <ul class="simple-list">
-    <?php if (!empty($invoices) && is_array($invoices)) {
+    <?php
+    if (!empty($invoices) && is_array($invoices)) {
+
         forEach ($invoices as $invoice) {
             $currency = $invoice->currencySymbol;
             $auctionItems = [];
             $purchaseItems = [];
+            $redemptionInstructions = [];
             $auctionTotal = 0;
             $purchaseTotal = 0;
             $itemTax = 0;
@@ -38,6 +36,12 @@ foreach ($invoices as $i => $invoice) {
                 } else {
                     $auctionItems[] = $lineItem;
                     $auctionTotal += (int)$lineItem->grandTotal;
+                }
+                if(!empty($lineItem->item->redemptionInstructions)){
+                    $redemptionInstructions[] = [
+                        'name' => $lineItem->item->name,
+                        'note' => $lineItem->item->redemptionInstructions,
+                    ];
                 }
                 $itemTax += ($lineItem->tax)?$lineItem->tax:0;
             }
@@ -50,13 +54,19 @@ foreach ($invoices as $i => $invoice) {
                 data-receipt-block-guid="<?php echo $invoice->receiptsGuid; ?>"
                 data-receipt-total="<?php echo number_format($invoice->grandTotal / 100, $coinsCount, $coinsDivider, $groupDivider); ?>"
                 >
-                <div class="col-md-10">
-                    <h4 class="invoice-title margin-bottom"><?php echo $invoice->name; ?></h4>
-                </div>
-                <div class="col-md-2">
-                    <a class="cta-link" data-toggle-invoice-link="<?php echo $invoice->id; ?>">View</a>
-                </div>
-                <div class="col-md-12 invoice-details-container" style="display: none;">
+                <?php if($invoicePage){?>
+                    <div class="col-md-12">
+                        <h3 class="margin-bottom"><?php echo $invoice->name; ?></h3>
+                    </div>
+                <?php }else{?>
+                    <div class="col-md-10">
+                        <h4 class="invoice-title margin-bottom"><?php echo $invoice->name; ?></h4>
+                    </div>
+                    <div class="col-md-2">
+                        <a class="cta-link" data-toggle-invoice-link="<?php echo $invoice->id; ?>">View</a>
+                    </div>
+                <?php }?>
+                <div class="col-md-12 invoice-details-container" style="<?php echo ($invoicePage) ? '' : 'display: none;'; ?>">
 
                     <table class="table  table-receipt-summary ">
                         <tbody>
@@ -101,23 +111,25 @@ foreach ($invoices as $i => $invoice) {
                         <?php }?>
                         </tbody>
                     </table>
-                    <div class="col-xs-12 margin-bottom">
+                    <div class="row">
+                    <div class="col-xs-12 margin-bottom share-receipt-controls">
                         <div class="col-xs-6 col-md-3">
-                            <a class="buy-now green-solid-button receipt-action-button col-md-12 loading-span-button"
+                            <a class="buy-now green-solid-button receipt-action-button col-xs-12 loading-span-button"
                                onclick="handbid_main.sendInvoice('<?php echo $invoice->id; ?>','<?php echo $profile->email; ?>', false)"
                             ><span>Email Receipt</span></a></div>
                         <div class="col-xs-6 col-md-3">
-                            <a class="buy-now green-solid-button receipt-action-button col-md-12 loading-span-button"
+                            <a class="buy-now green-solid-button receipt-action-button col-xs-12 loading-span-button"
                                onclick="handbid_main.sendInvoice('<?php echo $invoice->id; ?>','<?php echo $profile->userCellPhone; ?>', true)"
                             ><span>Text Receipt</span></a></div>
                     </div>
+                    </div>
                     <?php if (!((bool)$invoice->paid)) { ?>
-                        <div class="unpaidControls">
+                        <div class="unpaidControls row">
 
 
-                            <div class="col-md-12  margin-bottom receipt-payment-block hideIfNoCCAllowed">
-                                <div class="col-md-6">
-                                    <select class="select-payment-card col-md-12"
+                            <div class="col-xs-12 col-md-12  margin-bottom receipt-payment-block hideIfNoCCAllowed">
+                                <div class="col-xs-12 col-sm-6">
+                                    <select class="select-payment-card col-xs-12 col-md-12"
                                             style="<?php echo (!count($creditCards)) ? " display:none; " : ""; ?>">
                                         <?php
                                         if (count($creditCards)) {
@@ -128,8 +140,12 @@ foreach ($invoices as $i => $invoice) {
                                         ?>
                                     </select>
                                 </div>
-                                <div class="col-md-5">
-                                    <a class="buy-now green-solid-button receipt-action-button make-payment-button col-md-12 loading-span-button"
+                                <div class="col-xs-6 col-sm-3">
+                                    <a class="button green-solid-button handbid-modal-link add-credit-card-to-receipt col-xs-12" data-handbid-modal-key="credit-card-form">
+                                        Add Credit Card</a>
+                                </div>
+                                <div class="col-xs-6 col-sm-3">
+                                    <a class="buy-now green-solid-button receipt-action-button make-payment-button col-xs-12 loading-span-button"
                                        data-auction-id="<?php echo $invoice->auctionId; ?>"
                                        data-receipt-id="<?php echo $invoice->id; ?>"
                                        data-make-payment-nonce="<?php echo apply_filters("handbid_create_nonce", date("d.m.Y") . "make_receipt_payment"); ?>"
@@ -140,30 +156,32 @@ foreach ($invoices as $i => $invoice) {
                                 </div>
                             </div>
 
-                            <div class="col-md-12  margin-bottom receipt-payment-block showIfNoCCAllowed">
-                                <div class="col-md-12">
+                            <div class="col-xs-12 col-md-12  margin-bottom receipt-payment-block showIfNoCCAllowed">
+                                <div class="col-xs-12 col-md-12">
                                     <h4>Payments have been disabled through the site.<br>Contact the auction manager to pay.</h4>
                                 </div>
                             </div>
                         </div>
                     <?php } ?>
-
-                    <div class="col-md-12 margin-bottom paidControls"
-                         style="<?php echo (!((bool)$invoice->paid)) ? " display:none; " : ""; ?>">
-                        <div class="col-xs-12 col-md-6 col-xs-offset-0 col-md-offset-3">
-                            <a class="buy-now green-solid-button receipt-action-button col-md-12 loading-span-button"
-                                ><span>Paid In Full</span></a></div>
+                    <div class="row">
+                        <div class="col-xs-12 margin-bottom paidControls"
+                             style="<?php echo (!((bool)$invoice->paid)) ? " display:none; " : ""; ?>">
+                            <div class="col-xs-6 col-xs-offset-3">
+                                <span class="buy-now green-solid-button receipt-action-button col-xs-12"
+                                    ><span>Paid In Full</span></span></div>
+                        </div>
                     </div>
 
 
                     <div class="col-md-12">
-                        <a class="cta-link margin-bottom" data-toggle-invoice-more-link="<?php echo $invoice->id; ?>">More
+                        <a class="cta-link margin-bottom" data-toggle-invoice-more-link="<?php echo $invoice->id; ?>">Toggle
                             Details</a>
                     </div>
 
-                    <div class="item-1-col row col-md-12 invoice-more-details-container" style="display: none;">
+                    <div class="item-1-col row col-md-12 invoice-more-details-container"  style="<?php echo ($invoicePage) ? '' : 'display: none;'; ?>">
 
-                        <?php if ($auctionTotal) { ?>
+                        <?php
+                        if ($auctionTotal) { ?>
                             <div class="receipt">
                                 <h4>Auction Items (<span class="format-money"><?php
                                         echo $currency . "<em>" . number_format($auctionTotal, $coinsCount, $coinsDivider, $groupDivider) . "</em>";
@@ -176,9 +194,9 @@ foreach ($invoices as $i => $invoice) {
                                             <th>Item Code</th>
                                             <th>Item Name</th>
                                             <th>Market Value</th>
-                                            <th>Category</th>
+                                            <th class="hide-in-mobile">Category</th>
                                             <th>Bid</th>
-                                            <th>Tax</th>
+                                            <th class="hide-in-mobile">Tax</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -188,9 +206,9 @@ foreach ($invoices as $i => $invoice) {
                                         <td>' . $auctionItem->item->itemCode . '</td>
                                         <td>' . $auctionItem->item->name . '</td>
                                         <td class="format-money">' . (($auctionItem->item->value) ? $currency . "<em>" . number_format($auctionItem->item->value, $coinsCount, $coinsDivider, $groupDivider) : "--") . "</em>" . '</td>
-                                        <td>' . $auctionItem->item->categoryName . '</td>
+                                        <td class="hide-in-mobile" >' . $auctionItem->item->categoryName . '</td>
                                         <td class="format-money">' . $currency . "<em>" . number_format($auctionItem->grandTotal, $coinsCount, $coinsDivider, $groupDivider) . "</em>" . '</td>
-                                        <td class="format-money">' . $currency . "<em>" . number_format($auctionItem->tax / 100, $coinsCount, $coinsDivider, $groupDivider) . "</em>" . '</td>
+                                        <td class="format-money hide-in-mobile">' . $currency . "<em>" . number_format($auctionItem->tax / 100, $coinsCount, $coinsDivider, $groupDivider) . "</em>" . '</td>
                                     </tr>';
                                         }
                                         ?>
@@ -211,9 +229,9 @@ foreach ($invoices as $i => $invoice) {
                                         <tr>
                                             <th>Item Code</th>
                                             <th>Item Name</th>
-                                            <th>Quantity</th>
-                                            <th>Unit Price</th>
-	                                        <th>ItemTax</th>
+                                            <th class="hide-in-mobile">Quantity</th>
+                                            <th class="hide-in-mobile">Unit Price</th>
+	                                        <th class="hide-in-mobile">ItemTax</th>
                                             <th>Total</th>
                                         </tr>
                                         </thead>
@@ -223,14 +241,43 @@ foreach ($invoices as $i => $invoice) {
                                             echo '<tr data-key="' . $purchaseItem->item->id . '">
                                         <td>' . $purchaseItem->item->itemCode . '</td>
                                         <td>' . $purchaseItem->item->name . '</td>
-                                        <td>' . $purchaseItem->quantity . '</td>
-                                        <td class="format-money">' . $currency . "<em>" . number_format($purchaseItem->pricePerItem, $coinsCount, $coinsDivider, $groupDivider) . "</em>" . '</td>
-                                        <td class="format-money">' . $currency . "<em>" . number_format($purchaseItem->tax / 100, $coinsCount, $coinsDivider, $groupDivider) . "</em>" . '</td>
+                                        <td class="hide-in-mobile" >' . $purchaseItem->quantity . '</td>
+                                        <td class="format-money hide-in-mobile">' . $currency . "<em>" . number_format($purchaseItem->pricePerItem, $coinsCount, $coinsDivider, $groupDivider) . "</em>" . '</td>
+                                        <td class="format-money hide-in-mobile">' . $currency . "<em>" . number_format($purchaseItem->tax / 100, $coinsCount, $coinsDivider, $groupDivider) . "</em>" . '</td>
                                         <td class="format-money">' . $currency . "<em>" . number_format($purchaseItem->grandTotal, $coinsCount, $coinsDivider, $groupDivider) . "</em>" . '</td>
                                     </tr>';
                                         }
                                         ?>
 
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        <?php } ?>
+                        <?php if ($invoicePage and !empty($redemptionInstructions)) { ?>
+                            <div class="receipt">
+                                <h4>
+                                    Important Information About Your Items</h4>
+
+                                <div id="w1" class="grid-view">
+                                    <table class="table table-striped table-bordered">
+                                        <thead>
+                                        <tr>
+                                            <th>Item Name</th>
+                                            <th>Instruction</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <?php
+                                        foreach ($redemptionInstructions as $redemptionInstruction) {
+                                            ?>
+                                            <tr>
+                                                <td><?php echo $redemptionInstruction['name']?></td>
+                                                <td><?php echo $redemptionInstruction['note']?></td>
+                                            </tr>
+                                            <?php
+                                        }
+                                        ?>
                                         </tbody>
                                     </table>
                                 </div>
