@@ -1683,7 +1683,7 @@ class HandbidShortCodeController
 
                 $title = $auctionTitle;
                 $title .= ($auctionStatus == "setup") ? '<span class="auction-unavailable">auction is currently not available</span>' : "";
-                $title .= '<span class="under">';
+                $title .= '<span class="under open">';
                 $sep = ' &mdash; ';
 
                 if (date('Ymd', $auctionStartTime) == date('Ymd', $auctionEndTime))
@@ -1705,6 +1705,8 @@ class HandbidShortCodeController
                 }
 
                 $title .= ' ' . date("T", $auctionEndTime);
+
+                $title .= ' | ' . '<span class="status-label">' . $auctionStatus . '</span> <span class="status-box"></span>';
 
                 $title .= '</span>';
 

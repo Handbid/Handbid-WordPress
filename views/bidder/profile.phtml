@@ -71,7 +71,7 @@ $coinsDivider = ".";
                     </div>
 
                     <a class="col-xs-12 profile-user-info profile-opener" data-slider-nav-key="profile-user-info">
-                        <span><?php echo $bidderName; ?></span>
+                        <span><label>Hello,</label>&nbsp<?php echo $bidderName; ?></span>
                     </a>
 
                 </div>
@@ -81,16 +81,19 @@ $coinsDivider = ".";
                     <label>Total</label>
 
                 </a>
-
             </div>
 
 
             <div class="slider-nav-desktop row stats-bar">
                 <a class="col-md-<?php echo ($auction) ? '2' : '3'; ?> col-xs-8 profile-user-info profile-opener" data-slider-nav-key="profile-user-info">
-                    <span><?php echo $bidderName; ?></span>
+                    <span><label>Hello,</label>&nbsp<?php echo $bidderName; ?></span>
                 </a>
                 <?php if($auction) {
                     ?>
+                    <a class="col-md-2 col-sm-3 col-xs-3 profile-alerts" data-slider-nav-key="profile-alerts">
+                        <label>Alerts</label>
+                        <span data-handbid-stats-num-purchases><?php echo ($purchases) ? count($purchases) : '0'; ?></span>
+                    </a>
                     <a class="col-md-2 col-sm-3 col-xs-3 profile-max-bids <?php echo $loader;?>" data-slider-nav-key="profile-max-bids">
                         <label>Max Bids</label>
                         <span data-handbid-stats-num-proxies><?php echo ($maxBids) ? count($maxBids) : '0'; ?></span>
@@ -98,6 +101,10 @@ $coinsDivider = ".";
                     <a class="col-md-2 col-sm-3 col-xs-3 profile-winning <?php echo $loader;?>" data-slider-nav-key="profile-winning">
                         <label>Winning</label>
                         <span data-handbid-stats-num-winning><?php echo ($winning) ? count($winning) : '0'; ?></span>
+                    </a>
+                    <a class="col-md-2 col-sm-3 col-xs-3 profile-favourites" data-slider-nav-key="profile-favourites">
+                        <label>Favourites</label>
+                        <span data-handbid-stats-num-purchases><?php echo ($purchases) ? count($purchases) : '0'; ?></span>
                     </a>
                     <a class="col-md-2 col-sm-3 col-xs-3 profile-losing <?php echo $loader;?>" data-slider-nav-key="profile-losing">
                         <label>Losing</label>
@@ -109,7 +116,7 @@ $coinsDivider = ".";
                     </a>
                     <a class="col-md-2 col-xs-12 total-spent <?php echo $loader;?>">
                         <label>Total</label>
-                        <span><span class="handbidAuctionCurrency" title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span><span data-handbid-stats-grand-total><?php echo $total; ?></span></span>
+                        <span><span class="handbidAuctionCurrency" title="<?php echo $currencyCode; ?>"><?php echo $currencySymbol; ?></span><span data-handbid-stats-grand-total class="grand-total"><?php echo $total; ?></span></span>
                     </a>
                 <?php } ?>
             </div>

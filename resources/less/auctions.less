@@ -461,7 +461,7 @@
     bottom: @logoSize / 2 * -1;
     width: @logoSize;
     height: @logoSize;
-    left: 40px;
+    left: ~"calc(50% - 100px)";
     line-height: 100px;
     background-color: @white;
     border-radius: @borderRadius;
@@ -781,11 +781,6 @@
   }
 
   .auction-details, .org-details {
-    .detail-banner .logo {
-      left: 50%;
-      margin-left: -100px;
-    }
-
     .controls {
       margin-top: 100px;
       text-align: center;

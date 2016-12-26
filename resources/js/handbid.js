@@ -855,8 +855,8 @@ var handbid_main, connect_message, modal_overlay, reload_overlay, confirm_bid_ov
                 var confirm        = false;
                 var hide           = true;
                 var hasBidderPanel = ($("#bidder-info-load").length && $("#bidder-info-load").html() != "");
-                $(".auction-details").removeClass('open').removeClass('preview').removeClass('presale').addClass('closed');
-                $(".auction-details .status .status-label").html('closed');
+                $(".under").removeClass('open').removeClass('preview').removeClass('presale').addClass('closed'); //.auction-details
+                $(".under .status-label").html('closed'); //.auction-details .status
                 if (hasInvoices && hasBidderPanel) {
                     noticeText += "<br>You may have an unpaid invoices so you can check them.";
                     buttons.push({
