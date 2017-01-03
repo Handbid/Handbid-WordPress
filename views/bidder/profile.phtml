@@ -21,6 +21,7 @@ if (!is_null($this->get('profile'))) {
     $myAuctions = $this->get('myAuctions');
     $myInvoices = $this->get('myInvoices');
     $myMessages = $this->get('notifications');
+    $isInvoicesPage = $this->get('isInvoicesPage');
     $isInitialLoading = 0; //$this->get('isInitialLoading');
     $bidderName = strtoupper($profile->firstName[0]) . '. ' . $profile->lastName;
     $redirect   = $_SERVER['REQUEST_URI'];
@@ -131,6 +132,7 @@ $coinsDivider = ".";
                         'myAuctions' => $myAuctions,
                         'myInvoices' => $myInvoices,
                         'notifications' => $myMessages,
+                        'isInvoicesPage' => $isInvoicesPage,
                     ]);
                     ?>
                 </div>

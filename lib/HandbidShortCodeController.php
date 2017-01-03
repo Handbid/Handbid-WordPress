@@ -1007,10 +1007,6 @@ class HandbidShortCodeController
 
         try
         {
-            if($post->post_name == 'invoices'){
-                return '.';
-            }
-
             $template = $this->templateFromAttributes($attributes, 'views/bidder/profile');
 
             // $profile  = $this->handbid->store( 'Bidder' )->myProfile();
@@ -1095,6 +1091,7 @@ class HandbidShortCodeController
                     'myInvoices'       => $myInvoices,
                     'notifications'    => $myMessages,
                     'isInitialLoading' => $isInitialLoading,
+                    'isInvoicesPage'    => ($post->post_name == 'invoices'),
                 ]
             );
         } catch (Exception $e)

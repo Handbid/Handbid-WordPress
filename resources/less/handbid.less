@@ -475,7 +475,23 @@ h3.no-results {
 
 .page-invoices{
   .bidder-info-load{
-    visibility: hidden !important;
+    //visibility: hidden !important;
+  }
+  .total-spent{
+    display: none !important;
+  }
+
+  .bidder-info-container{
+    [data-slider-nav-id="bidder-dashboard"]{
+
+    }
+  }
+
+
+  @media (min-width: 768px) {
+    .container {
+      width: 96%;
+    }
   }
 }
 
@@ -511,6 +527,7 @@ h3.no-results {
         position: relative !important;
     }
   }
+  .container,
   .receipts-page-container{
     width: 100%;
   }
@@ -519,6 +536,7 @@ h3.no-results {
 @media only screen
 and (min-width: 320px) {
 
+  .container,
   .receipts-page-container{
     width: 90%;
 
@@ -543,6 +561,7 @@ and (max-width: 500px) {
 
 @media only screen
 and (min-width: 960px) {
+  .container,
   .receipts-page-container{
     width: 70%;
   }

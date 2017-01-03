@@ -690,7 +690,15 @@ var handbid_main, connect_message, modal_overlay, reload_overlay, confirm_bid_ov
                                     text     : 'View Invoice',
                                     addClass : 'view-invoices-button',
                                     click    : function (notice) {
-                                        handbid.scrollToInvoices(notice, val.id);
+                                        if($('body').hasClass('page-invoices')) {
+                                            var invoiceBlock = $('[data-receipt-block-id="'+val.id+'"]');
+                                            if(invoiceBlock.length) {
+                                                $('html,body').animate({scrollTop: invoiceBlock.offset().top}, 'normal');
+                                            }
+                                        }
+                                        else {
+                                            handbid.scrollToInvoices(notice, val.id);
+                                        }
                                         notice.remove();
                                     }
                                 }, {
@@ -860,13 +868,21 @@ var handbid_main, connect_message, modal_overlay, reload_overlay, confirm_bid_ov
                 if (hasInvoices && hasBidderPanel) {
                     noticeText += "<br>You may have an unpaid invoices so you can check them.";
                     buttons.push({
-                                     text     : 'View Invoices',
-                                     addClass : 'view-invoices-button',
-                                     click    : function (notice) {
-                                         handbid.scrollToInvoices(notice);
-                                         notice.remove();
-                                     }
-                                 });
+                         text     : 'View Invoices',
+                         addClass : 'view-invoices-button',
+                         click    : function (notice) {
+                             if($('body').hasClass('page-invoices')) {
+                                 var invoiceBlock = $('[data-receipt-block-id="'+values.id+'"]');
+                                 if(invoiceBlock.length) {
+                                     $('html,body').animate({scrollTop: invoiceBlock.offset().top}, 'normal');
+                                 }
+                             }
+                             else {
+                                 handbid.scrollToInvoices(notice);
+                             }
+                             notice.remove();
+                         }
+                     });
                     confirm = {
                         confirm : true,
                         buttons : buttons
