@@ -127,6 +127,8 @@ class Handbid
         add_action('wp_footer', [$this, 'onRenderFooter']);
         add_action('wp_head', [$this, 'onRenderHeader'], 1);
         add_filter('query_vars', [$this, 'registerVariables']);
+        add_filter('body_class', [$this, 'setBodyClasses']);
+
 
         // Temporary fix for showing admin bar
         add_action('after_setup_theme', [$this, 'remove_admin_bar']);
@@ -134,6 +136,7 @@ class Handbid
         add_action('widgets_init', [$this->testimonials, "addCustomSidebar"]);
 
     }
+
 
     function init()
     {
@@ -459,8 +462,22 @@ class Handbid
         $qvars[] = 'organization';
         $qvars[] = 'auction';
         $qvars[] = 'item';
+        $qvars[] = 'details';
 
         return $qvars;
+    }
+
+    function setBodyClasses( $classes ) {
+
+        global $post;
+
+        if($post)
+        {
+            $classes[] = 'page-'.$post->post_name;
+        }
+
+        return $classes;
+
     }
 
 

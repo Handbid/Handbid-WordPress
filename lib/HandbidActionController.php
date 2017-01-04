@@ -158,6 +158,7 @@ class HandbidActionController
             "handbid_ajax_removebid",
             "handbid_ajax_add_credit_card",
             "handbid_ajax_get_invoices",
+            "handbid_ajax_get_invoice_by_guid",
             "handbid_ajax_get_messages",
             "handbid_ajax_get_bid_history",
             "handbid_ajax_send_message",
@@ -858,6 +859,37 @@ class HandbidActionController
                 }
             }
             $result["unpaid"]   = $unpaidInvoices;
+            $result["invoices"] = $this->viewRenderer->render(
+                'views/bidder/receipt',
+                [
+                    'profile'    => $profile,
+                    'auction'    => $auction,
+                    'myInvoices' => $myInvoices,
+                ]
+            );
+        }
+
+
+        echo json_encode($result);
+        exit;
+    }
+
+
+    function handbid_ajax_get_invoice_by_guid_callback()
+    {
+
+        $nonce = isset($_POST['nonce']) ? $_POST['nonce'] : 'nonce';
+        $guid = isset($_POST['nonce']) ? $_POST['nonce'] : 'nonce';
+
+        if ($this->handbid_verify_nonce($nonce, date("d.m.Y") . "get_invoice_by_guid"))
+        {
+
+            $auction   = $this->state->currentAuction();
+            $auctionID = (isset($auction->id)) ? $auction->id : 0;
+            $profile   = $this->state->currentBidder($auctionID);
+
+            $myInvoices = $this->handbid->store('Receipt')->allReceipts($guid);
+
             $result["invoices"] = $this->viewRenderer->render(
                 'views/bidder/receipt',
                 [

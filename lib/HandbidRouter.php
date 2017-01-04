@@ -39,16 +39,26 @@ class HandbidRouter
                 if (strpos($_SERVER["REQUEST_URI"], "autologin") !== false) {
 
                     $this->handbid->store('Bidder')->setCookie($_REQUEST["id"]);
-                    $auctionSlug = "";
-                    try
+
+                    if(!empty($_REQUEST['rid'])){
+                        wp_redirect("/user/invoices/?guid=" . $_REQUEST['rid']);
+                    }
+                    else
                     {
-                        $auction = $this->handbid->store('Auction')->byGuid($_REQUEST["auid"]);
-                        $auctionSlug = $auction->key;
 
-                    } catch (Exception $e) { }
+                        $auctionSlug = "";
+                        try
+                        {
+                            $auction     = $this->handbid->store('Auction')->byGuid($_REQUEST["auid"]);
+                            $auctionSlug = $auction->key;
 
-                    wp_redirect("/auctions/" . (!empty($auctionSlug) ? $auctionSlug . '/' : ''));
+                        } catch (Exception $e)
+                        {
+                        }
 
+                        wp_redirect("/auctions/" . (!empty($auctionSlug) ? $auctionSlug . '/' : ''));
+
+                    }
                     exit;
                 }
                 if (strpos($_SERVER["REQUEST_URI"], "sharedauction") !== false) {
@@ -107,6 +117,11 @@ class HandbidRouter
             'index.php?pagename=auction-item&auction=$matches[1]&item=$matches[2]',
             'top'
         );
+        add_rewrite_rule(
+            'auction/([^/]+)/?/details/([^/]+)/?',
+            'index.php?pagename=auction&auction=$matches[1]&details=$matches[2]',
+            'top'
+        );
 
         add_rewrite_rule('auctions/([^/]+)/?', 'index.php?pagename=auction&auction=$matches[1]', 'top');
         add_rewrite_rule('auction/([^/]+)/?', 'index.php?pagename=auction&auction=$matches[1]', 'top');
@@ -116,33 +131,14 @@ class HandbidRouter
 
         add_rewrite_rule('autologin/([^/]+)/?', 'index.php?action=autologin&organization=$matches[1]', 'top');
 
-//        add_rewrite_rule('autologin/([^/]+)/?', 'wp-admin/admin-post.php?action=autologin&matches=$matches[1]', 'top');
-
+        add_rewrite_rule('user/invoices/?', 'index.php?pagename=invoices', 'top');
     }
 
     function throw404() {
 
-//        ob_clean();
 	    if(!is_admin()) {
 	        header("HTTP/1.0 404 Not Found - Archive Empty");
             require TEMPLATEPATH.'/404.php';
-
-	        exit;
-	    }
-    }
-
-    function outputAppleAssociationFile() {
-
-	    if(!is_admin()) {
-            $filename = "apple-app-site-association-unsigned";
-            $file = str_replace("\\","/",HANDBID_PLUGIN_PATH).$filename;
-            $fileUrl = str_replace("\\","/",HANDBID_PLUGIN_URL).$filename;
-            $headers = get_headers($fileUrl);
-            foreach($headers as $header){
-                header($header);
-            }
-            header('Content-Type: application/pkcs7-mime');
-            echo file_get_contents($file);
 
 	        exit;
 	    }
@@ -160,10 +156,6 @@ class HandbidRouter
 
         if(!defined('HANDBID_PAGE_TYPE')){
             define('HANDBID_PAGE_TYPE', $post->post_name);
-        }
-
-        if($post->post_name == 'apple-app-site-association') {
-            $this->outputAppleAssociationFile();
         }
 
         if($post->post_name == 'auction') {

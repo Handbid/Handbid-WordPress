@@ -61,6 +61,7 @@ class HandbidShortCodeController
             'handbid_auction_timer'         => 'auctionTimer',
             'handbid_auction_banner'        => 'auctionBanner',
             'handbid_auction_details'       => 'auctionDetails',
+            'handbid_invoice_details'       => 'invoiceDetails',
             'handbid_auction_item_list'     => 'auctionItemList',
             'handbid_auction_ticket_list'   => 'ticketList',
             'handbid_item_details'          => 'itemDetails',
@@ -594,11 +595,39 @@ class HandbidShortCodeController
 
     }
 
+    public function invoiceDetails($attributes)
+    {
+        try
+        {
+            $myInvoices = $this->state->currentReceipts();
+
+            $profile   = $this->state->currentBidder();
+
+            $template = $this->templateFromAttributes($attributes, 'views/bidder/receipt-page');
+
+            return $this->viewRenderer->render(
+                $template,
+                [
+                    'profile'     => $profile,
+                    'myInvoices'    => $myInvoices,
+                ]
+            );
+
+        } catch (Exception $e)
+        {
+            echo "Invoice details could not be loaded, Please try again later.";
+            $this->logException($e);
+
+            return;
+        }
+    }
+
     public function auctionDetails($attributes)
     {
         try
         {
-
+            $vars = $this->state->getQueryVar('item');
+            return "<pre>".print_r($vars, true)."</pre>";
             $template = $this->templateFromAttributes($attributes, 'views/auction/details');
             $auction  = $this->state->currentAuction($attributes);
 
@@ -975,6 +1004,7 @@ class HandbidShortCodeController
 
     public function myProfile($attributes)
     {
+        global $post;
 
         try
         {
@@ -1062,6 +1092,7 @@ class HandbidShortCodeController
                     'myInvoices'       => $myInvoices,
                     'notifications'    => $myMessages,
                     'isInitialLoading' => $isInitialLoading,
+                    'isInvoicesPage'    => ($post->post_name == 'invoices'),
                 ]
             );
         } catch (Exception $e)
@@ -1712,6 +1743,12 @@ class HandbidShortCodeController
 
                 return $title;
             }
+        }
+        if ($post->post_name == 'invoices')
+        {
+            $hb       = Handbid::instance();
+            $receipts = $hb->state()->currentReceipts();
+            return (is_array($receipts) && count($receipts) && !empty($receipts[0]->name)) ? $receipts[0]->name : "Invoices";
         }
 
         return get_the_title();

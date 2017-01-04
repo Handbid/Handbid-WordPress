@@ -31,6 +31,7 @@ class HandbidState
     public $itemBids;
     public $inventory;
     public $bidder;
+    public $receipts;
     public $bidderNotAvailable = false;
     public $bidderAuctionID    = null;
     public $countriesAndProvinces;
@@ -91,6 +92,12 @@ class HandbidState
         }
     }
 
+    public function getQueryVar($name){
+        return get_query_var(
+            $name
+        );
+    }
+
     public function currentAuction($attributes = null)
     {
 
@@ -148,6 +155,41 @@ class HandbidState
             }
 
             return $this->auction;
+
+        } catch (Exception $e)
+        {
+
+            return null;
+        }
+    }
+
+    public function currentReceipts($attributes = null)
+    {
+
+        try
+        {
+            if(!$this->receipts)
+            {
+                $guid       = (!empty($_GET['guid'])) ? $_GET['guid'] : false;
+                $myReceipts = $this->handbid->store('Receipt')->allReceipts($guid);
+
+                if ($guid && (count($myReceipts) > 1))
+                {
+                    $result = [];
+                    foreach ($myReceipts as $myInvoice)
+                    {
+                        if ($myInvoice->receiptsGuid == $guid)
+                        {
+                            $result[] = $myInvoice;
+                        }
+                    }
+                    $myReceipts = $result;
+                }
+
+                $this->receipts = $myReceipts;
+            }
+
+            return $this->receipts;
 
         } catch (Exception $e)
         {

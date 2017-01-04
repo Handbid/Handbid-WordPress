@@ -15,6 +15,7 @@ $profile    = $this->get('profile');
     $losing     = $this->get('losing');
     $redirect   = $this->get('redirect');
     $myAuctions = $this->get('myAuctions');
+    $isInvoicesPage = $this->get('isInvoicesPage');
 $myInvoices = $this->get('myInvoices');
 $myMessages = $this->get('notifications');
 $unpaidInvoices = 0;
@@ -30,9 +31,11 @@ if(!empty($myInvoices) && is_array($myInvoices)){
 <div class="col-md-3 col-xs-12">
     <ul class="quick-links slider-nav auto-open" data-slider-nav-id="bidder-dashboard-inner">
         <li><a data-slider-nav-key="user-profile">User Profile</a></li>
+        <?php if(!$isInvoicesPage){?>
         <li><a data-slider-nav-key="update-credit-card">Update Credit Card</a></li>
         <li><a data-slider-nav-key="bidder-notifications">Messages</a></li>
         <li><a data-slider-nav-key="see-my-receipt">View Receipts/Invoices <span class="badge unpaidInvoicesCountContainer" style="<?php echo ($unpaidInvoices)?"":"display:none;";?>"><?php echo $unpaidInvoices;?></span></a></li>
+        <?php } ?>
         <li><a href="/handbid-logout" class="handbid-logout-link">Logout</a></li>
     </ul>
 </div>
@@ -43,7 +46,7 @@ if(!empty($myInvoices) && is_array($myInvoices)){
         <div class="" data-slider-nav-key="user-profile" data-slider-href="">
             <?php echo do_shortcode('[handbid_bidder_profile_form auction="'.$auctionCurrent->id.'" redirect="' . $redirect . '"]'); ?>
         </div>
-
+        <?php if(!$isInvoicesPage){?>
         <div class="" data-slider-nav-key="update-credit-card">
             <?php echo do_shortcode('[handbid_bidder_credit_cards]'); ?>
         </div>
@@ -75,5 +78,8 @@ if(!empty($myInvoices) && is_array($myInvoices)){
                 ]);?>
             </div>
         </div>
+
+        <?php } ?>
+
     </div>
 </div>
