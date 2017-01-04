@@ -458,6 +458,7 @@ class Handbid
     // Query Variable Support
     function registerVariables($qvars)
     {
+        $qvars[] = 'invoice';
         $qvars[] = 'organization';
         $qvars[] = 'auction';
         $qvars[] = 'item';

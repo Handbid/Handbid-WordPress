@@ -127,6 +127,12 @@ class HandbidRouter
         add_rewrite_rule('autologin/([^/]+)/?', 'index.php?action=autologin&organization=$matches[1]', 'top');
 
         add_rewrite_rule('user/invoices/?', 'index.php?pagename=invoices', 'top');
+
+        add_rewrite_rule(
+            'user/invoice[s]?/([^/]+)/?',
+            'index.php?pagename=invoices&invoice=$matches[1]',
+            'top'
+        );
     }
 
     function throw404() {

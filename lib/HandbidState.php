@@ -164,7 +164,9 @@ class HandbidState
         {
             if(!$this->receipts)
             {
-                $guid       = (!empty($_GET['guid'])) ? $_GET['guid'] : false;
+                $invoiceGuid = get_query_var('invoice');
+                $guid       = (!empty($_GET['guid'])) ? $_GET['guid'] : ((!empty($invoiceGuid)) ? $invoiceGuid : false);
+
                 $myReceipts = $this->handbid->store('Receipt')->allReceipts($guid);
 
                 if ($guid && (count($myReceipts) > 1))
