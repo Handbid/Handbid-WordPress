@@ -129,7 +129,13 @@ class HandbidRouter
         add_rewrite_rule('user/invoices/?', 'index.php?pagename=invoices', 'top');
 
         add_rewrite_rule(
-            'user/invoice[s]?/([^/]+)/?',
+            'user/invoice/([^/]+)/?',
+            'index.php?pagename=invoices&invoice=$matches[1]',
+            'top'
+        );
+
+        add_rewrite_rule(
+            'user/invoices/([^/]+)/?',
             'index.php?pagename=invoices&invoice=$matches[1]',
             'top'
         );
