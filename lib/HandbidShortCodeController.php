@@ -626,9 +626,14 @@ class HandbidShortCodeController
     {
         try
         {
-            $vars = $this->state->getQueryVar('item');
-            return "<pre>".print_r($vars, true)."</pre>";
-            $template = $this->templateFromAttributes($attributes, 'views/auction/details');
+            $details = $this->state->getQueryVar('details');
+
+            $details_template = '';
+            if(!empty($details) && in_array($details, ['items', 'donations'])){
+                $details_template = ($details == 'items') ? '/items' : '/donations';
+            }
+            $template = $this->templateFromAttributes($attributes, 'views/auction/details' . $details_template);
+
             $auction  = $this->state->currentAuction($attributes);
 
             if ($this->isAuctionSetup($auction))

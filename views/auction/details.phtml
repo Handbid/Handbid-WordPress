@@ -108,8 +108,8 @@ $currencySymbol = (isset($auction->currencySymbol)) ? $auction->currencySymbol :
                     $image        = ($auction->imageUrl) ? $auction->imageUrl : $auction->sponsorImage;
                     $imageUrlPath = parse_url($image);
                     $image        = ($imageUrlPath["scheme"]) ? $image : "https://" . $image;
-                    $image        = (strpos($image, "ucarecdn") !== false && strpos($image, "preview") === false) ? $image . "-/preview/120x120/" : $image;
-                    echo $image;
+                    $imageLogo        = (strpos($image, "ucarecdn") !== false && strpos($image, "preview") === false) ? $image . "-/preview/120x120/" : $image;
+                    echo $imageLogo;
                     ?>"/>
                 </a>
             </div>
@@ -118,51 +118,39 @@ $currencySymbol = (isset($auction->currencySymbol)) ? $auction->currencySymbol :
 
             <?php echo do_shortcode('[handbid_social_share]'); ?>
 
-<!--            <span class="buttons">-->
-<!--                --><?php //if (!$profile)
-//                { ?>
-<!--                    <a href="#"-->
-<!--                       class="button pink-button register"-->
-<!--                       data-handbid-connect-->
-<!--                       data-tickets-enabled="--><?php //echo ($auction->enableTicketSales) ? 'yes' : 'no' ?><!--"-->
-<!--                    >Register--><?php //echo ($auction->enableTicketSales) ? ' / Buy Tickets' : '' ?><!--</a>-->
-<!--                --><?php //} ?>
-<!---->
-<!---->
-<!--                --><?php //if ($auction->enableTicketSales && $profile)
-//                { ?>
-<!--                    <a class="button pink-button handbid-modal-link purchase-tickets"-->
-<!--                       data-handbid-credit-cards-need-->
-<!--                       data-handbid-tickets="open-button">Buy Tickets</a>-->
-<!--                --><?php //} ?>
-<!---->
-<!--                <span class="status">-->
-<!--                Status<span class="status-box"></span><span class="status-label">--><?php //echo $auction->status; ?><!--</span>-->
-<!--            </span>-->
-<!--            </span>-->
         </div>
 
         <ul class="action-list flex-list">
             <li>
                 <h3>BROWSE AUCTION</h3>
                 <p>Browse, bid, and buy in the auction</p>
-                <a class="button pink-button register" href="#">BROWSE NOW</a>
+                <a class="button pink-button register" href="/auction/<?php echo $auction->key; ?>/details/items/">BROWSE NOW</a>
             </li>
-            <li>
-                <h3>REGISTER</h3>
-                <p>Register now to bid in this auction.</p>
-                <a class="button pink-button register" href="#">Register now</a>
-            </li>
+            <?php if (!$profile)
+            { ?>
+                <li>
+                    <h3>REGISTER</h3>
+                    <p>Register now to bid in this auction.</p>
+                    <a class="button pink-button register"
+                       data-handbid-connect
+                       data-tickets-enabled="<?php echo ($auction->enableTicketSales) ? 'yes' : 'no' ?>"
+                       href="#">Register now</a>
+                </li>
+            <?php } ?>
             <li>
                 <h3>DONATE</h3>
                 <p>Make a donation to Auction</p>
-                <a class="button pink-button register" href="#">Donate NOW</a>
+                <a class="button pink-button register" href="/auction/<?php echo $auction->key; ?>/details/donations/">Donate NOW</a>
             </li>
-            <li>
-                <h3>BUY TICKETS</h3>
-                <p>Buy Tickets to  the in-person event</p>
-                <a class="button pink-button register" href="#">Buy now</a>
-            </li>
+            <?php if ($auction->enableTicketSales && $profile)
+            { ?>
+                <li>
+                    <h3>BUY TICKETS</h3>
+                    <p>Buy Tickets to  the in-person event</p>
+                    <a class="button pink-button  handbid-modal-link purchase-tickets"data-handbid-credit-cards-need
+                       data-handbid-tickets="open-button" >Buy now</a>
+                </li>
+            <?php } ?>
         </ul>
     </div>
 
@@ -173,414 +161,22 @@ $currencySymbol = (isset($auction->currencySymbol)) ? $auction->currencySymbol :
         </p>
         <ul class="flex-list">
             <li>
-                <img src="../../wp-content/plugins/handbid/public/images/auction-details/img1.jpg" alt="about us">
+                <img src="<?php echo HANDBID_PLUGIN_URL; ?>/public/images/auction-details/img1.jpg" alt="about us">
             </li>
             <li>
-                <img src="../../wp-content/plugins/handbid/public/images/auction-details/img2.jpg" alt="about us">
+                <img src="<?php echo HANDBID_PLUGIN_URL; ?>/public/images/auction-details/img2.jpg" alt="about us">
             </li>
             <li>
-                <img src="../../wp-content/plugins/handbid/public/images/auction-details/img3.jpg" alt="about us">
+                <img src="<?php echo HANDBID_PLUGIN_URL; ?>/public/images/auction-details/img3.jpg" alt="about us">
             </li>
         </ul>
     </div>
 
     <a class="social-responsibility  container container-fluid">
-<!--        <h3>Social responsibility</h3>-->
-<!--        <p>Giving back and providing support to our neighbors</p>-->
-        <img src="../../wp-content/plugins/handbid/public/images/auction-details/responsibility.png" alt="responsibility">
+        <img src="<?php echo HANDBID_PLUGIN_URL; ?>/public/images/auction-details/responsibility.png" alt="responsibility">
     </a>
 
-
-    <form action="#" method="POST" class="form-styles handbid-form checkbox">
-        <div class="make-a-donation">
-            <img src="../../wp-content/themes/handbid/public/images/ticket/logo.png" alt="">
-            <h2>Make a Donation</h2>
-            <ul>
-                <li>
-                    <input type="radio" id="donation-25" class="donation-radio" name="donation" value="25">
-                    <label for="donation-25">$25</label>
-                </li>
-                <li>
-                    <input type="radio" id="donation-50" class="donation-radio" name="donation" value="50">
-                    <label for="donation-50">$50</label>
-                </li>
-                <li>
-                    <input type="radio" id="donation-100" class="donation-radio" name="donation" value="100">
-                    <label for="donation-100">$100</label>
-                </li>
-                <li>
-                    <input type="radio" id="donation-500" class="donation-radio" name="donation" value="500">
-                    <label for="donation-500">$500</label>
-                </li>
-                <li>
-                    <input type="radio" id="donation-1000" class="donation-radio" name="donation" value="1000">
-                    <label for="donation-1000">$1000</label>
-                </li>
-                <li>
-                    <input type="radio" id="donation-5000" class="donation-radio" name="donation" value="5000">
-                    <label for="donation-5000">$5000</label>
-                </li>
-            </ul>
-            <input type="text" name="other-donation" class="other-donation" placeholder="Other Amount">
-        </div>
-        <div class="register-to-donate">
-            <div class="row">
-                <h2>Register to Donate</h2>
-                <p>Already Registered? <a href="#">Login</a> to donate</p>
-                <p class="notice-message">*Required Fields</p>
-
-            </div>
-            <div class="col-xs-12 center-aligned-text handbid-form-area">
-                <div class="row errorsRow" style="display: none;">
-                    <div class="col-xs-12 errorsContainer">
-
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="form-group col-md-6 col-xs-12">
-                        <input id="reg-firstname" placeholder="First Name *" type="text" name="firstname" value="" class="col-xs-12 has-question-icon has-popover cleanable-input copyable-field" data-copy-to="confirm-firstname" required="required" data-required-message="First Name field is required" data-original-title="" title="">
-                    </div>
-                    <div class="form-group col-md-6 col-xs-12">
-                        <input placeholder="Last Name *" type="text" name="lastname" value="" class="col-xs-12 has-question-icon has-popover cleanable-input copyable-field" data-copy-to="confirm-lastname" required="" data-required-message="Last Name field is required" data-original-title="" title="">
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="form-group col-md-6 col-xs-12">
-                        <input id="reg-email" placeholder="Email Address*" type="email" name="email" value="" class="col-xs-12 has-question-icon has-popover cleanable-input copyable-field is-email" data-copy-to="confirm-email" data-not-email-message="Please, provide valid email address" required="" data-required-message="Email field is required" data-original-title="" title="">
-                    </div>
-                    <div class="form-group col-md-6 col-xs-12">
-                        <input id="reg-phone-number" placeholder="Phone Number*" type="text" name="phone-number" value="" class="col-xs-12 has-question-icon has-popover cleanable-input copyable-field" data-copy-to="confirm-phone-number" required="" data-required-message="Phone field is required" data-original-title="" title="">
-                    </div>
-                    <div class="form-group col-md-6 col-xs-12">
-                        <input id="reg-address" placeholder="Full Address*" type="text" name="address" value="" class="col-xs-12 has-question-icon has-popover cleanable-input copyable-field" data-copy-to="confirm-address" onfocus="handbid_main.initGoogleAutocomplete('reg-address')" data-original-title="" title="">
-                    </div>
-                    <div class="form-group col-md-6 col-xs-12">
-                        <select id="reg-phone-code" name="phone-code" class="col-xs-12 copyable-field" data-copy-to="confirm-phone-code">
-                            <option value="0">Country</option>
-                        </select>
-                    </div>
-                    <div class="form-group col-md-6 col-xs-12">
-                        <input id="reg-password" placeholder="Password" type="password" name="password" value="" class="col-xs-12 has-question-icon has-popover cleanable-input copyable-field" data-copy-to="confirm-password" required="" data-required-message="Password field is required" data-original-title="" title="">
-                    </div>
-                    <div class="form-group col-md-6 col-xs-12">
-                        <input id="reg-password-confirm" placeholder="Confirm your password" type="password" name="password-confirm" value="" class="col-xs-12 has-question-icon has-popover cleanable-input" data-mismatch-message="Password mismatch" data-original-title="" title="">
-                    </div>
-                </div>
-
-                <div class="row card-info-container">
-                    <div class="form-group col-md-6">
-                        <input id="reg-phone-number" placeholder="Credit Card Number*" type="text" name="phone-number" value="" class="col-xs-12 has-question-icon has-popover cleanable-input copyable-field" data-copy-to="confirm-phone-number" required="" data-required-message="Phone field is required" data-original-title="" title="">
-                    </div>
-                    <div class="form-group col-md-6 card-info">
-                        <div class="col-md-4 col-xs-12 form-group">
-                            <select class="col-xs-12 copyable-field">
-                                <option value="0">Exp Month*</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4 col-xs-12 form-group">
-                            <select class="col-xs-12 copyable-field">
-                                <option value="0">Exp Year*</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4 col-xs-12 form-group">
-                            <input id="reg-password" placeholder="CID*" type="password" name="password" value="" class="col-xs-12 has-question-icon has-popover cleanable-input copyable-field" data-copy-to="confirm-password" required="" data-required-message="Password field is required" data-original-title="" title="">
-                            <a class="has-question-icon has-popover" tabindex="-1" role="button" data-toggle="popover" data-placement="top" data-trigger="focus" title="" data-content="You will need a password to login on from Handbid.com. You will not need to use this password to login from the mobile apps or from the iPads. Please, ceep this password secure." data-original-title="Create a Password">
-                                ?
-                            </a>
-                        </div>
-                    </div>
-
-                    <input type="hidden" name="phone-type" value="other" class="copyable-field" data-copy-to="confirm-phone-type">
-                    <input type="hidden" class="" id="confirm-add-to-auction" name="add-to-auction" value="D439469E-5686-416B-9F0E-37E87DF43B79">
-                </div>
-
-                <div class="row">
-                    <div class="col-md-10 col-md-offset-1 col-xs-12">
-                        <label for="reg-agree-terms" class="radio-label agree-terms-label">
-                            <input type="checkbox" id="reg-agree-terms" name="agree-terms" value="agree" required="" data-required-message="You must agree to the bidder terms and conditions">
-                            <div class="check"></div>
-                            I agree to the <a target="_blank" href="https://handbid.com/terms-of-service/">bidder terms and conditions</a></label>
-                    </div>
-
-                </div>
-                <div class="row">
-                    <div class="col-md-10 col-md-offset-1 col-xs-12">
-                        <a class="btn btn-info signup login-popup-link register-next" data-target-tab="register-form-confirm">CONTINUE</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </form>
-
-
-    <ul class="action-list flex-list container container-fluid three-column-list">
-        <li>
-            <h3>BROWSE AUCTION</h3>
-            <p>Browse, bid, and buy in the auction</p>
-            <a class="button pink-button register" href="#">BROWSE NOW</a>
-        </li>
-        <li>
-            <h3>REGISTER</h3>
-            <p>Register now to bid in this auction.</p>
-            <a class="button pink-button register" href="#">Register now</a>
-        </li>
-        <li>
-            <h3>BUY TICKETS</h3>
-            <p>Buy Tickets to  the in-person event</p>
-            <a class="button pink-button register" href="#">Buy now</a>
-        </li>
-    </ul>
-
-    <?php $informationFirst = (in_array($auction->status, ["preview", "presale", "closed"])); ?>
-    <ul class="slider-nav col-md-12 auto-open" data-slider-nav-id="auction-details">
-        <?php if ($auction->description && $informationFirst)
-        { ?>
-            <li>
-                <a data-slider-nav-key="description">Auction Information</a>
-            </li>
-        <?php } ?>
-        <li>
-            <a data-slider-nav-key="items">Items</a>
-        </li>
-        <?php if ($auction->description && !$informationFirst)
-        { ?>
-            <li>
-                <a data-slider-nav-key="description">Auction Information</a>
-            </li>
-        <?php } ?>
-        <?php if ($hasLocation)
-        { ?>
-            <li>
-                <a data-slider-nav-key="map" class="map-holder-item">Event Details</a>
-            </li>
-        <?php } ?>
-    </ul>
-    <div class="slider-content" data-slider-nav-id="auction-details">
-
-        <div class="container container-fluid" data-slider-nav-key="items">
-            <div class="row">
-
-                <div class="sticky sticky-for-sort-bar">
-
-                    <div class="sort-bar auction-item-list">
-
-                        <div class="category-cover-cheating"></div>
-
-                        <div class="col-md-6 col-xs-6 fancy-search-wrapper">
-
-                            <form class="fancy-search" method="get">
-                                <button type="button">
-                                    <span class="icon">
-                                        <svg class="u-svg-icon">
-                                            <use xlink:href="#hb-mag"></use>
-                                        </svg>
-                                    </span>
-                                    Search Items
-                                </button>
-                                <input class="query" type="search" name="q" placeholder="Search items"/>
-                                <a class="reset" href="#" style="display: none">X</a>
-                            </form>
-
-                        </div>
-                        <div class="col-md-2 col-xs-2 sort-label">Sort By:</div>
-                        <div class="col-md-4 col-xs-4 select-wrapper">
-                            <select name="sort">
-                                <option value="_sortNameAsc">Name: A-Z</option>
-                                <option value="_sortNameDesc">Name: Z-A</option>
-                                <option value="_sortPriceAsc">Price: Low to High</option>
-                                <option value="_sortPriceDesc">Price: High to Low</option>
-                                <option value="_sortBidsAsc">Total Bids: Least to Most</option>
-                                <option value="_sortBidsDesc">Total Bids: Most to Least</option>
-                            </select>
-
-                        </div>
-                    </div>
-
-                    <div class="clear"></div>
-
-
-                    <div class="mobile-filters">
-
-                        <select name="mobile-sort">
-                            <option value="_sortNameAsc">Sort By Name: A-Z</option>
-                            <option value="_sortNameDesc">Name: Z-A</option>
-                            <option value="_sortPriceAsc">Price: Low to High</option>
-                            <option value="_sortPriceDesc">Price: High to Low</option>
-                            <option value="_sortBidsAsc">Total Bids: Least to Most</option>
-                            <option value="_sortBidsDesc">Total Bids: Most to Least</option>
-                        </select>
-
-                        <select name="mobile-type">
-                            <option value="*">Type: All Items</option>
-                            <option value="[data-donations]">Donations</option>
-                            <option value="[data-for-sale]">For Sale</option>
-                            <option value="[data-live]">Live</option>
-                            <option value="[data-silent]">Silent</option>
-                            <option value="[data-no-bids]">No Bids</option>
-                            <option value="[data-no-bids]">No Bids</option>
-                        </select>
-
-                        <select name="mobile-category">
-
-                            <option value="*" data-legacy-category-id="all"
-                                <?php selected(wp_is_mobile(), false) ?>
-                            >Category: All Items</option>
-
-                            <?php
-                            $i = 0;
-                            foreach ($categoriesOutput as $category)
-                            {
-
-                                if ($category['count'] > 0)
-                                {
-                                    ?>
-                                    <option value="[data-tags~='|<?php echo esc_html(
-                                        sanitize_key($category['name'])
-                                    ); ?>|']"
-                                        <?php selected((($i == 0) && wp_is_mobile()), true) ?>
-                                            data-legacy-category-id="<?php echo $category['id']?>">
-                                        <?php echo $category['name'] . ' (' . $category['count'] . ')'; ?></option>
-                                    <?php
-                                } //end if
-                                $i++;
-                            } ?>
-                        </select>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div class="row">
-
-                <div class="col-md-2 col-sm-3 col-xs-12 sticky filter-wrapper" data-sticky-margin-top="65">
-
-                    <div class="filters">
-
-                        <div class="section" data-section="type">
-                            <h4>Items</h4>
-                            <ul class="by-item-type">
-                                <li data-selector="*" class="selected"><a href="#">All Items</a></li>
-                                <li data-selector="[data-donations]"><a href="#">Donations</a></li>
-                                <li data-selector="[data-for-sale]"><a href="#">For Sale</a></li>
-                                <li data-selector="[data-live]"><a href="#">Live</a></li>
-                                <li data-selector="[data-silent]"><a href="#">Silent</a></li>
-                                <li data-selector="[data-no-bids]"><a href="#">No Bids</a></li>
-                            </ul>
-                        </div>
-
-                        <div class="section" data-section="category" style="display: block">
-                            <h4>Categories</h4>
-                            <ul class="by-category">
-
-                                <li data-selector="*" class="<?php echo (wp_is_mobile() ? '' : 'selected') ?>" data-legacy-category-id="all"><a href="#">All (<span
-                                            class="countAuctionItemsForCatAll"><?php echo $allItemsCount; ?></span>)</a>
-                                </li>
-
-
-                                <?php
-
-                                if (count($categoriesOutput))
-                                {
-                                    $i = 0;
-                                    foreach ($categoriesOutput as $category)
-                                    {
-
-                                        if ($category['count'] > 0)
-                                        {
-                                            $selected = (($i == 0) && wp_is_mobile()) ? 'selected' : '';
-                                            ?>
-                                            <li class="<?php echo $selected; ?>"
-                                                data-selector="[data-tags~='|<?php echo esc_html(
-                                                    sanitize_key($category['name'])
-                                                ); ?>|']" data-legacy-category-id="<?php echo $category['id']; ?>"><a
-                                                    href="#"><?php echo $category['name'] . ' (<span class="countAuctionItemsForCat' . $category['id'] . '">' . $category['count'] . '</span>)'; ?></a>
-                                            </li>
-                                            <?php
-                                        } //end if
-
-                                        $i++;
-                                    }
-                                } ?>
-
-                            </ul>
-                        </div>
-
-                    </div>
-
-
-                </div>
-                <div class="col-md-10 col-sm-9 col-xs-12">
-
-                    <?php
-
-                    echo $this->partial(
-                        '../../views/item/list.phtml',
-                        [
-                            'auction'    => $auction,
-                            'items'      => wp_is_mobile() ? $first_category_items : $items,
-                            'cols_count' => $colsCount,
-                            'winning'    => $winning,
-                            'losing'     => $losing,
-                        ]
-                    );
-                    //echo do_shortcode('[handbid_auction_item_list auction="' . $auction->key . '"]');
-                    ?>
-
-                </div>
-            </div>
-        </div>
-
-        <?php
-        if ($auction->description)
-        {
-            ?>
-            <div class="container container-fluid big-content" data-slider-nav-key="description">
-                <?php echo $auction->description; ?>
-            </div>
-        <?php } ?>
-
-        <?php if ($hasLocation)
-        { ?>
-            <div class="details-map" data-slider-nav-key="map" data-address="<?php echo $address; ?>">
-
-                <div id="large-map"></div>
-                <div id="small-map"></div>
-
-            </div>
-            <div style="display: none" id="map-marker-content">
-                <?php if ($auction->vanityAddress)
-                { ?>
-                    <div class="overflow" style="width:310px;">
-                        <div class="row">
-                            <div class="col-md-4 col-xs-4 iw-label">Location</div>
-                            <div class="col-md-8 col-xs-8"><?php echo $auction->vanityAddress; ?></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4 col-xs-4 iw-label">Address</div>
-                            <div
-                                class="col-md-8 col-xs-8"><?php
-
-                                echo $locationStreet1 . ' ' . $locationStreet2 . '<br />' . $locationCity . ', ' . strtoupper(
-                                        $locationProvinceShort
-                                    ) . ' ' . $locationPCode; ?></div>
-                        </div>
-                        <div class="row submit">
-                            <a class="pink-button get-directions" onclick="getDirections()" href="#">Get Directions</a>
-                        </div>
-                    </div>
-                <?php } ?>
-            </div>
-        <?php } ?>
-
-    </div>
 </div>
-<script>
-    var auction_categories_ids = <?php echo wp_is_mobile() ? json_encode($output_categories) : 'null'; ?>
-</script>
 
 <?php if ($auction->timerRemaining > 0)
 {

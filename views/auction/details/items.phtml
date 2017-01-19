@@ -1,0 +1,408 @@
+<?php
+/**
+ * @copyright Copyright (c) 2014-2015 Handbid Inc.
+ * @category handbid
+ * @package Handbid2-WordPress
+ * @license Proprietary
+ * @link http://www.handbid.com/
+ * @author Master of Code (worldclass@masterofcode.com)
+ */
+
+$auction = $this->get('auction');
+if (!$auction)
+{
+    return '';
+}
+
+$items       = $this->get('items');
+$winning     = $this->get('winning');
+$losing      = $this->get('losing');
+$colsCount   = $this->get('cols_count');
+$profile     = $this->get('profile');
+$location    = $this->get('location');
+$hasLocation = $this->get('hasLocation');
+$address     = null;
+$mapsUrl     = null;
+$categories  = $this->get('categories');
+$categories  = $auction->categories;
+
+$categoriesOutput                = [];
+$output_categories               = [];
+$first_category_items            = [];
+$auctionStatusIsPresaleOrPreview = in_array($auction->status, array("presale", "preview"));
+$auctionStatusIsPresale          = in_array($auction->status, array("presale"));
+$allItemsCount                   = 0;
+$counter                         = 0;
+foreach ($categories as $category_single)
+{
+    $temp = [
+        'id'    => $category_single->id,
+        'name'  => $category_single->name,
+        'count' => 0,
+        'items' => [],
+        'real_items' => [],
+    ];
+    foreach ($category_single->items as $item_single)
+    {
+        $availableForPreSale        = ($item_single->availableForPreSale == "1");
+        $isDirectPurchaseItem       = ($item_single->isDirectPurchaseItem);
+        $itemCanNotBeShownInPresale = ($auctionStatusIsPresale && !($isDirectPurchaseItem && $availableForPreSale));
+
+        $hideItemIfSold = (($item_single->isHidden == "1") or (($item_single->hideSales == 1) && $item_single->status == "sold"));
+
+        if (!$itemCanNotBeShownInPresale && !$hideItemIfSold && !$item_single->isHidden)
+        {
+            $temp['count'] += 1;
+            $temp['items'][] = $item_single->name;
+            $temp['real_items'][] = $item_single;
+        }
+    }
+    if ($temp['count'])
+    {
+        $allItemsCount += $temp['count'];
+
+        if($counter){
+            $output_categories[$category_single->id] = $category_single->id;
+        }
+        else{
+            $first_category_items = $temp['real_items'];
+        }
+
+        unset($temp['real_items']);
+
+        $categoriesOutput[$category_single->id] = $temp;
+        $counter++;
+    }
+}
+
+
+$locationStreet1       = ($hasLocation) ? $location->auctionLocationStreet1 : "";
+$locationStreet2       = ($hasLocation) ? $location->auctionLocationStreet2 : "";
+$locationPCode         = ($hasLocation) ? $location->auctionLocationPostalCode : "";
+$locationCity          = ($hasLocation) ? $location->auctionLocationCity : "";
+$locationProvince      = ($hasLocation) ? ((isset($location->province)) ? $location->province->countriesRegionsName : "") : "";
+$locationProvinceShort = ($hasLocation) ? ((isset($location->province)) ? $location->province->countriesRegionsShortName : "") : "";
+
+if ($hasLocation)
+{
+
+    $address = $locationStreet1 . ', ' . $locationStreet2 . ', ' . $locationCity . ', ' . $locationProvince . ', ' . $locationPCode;
+}
+
+$currencyCode   = (isset($auction->currencyCode)) ? $auction->currencyCode : HANDBID_DEFAULT_CURRENCY;
+$currencySymbol = (isset($auction->currencySymbol)) ? $auction->currencySymbol : HANDBID_DEFAULT_CURRENCY_SYMBOL;
+
+?>
+
+<div class="auction-details <?php echo $auction->status; ?>"
+     data-handbid-auction-guid="<?php echo $auction->auctionGuid; ?>">
+
+    <div class="container container-fluid detail-banner-wrapper">
+        <div class="detail-banner" style="background-image: url('<?php
+        $image = ($auction->bannerImage) ? $auction->bannerImage : $auction->organization->banner;
+        $image = (strpos($image, "ucarecdn") !== false && strpos($image, "preview") === false) ? $image . "-/preview/1140x280/" : $image;
+        echo $image; ?>')">
+            <div class="logo">
+                <a href="/organizations/<?php echo $auction->organizationKey; ?>/" style="cursor: pointer;">
+                    <img src="<?php
+                    $image        = ($auction->imageUrl) ? $auction->imageUrl : $auction->sponsorImage;
+                    $imageUrlPath = parse_url($image);
+                    $image        = ($imageUrlPath["scheme"]) ? $image : "https://" . $image;
+                    $image        = (strpos($image, "ucarecdn") !== false && strpos($image, "preview") === false) ? $image . "-/preview/120x120/" : $image;
+                    echo $image;
+                    ?>"/>
+                </a>
+            </div>
+        </div>
+        <div class="controls">
+
+            <?php echo do_shortcode('[handbid_social_share]'); ?>
+
+        </div>
+    </div>
+
+
+    <ul class="action-list flex-list container container-fluid three-column-list">
+        <?php if (!$profile)
+        { ?>
+            <li>
+                <h3>REGISTER</h3>
+                <p>Register now to bid in this auction.</p>
+                <a class="button pink-button register"
+                   data-handbid-connect
+                   data-tickets-enabled="<?php echo ($auction->enableTicketSales) ? 'yes' : 'no' ?>"
+                   href="#">Register now</a>
+            </li>
+        <?php } ?>
+        <li>
+            <h3>DONATE</h3>
+            <p>Make a donation to Auction</p>
+            <a class="button pink-button register" href="/auction/<?php echo $auction->key; ?>/details/donations/">Donate NOW</a>
+        </li>
+        <?php if ($auction->enableTicketSales && $profile)
+        { ?>
+            <li>
+                <h3>BUY TICKETS</h3>
+                <p>Buy Tickets to  the in-person event</p>
+                <a class="button pink-button  handbid-modal-link purchase-tickets"data-handbid-credit-cards-need
+                   data-handbid-tickets="open-button" >Buy now</a>
+            </li>
+        <?php } ?>
+    </ul>
+
+    <?php $informationFirst = (in_array($auction->status, ["preview", "presale", "closed"])); ?>
+    <ul class="slider-nav col-md-12 auto-open" data-slider-nav-id="auction-details">
+        <?php if ($auction->description && $informationFirst)
+        { ?>
+            <li>
+                <a data-slider-nav-key="description">Auction Information</a>
+            </li>
+        <?php } ?>
+        <li>
+            <a data-slider-nav-key="items">Items</a>
+        </li>
+        <?php if ($auction->description && !$informationFirst)
+        { ?>
+            <li>
+                <a data-slider-nav-key="description">Auction Information</a>
+            </li>
+        <?php } ?>
+        <?php if ($hasLocation)
+        { ?>
+            <li>
+                <a data-slider-nav-key="map" class="map-holder-item">Event Details</a>
+            </li>
+        <?php } ?>
+    </ul>
+    <div class="slider-content" data-slider-nav-id="auction-details">
+
+        <div class="container container-fluid" data-slider-nav-key="items">
+            <div class="row">
+
+                <div class="sticky sticky-for-sort-bar">
+
+                    <div class="sort-bar auction-item-list">
+
+                        <div class="category-cover-cheating"></div>
+
+                        <div class="col-md-6 col-xs-6 fancy-search-wrapper">
+
+                            <form class="fancy-search" method="get">
+                                <button type="button">
+                                    <span class="icon">
+                                        <svg class="u-svg-icon">
+                                            <use xlink:href="#hb-mag"></use>
+                                        </svg>
+                                    </span>
+                                    Search Items
+                                </button>
+                                <input class="query" type="search" name="q" placeholder="Search items"/>
+                                <a class="reset" href="#" style="display: none">X</a>
+                            </form>
+
+                        </div>
+                        <div class="col-md-2 col-xs-2 sort-label">Sort By:</div>
+                        <div class="col-md-4 col-xs-4 select-wrapper">
+                            <select name="sort">
+                                <option value="_sortNameAsc">Name: A-Z</option>
+                                <option value="_sortNameDesc">Name: Z-A</option>
+                                <option value="_sortPriceAsc">Price: Low to High</option>
+                                <option value="_sortPriceDesc">Price: High to Low</option>
+                                <option value="_sortBidsAsc">Total Bids: Least to Most</option>
+                                <option value="_sortBidsDesc">Total Bids: Most to Least</option>
+                            </select>
+
+                        </div>
+                    </div>
+
+                    <div class="clear"></div>
+
+
+                    <div class="mobile-filters">
+
+                        <select name="mobile-sort">
+                            <option value="_sortNameAsc">Sort By Name: A-Z</option>
+                            <option value="_sortNameDesc">Name: Z-A</option>
+                            <option value="_sortPriceAsc">Price: Low to High</option>
+                            <option value="_sortPriceDesc">Price: High to Low</option>
+                            <option value="_sortBidsAsc">Total Bids: Least to Most</option>
+                            <option value="_sortBidsDesc">Total Bids: Most to Least</option>
+                        </select>
+
+                        <select name="mobile-type">
+                            <option value="*">Type: All Items</option>
+                            <option value="[data-donations]">Donations</option>
+                            <option value="[data-for-sale]">For Sale</option>
+                            <option value="[data-live]">Live</option>
+                            <option value="[data-silent]">Silent</option>
+                            <option value="[data-no-bids]">No Bids</option>
+                            <option value="[data-no-bids]">No Bids</option>
+                        </select>
+
+                        <select name="mobile-category">
+
+                            <option value="*" data-legacy-category-id="all"
+                                <?php selected(wp_is_mobile(), false) ?>
+                            >Category: All Items</option>
+
+                            <?php
+                            $i = 0;
+                            foreach ($categoriesOutput as $category)
+                            {
+
+                                if ($category['count'] > 0)
+                                {
+                                    ?>
+                                    <option value="[data-tags~='|<?php echo esc_html(
+                                        sanitize_key($category['name'])
+                                    ); ?>|']"
+                                        <?php selected((($i == 0) && wp_is_mobile()), true) ?>
+                                            data-legacy-category-id="<?php echo $category['id']?>">
+                                        <?php echo $category['name'] . ' (' . $category['count'] . ')'; ?></option>
+                                    <?php
+                                } //end if
+                                $i++;
+                            } ?>
+                        </select>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-2 col-sm-3 col-xs-12 sticky filter-wrapper" data-sticky-margin-top="65">
+
+                    <div class="filters">
+
+                        <div class="section" data-section="type">
+                            <h4>Items</h4>
+                            <ul class="by-item-type">
+                                <li data-selector="*" class="selected"><a href="#">All Items</a></li>
+                                <li data-selector="[data-donations]"><a href="#">Donations</a></li>
+                                <li data-selector="[data-for-sale]"><a href="#">For Sale</a></li>
+                                <li data-selector="[data-live]"><a href="#">Live</a></li>
+                                <li data-selector="[data-silent]"><a href="#">Silent</a></li>
+                                <li data-selector="[data-no-bids]"><a href="#">No Bids</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="section" data-section="category" style="display: block">
+                            <h4>Categories</h4>
+                            <ul class="by-category">
+
+                                <li data-selector="*" class="<?php echo (wp_is_mobile() ? '' : 'selected') ?>" data-legacy-category-id="all"><a href="#">All (<span
+                                            class="countAuctionItemsForCatAll"><?php echo $allItemsCount; ?></span>)</a>
+                                </li>
+
+
+                                <?php
+
+                                if (count($categoriesOutput))
+                                {
+                                    $i = 0;
+                                    foreach ($categoriesOutput as $category)
+                                    {
+
+                                        if ($category['count'] > 0)
+                                        {
+                                            $selected = (($i == 0) && wp_is_mobile()) ? 'selected' : '';
+                                            ?>
+                                            <li class="<?php echo $selected; ?>"
+                                                data-selector="[data-tags~='|<?php echo esc_html(
+                                                    sanitize_key($category['name'])
+                                                ); ?>|']" data-legacy-category-id="<?php echo $category['id']; ?>"><a
+                                                    href="#"><?php echo $category['name'] . ' (<span class="countAuctionItemsForCat' . $category['id'] . '">' . $category['count'] . '</span>)'; ?></a>
+                                            </li>
+                                            <?php
+                                        } //end if
+
+                                        $i++;
+                                    }
+                                } ?>
+
+                            </ul>
+                        </div>
+
+                    </div>
+
+
+                </div>
+                <div class="col-md-10 col-sm-9 col-xs-12">
+
+                    <?php
+
+                    echo $this->partial(
+                        '../../../views/item/list.phtml',
+                        [
+                            'auction'    => $auction,
+                            'items'      => wp_is_mobile() ? $first_category_items : $items,
+                            'cols_count' => $colsCount,
+                            'winning'    => $winning,
+                            'losing'     => $losing,
+                        ]
+                    );
+                    //echo do_shortcode('[handbid_auction_item_list auction="' . $auction->key . '"]');
+                    ?>
+
+                </div>
+            </div>
+        </div>
+
+        <?php
+        if ($auction->description)
+        {
+            ?>
+            <div class="container container-fluid big-content" data-slider-nav-key="description">
+                <?php echo $auction->description; ?>
+            </div>
+        <?php } ?>
+
+        <?php if ($hasLocation)
+        { ?>
+            <div class="details-map" data-slider-nav-key="map" data-address="<?php echo $address; ?>">
+
+                <div id="large-map"></div>
+                <div id="small-map"></div>
+
+            </div>
+            <div style="display: none" id="map-marker-content">
+                <?php if ($auction->vanityAddress)
+                { ?>
+                    <div class="overflow" style="width:310px;">
+                        <div class="row">
+                            <div class="col-md-4 col-xs-4 iw-label">Location</div>
+                            <div class="col-md-8 col-xs-8"><?php echo $auction->vanityAddress; ?></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 col-xs-4 iw-label">Address</div>
+                            <div
+                                class="col-md-8 col-xs-8"><?php
+
+                                echo $locationStreet1 . ' ' . $locationStreet2 . '<br />' . $locationCity . ', ' . strtoupper(
+                                        $locationProvinceShort
+                                    ) . ' ' . $locationPCode; ?></div>
+                        </div>
+                        <div class="row submit">
+                            <a class="pink-button get-directions" onclick="getDirections()" href="#">Get Directions</a>
+                        </div>
+                    </div>
+                <?php } ?>
+            </div>
+        <?php } ?>
+
+    </div>
+</div>
+<script>
+    var auction_categories_ids = <?php echo wp_is_mobile() ? json_encode($output_categories) : 'null'; ?>
+</script>
+
+<?php if ($auction->timerRemaining > 0)
+{
+    ?>
+    <input type="hidden" id="timerRemaining" data-auction-name="<?php echo $auction->name; ?>"
+           value="<?php echo $auction->timerRemaining; ?>">
+    <?php
+} ?>

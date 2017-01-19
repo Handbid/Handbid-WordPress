@@ -122,11 +122,11 @@ class Handbid
             );
 
         register_activation_hook(__FILE__, [$this, 'install']);
+        add_filter('query_vars', [$this, 'registerVariables']);
         add_action('init', [$this, 'init']);
         add_action('init', [$this->testimonials, 'addActions']);
         add_action('wp_footer', [$this, 'onRenderFooter']);
         add_action('wp_head', [$this, 'onRenderHeader'], 1);
-        add_filter('query_vars', [$this, 'registerVariables']);
         add_filter('body_class', [$this, 'setBodyClasses']);
 
 
@@ -518,6 +518,7 @@ class Handbid
         $og_page_url    = ($is_auction or $is_item or $is_organization or is_home()) ? get_bloginfo("url") . '/' : get_permalink();
         $site_title     = get_bloginfo('title');
         $og_description = get_bloginfo("description");
+        get_post_meta(get_the_ID(), '_yoast_wpseo_metadesc', true);
         $og_title       = $site_title;
         $og_image       = $imageGoogle;
 

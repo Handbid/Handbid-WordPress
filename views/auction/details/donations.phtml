@@ -1,0 +1,262 @@
+<?php
+/**
+ * @copyright Copyright (c) 2014-2015 Handbid Inc.
+ * @category handbid
+ * @package Handbid2-WordPress
+ * @license Proprietary
+ * @link http://www.handbid.com/
+ * @author Master of Code (worldclass@masterofcode.com)
+ */
+
+$auction = $this->get('auction');
+if (!$auction)
+{
+    return '';
+}
+
+$items       = $this->get('items');
+$winning     = $this->get('winning');
+$losing      = $this->get('losing');
+$colsCount   = $this->get('cols_count');
+$profile     = $this->get('profile');
+$location    = $this->get('location');
+$hasLocation = $this->get('hasLocation');
+$address     = null;
+$mapsUrl     = null;
+$categories  = $this->get('categories');
+$categories  = $auction->categories;
+
+$categoriesOutput                = [];
+$output_categories               = [];
+$first_category_items            = [];
+$auctionStatusIsPresaleOrPreview = in_array($auction->status, array("presale", "preview"));
+$auctionStatusIsPresale          = in_array($auction->status, array("presale"));
+$allItemsCount                   = 0;
+$counter                         = 0;
+foreach ($categories as $category_single)
+{
+    $temp = [
+        'id'    => $category_single->id,
+        'name'  => $category_single->name,
+        'count' => 0,
+        'items' => [],
+        'real_items' => [],
+    ];
+    foreach ($category_single->items as $item_single)
+    {
+        $availableForPreSale        = ($item_single->availableForPreSale == "1");
+        $isDirectPurchaseItem       = ($item_single->isDirectPurchaseItem);
+        $itemCanNotBeShownInPresale = ($auctionStatusIsPresale && !($isDirectPurchaseItem && $availableForPreSale));
+
+        $hideItemIfSold = (($item_single->isHidden == "1") or (($item_single->hideSales == 1) && $item_single->status == "sold"));
+
+        if (!$itemCanNotBeShownInPresale && !$hideItemIfSold && !$item_single->isHidden)
+        {
+            $temp['count'] += 1;
+            $temp['items'][] = $item_single->name;
+            $temp['real_items'][] = $item_single;
+        }
+    }
+    if ($temp['count'])
+    {
+        $allItemsCount += $temp['count'];
+
+        if($counter){
+            $output_categories[$category_single->id] = $category_single->id;
+        }
+        else{
+            $first_category_items = $temp['real_items'];
+        }
+
+        unset($temp['real_items']);
+
+        $categoriesOutput[$category_single->id] = $temp;
+        $counter++;
+    }
+}
+
+
+$locationStreet1       = ($hasLocation) ? $location->auctionLocationStreet1 : "";
+$locationStreet2       = ($hasLocation) ? $location->auctionLocationStreet2 : "";
+$locationPCode         = ($hasLocation) ? $location->auctionLocationPostalCode : "";
+$locationCity          = ($hasLocation) ? $location->auctionLocationCity : "";
+$locationProvince      = ($hasLocation) ? ((isset($location->province)) ? $location->province->countriesRegionsName : "") : "";
+$locationProvinceShort = ($hasLocation) ? ((isset($location->province)) ? $location->province->countriesRegionsShortName : "") : "";
+
+if ($hasLocation)
+{
+
+    $address = $locationStreet1 . ', ' . $locationStreet2 . ', ' . $locationCity . ', ' . $locationProvince . ', ' . $locationPCode;
+}
+
+$currencyCode   = (isset($auction->currencyCode)) ? $auction->currencyCode : HANDBID_DEFAULT_CURRENCY;
+$currencySymbol = (isset($auction->currencySymbol)) ? $auction->currencySymbol : HANDBID_DEFAULT_CURRENCY_SYMBOL;
+
+?>
+<div class="auction-details <?php echo $auction->status; ?>"
+     data-handbid-auction-guid="<?php echo $auction->auctionGuid; ?>">
+
+    <form action="#" method="POST" class="form-styles handbid-form checkbox">
+        <div class="make-a-donation">
+            <div class="logo">
+                <a href="/organizations/<?php echo $auction->organizationKey; ?>/" style="cursor: pointer;">
+                    <img src="<?php
+                    $image        = ($auction->imageUrl) ? $auction->imageUrl : $auction->sponsorImage;
+                    $imageUrlPath = parse_url($image);
+                    $image        = ($imageUrlPath["scheme"]) ? $image : "https://" . $image;
+                    $imageLogo        = (strpos($image, "ucarecdn") !== false && strpos($image, "preview") === false) ? $image . "-/preview/120x120/" : $image;
+                    echo $imageLogo;
+                    ?>"/>
+                </a>
+            </div>
+            <br>
+            <br>
+            <h2>Make a Donation</h2>
+            <?php
+            $amounts = [25, 50, 100, 500, 1000, 5000]
+            ?>
+            <ul>
+                <?php foreach($amounts as $amount){?>
+                <li>
+                    <input type="radio" id="donation-<?php echo $amount?>" class="donation-radio" name="donation" value="<?php echo $amount?>">
+                    <label for="donation-<?php echo $amount?>"><?php echo $currencySymbol; ?><?php echo $amount?></label>
+                </li>
+                <?php }?>
+            </ul>
+            <input type="text" name="other-donation" class="other-donation" placeholder="Other Amount">
+        </div>
+
+        <div class="register-to-donate">
+            <?php if (!$profile)
+            { ?>
+            <div class="row">
+                <h2>Register to Donate</h2>
+                <p>Already Registered? <a href="#">Login</a> to donate</p>
+                <p class="notice-message">*Required Fields</p>
+
+            </div>
+            <?php } ?>
+            <div class="col-xs-12 center-aligned-text handbid-form-area">
+                <?php if (!$profile)
+                { ?>
+                <div class="row errorsRow" style="display: none;">
+                    <div class="col-xs-12 errorsContainer">
+
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-md-6 col-xs-12">
+                        <input id="reg-firstname" placeholder="First Name *" type="text" name="firstname" value="" class="col-xs-12 has-question-icon has-popover cleanable-input copyable-field" data-copy-to="confirm-firstname" required="required" data-required-message="First Name field is required" data-original-title="" title="">
+                    </div>
+                    <div class="form-group col-md-6 col-xs-12">
+                        <input placeholder="Last Name *" type="text" name="lastname" value="" class="col-xs-12 has-question-icon has-popover cleanable-input copyable-field" data-copy-to="confirm-lastname" required="" data-required-message="Last Name field is required" data-original-title="" title="">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-md-6 col-xs-12">
+                        <input id="reg-email" placeholder="Email Address*" type="email" name="email" value="" class="col-xs-12 has-question-icon has-popover cleanable-input copyable-field is-email" data-copy-to="confirm-email" data-not-email-message="Please, provide valid email address" required="" data-required-message="Email field is required" data-original-title="" title="">
+                    </div>
+                    <div class="form-group col-md-6 col-xs-12">
+                        <input id="reg-phone-number" placeholder="Phone Number*" type="text" name="phone-number" value="" class="col-xs-12 has-question-icon has-popover cleanable-input copyable-field" data-copy-to="confirm-phone-number" required="" data-required-message="Phone field is required" data-original-title="" title="">
+                    </div>
+                    <div class="form-group col-md-6 col-xs-12">
+                        <input id="reg-address" placeholder="Full Address*" type="text" name="address" value="" class="col-xs-12 has-question-icon has-popover cleanable-input copyable-field" data-copy-to="confirm-address" onfocus="handbid_main.initGoogleAutocomplete('reg-address')" data-original-title="" title="">
+                    </div>
+                    <div class="form-group col-md-6 col-xs-12">
+                        <select id="reg-phone-code" name="phone-code" class="col-xs-12 copyable-field" data-copy-to="confirm-phone-code">
+                            <option value="0">Country</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-6 col-xs-12">
+                        <input id="reg-password" placeholder="Password" type="password" name="password" value="" class="col-xs-12 has-question-icon has-popover cleanable-input copyable-field" data-copy-to="confirm-password" required="" data-required-message="Password field is required" data-original-title="" title="">
+                    </div>
+                    <div class="form-group col-md-6 col-xs-12">
+                        <input id="reg-password-confirm" placeholder="Confirm your password" type="password" name="password-confirm" value="" class="col-xs-12 has-question-icon has-popover cleanable-input" data-mismatch-message="Password mismatch" data-original-title="" title="">
+                    </div>
+                </div>
+
+                <div class="row card-info-container">
+                    <div class="form-group col-md-6">
+                        <input id="reg-phone-number" placeholder="Credit Card Number*" type="text" name="phone-number" value="" class="col-xs-12 has-question-icon has-popover cleanable-input copyable-field" data-copy-to="confirm-phone-number" required="" data-required-message="Phone field is required" data-original-title="" title="">
+                    </div>
+                    <div class="form-group col-md-6 card-info">
+                        <div class="col-md-4 col-xs-12 form-group">
+                            <select class="col-xs-12 copyable-field">
+                                <option value="0">Exp Month*</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 col-xs-12 form-group">
+                            <select class="col-xs-12 copyable-field">
+                                <option value="0">Exp Year*</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 col-xs-12 form-group">
+                            <input id="reg-password" placeholder="CID*" type="password" name="password" value="" class="col-xs-12 has-question-icon has-popover cleanable-input copyable-field" data-copy-to="confirm-password" required="" data-required-message="Password field is required" data-original-title="" title="">
+                            <a class="has-question-icon has-popover" tabindex="-1" role="button" data-toggle="popover" data-placement="top" data-trigger="focus" title="" data-content="You will need a password to login on from Handbid.com. You will not need to use this password to login from the mobile apps or from the iPads. Please, ceep this password secure." data-original-title="Create a Password">
+                                ?
+                            </a>
+                        </div>
+                    </div>
+
+                    <input type="hidden" name="phone-type" value="other" class="copyable-field" data-copy-to="confirm-phone-type">
+                    <input type="hidden" class="" id="confirm-add-to-auction" name="add-to-auction" value="D439469E-5686-416B-9F0E-37E87DF43B79">
+                </div>
+
+                <div class="row">
+                    <div class="col-md-10 col-md-offset-1 col-xs-12">
+                        <label for="reg-agree-terms" class="radio-label agree-terms-label">
+                            <input type="checkbox" id="reg-agree-terms" name="agree-terms" value="agree" required="" data-required-message="You must agree to the bidder terms and conditions">
+                            <div class="check"></div>
+                            I agree to the <a target="_blank" href="https://handbid.com/terms-of-service/">bidder terms and conditions</a></label>
+                    </div>
+
+                </div>
+                <?php }?>
+                <div class="row">
+                    <div class="col-md-10 col-md-offset-1 col-xs-12">
+                        <a class="btn btn-info signup login-popup-link register-next" data-target-tab="register-form-confirm">CONTINUE</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+
+    <ul class="action-list flex-list container container-fluid three-column-list">
+        <li>
+            <h3>BROWSE AUCTION</h3>
+            <p>Browse, bid, and buy in the auction</p>
+            <a class="button pink-button register" href="/auction/<?php echo $auction->key; ?>/details/items/">BROWSE NOW</a>
+        </li>
+        <?php if (!$profile)
+        { ?>
+        <li>
+            <h3>REGISTER</h3>
+            <p>Register now to bid in this auction.</p>
+            <a class="button pink-button register"
+               data-handbid-connect
+               data-tickets-enabled="<?php echo ($auction->enableTicketSales) ? 'yes' : 'no' ?>"
+               href="#">Register now</a>
+        </li>
+        <?php } ?>
+        <?php if ($auction->enableTicketSales && $profile)
+        { ?>
+        <li>
+            <h3>BUY TICKETS</h3>
+            <p>Buy Tickets to  the in-person event</p>
+            <a class="button pink-button  handbid-modal-link purchase-tickets"data-handbid-credit-cards-need
+               data-handbid-tickets="open-button" >Buy now</a>
+        </li>
+        <?php } ?>
+    </ul>
+</div>
+
+<?php if ($auction->timerRemaining > 0)
+{
+    ?>
+    <input type="hidden" id="timerRemaining" data-auction-name="<?php echo $auction->name; ?>"
+           value="<?php echo $auction->timerRemaining; ?>">
+    <?php
+} ?>

@@ -117,8 +117,9 @@ class HandbidRouter
             'index.php?pagename=auction-item&auction=$matches[1]&item=$matches[2]',
             'top'
         );
+
         add_rewrite_rule(
-            'auction/([^/]+)/?/details/([^/]+)/?',
+            'auction[s]?/([^/]+)/?/details/([^/]+)/?',
             'index.php?pagename=auction&auction=$matches[1]&details=$matches[2]',
             'top'
         );
