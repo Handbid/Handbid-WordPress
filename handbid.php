@@ -516,7 +516,8 @@ class Handbid
 
         $og_page_url    = ($is_auction or $is_item or $is_organization or is_home()) ? get_bloginfo("url") . '/' : get_permalink();
         $site_title     = get_bloginfo('title');
-        $og_description = get_bloginfo("description");
+        $y_description  = get_post_meta(get_the_ID(), '_yoast_wpseo_metadesc', true);
+        $og_description = (!empty($y_description)) ? $y_description : get_bloginfo("description");
         $og_title       = $site_title;
         $og_image       = $imageGoogle;
 
