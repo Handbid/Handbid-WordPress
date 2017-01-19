@@ -331,6 +331,14 @@ $isDonation = (!empty($item->isAppeal) and $item->isAppeal);
         </div>
 
 
+        <?php if(!empty($item->prev)){?>
+            <a class="item-nav-links prev-link" href="/auctions/<?php echo $auction->key; ?>/item/<?php echo $item->prev->key; ?>/" title="<?php echo esc_attr($item->prev->name); ?>"><?php echo $item->prev->name; ?></a>
+        <?php }?>
+        <?php if(!empty($item->next)){?>
+            <a class="item-nav-links next-link" href="/auctions/<?php echo $auction->key; ?>/item/<?php echo $item->next->key; ?>/" title="<?php echo esc_attr($item->next->name); ?>"><?php echo $item->next->name; ?></a>
+        <?php }?>
+
+
     </div>
 
 <?php if ($related)
@@ -361,4 +369,5 @@ $isDonation = (!empty($item->isAppeal) and $item->isAppeal);
     <input type="hidden" id="timerRemaining" data-auction-name="<?php echo $auction->name; ?>"
            value="<?php echo $auction->timerRemaining; ?>">
     <?php
-} ?>
+}
+?>

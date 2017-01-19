@@ -297,6 +297,37 @@ h3.no-results {
   }
 }
 
+.item-details{
+
+  position: relative;
+
+  .item-nav-links{
+
+    background-size: contain;
+    background-repeat: no-repeat;
+    display: block;
+    width: 30px;
+    height: 80px;
+    text-indent: -99999px;
+    position: absolute;
+    top: 40%;
+
+    &.prev-link{
+      background-image: url('../images/arrow-left.png');
+      left: -60px;
+    }
+    &.next-link{
+      background-image: url('../images/arrow-right.png');
+      right: -60px
+    }
+
+    &:hover{
+      opacity: 0.6;
+    }
+  }
+
+}
+
 #ui-datepicker-div {
   margin: 0;
 }
@@ -564,5 +595,23 @@ and (min-width: 960px) {
   .container,
   .receipts-page-container{
     width: 70%;
+  }
+}
+
+@media only screen
+and (max-width: 960px) {
+
+  .item-details{
+
+    .item-nav-links{
+
+      &.prev-link{
+        left: -30px;
+      }
+      &.next-link{
+        right: -30px
+      }
+    }
+
   }
 }
