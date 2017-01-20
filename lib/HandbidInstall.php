@@ -38,8 +38,7 @@ class HandbidInstall
         $auctionItem     = "[handbid_auction_banner]\n" .
                            "[handbid_item_details template=\"views/image/photo-gallery\"]\n" .
                            "[handbid_bid template=\"views/item/bid\"]\n" .
-                           "[handbid_item_bid template=\"views/item/bid-history\"]\n" .
-                           "[handbid_facebook_comments]";
+                           "[handbid_item_bid template=\"views/item/bid-history\"]";
 
         $bidder          = "[handbid_is_logged_in]\n" .
                            "\t[handbid_bidder_profile]\n" .

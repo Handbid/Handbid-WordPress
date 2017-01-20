@@ -918,29 +918,7 @@ class HandbidShortCodeController
     // Social
     public function facebookComments($attributes)
     {
-        {
-            try
-            {
-                $auction   = $this->state->currentAuction();
-                $item      = $this->state->currentItem();
-                $customUrl = isset($auction->key) ? $auction->key : '' . isset($item->key) ? $item->key : '';
-                $template  = $this->templateFromAttributes($attributes, 'views/facebook/comments');
-
-                return $this->viewRenderer->render(
-                    $template,
-                    [
-                        'url' => $customUrl,
-                    ]
-                );
-            } catch (Exception $e)
-            {
-                echo "Facebook Comments could not be loaded, Please try again later.";
-                $this->logException($e);
-
-                return;
-            }
-        }
-
+        return "";
     }
 
     public function socialShare($attributes)

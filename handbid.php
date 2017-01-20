@@ -591,7 +591,6 @@ class Handbid
         <meta property="og:url" content="' . esc_attr($og_page_url) . '" />
         <meta property="og:image" content="' . esc_attr($og_image) . '" />
         <meta property="og:description" content="' . esc_attr($og_description) . '" />
-        <meta property="fb:app_id" content="' . esc_attr(get_option('handbidFacebookAppId')) . '" />
         <link rel="canonical" href="' . esc_attr($og_page_url) . '" />
         ';
         echo $output;
@@ -757,17 +756,6 @@ class Handbid
 
         </script>
 
-        <?php if (!defined('HANDBID_PAGE_TYPE') or (defined('HANDBID_PAGE_TYPE') and HANDBID_PAGE_TYPE == 'auction-item'))
-    { ?>
-        <script>(function (d, s, id) {
-                var js, fjs = d.getElementsByTagName(s)[0];
-                if (d.getElementById(id)) return;
-                js = d.createElement(s);
-                js.id = id;
-                js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&appId=<?php echo get_option('handbidFacebookAppId'); ?>&version=v2.0";
-                fjs.parentNode.insertBefore(js, fjs);
-            }(document, 'script', 'facebook-jssdk'));</script>
-    <?php } ?>
         <?php
 
         $currencyCode   = (isset($auction->currencyCode)) ? $auction->currencyCode : HANDBID_DEFAULT_CURRENCY;

@@ -96,16 +96,6 @@ ShortCode                       |  Optional Attributes                          
 --------------------------------|-----------------------------------------------------|--------------
 [handbid_connect]        | <ul><li>template="{{'views/connect'}}</li></ul>   | <ul><li>bidder</li><li>passUrl</li><li>failUrl</li><li>id</li></ul>
 
-### Social
-
-ShortCode                       |  Optional Attributes                                | Template Vars
---------------------------------|-----------------------------------------------------|--------------
-[handbid_facebook_comments]        | <ul><li>template="{{'views/facebook/comments'}}</li><li>auctionkey="{{auction_key}}"</li><li>itemKey="{{item_key}}"</li></ul>   | <ul><li>url</li></ul>
-
-Once logged in you can use the [Logged in / Logged Out Shortcodes](#control-flow) to show or hide content based on user status.
-To log out send the uses to /handbid-logout to log them out
-
-
 ### Customization
 This is the file that maps all of the functions to call when a wordpress shortcode is called.
 If you want to override a template with a local one, add in the get_template_directory to get the current themes directory and navigate to your file,

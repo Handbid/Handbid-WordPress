@@ -59,7 +59,6 @@ class HandbidAdminActionController
         // Registering Handbid admin setting fields
         $settings = [
             'handbidRestEndpoint',
-            'handbidFacebookAppId',
             'handbidDefaultAuctionKey',
             'handbidDefaultOrganizationKey',
             'handbidSocketUrl',

@@ -61,12 +61,6 @@ $is_local = $this->get("is_local");
                     <label for="handbidDisplayProfileDashboardOn1"><input type="checkbox" id="handbidDisplayProfileDashboardOn1" name="handbidDisplayProfileDashboardOn[]" value="other" <?php checked(in_array("other", $profileDashboardOn), true);?>/> All Other Pages</label>
                 </td>
             </tr>
-
-            <tr valign="top">
-                <th scope="row"><?php echo('Facebook App Id ( For Comments )'); ?></th>
-                <td><input type="text" name="handbidFacebookAppId"
-                           value="<?php echo get_option('handbidFacebookAppId'); ?>"/></td>
-            </tr>
             <tr valign="top">
                 <th scope="row"><?php echo('Default Auction Key'); ?></th>
                 <td><input type="text" name="handbidDefaultAuctionKey"
