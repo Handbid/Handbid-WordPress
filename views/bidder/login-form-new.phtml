@@ -617,11 +617,11 @@ if(!function_exists("handbid_popup_inline_links")){
                         </p>
 
                         <div class="cards-block no-cards-if-no-cards no-cards-on-file">
-                            <form class="row cards-form">
-                                <div class="form-group col-sm-9">
+                            <form class="row cards-form" style="text-align: center">
+                                <div class="form-group col-sm-9 cards-form-group hide-if-no-cards">
                                     <select id="tickets-payment-card" class="form-control select-payment-card" name="payment-card"></select>
                                 </div>
-                                <button type="submit" id="hb-tickets-make-payment" class="btn col-sm-3 loading-span-button">
+                                <button type="submit" id="hb-tickets-make-payment" class="btn col-sm-3 loading-span-button  hide-if-no-cards">
                                     <span>Pay now</span>
                                 </button>
                             </form>

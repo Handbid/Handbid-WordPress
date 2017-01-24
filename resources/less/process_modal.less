@@ -52,10 +52,24 @@
   &.no-cards-on-file {
     text-align: center;
 
-    .cards-form {
+    .hide-if-no-cards {
       display: none;
+
+      &.zero-price {
+        display: block;
+        float: none !important;
+        margin: 0 auto;
+      }
     }
   }
+}
+
+
+.hide-if-zero-price{
+  display: none !important;
+}
+.zero-price{
+  float: none !important;
 }
 
 .process-container.process-success-container {

@@ -320,7 +320,7 @@ var handbid_main, connect_message, modal_overlay, reload_overlay, confirm_bid_ov
                     auctionKey          = (values.auctionKey != undefined) ? values.auctionKey : "undefined";
 
                 var pattern = '<li class="row"' +
-                              'data-dashboard-price="' + (amount * quantity) + '"' +
+                              'data-dashboard-price="' + (receiptTotal) + '"' +
                               'data-dashboard-quantity="' + quantity + '"' +
                               'data-purchased-item-id="' + itemID + '" ' +
                               ((item.isTicket == 1) ? 'data-purchased-item-is-ticket="yes" ' : '') +
@@ -2179,7 +2179,6 @@ var handbid_main, connect_message, modal_overlay, reload_overlay, confirm_bid_ov
                         console.log("---------------------------");
                         console.log("----Make payment success----");
                         data = JSON.parse(data);
-                        console.log(data);
 
                         if (data.result != undefined) {
 
@@ -3913,7 +3912,6 @@ var handbid_main, connect_message, modal_overlay, reload_overlay, confirm_bid_ov
                 }
 
                 if (!$.isEmptyObject(data)) {
-                    console.log(data);
                     button.addClass('active');
                     form_inputs.attr('disabled', 'disabled');
 
@@ -3985,9 +3983,7 @@ var handbid_main, connect_message, modal_overlay, reload_overlay, confirm_bid_ov
                        },
                        function (data) {
 
-                           console.log(data);
                            data = JSON.parse(data);
-                           console.log(data);
 
                            if(!published) {
                                handbid_login_main.addCreditCardsToPayForTickets(
