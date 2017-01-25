@@ -733,6 +733,10 @@ var handbid_main, connect_message, modal_overlay, reload_overlay, confirm_bid_ov
 
             loadInvoicesToContainer : function (scrolled, invoiceID) {
 
+                if (handbid.cannotDoIfUnauthorized()) {
+                    return false;
+                }
+
                 var unpaidInvoicesCountContainer = $(".unpaidInvoicesCountContainer");
                 var invoicesContainer            = $(".receipts-list-area");
                 invoicesContainer.addClass("loading-messages");
@@ -790,6 +794,10 @@ var handbid_main, connect_message, modal_overlay, reload_overlay, confirm_bid_ov
             },
 
             loadMessagesToContainer : function () {
+
+                if (handbid.cannotDoIfUnauthorized()) {
+                    return false;
+                }
 
                 var messagesContainer = $(".messages-list-area");
                 messagesContainer.addClass("loading-messages");
