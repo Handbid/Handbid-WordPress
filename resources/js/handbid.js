@@ -2351,13 +2351,16 @@ var handbid_main, connect_message, modal_overlay, reload_overlay, confirm_bid_ov
                             else{
                                 handbid_login_main.displaySpecifiedTabOfLoginPopup('register-form');
                             }
-                            handbid_login_main.setFlagOfInitialScreen('register_buy_tickets');
-                            loginModal.modal('show');
+                            setTimeout(function(){
+                                handbid_login_main.setFlagOfInitialScreen('register_buy_tickets');
+                            }, 1000);
                         }
                         else{
-                            handbid_login_main.setFlagOfInitialScreen('initial_login');
-                            loginModal.modal('show');
+                            setTimeout(function(){
+                                handbid_login_main.setFlagOfInitialScreen('initial_login');
+                            }, 1000);
                         }
+                        loginModal.modal('show');
                     });
 
                     loginModal.on('hidden.bs.modal', function (e) {

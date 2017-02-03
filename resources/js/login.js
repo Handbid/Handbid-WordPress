@@ -251,7 +251,6 @@ var handbid_login_main, cookieExpire = 7;
 
         tryToLogin : function (button) {
 
-            var action      = $("#hb-login-form-action").val();
             var username    = $("#hb-login-form-username").val();
             var password    = $("#hb-login-form-password").val();
             var auctionGuid = $("#login-add-to-auction").val();
@@ -271,7 +270,7 @@ var handbid_login_main, cookieExpire = 7;
             errorBlock.slideUp("normal");
             $.post(ajaxurl,
                    {
-                       action      : action,
+                       action      : 'handbid_ajax_login',
                        username    : username,
                        password    : password,
                        auctionGuid : auctionGuid,
@@ -316,7 +315,6 @@ var handbid_login_main, cookieExpire = 7;
 
         tryToRegister : function (button) {
 
-            var action          = $("#hb-reg-form-action").val();
             var firstname       = $("#confirm-firstname").val();
             var lastname        = $("#confirm-lastname").val();
             var password        = $("#confirm-password").val();
@@ -337,7 +335,7 @@ var handbid_login_main, cookieExpire = 7;
             button.addClass("active");
 
             var registration_data = {
-                action          : action,
+                action          : 'handbid_ajax_registration',
                 firstname       : firstname,
                 lastname        : lastname,
                 password        : password,

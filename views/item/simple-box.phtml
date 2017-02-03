@@ -103,11 +103,14 @@ $isSilentItem = (!$item->isDirectPurchaseItem && !$item->disableMobileBidding &&
     <div class="body">
         <?php
         $image = "";
-        if(isset($item->images) and is_array($item->images) and count($item->images) and isset($item->images[0]->itemImageUrl)){
-            $image = $item->images[0]->itemImageUrl;
+        if(!empty($item->imageUrl) && is_string($item->imageUrl)){
+            $image = $item->imageUrl;
         }
         if(!empty($item->images) && is_string($item->images)){
             $image = $item->images;
+        }
+        if(isset($item->images) and is_array($item->images) and count($item->images) and isset($item->images[0]->itemImageUrl)){
+            $image = $item->images[0]->itemImageUrl;
         }
         $image = apply_filters("handbid_cdn_image_thumbnail", $image);
         $image = (trim($image)) ? $image : HANDBID_PLUGIN_URL . 'public/images/simple-box/default_photo.png';
