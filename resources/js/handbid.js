@@ -733,7 +733,7 @@ var handbid_main, connect_message, modal_overlay, reload_overlay, confirm_bid_ov
 
             loadInvoicesToContainer : function (scrolled, invoiceID) {
 
-                if (handbid.cannotDoIfUnauthorized()) {
+                if (handbid.cannotDoIfUnauthorized(false)) {
                     return false;
                 }
 
@@ -795,7 +795,7 @@ var handbid_main, connect_message, modal_overlay, reload_overlay, confirm_bid_ov
 
             loadMessagesToContainer : function () {
 
-                if (handbid.cannotDoIfUnauthorized()) {
+                if (handbid.cannotDoIfUnauthorized(false)) {
                     return false;
                 }
 
@@ -1609,12 +1609,13 @@ var handbid_main, connect_message, modal_overlay, reload_overlay, confirm_bid_ov
 
             },
 
-            cannotDoIfUnauthorized : function () {
+            cannotDoIfUnauthorized : function (show_popup) {
                 var sessionCookie = $.cookie("handbid-auth");
                 if (!sessionCookie) {
-                    $("[data-handbid-connect]").eq(0).click();
-                    //this.notice("You should register or login to bid", "Unauthorized", "error");
-
+                    show_popup = (show_popup != undefined) ? show_popup : true;
+                    if(show_popup) {
+                        $("[data-handbid-connect]").eq(0).click();
+                    }
                     this.loggedIn = false;
                 }
                 else {
