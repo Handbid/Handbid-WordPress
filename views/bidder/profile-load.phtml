@@ -16,9 +16,9 @@ $auction = $this->get('auction');
 $profile = $this->get('profile');
 $bidConfirm = $this->get("bidConfirm");
 $auctionID = (isset($auction->id))?$auction->id:"";
-$profileDashboardOn = get_option('handbidDisplayProfileDashboardOn', array("other", "auction", "auction-item"));
+$profileDashboardOn = get_option('handbidDisplayProfileDashboardOn', array("other", "auction", "invoices", "auction-item"));
 $pageNameForProfile = get_query_var('name');
-$pageNameForProfile = (in_array($pageNameForProfile, array("auction", "auction-item")))?$pageNameForProfile:"other";
+$pageNameForProfile = (in_array($pageNameForProfile, array("invoices", "auction", "auction-item")))?$pageNameForProfile:"other";
 $displayBidderProfile = in_array($pageNameForProfile, $profileDashboardOn);
 $bidderLocationQuestion = (!empty($auction->bidderLocationQuestion)
     ? $auction->bidderLocationQuestion

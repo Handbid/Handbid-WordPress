@@ -52,12 +52,13 @@ $is_local = $this->get("is_local");
                 </td>
             </tr>
             <tr valign="top">
-                <?php $profileDashboardOn = get_option('handbidDisplayProfileDashboardOn', array("other", "auction", "auction-item"));
+                <?php $profileDashboardOn = get_option('handbidDisplayProfileDashboardOn', array("other", "auction", "invoices", "auction-item"));
                 ?>
                 <th scope="row"><?php echo('Display Profile Dashboard On'); ?>:</th>
                 <td>
 	                <label for="handbidDisplayProfileDashboardOn2"><input type="checkbox" id="handbidDisplayProfileDashboardOn2" name="handbidDisplayProfileDashboardOn[]" value="auction" <?php checked(in_array("auction", $profileDashboardOn), true);?>/> Auction Page</label>&nbsp;&nbsp;&nbsp;&nbsp;
 	                <label for="handbidDisplayProfileDashboardOn3"><input type="checkbox" id="handbidDisplayProfileDashboardOn3" name="handbidDisplayProfileDashboardOn[]" value="auction-item" <?php checked(in_array("auction-item", $profileDashboardOn), true);?>/> Auction Item Page</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <label for="handbidDisplayProfileDashboardOn4"><input type="checkbox" id="handbidDisplayProfileDashboardOn4" name="handbidDisplayProfileDashboardOn[]" value="invoices" <?php checked(in_array("invoices", $profileDashboardOn), true);?>/> Invoices Page</label>&nbsp;&nbsp;&nbsp;&nbsp;
                     <label for="handbidDisplayProfileDashboardOn1"><input type="checkbox" id="handbidDisplayProfileDashboardOn1" name="handbidDisplayProfileDashboardOn[]" value="other" <?php checked(in_array("other", $profileDashboardOn), true);?>/> All Other Pages</label>
                 </td>
             </tr>

@@ -529,6 +529,15 @@ h3.no-results {
   margin-bottom: 10px;
 }
 
+.container-fluid.detail-banner-wrapper{
+  width: 1140px;
+  padding: 0;
+
+  .detail-banner{
+    height: 280px;
+  }
+}
+
 @media print {
   .page-invoices{
     [data-toggle-invoice-more-link],
@@ -583,10 +592,14 @@ and (min-width: 960px) {
 }
 
 @media only screen
-and (min-width: 960px) {
-  .container,
-  .receipts-page-container{
-    width: 70%;
+and (max-width: 1165px) {
+
+  .container-fluid.detail-banner-wrapper{
+    width: 960px;
+
+    .detail-banner{
+      height: 235px;
+    }
   }
 }
 
@@ -605,5 +618,47 @@ and (max-width: 960px) {
       }
     }
 
+  }
+
+  .container-fluid.detail-banner-wrapper{
+    width: 750px;
+
+    .detail-banner{
+      height: 183px;
+    }
+  }
+}
+
+@media only screen
+and (max-width: 768px) {
+  .hide-in-mobile{
+    display: none;
+  }
+
+  .container-fluid.detail-banner-wrapper{
+    width: 620px;
+
+    .detail-banner{
+      height: 152px;
+    }
+  }
+}
+
+@media only screen
+and (max-width: 568px) {
+
+  .container-fluid.detail-banner-wrapper{
+    width: 533px;
+
+    .detail-banner{
+      height: 131px;
+    }
+  }
+}
+
+@media only screen
+and (max-width: 540px) {
+  .container-fluid.detail-banner-wrapper{
+    width: 90%;
   }
 }

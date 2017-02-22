@@ -733,6 +733,10 @@ var handbid_main, connect_message, modal_overlay, reload_overlay, confirm_bid_ov
 
             loadInvoicesToContainer : function (scrolled, invoiceID) {
 
+                if (handbid.cannotDoIfUnauthorized(false)) {
+                    return false;
+                }
+
                 var unpaidInvoicesCountContainer = $(".unpaidInvoicesCountContainer");
                 var invoicesContainer            = $(".receipts-list-area");
                 invoicesContainer.addClass("loading-messages");
@@ -790,6 +794,10 @@ var handbid_main, connect_message, modal_overlay, reload_overlay, confirm_bid_ov
             },
 
             loadMessagesToContainer : function () {
+
+                if (handbid.cannotDoIfUnauthorized(false)) {
+                    return false;
+                }
 
                 var messagesContainer = $(".messages-list-area");
                 messagesContainer.addClass("loading-messages");
@@ -1601,12 +1609,13 @@ var handbid_main, connect_message, modal_overlay, reload_overlay, confirm_bid_ov
 
             },
 
-            cannotDoIfUnauthorized : function () {
+            cannotDoIfUnauthorized : function (show_popup) {
                 var sessionCookie = $.cookie("handbid-auth");
                 if (!sessionCookie) {
-                    $("[data-handbid-connect]").eq(0).click();
-                    //this.notice("You should register or login to bid", "Unauthorized", "error");
-
+                    show_popup = (show_popup != undefined) ? show_popup : true;
+                    if(show_popup) {
+                        $("[data-handbid-connect]").eq(0).click();
+                    }
                     this.loggedIn = false;
                 }
                 else {
@@ -2343,13 +2352,16 @@ var handbid_main, connect_message, modal_overlay, reload_overlay, confirm_bid_ov
                             else{
                                 handbid_login_main.displaySpecifiedTabOfLoginPopup('register-form');
                             }
-                            handbid_login_main.setFlagOfInitialScreen('register_buy_tickets');
-                            loginModal.modal('show');
+                            setTimeout(function(){
+                                handbid_login_main.setFlagOfInitialScreen('register_buy_tickets');
+                            }, 1000);
                         }
                         else{
-                            handbid_login_main.setFlagOfInitialScreen('initial_login');
-                            loginModal.modal('show');
+                            setTimeout(function(){
+                                handbid_login_main.setFlagOfInitialScreen('initial_login');
+                            }, 1000);
                         }
+                        loginModal.modal('show');
                     });
 
                     loginModal.on('hidden.bs.modal', function (e) {

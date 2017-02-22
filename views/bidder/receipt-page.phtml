@@ -4,10 +4,25 @@
 $profile = $this->get('profile');
 $myInvoices = $this->get('myInvoices');
 
-echo $this->partial('receipt.phtml', [
-    'profile'    => $profile,
-    'myInvoices' => $myInvoices,
-    'invoicePage' => true,
-]);
+
+if(empty($myInvoices)){
+    ?>
+    <h3>You need to be logged in to view any invoices</h3>
+    <script type="text/javascript">
+        jQuery(function() {
+            setTimeout(function(){
+                handbid_modals_main.showSingleModal('login-modal');
+            }, 2000);
+        });
+    </script>
+    <?php
+}
+else{
+    echo $this->partial('receipt.phtml', [
+        'profile'    => $profile,
+        'myInvoices' => $myInvoices,
+        'invoicePage' => true,
+    ]);
+}
 ?>
 </div>

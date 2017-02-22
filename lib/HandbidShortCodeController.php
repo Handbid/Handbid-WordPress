@@ -1318,10 +1318,8 @@ class HandbidShortCodeController
     {
         try
         {
-
             $template = $this->templateFromAttributes($attributes, 'views/bidder/profile-form');
-            //$profile  = $this->handbid->store( 'Bidder' )->myProfile();
-            $auction                       = $this->state->currentAuction(["id" => (int)$attributes["auction"]]);
+            $auction                       = $this->state->currentAuction();
             $auctionID                     = (isset($auction->id)) ? $auction->id : 0;
             $profile                       = $this->state->currentBidder($auctionID);
             $inventory                     = $this->state->currentInventory($auctionID);
