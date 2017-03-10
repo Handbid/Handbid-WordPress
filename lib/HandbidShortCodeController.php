@@ -73,9 +73,6 @@ class HandbidShortCodeController
             'handbid_bidder_profile_bar'    => 'myProfile',
             'handbid_bidder_profile_inner'  => 'bidderProfileInner',
             'handbid_bidder_notifications'  => 'myNotifications',
-            'handbid_bidder_bids'           => 'myBids',
-            'handbid_bidder_proxy_bids'     => 'myProxyBids',
-            'handbid_bidder_purchases'      => 'myPurchases',
             'handbid_bidder_profile_form'   => 'bidderProfileForm',
             'handbid_bidder_cc_form'        => 'bidderCreditCardForm',
             'handbid_is_logged_in'          => 'isLoggedIn',
@@ -524,11 +521,6 @@ class HandbidShortCodeController
                     $totalLosing    = count($myInventory->losing);
                     $totalPurchases = count($myInventory->purchases);
                     $totalProxies   = count($myInventory->max_bids);
-
-                    //$totalWinning   = count( $this->handbid->store( 'Bid' )->myWinning( $auction->id ) );
-                    //$totalLosing    = count( $this->handbid->store( 'Bid' )->myLosing( $auction->id ) );
-                    //$totalProxies   = count( $this->handbid->store( 'Bid' )->myProxyBids( $auction->id ) );
-                    //$totalPurchases = count( $this->handbid->store( 'Bid' )->myPurchases( $auction->id ) );
 
                 }
 
@@ -1128,11 +1120,6 @@ class HandbidShortCodeController
 
                     $myInventory = $this->state->currentInventory($auction->id);
 
-                    // $winning   = $this->handbid->store( 'Bid' )->myWinning($auction->id );
-                    // $losing    = $this->handbid->store( 'Bid' )->myLosing( $auction->id );
-                    // $purchases = $this->handbid->store( 'Bid' )->myPurchases( $auction->id );
-                    // $proxyBids = $this->handbid->store( 'Bid' )->myProxyBids( $auction->id );
-
                     $winning = (isset($myInventory->winning) and is_array($myInventory->winning)) ? $myInventory->winning : [];
                     $losing  = (isset($myInventory->losing) and is_array($myInventory->losing)) ? $myInventory->losing : [];;
                     $purchases = $myInventory->purchases;
@@ -1188,41 +1175,6 @@ class HandbidShortCodeController
         }
     }
 
-    public function myBids($attributes)
-    {
-        try
-        {
-
-            $template = $this->templateFromAttributes($attributes, 'views/bidder/bids');
-            // $profile  = $this->handbid->store( 'Bidder' )->myProfile();
-            $auction = $this->state->currentAuction();
-            $profile = $this->state->currentBidder($auction->id);
-
-            $myInventory = $this->state->currentInventory($auction->id);
-
-            // $winning   = $this->handbid->store( 'Bid' )->myWinning($auction->id );
-            // $losing    = $this->handbid->store( 'Bid' )->myLosing( $auction->id );
-
-            $winning = (isset($myInventory->winning) and is_array($myInventory->winning)) ? $myInventory->winning : [];
-            $losing  = (isset($myInventory->losing) and is_array($myInventory->losing)) ? $myInventory->losing : [];
-
-
-            return $this->viewRenderer->render(
-                $template,
-                [
-                    'winning' => $winning,
-                    'losing'  => $losing,
-                ]
-            );
-        } catch (Exception $e)
-        {
-            echo "bids could not be loaded, Please try again later.";
-            $this->logException($e);
-
-            return;
-        }
-    }
-
     public function myNotifications($attributes)
     {
         try
@@ -1250,70 +1202,6 @@ class HandbidShortCodeController
         }
     }
 
-    public function myProxyBids($attributes)
-    {
-        try
-        {
-            $template = $this->templateFromAttributes($attributes, 'views/bidder/proxybids');
-            // $profile  = $this->handbid->store( 'Bidder' )->myProfile();
-            $auction = $this->state->currentAuction();
-            $profile = $this->state->currentBidder($auction->id);
-
-            $myInventory = $this->state->currentInventory($auction->id);
-
-            //$proxyBids = $this->handbid->store( 'Bid' )->myProxyBids( $auction->id );
-
-            $proxyBids = $myInventory->max_bids;
-
-            return $this->viewRenderer->render(
-                $template,
-                [
-                    'bids'    => $proxyBids,
-                    'auction' => $auction,
-                ]
-            );
-        } catch (Exception $e)
-        {
-            echo "Max bids could not be loaded. Please try again later.";
-            $this->logException($e);
-
-            return;
-        }
-    }
-
-    public function myPurchases($attributes)
-    {
-        try
-        {
-
-            $template = $this->templateFromAttributes($attributes, 'views/bidder/purchases');
-            //$profile  = $this->handbid->store( 'Bidder' )->myProfile();
-            $auction = $this->state->currentAuction();
-            $profile = $this->state->currentBidder($auction->id);
-
-            $myInventory = $this->state->currentInventory($auction->id);
-
-            // $purchases = $this->handbid->store( 'Bid' )->myPurchases( $auction->id );
-
-            $purchases = $myInventory->purchases;
-
-            return $this->viewRenderer->render(
-                $template,
-                [
-                    'purchases' => $purchases,
-                    'auction'   => $auction,
-                ]
-            );
-
-        } catch (Exception $e)
-        {
-            echo "purchases could not be loaded, Please try again later.";
-            $this->logException($e);
-
-            return;
-        }
-    }
-
     public function bidderProfileForm($attributes)
     {
         try
@@ -1322,6 +1210,9 @@ class HandbidShortCodeController
             $auction                       = $this->state->currentAuction();
             $auctionID                     = (isset($auction->id)) ? $auction->id : 0;
             $profile                       = $this->state->currentBidder($auctionID);
+            if (is_null($profile)) {
+                return "You must be logged in to view your profile.";
+            }
             $inventory                     = $this->state->currentInventory($auctionID);
             $countries                     = $this->state->getCountriesWithCodes();
             $countryIDs                    = $this->state->getCountriesAndProvinces();
