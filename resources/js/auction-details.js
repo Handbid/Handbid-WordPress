@@ -414,10 +414,17 @@ var currentlyFilteringByCat = null;
                     function (data) {
 
                         var $newItems = $(data);
-                        $('.simple-box-row.item-list.isotope').append($newItems).isotope('addItems', $newItems);
+
+                        var isotope_list = $('.simple-box-row.item-list.isotope');
+                        if(catId == 'all'){
+                            var $allAtoms = isotope_list.isotope('getItemElements');
+                            isotope_list.isotope( 'remove', $allAtoms );
+                        }
+                        isotope_list.append($newItems).isotope('addItems', $newItems);
                         checkAndUpdateIsotope();
                         categorySelect.removeClass('loading').removeAttr('disabled');
                         itemsContainer.removeClass('loading');
+
                     }
                 );
             }

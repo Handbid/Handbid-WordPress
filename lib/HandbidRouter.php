@@ -144,10 +144,9 @@ class HandbidRouter
     function throw404() {
 
 	    if(!is_admin()) {
-	        header("HTTP/1.0 404 Not Found - Archive Empty");
+            http_response_code(404);
             require TEMPLATEPATH.'/404.php';
-
-	        exit;
+            die;
 	    }
     }
 
@@ -176,18 +175,23 @@ class HandbidRouter
             $auctionID = $currentAuction->id;
         }
 
+
         if($post->post_name == 'auction' && !is_object($currentAuction)) {
             $this->throw404();
         }
-        else if($post->post_name == 'organization' && !$this->state->currentOrg()) {
+        elseif($post->post_name == 'organization' && !is_object($this->state->currentOrg())) {
             $this->throw404();
         }
-        else if($post->post_name == 'auction-item' && !$this->state->currentItem()) {
-            $this->throw404();
+        elseif($post->post_name == 'auction-item') {
+            $currentItem = $this->state->currentItem();
+
+            if(!is_object($currentItem)) {
+
+                $this->throw404();
+            }
         }
 
         $currentBidder = $this->state->currentBidder($auctionID);
-
     }
 
 }
