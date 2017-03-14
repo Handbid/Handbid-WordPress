@@ -279,7 +279,7 @@ class HandbidState
                 }
             }
 
-            return $this->item;
+            return (is_object($this->item)) ? $this->item : null;
 
         } catch (Exception $e)
         {

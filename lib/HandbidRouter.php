@@ -142,12 +142,11 @@ class HandbidRouter
     }
 
     function throw404() {
-
-	    if(!is_admin()) {
+        if(!is_admin()) {
             http_response_code(404);
-            require TEMPLATEPATH.'/404.php';
+            load_template(TEMPLATEPATH.'/404.php');
             die;
-	    }
+        }
     }
 
     function checkPageState() {
@@ -181,14 +180,6 @@ class HandbidRouter
         }
         elseif($post->post_name == 'organization' && !is_object($this->state->currentOrg())) {
             $this->throw404();
-        }
-        elseif($post->post_name == 'auction-item') {
-            $currentItem = $this->state->currentItem();
-
-            if(!is_object($currentItem)) {
-
-                $this->throw404();
-            }
         }
 
         $currentBidder = $this->state->currentBidder($auctionID);

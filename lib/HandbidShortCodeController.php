@@ -774,8 +774,13 @@ class HandbidShortCodeController
         {
 
             $template = $this->templateFromAttributes($attributes, 'views/item/details');
-            //$item    = $this->state->currentItem( $attributes );
             $item    = $this->state->currentItem();
+            if(!is_object($item)){
+                return $this->viewRenderer->render(
+                    $this->templateFromAttributes($attributes, 'views/errors/404'),
+                    []
+                );
+            }
             $auction = $this->state->currentAuction();
             $itemID  = (isset($item->id)) ? $item->id : 0;
             $bids    = $this->state->currentItemBids($itemID);
@@ -974,6 +979,12 @@ class HandbidShortCodeController
     public function myProfile($attributes)
     {
         global $post;
+
+        if(HANDBID_PAGE_TYPE == 'auction-item'){
+            if(!is_object($this->state->currentItem())){
+                return '';
+            }
+        }
 
         try
         {
