@@ -113,6 +113,7 @@ $isSilentItem = (!$item->isDirectPurchaseItem && !$item->disableMobileBidding &&
             $image = $item->images[0]->itemImageUrl;
         }
         $image = apply_filters("handbid_cdn_image_thumbnail", $image);
+        $image = (strpos($image, 'default_photo-75px-white.png')) ? '' : $image;
         $image = (trim($image)) ? $image : HANDBID_PLUGIN_URL . 'public/images/simple-box/default_photo.png';
         $imageUrlPath = parse_url($image);
         $image = ($imageUrlPath["scheme"]) ? $image : ((trim($image)) ? "https://" . $image : "");
