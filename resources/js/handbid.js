@@ -407,20 +407,9 @@ var handbid_main, connect_message, modal_overlay, reload_overlay, confirm_bid_ov
             },
 
             clickOnFiltersToReorder : function () {
-                var initialCat     = $('[data-initial-auction-category]').eq(0).val();
-                var initialCatLink = $('[data-legacy-category-id="' + initialCat + '"] a');
-
-                initialCatLink = initialCatLink[0];
-                //if(initialCatLink != undefined){
-                //    $('[data-initial-auction-category]').val(0);
-                //initialCatLink.eq(0).click();
-                //}
-                //else {
-                var firstCatLink = $('ul.by-category li.selected a')[0];
-                if (firstCatLink != undefined) {
-                    firstCatLink.click();
+                if(handbid_auction_main){
+                    handbid_auction_main.recheckIsotopeFilters();
                 }
-                //}
             },
 
             checkItemIsAvailableForPresale : function () {
@@ -524,6 +513,8 @@ var handbid_main, connect_message, modal_overlay, reload_overlay, confirm_bid_ov
 
                 var item                = values,
                     itemID              = values.id,
+                    itemName            = values.name,
+                    itemKey             = (values.key) ? values.key : (itemName + '-' + itemID).toLowerCase().replace(/ /g,'-').replace(/[^\w-]+/g,''),
                     itemStatus          = values.status,
                     showValue           = values.showValue,
                     availableForPreSale = values.availableForPreSale,
@@ -531,6 +522,21 @@ var handbid_main, connect_message, modal_overlay, reload_overlay, confirm_bid_ov
                     newHideIfSold       = (item.hideSales == 1);
 
                 var parentElem = $("[data-handbid-item-box='" + itemID + "']").eq(0);
+
+                var itemBreadcrumbLink = $('[data-handbid-item-breadcrumb-link]'),
+                    itemUrlLink = (itemBreadcrumbLink.length) ? itemBreadcrumbLink : $('[data-handbid-item-attribute="name"]', parentElem);
+
+                if(itemUrlLink.length) {
+                    var itemUrl = itemUrlLink.attr('href').split('/'),
+                        oldKey = itemUrl[itemUrl.length - 2];
+                    itemUrl[itemUrl.length - 2] = itemKey;
+                    itemUrlLink.html(values.name).attr('href', itemUrl.join('/'));
+                    if(itemBreadcrumbLink.length && (oldKey != itemKey)){
+                        handbid_main.goToSingleItemPage(itemUrl.join('/'), itemID);
+                    }
+                    parentElem.attr('onclick', "handbid_main.goToSingleItemPage('" + itemUrl.join('/') + "', " + itemID + ");");
+
+                }
 
                 var currentItemID = $("#bidItemId").val();
                 if (currentItemID == itemID) {
@@ -543,13 +549,19 @@ var handbid_main, connect_message, modal_overlay, reload_overlay, confirm_bid_ov
                         value = "∞"
                     }
                     if (attribute == "categoryName") {
-                        parentElem.attr("data-tags", "|" + value.toLowerCase() + "|");
+                        var newCatTag = "|" + value.toLowerCase().split(' ').join('') + "|";
+                        parentElem.attr("data-tags", newCatTag);
                     }
                     if (attribute == "quantitySold") {
                         $('[data-handbid-sold-of-id=' + itemID + ']').html(value);
                     }
                     if (attribute == "bidCount") {
                         $('[data-handbid-bids-of-id=' + itemID + ']').html(value);
+                    }
+                    if (attribute == "image") {
+                        if(value != '/images/default_photo-75px-white.png') {
+                            $('[data-handbid-item-box=' + itemID + '] .full-image-wrapper').attr('style', 'background-image: url(' + value + ')');
+                        }
                     }
                     $('[data-change-attribute=' + attribute + ']', parentElem).html(value);
                     $('[data-handbid-item-attribute=' + attribute + ']', parentElem).html(value);
@@ -563,7 +575,6 @@ var handbid_main, connect_message, modal_overlay, reload_overlay, confirm_bid_ov
                     $('[data-handbid-remaining-of-id=' + itemID + ']').html(value);
                 }
 
-                var needToReSort         = false;
                 var paramsBoxes          = $("[data-handbid-params-box='" + itemID + "']"),
                     paramsBoxQuant       = $("[data-is-hidden-item] [data-handbid-ticket-quantity]"),
                     isHidden             = (values.isHidden == "1"),
@@ -605,7 +616,6 @@ var handbid_main, connect_message, modal_overlay, reload_overlay, confirm_bid_ov
                     isShowing ? handbid.utilChangeCountValue(allCatIDContainer, 1) : "";
                     isHiding ? handbid.utilChangeCountValue(allCatIDContainer, -1) : "";
 
-                    needToReSort = (isHiding || isShowing );
                     (isHidden) ? paramsBox.attr("data-is-hidden-item", "1") : paramsBox.removeAttr("data-is-hidden-item");
                     (isDirectPurchaseItem) ? paramsBox.attr("data-for-sale", "1") : paramsBox.removeAttr("data-for-sale");
                     (disableMobileBidding) ? paramsBox.attr("data-live", "1") : paramsBox.removeAttr("data-live");
@@ -637,9 +647,7 @@ var handbid_main, connect_message, modal_overlay, reload_overlay, confirm_bid_ov
                 (buyItNow) ? BINContainer.addClass("BINAvailable") : BINContainer.removeClass("BINAvailable");
                 BINButton.attr("data-handbid-buynow-price", item.buyNowPrice);
 
-                if (needToReSort) {
-                    this.clickOnFiltersToReorder();
-                }
+                this.clickOnFiltersToReorder();
 
                 var simpleBox = $('[data-handbid-item-box="' + item.id + '"].simple-item-box');
                 simpleBox.removeClass('status-open')

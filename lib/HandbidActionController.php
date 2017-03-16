@@ -175,6 +175,7 @@ class HandbidActionController
             "handbid_ajax_get_auction_ticketing",
             "handbid_ajax_get_list_of_credit_cards",
             "handbid_ajax_get_item_boxes_by_category",
+            "handbid_ajax_get_new_item_box",
             "handbid_ajax_check_discount_code",
             "handbid_ajax_update_shipping_address",
         ];
@@ -1335,6 +1336,46 @@ class HandbidActionController
                 );
             }
         }
+        exit;
+    }
+
+    public function handbid_ajax_get_new_item_box_callback()
+    {
+        try {
+            if (!empty($_POST['slug'])) {
+                $slug = $_POST['slug'];
+
+                $item = $this->handbid->store('Item')->byKey($slug);
+
+                if ($item) {
+                    $auction = $item->auction;
+
+                    $auctionID = $auction->id;
+
+                    $myInventory = $this->state->currentInventory($auctionID);
+
+                    if ($myInventory) {
+                        $winning = (isset($myInventory->winning) and is_array($myInventory->winning)) ? $myInventory->winning : [];
+                        $losing = (isset($myInventory->losing) and is_array($myInventory->losing)) ? $myInventory->losing : [];;
+
+                    } else {
+                        $winning = [];
+                        $losing = [];
+                    }
+
+                    echo $this->viewRenderer->render(
+                        'views/item/simple-box.phtml',
+                        [
+                            'item' => $item,
+                            'auction' => $auction,
+                            'winning' => $winning,
+                            'losing' => $losing,
+                        ]
+                    );
+                }
+            }
+        }
+        catch(Exception $e){}
         exit;
     }
 
