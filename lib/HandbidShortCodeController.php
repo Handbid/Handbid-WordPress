@@ -1221,7 +1221,7 @@ class HandbidShortCodeController
             $auction                       = $this->state->currentAuction();
             $auctionID                     = (isset($auction->id)) ? $auction->id : 0;
             $profile                       = $this->state->currentBidder($auctionID);
-            if (is_null($profile)) {
+            if (is_null($profile) && ($template[0] != 'views/bidder/credit-card-form')) {
                 return "You must be logged in to view your profile.";
             }
             $inventory                     = $this->state->currentInventory($auctionID);
