@@ -263,7 +263,6 @@ class HandbidShortCodeController
                 $page = $attributes['page'];
             }
             $page                = (int)$page;
-            $currentAuctionsPage = $page + 1;
 
             //paging and sort
             $pageSize      = $this->state->getPageSize((int)$attributes['page_size']);
@@ -309,7 +308,7 @@ class HandbidShortCodeController
                 }
             } else
             {
-                $auctions = $this->handbid->store('Auction')->byStatus($attributes['type'], $currentAuctionsPage, $pageSize);
+                $auctions = $this->handbid->store('Auction')->byStatus($attributes['type'], $page, $pageSize);
             }
 
             if (!$auctionSearch)
