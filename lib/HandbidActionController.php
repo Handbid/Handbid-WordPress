@@ -1279,10 +1279,10 @@ class HandbidActionController
 
     public function handbid_ajax_get_item_boxes_by_category_callback()
     {
-        if(!empty($_POST['auctionId'])){
-            $auctionID = intval($_POST['auctionId']);
+        if(!empty($_POST['auctionSlug'])){
+            $auctionSlug = $_POST['auctionSlug'];
 
-            $auction = $this->handbid->store('Auction')->byId($auctionID);
+            $auction = $this->handbid->store('Auction')->byKey($auctionSlug);
 
             if($auction)
             {
@@ -1290,7 +1290,7 @@ class HandbidActionController
 
                 $colsCount = $this->state->getGridColsCount(3, "Item");
 
-                $myInventory = $this->state->currentInventory($auctionID);
+                $myInventory = $this->state->currentInventory($auction->id);
 
                 if ($myInventory)
                 {

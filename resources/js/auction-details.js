@@ -449,7 +449,7 @@ var currentlyFilteringByCat = null;
                     delete auction_categories_ids[catId];
                 }
 
-                var auctionId = $('#footer-auction-id').val();
+                var auctionSlug = $('#footer-auction-slug').val();
 
                 categorySelect.addClass('loading').attr('disabled', 'disabled');
                 categoryLinks.addClass('loading');
@@ -457,7 +457,7 @@ var currentlyFilteringByCat = null;
 
                 var dataAct = {
                     action    : "handbid_ajax_get_item_boxes_by_category",
-                    auctionId : auctionId,
+                    auctionSlug : auctionSlug,
                     catId     : catId
                 };
 

@@ -604,12 +604,14 @@ class Handbid
 
         $auction   = $this->state()->currentAuction();
         $auctionID = isset($auction->id) ? $auction->id : 0;
+        $auctionSlug = isset($auction->key) ? $auction->key : '';
         $bidder    = $this->state()->currentBidder($auctionID);
 
         echo do_shortcode('[handbid_bidder_login_form  auction_requires_cc=' . (($auction->requireCreditCard) ? 'true' : 'false') . ']');
 
         echo "<div class='handbid-credit-card-footer-form'>";
         echo "<input type='hidden' id='footer-auction-id' value='" . $auctionID . "'>";
+        echo "<input type='hidden' id='footer-auction-slug' value='" . $auctionSlug . "'>";
         echo "<input type='hidden' id='footer-credit-cards-count' value='" . count($bidder->creditCards) . "'>";
         echo do_shortcode('[handbid_bidder_profile_form template="views/bidder/credit-card-form" show_credit_card_required_message=true]');
         echo "</div>";
