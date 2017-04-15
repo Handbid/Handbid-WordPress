@@ -29,7 +29,7 @@ if (!is_front_page()) {
         echo ' : <a href="/auctions/' . $auction->key . '/">' . $auction->name . '</a>';
         if (isset($item->key) and isset($item->name)) {
             // If there is an auction and an item set drop in the link
-            echo ' : <a href="/auctions/' . $auction->key . '/item/' . $item->key . '/">' . $item->name . '</a>';
+            echo ' : <a data-handbid-item-breadcrumb-link href="/auctions/' . $auction->key . '/item/' . $item->key . '/">' . $item->name . '</a>';
         }
     } else {
         if (is_category() || is_single()) {

@@ -175,6 +175,7 @@ class HandbidActionController
             "handbid_ajax_get_auction_ticketing",
             "handbid_ajax_get_list_of_credit_cards",
             "handbid_ajax_get_item_boxes_by_category",
+            "handbid_ajax_get_new_item_box",
             "handbid_ajax_check_discount_code",
             "handbid_ajax_update_shipping_address",
         ];
@@ -1278,10 +1279,10 @@ class HandbidActionController
 
     public function handbid_ajax_get_item_boxes_by_category_callback()
     {
-        if(!empty($_POST['auctionId'])){
-            $auctionID = intval($_POST['auctionId']);
+        if(!empty($_POST['auctionSlug'])){
+            $auctionSlug = $_POST['auctionSlug'];
 
-            $auction = $this->handbid->store('Auction')->byId($auctionID);
+            $auction = $this->handbid->store('Auction')->byKey($auctionSlug);
 
             if($auction)
             {
@@ -1289,7 +1290,7 @@ class HandbidActionController
 
                 $colsCount = $this->state->getGridColsCount(3, "Item");
 
-                $myInventory = $this->state->currentInventory($auctionID);
+                $myInventory = $this->state->currentInventory($auction->id);
 
                 if ($myInventory)
                 {
@@ -1335,6 +1336,46 @@ class HandbidActionController
                 );
             }
         }
+        exit;
+    }
+
+    public function handbid_ajax_get_new_item_box_callback()
+    {
+        try {
+            if (!empty($_POST['slug'])) {
+                $slug = $_POST['slug'];
+
+                $item = $this->handbid->store('Item')->byKey($slug);
+
+                if ($item) {
+                    $auction = $item->auction;
+
+                    $auctionID = $auction->id;
+
+                    $myInventory = $this->state->currentInventory($auctionID);
+
+                    if ($myInventory) {
+                        $winning = (isset($myInventory->winning) and is_array($myInventory->winning)) ? $myInventory->winning : [];
+                        $losing = (isset($myInventory->losing) and is_array($myInventory->losing)) ? $myInventory->losing : [];;
+
+                    } else {
+                        $winning = [];
+                        $losing = [];
+                    }
+
+                    echo $this->viewRenderer->render(
+                        'views/item/simple-box.phtml',
+                        [
+                            'item' => $item,
+                            'auction' => $auction,
+                            'winning' => $winning,
+                            'losing' => $losing,
+                        ]
+                    );
+                }
+            }
+        }
+        catch(Exception $e){}
         exit;
     }
 

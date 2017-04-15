@@ -7,6 +7,7 @@
  * @author Master of Code (worldclass@masterofcode.com)
  */
 
+var handbid_auction_main;
 var timerForSearch, timerToLoad, isotopeWasFiltered = false, wasNotVisible = true, needToMoveToItem = false, checkIS;
 var currentlyFilteringByCat = null;
 (function ($) {
@@ -27,8 +28,60 @@ var currentlyFilteringByCat = null;
      * In other words, wrap node you want to stick to the screen in a div with a class of "sticky"
      *
      */
+
+    var handbid_auction   = {
+
+        processItemAdding : function (values) {
+
+            var dataAct = {
+                action  : "handbid_ajax_get_new_item_box",
+                slug    : values.key
+            };
+
+            $.post(
+                ajaxurl,
+                dataAct,
+                function (data) {
+
+                    var $newItems = $(data);
+
+                    var isotope_list = $('.simple-box-row.item-list.isotope');
+                    isotope_list.append($newItems).isotope('addItems', $newItems);
+                    refreshSearchResults();
+                    checkAndUpdateIsotope();
+
+                }
+            );
+
+        },
+        recheckIsotopeFilters : function () {
+
+            // var neededElement = $('.by-category li.selected');
+            //
+            // if(neededElement.length){
+            //
+            //     var selector = neededElement.attr('data-selector');
+            //
+            //     var key = 'category';
+            //
+            //     if (selector === '*') {
+            //         delete filterItems[key];
+            //     } else {
+            //         filterItems[key] = selector;
+            //     }
+            // }
+
+            refreshSearchResults();
+
+            checkAndUpdateIsotope();
+
+        }
+    };
+
+
     $(document).ready(function () {
 
+        handbid_auction_main = handbid_auction;
 
         $('.sticky').each(function (index, sticky) {
 
@@ -396,7 +449,7 @@ var currentlyFilteringByCat = null;
                     delete auction_categories_ids[catId];
                 }
 
-                var auctionId = $('#footer-auction-id').val();
+                var auctionSlug = $('#footer-auction-slug').val();
 
                 categorySelect.addClass('loading').attr('disabled', 'disabled');
                 categoryLinks.addClass('loading');
@@ -404,7 +457,7 @@ var currentlyFilteringByCat = null;
 
                 var dataAct = {
                     action    : "handbid_ajax_get_item_boxes_by_category",
-                    auctionId : auctionId,
+                    auctionSlug : auctionSlug,
                     catId     : catId
                 };
 
