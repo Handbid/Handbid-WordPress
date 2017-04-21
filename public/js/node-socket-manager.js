@@ -49,7 +49,7 @@ console.log("success connect");
 
                 this.on('event.item', function (data) {
                     console.log(" ===== event.item =====" + $.getCurrentDateAndTime());
-                    console.log(data);
+                    console.log(data.values);
                     $.eventAuctionItem(data);
                 });
 
@@ -385,14 +385,7 @@ console.log("success connect");
      */
     $.effectNodeItemUpdate = function (data) {
 
-        if(data.type == 'insert'){
-            if(handbid_auction_main) {
-                handbid_auction_main.processItemAdding(data.values);
-            }
-        }
-        else {
-            handbid_main.processItemChange(data.values);
-        }
+        handbid_main.processItemChange(data.values);
 
         return true;
     };
