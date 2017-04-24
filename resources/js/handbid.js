@@ -529,13 +529,14 @@ var handbid_main, connect_message, modal_overlay, reload_overlay, confirm_bid_ov
                 if(itemUrlLink.length) {
                     var itemUrl = itemUrlLink.attr('href').split('/'),
                         oldKey = itemUrl[itemUrl.length - 2];
-                    itemUrl[itemUrl.length - 2] = itemKey;
-                    itemUrlLink.html(values.name).attr('href', itemUrl.join('/'));
-                    if(itemBreadcrumbLink.length && (oldKey != itemKey)){
-                        handbid_main.goToSingleItemPage(itemUrl.join('/'), itemID);
+                    if (oldKey.indexOf(itemID) !== -1) {
+                        itemUrl[itemUrl.length - 2] = itemKey;
+                        itemUrlLink.html(values.name).attr('href', itemUrl.join('/'));
+                        if (itemBreadcrumbLink.length && (oldKey != itemKey)) {
+                            handbid_main.goToSingleItemPage(itemUrl.join('/'), itemID);
+                        }
+                        parentElem.attr('onclick', "handbid_main.goToSingleItemPage('" + itemUrl.join('/') + "', " + itemID + ");");
                     }
-                    parentElem.attr('onclick', "handbid_main.goToSingleItemPage('" + itemUrl.join('/') + "', " + itemID + ");");
-
                 }
 
                 var currentItemID = $("#bidItemId").val();
