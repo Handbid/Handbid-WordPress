@@ -533,6 +533,7 @@ class HandbidActionController
             "fail"      => [],
             "successID" => [],
             "failID"    => [],
+            "paddleNumber" => 'N/A',
         ];
 
         //if ($this->handbid_verify_nonce($nonce, date("d.m.Y") . "buy_tickets_array"))
@@ -563,6 +564,7 @@ class HandbidActionController
                         $itemId                = $values["itemId"];
                         $result[$arr][$itemId] = $resp;
                         $result[$arr . "ID"][] = $itemId;
+                        $result['paddleNumber'] = $resp->paddleNumber;
                     } catch (Exception $e)
                     {
                         $itemId                  = $values["itemId"];

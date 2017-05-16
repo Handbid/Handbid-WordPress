@@ -929,6 +929,12 @@ var handbid_login_main, cookieExpire = 7;
                         data,
                         function (data) {
 
+                            data = JSON.parse(data);
+
+                            $('.reg-paddle-number').html(data.paddleNumber);
+                            $('[data-profile-current-paddle-number]').html(data.paddleNumber);
+                            $('[data-profile-paddle-number]').attr('data-profile-paddle-number', data.paddleNumber);
+
                             var dataAct = {
                                 action    : "handbid_ajax_pay_for_tickets_by_card",
                                 auctionId : auctionId,
