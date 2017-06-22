@@ -2991,7 +2991,7 @@ var handbid_main, connect_message, modal_overlay, reload_overlay, confirm_bid_ov
                             history : false
                         }
                     });
-                    bidNotice.get().on('pnotify.cancel', function () {
+                    sendInvoiceNotice.get().on('pnotify.cancel', function () {
                         return false;
                     });
                 }
@@ -3063,11 +3063,12 @@ var handbid_main, connect_message, modal_overlay, reload_overlay, confirm_bid_ov
                     var bidderDashboardPlace  = $("#bidder-info-load"),
                         auctionID             = parseInt(bidderDashboardPlace.data("auction")),
                         profileID             = parseInt(bidderDashboardPlace.data("profile-id")),
+                        locationCheck         = parseInt(bidderDashboardPlace.data("auction-location-check")),
                         messageShownCookieKey = "bidder-" + profileID + "-has-are-you-here-message-" + auctionID,
                         messageShownCookie    = $.cookie(messageShownCookieKey),
                         messageWasNotShown    = (messageShownCookie != 'yes');
 
-                    if (messageWasNotShown && are_you_here_message != undefined && are_you_here_message != '') {
+                    if (messageWasNotShown && locationCheck && are_you_here_message != undefined && are_you_here_message != '') {
 
                         $.cookie(messageShownCookieKey, 'yes', {expires : cookie_expire, path : '/'});
                         attention_about_are_you_at_the_event = true;
@@ -3182,7 +3183,7 @@ var handbid_main, connect_message, modal_overlay, reload_overlay, confirm_bid_ov
             detectIfNeedToShowAreYouHereMessage : function () {
 
                 var bidderDashboardPlace    = $("#bidder-info-load"),
-                    auctionLocationQuestion = bidderDashboardPlace.data("auction-locatin-question"),
+                    auctionLocationQuestion = bidderDashboardPlace.data("auction-location-question"),
                     paddleNumber            = bidderDashboardPlace.data("profile-paddle-number"),
                     havePaddleNumber        = (paddleNumber != undefined && (paddleNumber + '').trim() != 'N/A');
 

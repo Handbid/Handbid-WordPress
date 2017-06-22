@@ -20,6 +20,7 @@ $profileDashboardOn = get_option('handbidDisplayProfileDashboardOn', array("othe
 $pageNameForProfile = get_query_var('name');
 $pageNameForProfile = (in_array($pageNameForProfile, array("invoices", "auction", "auction-item")))?$pageNameForProfile:"other";
 $displayBidderProfile = in_array($pageNameForProfile, $profileDashboardOn);
+$bidderLocationCheck = (!empty($auction->bidderLocationCheck)) ? $auction->bidderLocationCheck : '0';
 $bidderLocationQuestion = (!empty($auction->bidderLocationQuestion)
     ? $auction->bidderLocationQuestion
     : (!empty($auction->bidderLocationText)
@@ -35,7 +36,8 @@ $welcomeForReceipt = (!empty($auction->welcomeForReceipt)) ? str_replace(['{auct
          data-auction-name="<?php echo esc_js($auction->name); ?>"
          data-auction-key="<?php echo $auction->key; ?>"
          data-auction-guid="<?php echo $auction->auctionGuid; ?>"
-         data-auction-locatin-question="<?php echo esc_attr($bidderLocationQuestion); ?>"
+         data-auction-location-check="<?php echo esc_attr($bidderLocationCheck); ?>"
+         data-auction-location-question="<?php echo esc_attr($bidderLocationQuestion); ?>"
          data-auction-welcome-message="<?php echo esc_attr($welcomeForReceipt); ?>"
          data-auction-image="<?php
          $image = $auction->logo->medium;
