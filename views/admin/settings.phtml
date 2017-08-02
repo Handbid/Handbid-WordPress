@@ -111,6 +111,19 @@ $is_local = $this->get("is_local");
                 <td><input type="number" name="handbidDefaultPageSize"
                            value="<?php $count = (int) get_option('handbidDefaultPageSize') ; echo ($count) ? $count : 25 ; ?>"/></td>
             </tr>
+            <tr valign="top">
+                <?php $redirectingMode = get_option('handbidRedirectingMode', 'normal');?>
+                <th scope="row"><?php echo('Work mode'); ?></th>
+                <td>
+                    <label for="handbidRedirectingMode1"><input type="radio" id="handbidRedirectingMode1" name="handbidRedirectingMode" value="normal" <?php checked($redirectingMode, "normal");?>/> Normal mode</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <label for="handbidRedirectingMode2"><input type="radio" id="handbidRedirectingMode2" name="handbidRedirectingMode" value="redirect" <?php checked($redirectingMode, "redirect");?>/> Simplify loading and redirect</label>
+                </td>
+            </tr>
+            <tr valign="top">
+                <th scope="row"><?php echo('Redirect auction links to domain'); ?></th>
+                <td><input type="text" name="handbidRedirectingDomain"
+                           value="<?php echo get_option('handbidRedirectingDomain'); ?>"/></td>
+            </tr>
 
         </table>
         <?php submit_button(); ?>

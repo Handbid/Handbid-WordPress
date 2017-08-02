@@ -93,6 +93,10 @@ class HandbidShortCodeController
         $this->addAjaxProcess();
     }
 
+    public function isRedirectingMode(){
+        return helper_handbid_is_in_redirect_mode();
+    }
+
     // Helpers
     public function templateFromAttributes($attributes, $default)
     {
@@ -120,6 +124,10 @@ class HandbidShortCodeController
     // Organization
     public function organizationDetails($attributes)
     {
+        if($this->isRedirectingMode()){
+            return '';
+        }
+
         try
         {
 
@@ -227,6 +235,10 @@ class HandbidShortCodeController
 
     public function auctionList($attributes)
     {
+
+        if($this->isRedirectingMode()){
+            return '';
+        }
 
         try
         {
@@ -353,6 +365,10 @@ class HandbidShortCodeController
 
     public function organizationList($attributes)
     {
+
+        if($this->isRedirectingMode()){
+            return '';
+        }
 
         try
         {
@@ -615,6 +631,10 @@ class HandbidShortCodeController
 
     public function auctionDetails($attributes)
     {
+        if($this->isRedirectingMode()){
+            return '';
+        }
+
         try
         {
 
@@ -692,6 +712,9 @@ class HandbidShortCodeController
 
     public function auctionTimer($attributes)
     {
+        if($this->isRedirectingMode()){
+            return '';
+        }
 
         try
         {
@@ -769,6 +792,10 @@ class HandbidShortCodeController
     // Items
     public function itemDetails($attributes)
     {
+        if($this->isRedirectingMode()){
+            return '';
+        }
+
         try
         {
 
@@ -977,7 +1004,12 @@ class HandbidShortCodeController
 
     public function myProfile($attributes)
     {
+
         global $post;
+
+        if($this->isRedirectingMode()){
+            return '';
+        }
 
         if(HANDBID_PAGE_TYPE == 'auction-item'){
             if(!is_object($this->state->currentItem())){
@@ -1214,6 +1246,10 @@ class HandbidShortCodeController
 
     public function bidderProfileForm($attributes)
     {
+        if($this->isRedirectingMode()){
+            return '';
+        }
+
         try
         {
             $template = $this->templateFromAttributes($attributes, 'views/bidder/profile-form');
@@ -1324,6 +1360,10 @@ class HandbidShortCodeController
 
     public function loginRegisterForm($atts)
     {
+        if($this->isRedirectingMode()){
+            return '';
+        }
+
         $atts              = shortcode_atts(array(
                                                 'in_page' => '',
                                             ), $atts);
@@ -1421,6 +1461,9 @@ class HandbidShortCodeController
 
     public function breadcrumbs($attributes)
     {
+        if($this->isRedirectingMode()){
+            return '';
+        }
 
         try
         {
@@ -1534,6 +1577,10 @@ class HandbidShortCodeController
     public function headerTitle($attributes)
     {
 
+        if($this->isRedirectingMode()){
+            return '';
+        }
+
         global $post;
 
         if (!$post)
@@ -1631,6 +1678,10 @@ class HandbidShortCodeController
 
     public function customizerStyles()
     {
+        if($this->isRedirectingMode()){
+            return '';
+        }
+
         return "<style type='text/css'>" . $this->viewRenderer->render(
             'views/admin/customizer', []
         ) . "</style>";

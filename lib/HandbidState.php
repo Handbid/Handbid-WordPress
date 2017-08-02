@@ -55,12 +55,16 @@ class HandbidState
         return ($stripeMode == "test") ? $this->stripeApiKey : $this->stripeApiKeyLive;
     }
 
+    public function isRedirectingMode(){
+
+        return helper_handbid_is_in_redirect_mode();
+
+    }
+
     public function currentOrg($attributes = null)
     {
-
         try
         {
-
             $profile = $this->currentBidder();
             $this->handbid->store('Organization')->setBasePublicity(!$profile);
 
@@ -302,6 +306,11 @@ class HandbidState
 
     public function currentBidder($auction_id = null)
     {
+
+        if($this->isRedirectingMode()){
+            return null;
+        }
+
         try
         {
             if (($this->bidder and $auction_id == null) or ($this->bidder and $auction_id == $this->bidderAuctionID) or $this->bidderNotAvailable)

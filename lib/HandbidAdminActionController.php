@@ -71,6 +71,8 @@ class HandbidAdminActionController
             'handbidForceRefresh',
             'handbidForceRefreshAfterPurchases',
             'handbidDisplayProfileDashboardOn',
+            'handbidRedirectingMode',
+            'handbidRedirectingDomain',
         ];
 
         forEach ($settings as $setting)

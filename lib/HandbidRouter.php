@@ -31,11 +31,20 @@ class HandbidRouter
     public function init()
     {
         $this->rewriteRules();
-//        $this->checkPageState();
 
         add_action(
             'template_redirect',
             function() {
+
+                if(helper_handbid_is_in_redirect_mode(true) &&
+                    ((strpos($_SERVER["REQUEST_URI"], "autologin") !== false) ||
+                        (strpos($_SERVER["REQUEST_URI"], "sharedauction") !== false) ||
+                        (strpos($_SERVER["REQUEST_URI"], "shareditem") !== false))){
+
+                    wp_redirect(helper_handbid_get_redirect_url());
+
+                }
+
                 if (strpos($_SERVER["REQUEST_URI"], "autologin") !== false) {
 
                     $this->handbid->store('Bidder')->setCookie($_REQUEST["id"]);

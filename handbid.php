@@ -84,6 +84,40 @@ if (!defined("HANDBID_DEFAULT_CURRENCY_SYMBOL"))
     define("HANDBID_DEFAULT_CURRENCY_SYMBOL", "$");
 }
 
+function helper_handbid_is_in_redirect_mode($onlyOption = false){
+    global $post;
+
+    if (defined("HANDBID_REDIRECT_MODE"))
+    {
+        return HANDBID_REDIRECT_MODE;
+    }
+
+    $is_redirect_mode = (get_option('handbidRedirectingMode', 'normal') == 'redirect');
+
+    if($onlyOption){
+        return $is_redirect_mode;
+    }
+    elseif($post){
+        $handbid_pages = in_array($post->post_name, ['auction', 'auction-item', 'organization', 'auctions', 'organizations']);
+
+        define("HANDBID_REDIRECT_MODE", ($handbid_pages && $is_redirect_mode));
+        return HANDBID_REDIRECT_MODE;
+    }
+    else{
+        return false;
+    }
+}
+
+function helper_handbid_get_redirect_url(){
+
+    $redirect_base = get_option('handbidRedirectingDomain', 'https://app.handbid.com');
+    $redirect_query = $_SERVER['REQUEST_URI'];
+
+    $redirect_url = str_replace(':/', '://', str_replace('//', '/', $redirect_base . $redirect_query));
+
+    return $redirect_url;
+}
+
 class Handbid
 {
 
@@ -174,6 +208,10 @@ class Handbid
         flush_rewrite_rules();
     }
 
+    function isRedirectingMode(){
+        return helper_handbid_is_in_redirect_mode();
+    }
+
     function addAjaxUrl()
     {
         ?>
@@ -258,7 +296,12 @@ class Handbid
 
 
     // Javascript
-    function initScripts()
+    function initScripts(){
+        if(!$this->isRedirectingMode()) {
+            $this->initLoadingScripts();
+        }
+    }
+    function initLoadingScripts()
     {
 
         $socketUrl   = $this->getSocketUrl();
@@ -598,6 +641,37 @@ class Handbid
     }
 
     function onRenderFooter()
+    {
+        if($this->isRedirectingMode()) {
+            $this->onRenderRedirectFooter();
+        }
+        else{
+            $this->onRenderMainFooter();
+        }
+    }
+
+    function onRenderRedirectFooter()
+    {
+        echo '<style type="text/css">
+              body {
+                  display: none !important;
+              }
+              </style>';
+
+        $redirect_url = helper_handbid_get_redirect_url();
+
+        echo '<script type="text/javascript">
+              jQuery(document).ready(function(){
+                  window.location = "'.$redirect_url.'";
+              })
+              </script>';
+
+        echo '</footer>';
+        echo '</html>';
+        die;
+    }
+
+    function onRenderMainFooter()
     {
 
         global $displayBidderProfile, $post;

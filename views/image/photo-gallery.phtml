@@ -23,7 +23,7 @@ if ($this->get('item')) {
         <ul>
             <?php forEach ($item->images as $imageUrl) {
                 ?>
-                <li style="background-image: url('<?= $imageUrl; ?>')"></li>
+                <li style="background-image: url('<?php echo $imageUrl; ?>')"></li>
             <?php
             }
             ?>
